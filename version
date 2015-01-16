@@ -1,0 +1,62 @@
+ORM M2 - Version 0.1.8
+ORM M2 - Build 20150109
+ORM M2 - Liste des changements
+
+ORM M2 - 0.1.8 (Pas encore publiée) [ Afficher les bogues ]
+===================================
+- 0003680: [Agenda] Charger tous les attributs lors d'un getList (thomas.payen) - résolu.
+
+[1 bogue]
+
+ORM M2 - 0.1.7 (Publiée 17/12/2014) [ Afficher les bogues ]
+===================================
+- 0003635: [Général] Externaliser la configuration de l'ORM (thomas.payen) - résolu.
+- 0003660: [Agenda] Le getList n'est pas optimum pour les exceptions (thomas.payen) - résolu.
+- 0003650: [Agenda] Problème lorsqu'un participant modifie sa réponse pour une occurrence (thomas.payen) - résolu.
+- 0003642: [Agenda] Impossible de remettre à zéro le champ "event_recurenddate" (thomas.payen) - résolu.
+- 0003615: [Agenda] Alimenter le champ recurrence master (thomas.payen) - résolu.
+- 0003613: [Général] Permetttre a l'application de gérer plusieurs connexions différentes aux bdd (thomas.payen) - résolu.
+- 0003604: [Tâches] Création d'un task propterty (thomas.payen) - résolu.
+
+[7 bogues]
+
+ORM M2 - 0.1.6 (Publiée 05/11/2014) [ Afficher les bogues ]
+===================================
+- 0003547: [Général] Réutiliser les prepare statements pour les requêtes identiques (thomas.payen) - résolu.
+- 0003556: [Général] Générer une exception lorsque la base de données est inaccessible (thomas.payen) - résolu.
+- 0003548: [Général] Etudier la mise en place d'un Selaforme pour les connexions à la base de données (thomas.payen) - résolu.
+- 0003499: [Général] Le check sur les champs SQL ne se fait pas (thomas.payen) - résolu.
+- 0003369: [Général] Gérer le cluster SQL en lecture/écriture suivant les requêtes (thomas.payen) - résolu.
+
+[5 bogues]
+
+ORM M2 - 0.1.5 (Publiée 28/05/2014) [ Afficher les bogues ]
+===================================
+- 0003298: [Général] Ajouter de nouveaux paramètres dans les recherches LDAP (thomas.payen) - fermé.
+- 0003000: [Général] Permettre de personnaliser les filtres du getList (thomas.payen) - fermé.
+- 0002994: [Général] Rendre paramètrable le starttls (thomas.payen) - fermé.
+ - 0003147: [Général] Modifier le backend LDAP pour séparer les requêtes par serveur (thomas.payen) - fermé.
+- 0003098: [Général] Mettre en place un autoloader dynamique (thomas.payen) - fermé.
+
+[5 bogues]
+
+ORM M2 - 0.1.4 (Publiée 19/09/2013) [ Afficher les bogues ]
+===================================
+- 0002998: [Général] Améliorer la consommation mémoire de la librairie (thomas.payen) - fermé.
+- 0002993: [Général] Charger la configuration en fonction de l'environnement (thomas.payen) - fermé.
+- 0002999: [Général] Pouvoir définir les champs à retourner par le getList (thomas.payen) - fermé.
+
+[3 bogues]
+
+ORM M2 - 0.1.3 (Publiée 28/05/2013) [ Afficher les bogues ]
+===================================
+- 0002878: [Agenda] LibM2: Erreur dans la sauvegarde des attributs de l'évènement (thomas.payen) - fermé.
+- 0002877: [Agenda] Seuls les rdv dont la date de début est dans la plage de synchro sont synchronisés (thomas.payen) - fermé.
+- 0002882: [Agenda] Implémenter les pièces jointes Binaires et URL (thomas.payen) - fermé.
+- 0002858: [Général] LibM2: Gérer des valeurs par défaut dans la configuration du mapping (thomas.payen) - fermé.
+- 0002860: [Agenda] LibM2: Le etag des participants n'est pas mis à jour lors d'une réponse (thomas.payen) - fermé.
+- 0002887: [Agenda] Grouper le chargement des attributs supplémentaires (thomas.payen) - fermé.
+- 0002888: [Général] Pouvoir récupérer une liste d'objets à partir de champs multivalués (thomas.payen) - fermé.
+- 0002892: [Agenda] La méthode getList associe les évènements à un calendrier non chargé (thomas.payen) - fermé.
+
+[8 bogues]

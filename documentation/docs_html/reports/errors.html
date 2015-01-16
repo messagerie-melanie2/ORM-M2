@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>     &raquo; Compilation errors
+</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Lib ORM Mélanie2</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/LibMelanie.html">\LibMelanie</a></li>
+                                                    </ul>
+                    </li>
+                    <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">61</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">42</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+
+            <ul class="side-nav nav nav-list">
+                <li class="nav-header">Navigation</li>
+                                                                            <li><a href="#api/melanie2/attachment.php"><i class="icon-file"></i> api/melanie2/attachment.php</a></li>
+                                                                                                    <li><a href="#objects/usermelanie.php"><i class="icon-file"></i> objects/usermelanie.php</a></li>
+                                                                                                    <li><a href="#objects/eventmelanie.php"><i class="icon-file"></i> objects/eventmelanie.php</a></li>
+                                                                                                    <li><a href="#objects/historymelanie.php"><i class="icon-file"></i> objects/historymelanie.php</a></li>
+                                                                                                    <li><a href="#sql/sqlcalendarrequests.php"><i class="icon-file"></i> sql/sqlcalendarrequests.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/share.php"><i class="icon-file"></i> api/melanie2/share.php</a></li>
+                                                                                                    <li><a href="#sql/sqlhistoryrequests.php"><i class="icon-file"></i> sql/sqlhistoryrequests.php</a></li>
+                                                                                                    <li><a href="#ldap/ldap.php"><i class="icon-file"></i> ldap/ldap.php</a></li>
+                                                                                                    <li><a href="#sql/sqlattachmentrequests.php"><i class="icon-file"></i> sql/sqlattachmentrequests.php</a></li>
+                                                                                                    <li><a href="#log/m2log.php"><i class="icon-file"></i> log/m2log.php</a></li>
+                                                                                                    <li><a href="#exceptions/undefinedmappingexception.php"><i class="icon-file"></i> exceptions/undefinedmappingexception.php</a></li>
+                                                                                                    <li><a href="#lib/icstoevent.php"><i class="icon-file"></i> lib/icstoevent.php</a></li>
+                                                                                                    <li><a href="#objects/calendarmelanie.php"><i class="icon-file"></i> objects/calendarmelanie.php</a></li>
+                                                                                                    <li><a href="#lib/eventtoics.php"><i class="icon-file"></i> lib/eventtoics.php</a></li>
+                                                                                                    <li><a href="#exceptions/propertydoesnotexistexception.php"><i class="icon-file"></i> exceptions/propertydoesnotexistexception.php</a></li>
+                                                                                                    <li><a href="#lib/magicobject.php"><i class="icon-file"></i> lib/magicobject.php</a></li>
+                                                                                                    <li><a href="#sql/sqlobjectrequests.php"><i class="icon-file"></i> sql/sqlobjectrequests.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/taskproperty.php"><i class="icon-file"></i> api/melanie2/taskproperty.php</a></li>
+                                                                                                    <li><a href="#exceptions/objectmelanieundefinedexception.php"><i class="icon-file"></i> exceptions/objectmelanieundefinedexception.php</a></li>
+                                                                                                    <li><a href="#exceptions/melanie2exception.php"><i class="icon-file"></i> exceptions/melanie2exception.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/calendar.php"><i class="icon-file"></i> api/melanie2/calendar.php</a></li>
+                                                                                                    <li><a href="#log/log.php"><i class="icon-file"></i> log/log.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/eventproperty.php"><i class="icon-file"></i> api/melanie2/eventproperty.php</a></li>
+                                                                                                    <li><a href="#lib/selaforme.php"><i class="icon-file"></i> lib/selaforme.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/exception.php"><i class="icon-file"></i> api/melanie2/exception.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/contact.php"><i class="icon-file"></i> api/melanie2/contact.php</a></li>
+                                                                                                    <li><a href="#sql/sqltaskrequests.php"><i class="icon-file"></i> sql/sqltaskrequests.php</a></li>
+                                                                                                    <li><a href="#exceptions/undefinedprimarykeyexception.php"><i class="icon-file"></i> exceptions/undefinedprimarykeyexception.php</a></li>
+                                                                                                    <li><a href="#sql/sqlmelanierequests.php"><i class="icon-file"></i> sql/sqlmelanierequests.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/event.php"><i class="icon-file"></i> api/melanie2/event.php</a></li>
+                                                                                                    <li><a href="#sql/dbmelanie.php"><i class="icon-file"></i> sql/dbmelanie.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/userprefs.php"><i class="icon-file"></i> api/melanie2/userprefs.php</a></li>
+                                                                                                    <li><a href="#exceptions/melanie2databaseexception.php"><i class="icon-file"></i> exceptions/melanie2databaseexception.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/recurrence.php"><i class="icon-file"></i> api/melanie2/recurrence.php</a></li>
+                                                                                                    <li><a href="#sql/sql.php"><i class="icon-file"></i> sql/sql.php</a></li>
+                                                                                                    <li><a href="#interfaces/iobjectmelanie.php"><i class="icon-file"></i> interfaces/iobjectmelanie.php</a></li>
+                                                                                                    <li><a href="#lib/EventToICS_save.php"><i class="icon-file"></i> lib/EventToICS_save.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/taskslist.php"><i class="icon-file"></i> api/melanie2/taskslist.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/attendee.php"><i class="icon-file"></i> api/melanie2/attendee.php</a></li>
+                                                                                                    <li><a href="#objects/taskslistmelanie.php"><i class="icon-file"></i> objects/taskslistmelanie.php</a></li>
+                                                                                                    <li><a href="#cache/cache.php"><i class="icon-file"></i> cache/cache.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/organizer.php"><i class="icon-file"></i> api/melanie2/organizer.php</a></li>
+                                                                                                    <li><a href="#lib/melanie2object.php"><i class="icon-file"></i> lib/melanie2object.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/addressbook.php"><i class="icon-file"></i> api/melanie2/addressbook.php</a></li>
+                                                                                                    <li><a href="#sql/sqlcontactrequests.php"><i class="icon-file"></i> sql/sqlcontactrequests.php</a></li>
+                                                                                                    <li><a href="#objects/objectmelanie.php"><i class="icon-file"></i> objects/objectmelanie.php</a></li>
+                                                                                                    <li><a href="#sql/sqlobjectpropertyrequests.php"><i class="icon-file"></i> sql/sqlobjectpropertyrequests.php</a></li>
+                                                                                                    <li><a href="#objects/attachmentmelanie.php"><i class="icon-file"></i> objects/attachmentmelanie.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/task.php"><i class="icon-file"></i> api/melanie2/task.php</a></li>
+                                                                                                    <li><a href="#objects/addressbookmelanie.php"><i class="icon-file"></i> objects/addressbookmelanie.php</a></li>
+                                                                                                    <li><a href="#api/melanie2/user.php"><i class="icon-file"></i> api/melanie2/user.php</a></li>
+                                                                                                    <li><a href="#lib/ics.php"><i class="icon-file"></i> lib/ics.php</a></li>
+                                                                                                    <li><a href="#ldap/ldapmelanie.php"><i class="icon-file"></i> ldap/ldapmelanie.php</a></li>
+                                                                    </ul>
+        </div>
+
+        <div class="span10 offset2">
+            <ul class="breadcrumb">
+                <li><a href="../"><i class="icon-remove-sign"></i></a><span class="divider">\</span></li>
+                <li>Compilation Errors</li>
+            </ul>
+
+            
+                            <div class="package-contents">
+                                            <a name="api/melanie2/attachment.php" id="api/melanie2/attachment.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/attachment.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>58</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="objects/usermelanie.php" id="objects/usermelanie.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            objects/usermelanie.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>38</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="objects/eventmelanie.php" id="objects/eventmelanie.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            objects/eventmelanie.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>43</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="objects/historymelanie.php" id="objects/historymelanie.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            objects/historymelanie.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>39</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="sql/sqlcalendarrequests.php" id="sql/sqlcalendarrequests.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            sql/sqlcalendarrequests.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/share.php" id="api/melanie2/share.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/share.php
+                            <small style="float: right;padding-right: 10px;">2</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>53</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>159</td>
+                                        <td>Argument $acl is missing from the Docblock of asRight()</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="sql/sqlhistoryrequests.php" id="sql/sqlhistoryrequests.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            sql/sqlhistoryrequests.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="ldap/ldap.php" id="ldap/ldap.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            ldap/ldap.php
+                            <small style="float: right;padding-right: 10px;">2</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>36</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>441</td>
+                                        <td>The type for the param tag $value in setCache() is either &quot;type&quot; or &quot;unknown&quot;; isn&#039;t this an IDE default?</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="sql/sqlattachmentrequests.php" id="sql/sqlattachmentrequests.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            sql/sqlattachmentrequests.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="log/m2log.php" id="log/m2log.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            log/m2log.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>36</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="exceptions/undefinedmappingexception.php" id="exceptions/undefinedmappingexception.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            exceptions/undefinedmappingexception.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>34</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="lib/icstoevent.php" id="lib/icstoevent.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            lib/icstoevent.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>40</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="objects/calendarmelanie.php" id="objects/calendarmelanie.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            objects/calendarmelanie.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>38</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="lib/eventtoics.php" id="lib/eventtoics.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            lib/eventtoics.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>44</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="exceptions/propertydoesnotexistexception.php" id="exceptions/propertydoesnotexistexception.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            exceptions/propertydoesnotexistexception.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>34</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="lib/magicobject.php" id="lib/magicobject.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            lib/magicobject.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>34</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="sql/sqlobjectrequests.php" id="sql/sqlobjectrequests.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            sql/sqlobjectrequests.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/taskproperty.php" id="api/melanie2/taskproperty.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/taskproperty.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>54</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="exceptions/objectmelanieundefinedexception.php" id="exceptions/objectmelanieundefinedexception.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            exceptions/objectmelanieundefinedexception.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>34</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="exceptions/melanie2exception.php" id="exceptions/melanie2exception.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            exceptions/melanie2exception.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>34</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/calendar.php" id="api/melanie2/calendar.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/calendar.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>49</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="log/log.php" id="log/log.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            log/log.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>30</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/eventproperty.php" id="api/melanie2/eventproperty.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/eventproperty.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>55</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="lib/selaforme.php" id="lib/selaforme.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            lib/selaforme.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>36</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/exception.php" id="api/melanie2/exception.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/exception.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>72</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/contact.php" id="api/melanie2/contact.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/contact.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>100</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="sql/sqltaskrequests.php" id="sql/sqltaskrequests.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            sql/sqltaskrequests.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="exceptions/undefinedprimarykeyexception.php" id="exceptions/undefinedprimarykeyexception.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            exceptions/undefinedprimarykeyexception.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>34</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="sql/sqlmelanierequests.php" id="sql/sqlmelanierequests.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            sql/sqlmelanierequests.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/event.php" id="api/melanie2/event.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/event.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>73</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="sql/dbmelanie.php" id="sql/dbmelanie.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            sql/dbmelanie.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>33</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/userprefs.php" id="api/melanie2/userprefs.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/userprefs.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>53</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="exceptions/melanie2databaseexception.php" id="exceptions/melanie2databaseexception.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            exceptions/melanie2databaseexception.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>34</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/recurrence.php" id="api/melanie2/recurrence.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/recurrence.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>48</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="sql/sql.php" id="sql/sql.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            sql/sql.php
+                            <small style="float: right;padding-right: 10px;">2</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>37</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>111</td>
+                                        <td>Argument $db_read is missing from the Docblock of __construct()</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="interfaces/iobjectmelanie.php" id="interfaces/iobjectmelanie.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            interfaces/iobjectmelanie.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>31</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="lib/EventToICS_save.php" id="lib/EventToICS_save.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            lib/EventToICS_save.php
+                            <small style="float: right;padding-right: 10px;">5</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>69</td>
+                                        <td>No summary for property $event</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>70</td>
+                                        <td>No summary for property $calendar</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>71</td>
+                                        <td>No summary for property $vevent</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>76</td>
+                                        <td>Argument $event is missing from the Docblock of __construct()</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>76</td>
+                                        <td>Argument $calendar is missing from the Docblock of __construct()</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/taskslist.php" id="api/melanie2/taskslist.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/taskslist.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>49</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/attendee.php" id="api/melanie2/attendee.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/attendee.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>44</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="objects/taskslistmelanie.php" id="objects/taskslistmelanie.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            objects/taskslistmelanie.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>38</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="cache/cache.php" id="cache/cache.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            cache/cache.php
+                            <small style="float: right;padding-right: 10px;">2</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>36</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>38</td>
+                                        <td>No summary for property $cache_sql</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/organizer.php" id="api/melanie2/organizer.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/organizer.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>51</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="lib/melanie2object.php" id="lib/melanie2object.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            lib/melanie2object.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>33</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/addressbook.php" id="api/melanie2/addressbook.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/addressbook.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>48</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="sql/sqlcontactrequests.php" id="sql/sqlcontactrequests.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            sql/sqlcontactrequests.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="objects/objectmelanie.php" id="objects/objectmelanie.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            objects/objectmelanie.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>42</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="sql/sqlobjectpropertyrequests.php" id="sql/sqlobjectpropertyrequests.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            sql/sqlobjectpropertyrequests.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>32</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="objects/attachmentmelanie.php" id="objects/attachmentmelanie.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            objects/attachmentmelanie.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>39</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/task.php" id="api/melanie2/task.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/task.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>71</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="objects/addressbookmelanie.php" id="objects/addressbookmelanie.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            objects/addressbookmelanie.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>38</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="api/melanie2/user.php" id="api/melanie2/user.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            api/melanie2/user.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>39</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="lib/ics.php" id="lib/ics.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            lib/ics.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>33</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                            <div class="package-contents">
+                                            <a name="ldap/ldapmelanie.php" id="ldap/ldapmelanie.php"></a>
+                        <h3>
+                            <i class="icon-file"></i>
+                            ldap/ldapmelanie.php
+                            <small style="float: right;padding-right: 10px;">1</small>
+                        </h3>
+                        <div>
+                            <table class="table markers table-bordered">
+                                <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Line</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                                                    <tr>
+                                        <td>error</td>
+                                        <td>33</td>
+                                        <td>Cannot have a @subpackage when a @package tag is not present</td>
+                                    </tr>
+                                                            </tbody>
+                            </table>
+                        </div>
+                                    </div>
+                    </div>
+    </section>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/LibMelanie.html">\LibMelanie</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on January 15th, 2015 at 18:49.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

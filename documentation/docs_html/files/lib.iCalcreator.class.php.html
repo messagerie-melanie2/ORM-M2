@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>Lib ORM Mélanie2</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="https://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    <![endif]-->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+        <script type="text/javascript">
+        function loadExternalCodeSnippets() {
+            Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+                var src = pre.getAttribute('data-src');
+                var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+                var language = 'php';
+
+                var code = document.createElement('code');
+                code.className = 'language-' + language;
+
+                pre.textContent = '';
+
+                code.textContent = 'Loading…';
+
+                pre.appendChild(code);
+
+                var xhr = new XMLHttpRequest();
+
+                xhr.open('GET', src, true);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+
+                        if (xhr.status < 400 && xhr.responseText) {
+                            code.textContent = xhr.responseText;
+
+                            Prism.highlightElement(code);
+                        }
+                        else if (xhr.status >= 400) {
+                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                        }
+                        else {
+                            code.textContent = '✖ Error: File does not exist or is empty';
+                        }
+                    }
+                };
+
+                xhr.send(null);
+            });
+        }
+
+        $(document).ready(function(){
+            loadExternalCodeSnippets();
+        });
+        $('#source-view').on('shown', function () {
+            loadExternalCodeSnippets();
+        })
+    </script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Lib ORM Mélanie2</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/LibMelanie.html">\LibMelanie</a></li>
+                                                    </ul>
+                    </li>
+                    <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">355</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">43</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-96367667"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-96367667" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1561267338"></a>
+                                <a href="../namespaces/LibMelanie.html" style="margin-left: 30px; padding-left: 0">LibMelanie</a>
+            </div>
+            <div id="namespace-1561267338" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1565764860"></a>
+                                <a href="../namespaces/LibMelanie.Api.html" style="margin-left: 30px; padding-left: 0">Api</a>
+            </div>
+            <div id="namespace-1565764860" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1590393094"></a>
+                                <a href="../namespaces/LibMelanie.Api.Melanie2.html" style="margin-left: 30px; padding-left: 0">Melanie2</a>
+            </div>
+            <div id="namespace-1590393094" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Attachment.html">Attachment</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.TaskProperty.html">TaskProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Calendar.html">Calendar</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.EventProperty.html">EventProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Contact.html">Contact</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Event.html">Event</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.UserPrefs.html">UserPrefs</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Recurrence.html">Recurrence</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Taskslist.html">Taskslist</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Attendee.html">Attendee</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Organizer.html">Organizer</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Addressbook.html">Addressbook</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Task.html">Task</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.User.html">User</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1298179938"></a>
+                                <a href="../namespaces/LibMelanie.Objects.html" style="margin-left: 30px; padding-left: 0">Objects</a>
+            </div>
+            <div id="namespace-1298179938" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Objects.UserMelanie.html">UserMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.EventMelanie.html">EventMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.HistoryMelanie.html">HistoryMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.CalendarMelanie.html">CalendarMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.TaskslistMelanie.html">TaskslistMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.ObjectMelanie.html">ObjectMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.AttachmentMelanie.html">AttachmentMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.AddressbookMelanie.html">AddressbookMelanie</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1475022528"></a>
+                                <a href="../namespaces/LibMelanie.Sql.html" style="margin-left: 30px; padding-left: 0">Sql</a>
+            </div>
+            <div id="namespace-1475022528" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlCalendarRequests.html">SqlCalendarRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlHistoryRequests.html">SqlHistoryRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlAttachmentRequests.html">SqlAttachmentRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlObjectRequests.html">SqlObjectRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlTaskRequests.html">SqlTaskRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlMelanieRequests.html">SqlMelanieRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.DBMelanie.html">DBMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.Sql.html">Sql</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlContactRequests.html">SqlContactRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlObjectPropertyRequests.html">SqlObjectPropertyRequests</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-556544795"></a>
+                                <a href="../namespaces/LibMelanie.Ldap.html" style="margin-left: 30px; padding-left: 0">Ldap</a>
+            </div>
+            <div id="namespace-556544795" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Ldap.Ldap.html">Ldap</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Ldap.LDAPMelanie.html">LDAPMelanie</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-765070974"></a>
+                                <a href="../namespaces/LibMelanie.Log.html" style="margin-left: 30px; padding-left: 0">Log</a>
+            </div>
+            <div id="namespace-765070974" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Log.M2Log.html">M2Log</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Log.Log.html">Log</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1940920305"></a>
+                                <a href="../namespaces/LibMelanie.Exceptions.html" style="margin-left: 30px; padding-left: 0">Exceptions</a>
+            </div>
+            <div id="namespace-1940920305" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.UndefinedMappingException.html">UndefinedMappingException</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.PropertyDoesNotExistException.html">PropertyDoesNotExistException</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.ObjectMelanieUndefinedException.html">ObjectMelanieUndefinedException</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.Melanie2Exception.html">Melanie2Exception</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.UndefinedPrimaryKeyException.html">UndefinedPrimaryKeyException</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.Melanie2DatabaseException.html">Melanie2DatabaseException</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1308326184"></a>
+                                <a href="../namespaces/LibMelanie.Lib.html" style="margin-left: 30px; padding-left: 0">Lib</a>
+            </div>
+            <div id="namespace-1308326184" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Lib.ICSToEvent.html">ICSToEvent</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.EventToICS.html">EventToICS</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.MagicObject.html">MagicObject</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.vcalendar.html">vcalendar</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.calendarComponent.html">calendarComponent</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.vevent.html">vevent</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.vtodo.html">vtodo</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.vjournal.html">vjournal</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.vfreebusy.html">vfreebusy</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.valarm.html">valarm</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.vtimezone.html">vtimezone</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.iCalUtilityFunctions.html">iCalUtilityFunctions</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.Selaforme.html">Selaforme</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.EventToICSSAVE.html">EventToICSSAVE</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.Melanie2Object.html">Melanie2Object</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.ICS.html">ICS</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-287391209"></a>
+                                <a href="../namespaces/LibMelanie.Interfaces.html" style="margin-left: 30px; padding-left: 0">Interfaces</a>
+            </div>
+            <div id="namespace-287391209" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/LibMelanie.Interfaces.IObjectMelanie.html">IObjectMelanie</a></li>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1169735721"></a>
+                                <a href="../namespaces/LibMelanie.Cache.html" style="margin-left: 30px; padding-left: 0">Cache</a>
+            </div>
+            <div id="namespace-1169735721" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Cache.Cache.html">Cache</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content file">
+                    <nav>
+                                                                    </nav>
+
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+                    <h1><small>lib</small>iCalcreator.class.php</h1>
+                    <p><em></em></p>
+                    
+
+                    
+                    
+                                        <h2>Classes</h2>
+                    <table class="table table-hover">
+                                            <tr>
+                            <td><a href="../classes/LibMelanie.Lib.vcalendar.html">vcalendar</a></td>
+                            <td><em>vcalendar class</em></td>
+                        </tr>
+                                            <tr>
+                            <td><a href="../classes/LibMelanie.Lib.calendarComponent.html">calendarComponent</a></td>
+                            <td><em>abstract class for calendar components</em></td>
+                        </tr>
+                                            <tr>
+                            <td><a href="../classes/LibMelanie.Lib.vevent.html">vevent</a></td>
+                            <td><em>class for calendar component VEVENT</em></td>
+                        </tr>
+                                            <tr>
+                            <td><a href="../classes/LibMelanie.Lib.vtodo.html">vtodo</a></td>
+                            <td><em>class for calendar component VTODO</em></td>
+                        </tr>
+                                            <tr>
+                            <td><a href="../classes/LibMelanie.Lib.vjournal.html">vjournal</a></td>
+                            <td><em>class for calendar component VJOURNAL</em></td>
+                        </tr>
+                                            <tr>
+                            <td><a href="../classes/LibMelanie.Lib.vfreebusy.html">vfreebusy</a></td>
+                            <td><em>class for calendar component VFREEBUSY</em></td>
+                        </tr>
+                                            <tr>
+                            <td><a href="../classes/LibMelanie.Lib.valarm.html">valarm</a></td>
+                            <td><em>class for calendar component VALARM</em></td>
+                        </tr>
+                                            <tr>
+                            <td><a href="../classes/LibMelanie.Lib.vtimezone.html">vtimezone</a></td>
+                            <td><em>class for calendar component VTIMEZONE</em></td>
+                        </tr>
+                                            <tr>
+                            <td><a href="../classes/LibMelanie.Lib.iCalUtilityFunctions.html">iCalUtilityFunctions</a></td>
+                            <td><em>moving all utility (static) functions to a utility class
+20111223 - move iCalUtilityFunctions class to the end of the iCalcreator class file</em></td>
+                        </tr>
+                                        </table>
+                                    </div>
+
+                <aside class="span4 detailsbar">
+                    <dl>
+                        
+                        
+                    </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                                    <tr>
+                                <th>
+                                    ignore
+                                </th>
+                                <td>
+                                                                            
+                                                                    </td>
+                            </tr>
+                                            </table>
+
+                </aside>
+            </div>
+
+                        <div class="row-fluid">
+                <section class="span8 content file">
+                    <h2>Constants</h2>
+                </section>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ICALCREATOR_VERSION" name="constant_ICALCREATOR_VERSION" class="anchor"></a>
+            <article id="constant_ICALCREATOR_VERSION" class="constant">
+                <h3 class="">ICALCREATOR_VERSION</h3>
+                <pre class="signature">ICALCREATOR_VERSION</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                <dt>File</dt>
+                <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                        <div class="row-fluid">
+                <section class="span8 content file">
+                    <h2>Functions</h2>
+                </section>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_iCal2vCard" name="method_iCal2vCard" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">iCal2vCard()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">iCal2vCard(object <span class="argument">$email</span>,  <span class="argument">$version</span>,  <span class="argument">$directory</span>,  <span class="argument">$ext</span>) : mixed</pre>
+                <p><em>convert single ATTENDEE, CONTACT or ORGANIZER (in email format) to vCard
+returns vCard/TRUE or if directory (if set) or file write is unvalid, FALSE</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>object</td>
+                                <td>$email</td>
+                                <td><p>$param string $version, vCard version (default 2.1)
+$param string $directory, where to save vCards (default FALSE)
+$param string $ext, vCard file extension (default 'vcf')</p></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$version</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$directory</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$ext</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            author
+                        </th>
+                        <td>
+                                                                                            <p>Kjell-Inge Gustafsson, kigkonsult <a href="mailto:ical@kigkonsult.se">ical@kigkonsult.se</a></p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.12.2                                <ul>
+<li>2012-07-11</li>
+</ul>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_iCal2vCards" name="method_iCal2vCards" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">iCal2vCards()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">iCal2vCards( <span class="argument">$calendar</span>,  <span class="argument">$version</span>,  <span class="argument">$directory</span>,  <span class="argument">$ext</span>) : mixed</pre>
+                <p><em>convert ATTENDEEs, CONTACTs and ORGANIZERs (in email format) to vCards</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$calendar</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$version</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$directory</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$ext</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            author
+                        </th>
+                        <td>
+                                                                                            <p>Kjell-Inge Gustafsson, kigkonsult <a href="mailto:ical@kigkonsult.se">ical@kigkonsult.se</a></p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.12.2                                <ul>
+<li>2012-05-07</li>
+</ul>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_iCal2XML" name="method_iCal2XML" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">iCal2XML()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">iCal2XML( <span class="argument">$calendar</span>) : string</pre>
+                <p><em>format iCal XML output, rfc6321, using PHP SimpleXMLElement</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$calendar</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            author
+                        </th>
+                        <td>
+                                                                                            <p>Kjell-Inge Gustafsson, kigkonsult <a href="mailto:ical@kigkonsult.se">ical@kigkonsult.se</a></p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.15.6                                <ul>
+<li>2012-10-19</li>
+</ul>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__addXMLchild" name="method__addXMLchild" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">_addXMLchild()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_addXMLchild( <span class="argument">$parent</span>,  <span class="argument">$name</span>,  <span class="argument">$type</span>,  <span class="argument">$content</span>,  <span class="argument">$params</span>) : void</pre>
+                <p><em>Add children to a SimpleXMLelement</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$parent</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$name</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$type</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$content</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$params</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            author
+                        </th>
+                        <td>
+                                                                                            <p>Kjell-Inge Gustafsson, kigkonsult <a href="mailto:ical@kigkonsult.se">ical@kigkonsult.se</a></p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.15.5                                <ul>
+<li>2012-10-19</li>
+</ul>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_XMLstr2iCal" name="method_XMLstr2iCal" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">XMLstr2iCal()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">XMLstr2iCal(string <span class="argument">$xmlstr</span>, array <span class="argument">$iCalcfg</span>) : mixed</pre>
+                <p><em>parse xml string into iCalcreator instance</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$xmlstr</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$iCalcfg</td>
+                                <td><p>iCalcreator config array (opt)</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>iCalcreator instance or FALSE on error</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            author
+                        </th>
+                        <td>
+                                                                                            <p>Kjell-Inge Gustafsson, kigkonsult <a href="mailto:ical@kigkonsult.se">ical@kigkonsult.se</a></p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11.2                                <ul>
+<li>2012-01-31</li>
+</ul>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_XMLfile2iCal" name="method_XMLfile2iCal" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">XMLfile2iCal()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">XMLfile2iCal(string <span class="argument">$xmlfile</span>,  <span class="argument">$iCalcfg</span>) : \LibMelanie\Lib\mixediCalcreator</pre>
+                <p><em>parse xml file into iCalcreator instance</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$xmlfile</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$iCalcfg</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \LibMelanie\Lib\mixediCalcreator
+                                            &mdash; <p>instance or FALSE on error</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            author
+                        </th>
+                        <td>
+                                                                                            <p>Kjell-Inge Gustafsson, kigkonsult <a href="mailto:ical@kigkonsult.se">ical@kigkonsult.se</a></p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11.2                                <ul>
+<li>2012-01-20</li>
+</ul>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_XML2iCal" name="method_XML2iCal" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">XML2iCal()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">XML2iCal(object <span class="argument">$xmlobj</span>, array <span class="argument">$iCalcfg</span>) : mixed</pre>
+                <p><em>parse SimpleXMLElement instance into iCalcreator instance</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>object</td>
+                                <td>$xmlobj</td>
+                                <td><p>SimpleXMLElement</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$iCalcfg</td>
+                                <td><p>iCalcreator config array (opt)</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>iCalcreator instance or FALSE on error</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            author
+                        </th>
+                        <td>
+                                                                                            <p>Kjell-Inge Gustafsson, kigkonsult <a href="mailto:ical@kigkonsult.se">ical@kigkonsult.se</a></p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11.2                                <ul>
+<li>2012-01-27</li>
+</ul>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__getXMLParams" name="method__getXMLParams" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">_getXMLParams()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_getXMLParams(object <span class="argument">$parameters</span>) : array</pre>
+                <p><em>parse SimpleXMLElement instance property parameters and return iCalcreator property parameter array</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>object</td>
+                                <td>$parameters</td>
+                                <td><p>SimpleXMLElement</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>iCalcreator property parameter array</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            author
+                        </th>
+                        <td>
+                                                                                            <p>Kjell-Inge Gustafsson, kigkonsult <a href="mailto:ical@kigkonsult.se">ical@kigkonsult.se</a></p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11.2                                <ul>
+<li>2012-01-15</li>
+</ul>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__getXMLComponents" name="method__getXMLComponents" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">_getXMLComponents()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_getXMLComponents(array <span class="argument">$iCal</span>, object <span class="argument">$component</span>) : void</pre>
+                <p><em>parse SimpleXMLElement instance components, create iCalcreator component and update</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$iCal</td>
+                                <td><p>iCalcreator calendar instance</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>object</td>
+                                <td>$component</td>
+                                <td><p>SimpleXMLElement</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            author
+                        </th>
+                        <td>
+                                                                                            <p>Kjell-Inge Gustafsson, kigkonsult <a href="mailto:ical@kigkonsult.se">ical@kigkonsult.se</a></p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11.2                                <ul>
+<li>2012-01-15</li>
+</ul>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__getXMLProperties" name="method__getXMLProperties" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">_getXMLProperties()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_getXMLProperties(array <span class="argument">$iCal</span>,  <span class="argument">$property</span>) : void</pre>
+                <p><em>parse SimpleXMLElement instance property, create iCalcreator component property</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$iCal</td>
+                                <td><p>iCalcreator calendar instance</p></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$property</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            author
+                        </th>
+                        <td>
+                                                                                            <p>Kjell-Inge Gustafsson, kigkonsult <a href="mailto:ical@kigkonsult.se">ical@kigkonsult.se</a></p>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11.2                                <ul>
+<li>2012-01-27</li>
+</ul>
+                                                    </td>
+                    </tr>
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getTzOffsetForDate" name="method_getTzOffsetForDate" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">getTzOffsetForDate()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getTzOffsetForDate( <span class="argument">$timezonesarray</span>,  <span class="argument">$tzid</span>,  <span class="argument">$timestamp</span>) : \LibMelanie\Lib\array,</pre>
+                <p><em>Returns array with the offset information from UTC for a (UTC) datetime/timestamp in the
+timezone, according to the VTIMEZONE information in the input array.</em></p>
+                <p>$param array  $timezonesarray, output from function getTimezonesAsDateArrays (below)
+$param string $tzid,           time zone identifier
+$param mixed  $timestamp,      timestamp or a UTC datetime (in array format)</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$timezonesarray</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$tzid</td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$timestamp</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \LibMelanie\Lib\array,
+                                            &mdash; <p>time zone data with keys for 'offsetHis', 'offsetSec' and 'tzname'</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getTimezonesAsDateArrays" name="method_getTimezonesAsDateArrays" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">getTimezonesAsDateArrays()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getTimezonesAsDateArrays( <span class="argument">$vcalendar</span>) : \LibMelanie\Lib\array,</pre>
+                <p><em>Returns an array containing all the timezone data in the vcalendar object</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$vcalendar</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \LibMelanie\Lib\array,
+                                            &mdash; <p>time zone transition timestamp, array before(offsetHis, offsetSec), array after(offsetHis, offsetSec, tzname)</p>
+<pre><code>           based on the timezone data in the vcalendar object</code></pre>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                        <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_expandTimezoneDates" name="method_expandTimezoneDates" class="anchor"></a>
+            <article class="method">
+                <h3 class=" ">expandTimezoneDates()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">expandTimezoneDates( <span class="argument">$vtzc</span>) : \LibMelanie\Lib\array,</pre>
+                <p><em>Returns an array containing time zone data from vtimezone standard/daylight instances</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$vtzc</td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \LibMelanie\Lib\array,
+                                            &mdash; <p>time zone data; array before(offsetHis, offsetSec), array after(offsetHis, offsetSec, tzname)</p>
+                                                </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                    <dt>File</dt>
+                    <dd><a href=""><div class="path-wrapper">lib/iCalcreator.class.php</div></a></dd>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            todo
+                        </th>
+                        <td>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+        </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label"></h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/lib/iCalcreator.class.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/LibMelanie.html">\LibMelanie</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on January 15th, 2015 at 18:48.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

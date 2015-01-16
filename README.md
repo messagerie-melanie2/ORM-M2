@@ -17,8 +17,7 @@ Définition ORM
 Un ORM (object-relationnal mapping) va permettre de faire le lien entre une base de
 données et des objets. Ces objets seront formattés de façon à être facilement exploitable par les
 applications.
-Notre librairie est un ORM écrit en PHP qui permet le mapping de la base de données Horde
-Mélanie2.
+Notre librairie est un ORM écrit en PHP5 objet qui permet le mapping d'une base de données relationnelle vers des objets PHP. Cela permet de faciliter l'impémentation d'un accés lecture/écriture vers une base de données depuis une ou plusieurs applications.
 
 Intérêt de cette librairie pour Mélanie2
 ----------------------------------------

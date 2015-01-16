@@ -26,8 +26,15 @@ Intérêt de cette librairie pour Mélanie2
 La base de données Mélanie2 (Horde) a un schema très spécifique qui n'a pas évolué depuis
 des années. Or, de plus en plus d'applications de présentation et de synchronisation utilisent cette
 base de données. L'idée est donc de faciliter le développement de ces applications en proposant des
-méthodes de développement simple pour l'accès à ces données. De plus des API de type service
-Web peuvent être proposé afin d'implémenter cette librairie pour d'autres langages que le PHP.
+méthodes de développement simple pour l'accès à ces données.
+
+Au sein de Mélanie2, cette librairie a premièrement été utilisée pour le développement de la solution 
+de synchronisation mobile Zpush2. Elle permet l'accès aux données d'agendas, contacts et tâches en faisant 
+le lien entre la solution de synchronisation et la base de données Mélanie2.
+
+Dernièrement elle a également été implémentée dans le nouveau Webmail Mélanie2 : Roundcube. 
+Elle permet l'accès aux contacts Mélanie2 via un plugin spécifique. Elle est également utilisée 
+dans les drivers Mélanie2 des plugins Calendar et Tasklist développés par Kolab.
 
 
 INSTALLATION

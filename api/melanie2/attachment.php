@@ -44,6 +44,7 @@ use LibMelanie\Log\M2Log;
  * @property string $path [TYPE_BINARY] Chemin vers la pièce jointe
  * @property string $owner [TYPE_BINARY] Propriétaire de la pièce jointe
  * @property string $data Données encodées de la pièce jointe
+ * @property string $url URL vers la pièce jointe
  * @property Attachment::TYPE_* $type Type de la pièce jointe / Binaire ou URL (Binaire par défaut)
  *
  * @property-read string $hash Lecture du HASH lié aux données de la pièce jointe (lecture seule)
@@ -75,10 +76,10 @@ class Attachment extends Melanie2Object {
 	 * Constructeur de l'objet
 	 */
 	public function __construct() {
-	    // Défini la classe courante
-	    $this->get_class = get_class($this);
+    // Défini la classe courante
+    $this->get_class = get_class($this);
 
-		//M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
+	  //M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
 		// Définition de la pièce jointe melanie2
 		$this->objectmelanie = new AttachmentMelanie();
 	}
@@ -111,8 +112,33 @@ class Attachment extends Melanie2Object {
 	function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
 		if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+
 		// Si c'est une pièce jointe de type URL l'enregistrement est différent
 		if ($this->type === self::TYPE_URL) return null;
+
+		// Création du chemin s'il n'existe pas déjà
+		$path = trim(str_replace(self::PATH_ROOT, '', $this->objectmelanie->path), '/');
+		if (!empty($path)) {
+  		$paths = explode('/', $path);
+  		$current_path = "";
+  		foreach($paths as $path) {
+  		  // Creation du dossier
+  		  $_folder = new Attachment();
+  		  $_folder->name = $path;
+  		  $_folder->path = $current_path;
+    		if (!$_folder->load()) {
+    		  $_folder->isfolder = true;
+    		  $_folder->modified = time();
+    		  $_folder->owner = $this->objectmelanie->owner;
+    		  $_folder->save();
+    		} else {
+          break;
+    		}
+    		if ($current_path != "") $current_path .= "/";
+    		$current_path .= $path;
+  		}
+		}
+
 		// TODO: Test - Nettoyage mémoire
 		gc_collect_cycles();
 		// Sauvegarde l'objet
@@ -191,7 +217,7 @@ class Attachment extends Melanie2Object {
 	 * @param string $path
 	 */
 	protected function setMapPath($path) {
-	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapPath($type)");
+	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapPath($path)");
 	    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 	    if (is_string($path)) {
 	        if ($path == "") {
@@ -254,6 +280,37 @@ class Attachment extends Melanie2Object {
 	        $this->objectmelanie->data = bin2hex($data);
 	    }
 	    return true;
+	}
+
+	/**
+	 * Mapping url field
+	 */
+	protected function getMapUrl() {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapUrl()");
+	  if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+	  if ($this->type == self::TYPE_BINARY) {
+	    $url = ConfigMelanie::ATTACHMENT_DOWNLOAD_URL;
+	    $url = str_replace('%f', urlencode($this->name), $url);
+	    $url = str_replace('%p', urlencode(substr($this->path, strlen(ConfigMelanie::DEFAULT_ATTACHMENTS_FOLDER) + 1)), $url);
+	    return $url;
+	  } else {
+	    return $this->data;
+	  }
+	}
+  /**
+   * Mapping url field
+   * @param string $url
+   * @throws Exceptions\ObjectMelanieUndefinedException
+   * @return boolean
+   */
+	protected function setMapUrl($url) {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapUrl($url)");
+	  if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+	  if ($this->type != self::TYPE_URL)
+	    return false;
+
+	  $this->data = $url;
+	  return true;
 	}
 
 	/**

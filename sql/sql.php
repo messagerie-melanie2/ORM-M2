@@ -244,8 +244,8 @@ class Sql {
 	 */
 	public function executeQuery($query, $params, $class, $objectType, $cached_statement = true) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->executeQuery($query, $class)");
-		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->executeQuery() params : " . var_export($params, true));
-        // Si la connexion n'est pas instanciée
+		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->executeQuery() params : " . print_r($params, true));
+    // Si la connexion n'est pas instanciée
 		if (is_null($this->connection)) {
 		    // Throw exception, erreur
 		    M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class."->executeQueryToObject(): Problème de connexion à la base de données");
@@ -343,7 +343,7 @@ class Sql {
 	 */
 	public function executeQueryToObject($query, $params, $object, $cached_statement = true) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->executeQueryToObject($query, ".get_class($object).")");
-		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->executeQueryToObject() params : " . var_export($params, true));
+		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->executeQueryToObject() params : " . print_r($params, true));
 		// Si la connexion n'est pas instanciée
 		if (is_null($this->connection)) {
 		    // Throw exception, erreur

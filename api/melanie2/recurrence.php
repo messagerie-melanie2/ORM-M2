@@ -27,6 +27,7 @@ use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Exceptions;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Lib\ICS;
 
 /**
  * Classe recurrence pour Melanie2
@@ -44,6 +45,7 @@ use LibMelanie\Log\M2Log;
  * @property int $interval Interval de répétition de la récurrence
  * @property Recurrence::RECURTYPE_* $type Type de récurrence
  * @property Recurrence::RECURDAYS_* $days Jours de récurrence
+ * @property array $rrule Parses an iCalendar 2.0 recurrence rule
  */
 class Recurrence extends Melanie2Object {
 	// Accès aux objets associés
@@ -51,7 +53,7 @@ class Recurrence extends Melanie2Object {
 	 * Evenement associé à l'objet
 	 * @var EventMelanie
 	 */
-	 private $event;
+	private $event;
 
 
 	// RECURDAYS Fields
@@ -123,7 +125,7 @@ class Recurrence extends Melanie2Object {
 	 * @ignore
 	 */
 	protected function setMapDays($days) {
-		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapDays($days)");
+		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapDays()");
 		if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 		$this->objectmelanie->days = MappingMelanie::NODAY;
 		if (is_array($days)) {
@@ -148,5 +150,221 @@ class Recurrence extends Melanie2Object {
 				$days[] = $day;
 		}
 		return $days;
+	}
+
+	/**
+	 * Parses an iCalendar 2.0 recurrence rule.
+	 *
+	 * based on Horde_Date_Recurrence class
+	 *
+	 * @link http://rfc.net/rfc2445.html#s4.3.10
+	 * @link http://rfc.net/rfc2445.html#s4.8.5
+	 * @link http://www.shuchow.com/vCalAddendum.html
+	 *
+	 * @param array $rdata  An iCalendar 2.0 conform RRULE value.
+	 */
+	protected function setMapRrule($rdata) {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapRrule()");
+	  $recurrence = $this;
+
+	  if (isset($rdata[ICS::FREQ])) {
+	    // Always default the recurInterval to 1.
+	    $recurrence->interval = isset($rdata[ICS::INTERVAL]) ? $rdata[ICS::INTERVAL] : 1;
+
+	    switch (strtoupper($rdata[ICS::FREQ])) {
+	      case ICS::FREQ_DAILY:
+	        $recurrence->type = self::RECURTYPE_DAILY;
+	        break;
+
+	      case ICS::FREQ_WEEKLY:
+	        $recurrence->type = self::RECURTYPE_WEEKLY;
+	        if (isset($rdata[ICS::BYDAY])) {
+	          if (is_array($rdata[ICS::BYDAY])) {
+	            $recurrence->days = $rdata[ICS::BYDAY];
+	          } else {
+	            $recurrence->days = explode(',', $rdata[ICS::BYDAY]);
+	          }
+	        }
+	        break;
+
+	      case ICS::FREQ_MONTHLY:
+	        if (isset($rdata[ICS::BYDAY])) {
+	          $recurrence->type = self::RECURTYPE_MONTHLY_BYDAY;
+	          if (is_array($rdata[ICS::BYDAY])) {
+	            $recurrence->days = $rdata[ICS::BYDAY];
+	          } else {
+	            $recurrence->days = explode(',', $rdata[ICS::BYDAY]);
+	          }
+	        } else {
+	          $recurrence->type = self::RECURTYPE_MONTHLY;
+	        }
+	        break;
+
+	      case ICS::FREQ_YEARLY:
+	        if (isset($rdata[ICS::BYYEARDAY])) {
+	          $recurrence->type = self::RECURTYPE_YEARLY;
+	        } elseif (isset($rdata[ICS::BYDAY])) {
+	          $recurrence->type = self::RECURTYPE_YEARLY_BYDAY;
+	          if (is_array($rdata[ICS::BYDAY])) {
+	            $recurrence->days = $rdata[ICS::BYDAY];
+	          } else {
+	            $recurrence->days = explode(',', $rdata[ICS::BYDAY]);
+	          }
+	        } else {
+	          $recurrence->type = self::RECURTYPE_YEARLY;
+	        }
+	        break;
+	    }
+	    if (isset($rdata[ICS::UNTIL])) {
+        // Récupération du timezone
+	      $calendar = $this->event->getCalendarMelanie();
+	      if (isset($calendar)) {
+	        $timezone = $calendar->getTimezone();
+	      }
+	      if (!isset($timezone)) {
+	        $timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
+	      }
+        // Génération de la date de fin de récurrence
+	      $recurrence->enddate = $rdata[ICS::UNTIL];
+	      $recurenddate = new \DateTime($recurrence->enddate, new \DateTimeZone('UTC'));
+	      $startdate = new \DateTime($this->event->start, new \DateTimeZone($timezone));
+	      $enddate = new \DateTime($this->event->end, new \DateTimeZone($timezone));
+	      // Est-ce que l'on est en journée entière ?
+	      if ($startdate->format('H:i:s') == '00:00:00'
+	          && $enddate->format('H:i:s') == '00:00:00') {
+	        // On position la date de fin de récurrence de la même façon
+	        $recurrence->enddate = $recurenddate->format('Y-m-d').' 00:00:00';
+	      }
+	      else {
+	        // On position la date de fin basé sur la date de début en UTC
+	        // Voir MANTIS 3584: Les récurrences avec une date de fin se terminent à J+1 sur mobile
+	        $startdate->setTimezone(new \DateTimeZone('UTC'));
+	        $recurrence->enddate = $recurenddate->format('Y-m-d').' '.$startdate->format('H:i:s');
+	      }
+	      // MANTIS 3610: Impossible de modifier la date de fin d'un evt récurrent si celui-ci était paramétré avec un nombre d'occurrences
+	      // Forcer le count a 0
+	      $recurrence->count = '';
+	    } elseif (isset($rdata[ICS::COUNT])) {
+	      $recurrence->count = intval($rdata[ICS::COUNT]);
+	      $recurrence->enddate = "9999-12-31 00:00:00";
+	    } else {
+	      $recurrence->enddate = "9999-12-31 00:00:00";
+	      $recurrence->count = '';
+	    }
+	  } else {
+	    // No recurrence data - event does not recur.
+	    $recurrence->type = self::RECURTYPE_NORECUR;
+	    $recurrence->count = '';
+	    $recurrence->enddate = '';
+	    $recurrence->days = '';
+	    $recurrence->interval = '';
+	  }
+	}
+
+	/**
+	 * Creates an iCalendar 2.0 recurrence rule.
+	 * based on Horde_Date_Recurrence class
+	 *
+	 * @link http://rfc.net/rfc2445.html#s4.3.10
+	 * @link http://rfc.net/rfc2445.html#s4.8.5
+	 * @link http://www.shuchow.com/vCalAddendum.html
+	 *
+	 *
+	 * @return array  An iCalendar 2.0 conform RRULE value for roundcube.
+	 */
+	protected function getMapRrule() {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapRrule()");
+	  // Tableau permettant de recuperer toutes les valeurs de la recurrence
+	  $recurrence = [];
+	  // Récupération des informations de récurrence de l'évènement
+	  $_recurrence = $this;
+	  // Si une recurrence est bien definie dans l'evenement
+	  if ($_recurrence->type !== self::RECURTYPE_NORECUR) {
+	    if (isset($_recurrence->count)
+	        && intval($_recurrence->count) > 0) {
+	      // Gestion du nombre d'occurences
+	      $recurrence['COUNT'] = intval($_recurrence->count);
+	    }
+	    elseif (isset($_recurrence->enddate)) {
+	      // Gestion d'une date de fin
+	      $recurrence['UNTIL'] = new \DateTime($_recurrence->enddate, new \DateTimeZone('UTC'));
+	      if ($recurrence['UNTIL']->format('Y') == '9999') {
+	        // Si l'année est en 9999 on considère qu'il n'y a de date de fin
+	        unset($recurrence['UNTIL']);
+	      }
+	    }
+	    switch ($_recurrence->type) {
+	      case self::RECURTYPE_DAILY:
+	        $recurrence[ICS::FREQ] = ICS::FREQ_DAILY;
+	        if (isset($_recurrence->interval)) {
+	          // Recupere l'interval de recurrence
+	          $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+	        }
+	        break;
+
+	      case self::RECURTYPE_WEEKLY:
+	        $recurrence[ICS::FREQ] = ICS::FREQ_WEEKLY;
+	        if (isset($_recurrence->interval)) {
+	          // Recupere l'interval de recurrence
+	          $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+	        }
+	        if (is_array($_recurrence->days)
+	            && count($_recurrence->days) > 0) {
+	          // Jour de récurrence
+	          $recurrence[ICS::BYDAY] = implode(',', $_recurrence->days);
+	        }
+	        break;
+
+	      case self::RECURTYPE_MONTHLY:
+	        $recurrence[ICS::FREQ] = ICS::FREQ_MONTHLY;
+	        if (isset($_recurrence->interval)) {
+	          // Recupere l'interval de recurrence
+	          $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+	        }
+	        $start = new \DateTime($this->event->start);
+	        $recurrence[ICS::BYMONTHDAY] = $start->format('d');
+	        break;
+
+	      case self::RECURTYPE_MONTHLY_BYDAY:
+	        $start = new \DateTime($this->event->start);
+	        $day_of_week = $start->format('w');
+	        $nth_weekday = ceil($start->format('d')/7);
+
+	        $vcaldays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+
+	        $recurrence[ICS::FREQ] = ICS::FREQ_MONTHLY;
+	        if (isset($_recurrence->interval)) {
+	          // Recupere l'interval de recurrence
+	          $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+	        }
+	        $recurrence[ICS::BYDAY] = $nth_weekday . $vcaldays[$day_of_week];
+	        break;
+
+	      case self::RECURTYPE_YEARLY:
+	        $recurrence[ICS::FREQ] = ICS::FREQ_YEARLY;
+	        if (isset($_recurrence->interval)) {
+	          // Recupere l'interval de recurrence
+	          $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+	        }
+	        break;
+
+	      case self::RECURTYPE_YEARLY_BYDAY:
+	        $start = new \DateTime($this->event->start);
+	        $monthofyear = $start->format('m'); // 01 à 12
+	        $nth_weekday = ceil($start->format('d')/7);
+	        $day_of_week = $start->format('w');
+	        $vcaldays = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+
+	        $recurrence[ICS::FREQ] = ICS::FREQ_YEARLY;
+	        if (isset($_recurrence->interval)) {
+	          // Recupere l'interval de recurrence
+	          $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+	        }
+	        $recurrence[ICS::BYDAY] = $nth_weekday . $vcaldays[$day_of_week];
+	        $recurrence[ICS::BYMONTH] = $monthofyear;
+	        break;
+	    }
+	  }
+	  return $recurrence;
 	}
 }

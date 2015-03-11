@@ -262,6 +262,8 @@ class Exception extends Event {
 	protected function setMapRecurrenceid($recurrenceId) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapRecurrenceid($recurrenceId)");
 		$this->recurrenceId = $recurrenceId;
+		$recId = date(self::FORMAT_ID, strtotime($this->recurrenceId));
+		$this->objectmelanie->uid = $this->getMapUid() . '-' . $recId . self::RECURRENCE_ID;
 	}
 	/**
 	 * Mapping recurrenceId field

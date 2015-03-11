@@ -63,6 +63,8 @@ use LibMelanie\Log\M2Log;
  * @property int $percent_complete Pourcentage de réalisation pour la tâche
  * @property string $status Status de la tâche
  *
+ * @property string $ics ICS associé à l'évènement courant, calculé à la volée en attendant la mise en base de données
+ *
  * @method bool load() Chargement l'évènement, en fonction du taskslist et de l'uid
  * @method bool exists() Test si l'évènement existe, en fonction du taskslist et de l'uid
  * @method bool save() Sauvegarde l'évènement et l'historique dans la base de données
@@ -97,6 +99,7 @@ class Task extends Melanie2Object {
 	const CLASS_CONFIDENTIAL = ConfigMelanie::CONFIDENTIAL;
 
 	// PRIORITY Fields
+	const PRIORITY_NO = ConfigMelanie::NO_PRIORITY;
 	const PRIORITY_VERY_HIGH = ConfigMelanie::VERY_HIGH;
 	const PRIORITY_HIGH = ConfigMelanie::HIGH;
 	const PRIORITY_NORMAL = ConfigMelanie::NORMAL;
@@ -465,5 +468,22 @@ class Task extends Melanie2Object {
 	    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 	    $status = $this->getAttribute('STATUS');
 	    return isset($status);
+	}
+	/**
+	 * Map ics to current task
+	 * @ignore
+	 */
+	protected function setMapIcs($ics) {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapsIcs()");
+	  \LibMelanie\Lib\ICSToTask::Convert($ics, $this, $this->calendarmelanie, $this->usermelanie);
+	}
+	/**
+	 * Map current task to ics
+	 * @return string $ics
+	 * @ignore
+	 */
+	protected function getMapIcs() {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapIcs()");
+	  return \LibMelanie\Lib\TaskToICS::Convert($this, $this->calendarmelanie, $this->usermelanie);
 	}
 }

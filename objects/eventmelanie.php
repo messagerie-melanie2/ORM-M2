@@ -235,7 +235,12 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		}
 
 		// Supprimer l'évènement
-		return (Sql\DBMelanie::ExecuteQuery(Sql\SqlCalendarRequests::deleteEvent, $params) !== false);
+		$ret = (Sql\DBMelanie::ExecuteQuery(Sql\SqlCalendarRequests::deleteEvent, $params) !== false);
+		if ($ret) {
+		  $this->initializeHasChanged();
+		  $this->isExist = false;
+		}
+		return $ret;
 	}
 
 	/**
@@ -319,8 +324,8 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 					$matches, PREG_PATTERN_ORDER);
 			if (isset($matches[1])) {
 				foreach ($matches[1] as $key) {
-				    // Est-ce que le champ courant est non case sensitive
-				    $is_case_unsensitive = in_array($key, $case_unsensitive_fields);
+			    // Est-ce que le champ courant est non case sensitive
+			    $is_case_unsensitive = in_array($key, $case_unsensitive_fields);
 					// Récupèration des données de mapping
 					if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
 							&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
@@ -408,8 +413,8 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 							$i = 1;
 							foreach ($this->$key as $val) {
 								if ($i > 1) {
-									if ($opmapping[$mapKey] == MappingMelanie::diff) $clause .= " AND ";
-									else $clause .= " OR ";
+									if ($opmapping[$key] == MappingMelanie::diff) $whereClause .= " AND ";
+									else $whereClause .= " OR ";
 								} else $whereClause .= "(";
 								if ($is_case_unsensitive) {
 								    $whereClause .= "LOWER(k1.$key) " . $opmapping[$key] . " ";

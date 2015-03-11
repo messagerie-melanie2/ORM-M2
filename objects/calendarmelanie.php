@@ -230,8 +230,12 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 //  			);
 //  			// Supprimer l'objet
 //  			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
-            if ($ok) Sql\DBMelanie::Commit();
-            else Sql\DBMelanie::Rollback();
+      if ($ok) {
+        Sql\DBMelanie::Commit();
+        $this->initializeHasChanged();
+        $this->isExist = false;
+      }
+      else Sql\DBMelanie::Rollback();
 			return $ok;
 		}
 		return false;
@@ -361,7 +365,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function getTimezone() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getTimezone()");
-		if (!isset($this->user_uid)) return false;
+		if (!isset($this->user_uid)) return ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
 
 		if (!isset($this->timezone)) {
 			// Replace name

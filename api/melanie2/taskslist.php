@@ -101,7 +101,7 @@ class Taskslist extends Melanie2Object {
 		foreach ($_tasks as $_task) {
 			$task = new Task($this->usermelanie, $this);
 			$task->setObjectMelanie($_task);
-			$tasks[$_task->id] = $task;
+			$tasks[$_task->uid.$_task->taskslist] = $task;
 		}
 		// Détruit les variables pour libérer le plus rapidement de la mémoire
 		unset($_tasks);

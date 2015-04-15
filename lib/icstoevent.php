@@ -109,7 +109,7 @@ class ICSToEvent {
 			}
       // Cas du FAKED MASTER
 			if (isset($vevent->{ICS::X_MOZ_FAKED_MASTER})
-			      && $vevent->{ICS::X_MOZ_FAKED_MASTER} == 1){
+			      && intval($vevent->{ICS::X_MOZ_FAKED_MASTER}->getValue()) == 1){
 			  $object->deleted = true;
 			  continue;
 			}
@@ -134,10 +134,12 @@ class ICSToEvent {
 			// VALARM
 			if (isset($vevent->VALARM)) {
         $alarmDate = $vevent->VALARM->getEffectiveTriggerTime();
-        $startDate = $vevent->DTSTART->getDateTime();
-        $object->alarm = ($startDate->format("U") - $alarmDate->format("U")) / 60;
-        if ($object->alarm === 0) {
-          $object->alarm = 1;
+        if (isset($vevent->DTSTART)) {
+          $startDate = $vevent->DTSTART->getDateTime();
+          $object->alarm = ($startDate->format("U") - $alarmDate->format("U")) / 60;
+          if ($object->alarm === 0) {
+            $object->alarm = 1;
+          }
         }
         if (isset($vevent->{ICS::X_MOZ_LASTACK})) $event->setAttribute(ICS::X_MOZ_LASTACK, $vevent->{ICS::X_MOZ_LASTACK});
         if (isset($vevent->{ICS::X_MOZ_SNOOZE_TIME})) $event->setAttribute(ICS::X_MOZ_SNOOZE_TIME, $vevent->{ICS::X_MOZ_SNOOZE_TIME});
@@ -160,8 +162,11 @@ class ICSToEvent {
 			else if (isset($vevent->CREATED)) $object->modified = strtotime($vevent->CREATED->getValue());
 			else $object->modified = time();
 			// DTSTART & DTEND
-      $object->start = $vevent->DTSTART->getDateTime()->format(self::DB_DATE_FORMAT);;
-      $object->end = $vevent->DTEND->getDateTime()->format(self::DB_DATE_FORMAT);
+			if (isset($vevent->DTSTART)
+			    && isset($vevent->DTEND)) {
+        $object->start = $vevent->DTSTART->getDateTime()->format(self::DB_DATE_FORMAT);;
+        $object->end = $vevent->DTEND->getDateTime()->format(self::DB_DATE_FORMAT);
+			}
 			// CLASS
 			if (isset($vevent->CLASS)) {
 				switch ($vevent->CLASS->getValue()) {

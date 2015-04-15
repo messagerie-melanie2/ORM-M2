@@ -35,7 +35,7 @@ class SqlCalendarRequests {
 	 * @param REPLACE {event_range}
 	 * @param PDO :calendar_id
 	 */
-	const listAllEvents = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2	ON k1.event_uid = k2.event_uid AND k2.event_attendees <> ''	AND k2.event_attendees <> 'a:0:{}' WHERE k1.calendar_id = :calendar_id{event_range};";
+	const listAllEvents = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2	ON k1.event_uid = k2.event_uid AND k2.event_attendees <> ''	AND k2.event_attendees <> 'a:0:{}' WHERE k1.calendar_id = :calendar_id{event_range} ORDER BY event_start;";
 
 	/**
 	 * @var SELECT

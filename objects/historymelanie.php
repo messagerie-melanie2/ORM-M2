@@ -54,7 +54,7 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 
 		if (isset(MappingMelanie::$Primary_Keys[$this->objectType])) {
 			if (is_array(MappingMelanie::$Primary_Keys[$this->objectType])) $this->primaryKeys = MappingMelanie::$Primary_Keys[$this->objectType];
-			else $this->primaryKeys = array(MappingMelanie::$Primary_Keys[$this->objectType]);
+			else $this->primaryKeys = [MappingMelanie::$Primary_Keys[$this->objectType]];
 		}
 	}
 
@@ -65,9 +65,12 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
-
+		// Test si l'objet existe, pas besoin de load
+		if (is_bool($this->isExist)) {
+		  return $this->isExist;
+		}
 		// Paramètres de la requête
-		$params = array();
+		$params = [];
 		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
 		foreach ($this->primaryKeys as $key) {
 			if (!isset($this->$key)) return false;
@@ -104,11 +107,14 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 			if ($haschanged) break;
 		}
 		if (!$haschanged) return null;
-
+		// Si isExist est à null c'est qu'on n'a pas encore testé
+		if (!is_bool($this->isExist)) {
+		  $this->isExist = $this->exists();
+		}
 		// Si l'objet existe on fait un UPDATE
 		if ($this->isExist) {
 			// Paramètres de la requête
-			$params = array();
+			$params = [];
 			// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
 			foreach ($this->primaryKeys as $key) {
 				if (!isset($this->$key)) return null;
@@ -140,45 +146,39 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 			// Execute
 			$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
 		} else {
-			$this->isExist = $this->exists();
-			if ($this->isExist) {
-				// L'objet existe, on rappel save pour l'UPDATE
-				$this->save();
-			} else {
-				// C'est une Insertion
-				$insert = true;
-				// Test si les clés primaires sont bien instanciées
-				foreach ($this->primaryKeys as $key) {
-					if (!isset($this->$key)) return null;
-				}
-
-				// Gestion de history_id
-				if (!isset($this->id)) Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlHistoryRequests::getNextHistory, null, $this);
-
-				// Si l'objet n'existe pas, on fait un INSERT
-				// Liste les insertion à faire
-				$data_fields = "";
-				$data_values = "";
-				$params = array();
-				foreach ($this->haschanged as $key => $value) {
-					if ($value) {
-						if ($data_fields != "") $data_fields .= ", ";
-						if ($data_values != "") $data_values .= ", ";
-						$data_fields .= $key;
-						$data_values .= ":".$key;
-						$params[$key] = $this->$key;
-					}
-				}
-				// Pas d'insert
-				if ($data_fields == "") return null;
-
-				// Replace
-				$query = str_replace("{data_fields}", $data_fields, Sql\SqlHistoryRequests::insertHistory);
-				$query = str_replace("{data_values}", $data_values, $query);
-
-				// Execute
-				$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
+			// C'est une Insertion
+			$insert = true;
+			// Test si les clés primaires sont bien instanciées
+			foreach ($this->primaryKeys as $key) {
+				if (!isset($this->$key)) return null;
 			}
+
+			// Gestion de history_id
+			if (!isset($this->id)) Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlHistoryRequests::getNextHistory, null, $this);
+
+			// Si l'objet n'existe pas, on fait un INSERT
+			// Liste les insertion à faire
+			$data_fields = "";
+			$data_values = "";
+			$params = [];
+			foreach ($this->haschanged as $key => $value) {
+				if ($value) {
+					if ($data_fields != "") $data_fields .= ", ";
+					if ($data_values != "") $data_values .= ", ";
+					$data_fields .= $key;
+					$data_values .= ":".$key;
+					$params[$key] = $this->$key;
+				}
+			}
+			// Pas d'insert
+			if ($data_fields == "") return null;
+
+			// Replace
+			$query = str_replace("{data_fields}", $data_fields, Sql\SqlHistoryRequests::insertHistory);
+			$query = str_replace("{data_values}", $data_values, $query);
+
+			// Execute
+			$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
 		}
 		if ($this->isExist) $this->initializeHasChanged();
 		return $insert;
@@ -199,9 +199,12 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
-
+		// Test si l'objet existe, pas besoin de load
+		if (is_bool($this->isExist)) {
+		  return $this->isExist;
+		}
 		// Paramètres de la requête
-		$params = array();
+		$params = [];
 		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
 		foreach ($this->primaryKeys as $key) {
 			if (!isset($this->$key)) return false;
@@ -217,6 +220,7 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 
 		// Liste les history
 		$res = Sql\DBMelanie::ExecuteQuery(Sql\SqlHistoryRequests::getHistory, $params);
-		return (count($res) >= 1);
+		$this->isExist = (count($res) >= 1);
+		return $this->isExist;
 	}
 }

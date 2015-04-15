@@ -108,7 +108,7 @@ class Attendee extends Melanie2Object {
 	 */
 	public function render() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->render()");
-		$attendee = array();
+		$attendee = [];
 		$attendee[ConfigMelanie::NAME] = $this->name;
 		$attendee[ConfigMelanie::ROLE] = $this->role;
 		$attendee[ConfigMelanie::RESPONSE] = $this->response;

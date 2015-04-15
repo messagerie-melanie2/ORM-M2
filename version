@@ -1,12 +1,23 @@
-ORM M2 - Version 0.1.8
-ORM M2 - Build 20150109
+ORM M2 - Version 0.1.9
+ORM M2 - Build 201504071511
 ORM M2 - Liste des changements
 
-ORM M2 - 0.1.8 (Pas encore publiée) [ Afficher les bogues ]
+ORM M2 - 0.1.9 (Pas encore publiée) [ Afficher les bogues ]
 ===================================
+- 0003830: [Agenda] Gestion des exceptions sans date (thomas.payen) - résolu.
+- 0003803: [Général] Modifier le isExists des objet pour déterminer le Creation/Modification (thomas.payen) - résolu.
+
+[2 bogues]
+
+ORM M2 - 0.1.8 (Publiée 20/03/2015) [ Afficher les bogues ]
+===================================
+- 0003767: [Agenda] Intégrer les pièces jointes directement dans les évènements (thomas.payen) - résolu.
+- 0003626: [Tâches] Conversion d'une tâche en ICS et inversement (thomas.payen) - résolu.
+- 0002883: [Agenda] Conversion de l'évènement en ICS et inversement (thomas.payen) - résolu.
+- 0003706: [Général] Associer un timezone à un utilisateur plutot qu'un calendrier (thomas.payen) - résolu.
 - 0003680: [Agenda] Charger tous les attributs lors d'un getList (thomas.payen) - résolu.
 
-[1 bogue]
+[5 bogues]
 
 ORM M2 - 0.1.7 (Publiée 17/12/2014) [ Afficher les bogues ]
 ===================================

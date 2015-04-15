@@ -164,7 +164,7 @@ class Exception extends Event {
 	 * @param int $offset Offset de début pour les résultats (utile pour la pagination)
 	 * @param String[] $case_unsensitive_fields Liste des champs pour lesquels on ne sera pas sensible à la casse
 	 */
-	function getList($fields = array(), $filter = "", $operators = array(), $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = array()) {
+	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
 		throw new Exceptions\ObjectMelanieUndefinedException();
 	}
 
@@ -227,8 +227,14 @@ class Exception extends Event {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
 		$exist = parent::load();
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load() exist : " . $exist);
-		if ($exist) $this->deleted = false;
-		else $this->deleted = true;
+		if ($exist
+		    && isset($this->start)
+		    && isset($this->end)) {
+		  $this->deleted = false;
+		}
+		else {
+		  $this->deleted = true;
+		}
 		// TODO: Test - Nettoyage mémoire
 		gc_collect_cycles();
 		return $exist;

@@ -36,17 +36,17 @@ abstract class MagicObject {
 	 * Stockage des données cachées
 	 * @var array
 	 */
-	protected $data = array();
+	protected $data = [];
 	/**
 	 * Défini si les propriété ont changé pour les requêtes SQL
 	 * @var array
 	 */
-	protected $haschanged = array();
+	protected $haschanged = [];
 	/**
 	 * Est-ce que l'objet existe
 	 * @var bool
 	 */
-	protected $isExist = false;
+	protected $isExist = null;
 	/**
 	 * Type d'objet, lié au mapping
 	 * @var string
@@ -233,6 +233,7 @@ abstract class MagicObject {
 
 		if (isset($this->data[$lname])) {
 			unset($this->data[$lname]);
+			$this->haschanged[$lname] = true;
 		}
 	}
 

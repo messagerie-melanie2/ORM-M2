@@ -143,7 +143,7 @@ class Recurrence extends Melanie2Object {
 	protected function getMapDays() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapDays()");
 		if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-		$days = array();
+		$days = [];
 		foreach (MappingMelanie::$MapRecurdaysObjectMelanie as $day) {
 			if (is_integer(MappingMelanie::$MapRecurdaysObjectMelanie[$day])
 					&& MappingMelanie::$MapRecurdaysObjectMelanie[$day] & $this->objectmelanie->days)

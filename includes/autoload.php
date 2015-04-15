@@ -46,4 +46,4 @@ function libm2_autoload($pClassName) {
 }
 
 // Appel l'autoload register qui va utiliser notre méthode autoload
-spl_autoload_register("libm2_autoload");
+spl_autoload_register("libm2_autoload", true, true);

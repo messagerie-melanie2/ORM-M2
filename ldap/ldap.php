@@ -38,7 +38,7 @@ class Ldap {
      * Instances LDAP
      * @var Ldap
      */
-    private static $instances = array();
+    private static $instances = [];
 	/**
 	 * Connexion vers le serveur LDAP
 	 * @var resource
@@ -48,7 +48,7 @@ class Ldap {
 	 * Configuration de connexion
 	 * @var array
 	 */
-	private $config = array();
+	private $config = [];
 	/**
 	 * Utilisateur connecté
 	 * @var string
@@ -58,7 +58,7 @@ class Ldap {
 	 * Stockage des données retournées en cache
 	 * @var array
 	 */
-	private $cache = array();
+	private $cache = [];
 	/**
 	 * Permet de savoir si on est en connexion anonyme
 	 * @var bool
@@ -180,7 +180,7 @@ class Ldap {
                 $filter = "(uid=$username)";
             }
             // Lancement de la recherche
-            $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, array('dn'), 0, 1);
+            $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, ['dn'], 0, 1);
             if ($sr && $ldap->count_entries($sr) == 1) {
                 $infos = $ldap->get_entries($sr);
                 $dn = $infos[0]['dn'];
@@ -440,7 +440,7 @@ class Ldap {
 	 */
 	public function setCache($key, $value) {
 	    // Création du stockage en cache
-	    if (!is_array($this->cache)) $this->cache = array();
+	    if (!is_array($this->cache)) $this->cache = [];
 	    // Stockage en cache de la donnée
 	    $this->cache[$key] = $value;
 	}

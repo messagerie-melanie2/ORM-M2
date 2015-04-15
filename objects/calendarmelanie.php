@@ -54,7 +54,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 
 		if (isset(MappingMelanie::$Primary_Keys[$this->objectType])) {
 			if (is_array(MappingMelanie::$Primary_Keys[$this->objectType])) $this->primaryKeys = MappingMelanie::$Primary_Keys[$this->objectType];
-			else $this->primaryKeys = array(MappingMelanie::$Primary_Keys[$this->objectType]);
+			else $this->primaryKeys = [MappingMelanie::$Primary_Keys[$this->objectType]];
 		}
 	}
 
@@ -68,6 +68,10 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
 		if (!isset($this->id)) return false;
 		if (!isset($this->user_uid)) return false;
+		// Test si l'objet existe, pas besoin de load
+		if (is_bool($this->isExist)) {
+		  return $this->isExist;
+		}
 		$query = Sql\SqlMelanieRequests::listObjectsByUid;
 		// Replace name
 		$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping[$this->objectType]['owner'][MappingMelanie::name], $query);
@@ -77,20 +81,18 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping[$this->objectType]['object_id'][MappingMelanie::name], $query);
 
 		// Params
-		$params = array (
+		$params = [
 				"group_uid" => ConfigMelanie::CALENDAR_GROUP_UID,
 				"user_uid" => $this->user_uid,
 				"datatree_name" => $this->id,
 				"attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
 				"attribute_perm" => ConfigMelanie::ATTRIBUTE_NAME_PERM,
 				"attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP,
-		);
+		];
 
 		// Liste les calendriers de l'utilisateur
 		$this->isExist = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
 		if ($this->isExist) {
-			//$this->getCTag();
-			//$this->getTimezone();
 			$this->initializeHasChanged();
 		}
 		return $this->isExist;
@@ -113,7 +115,10 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 			if ($haschanged) break;
 		}
 		if (!$haschanged) return null;
-
+		// Si isExist est à null c'est qu'on n'a pas encore testé
+		if (!is_bool($this->isExist)) {
+		  $this->isExist = $this->exists();
+		}
 		// Si l'objet existe on fait un UPDATE
 		if ($this->isExist) {
 			if (isset($this->haschanged[MappingMelanie::$Data_Mapping[$this->objectType]['name'][MappingMelanie::name]])
@@ -121,68 +126,62 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 				$this->saveName();
 			}
 		} else {
-			$this->isExist = $this->exists();
-			if ($this->isExist) {
-				// L'objet existe, on rappel save pour l'UPDATE
-				$this->save();
-			} else {
-				if (!isset($this->user_uid)) return false;
-				// C'est une Insertion
-				$insert = true;
-				Sql\DBMelanie::BeginTransaction();
-				$query = Sql\SqlMelanieRequests::insertObject;
-				$res = Sql\DBMelanie::ExecuteQuery(Sql\SqlMelanieRequests::getNextObject);
-				$datatree_id = $res[0][0];
-				$datatree_name = isset($this->id) ? $this->id : md5(time() . $datatree_id);
-				$params = array(
+			if (!isset($this->user_uid)) return false;
+			// C'est une Insertion
+			$insert = true;
+			Sql\DBMelanie::BeginTransaction();
+			$query = Sql\SqlMelanieRequests::insertObject;
+			$res = Sql\DBMelanie::ExecuteQuery(Sql\SqlMelanieRequests::getNextObject);
+			$datatree_id = $res[0][0];
+			$datatree_name = isset($this->id) ? $this->id : md5(time() . $datatree_id);
+			$params = [
+					'datatree_id' => $datatree_id,
+					'datatree_name' => $datatree_name,
+					'user_uid' => $this->user_uid,
+					'group_uid' => isset($this->group) ?  $this->group : ConfigMelanie::CALENDAR_GROUP_UID,
+			];
+			if (Sql\DBMelanie::ExecuteQuery($query, $params)) {
+				$this->isExist = true;
+				// Name
+				$query = Sql\SqlObjectPropertyRequests::insertProperty;
+				$params = [
 						'datatree_id' => $datatree_id,
-						'datatree_name' => $datatree_name,
-						'user_uid' => $this->user_uid,
-						'group_uid' => isset($this->group) ?  $this->group : ConfigMelanie::CALENDAR_GROUP_UID,
-				);
-				if (Sql\DBMelanie::ExecuteQuery($query, $params)) {
-					$this->isExist = true;
-					// Name
-					$query = Sql\SqlObjectPropertyRequests::insertProperty;
-					$params = array(
-							'datatree_id' => $datatree_id,
-							'attribute_name' => ConfigMelanie::ATTRIBUTE_NAME_NAME,
-							'attribute_key' => '',
-							'attribute_value' => isset($this->name) ?  $this->name : $datatree_name,
-					);
-				    if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
-				        Sql\DBMelanie::Rollback();
-				        return null;
-					}
-					// owner
-					$query = Sql\SqlObjectPropertyRequests::insertProperty;
-					$params = array(
-							'datatree_id' => $datatree_id,
-							'attribute_name' => ConfigMelanie::ATTRIBUTE_OWNER,
-							'attribute_key' => '',
-							'attribute_value' => $this->user_uid,
-					);
-				    if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
-				        Sql\DBMelanie::Rollback();
-				        return null;
-					}
-					// perm
-					$query = Sql\SqlObjectPropertyRequests::insertProperty;
-					$params = array(
-							'datatree_id' => $datatree_id,
-							'attribute_name' => ConfigMelanie::ATTRIBUTE_NAME_PERM,
-							'attribute_key' => $this->user_uid,
-							'attribute_value' => '30',
-					);
-				    if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
-				        Sql\DBMelanie::Rollback();
-				        return null;
-					}
-					Sql\DBMelanie::Commit();
-				} else {
-				    Sql\DBMelanie::Rollback();
-				    return null;
+						'attribute_name' => ConfigMelanie::ATTRIBUTE_NAME_NAME,
+						'attribute_key' => '',
+						'attribute_value' => isset($this->name) ?  $this->name : $datatree_name,
+				];
+			    if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
+			        Sql\DBMelanie::Rollback();
+			        return null;
 				}
+				// owner
+				$query = Sql\SqlObjectPropertyRequests::insertProperty;
+				$params = [
+						'datatree_id' => $datatree_id,
+						'attribute_name' => ConfigMelanie::ATTRIBUTE_OWNER,
+						'attribute_key' => '',
+						'attribute_value' => $this->user_uid,
+				];
+			    if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
+			        Sql\DBMelanie::Rollback();
+			        return null;
+				}
+				// perm
+				$query = Sql\SqlObjectPropertyRequests::insertProperty;
+				$params = [
+						'datatree_id' => $datatree_id,
+						'attribute_name' => ConfigMelanie::ATTRIBUTE_NAME_PERM,
+						'attribute_key' => $this->user_uid,
+						'attribute_value' => '30',
+				];
+			    if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
+			        Sql\DBMelanie::Rollback();
+			        return null;
+				}
+				Sql\DBMelanie::Commit();
+			} else {
+			    Sql\DBMelanie::Rollback();
+			    return null;
 			}
 		}
 		if ($this->isExist) $this->initializeHasChanged();
@@ -201,9 +200,9 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 		if ($this->isExist
 				&& isset($this->object_id)) {
 			// Params
-			$params = array (
+			$params = [
 					"datatree_id" => $this->object_id,
-			);
+			];
 			$ok = true;
 			Sql\DBMelanie::BeginTransaction();
 			$query = Sql\SqlMelanieRequests::deleteObject1;
@@ -216,18 +215,18 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 			$query = str_replace("{objects_table}", "kronolith_events", $query);
 			$query = str_replace("{datatree_name}", MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name], $query);
 			// Params
-			$params = array (
+			$params = [
 			    "datatree_name" => $this->id,
-			);
+			];
 			// Supprimer l'objet
 			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
 			// Ne pas supprimer du horde_histories qui part en timeout sur la prod
 			// TODO: Trouver une solution
 //  			$query = Sql\SqlMelanieRequests::deleteObject4;
 //  			// Params
-//  			$params = array (
+//  			$params = [
 //  					"object_uid" => ConfigMelanie::CALENDAR_PREF_SCOPE.":".$this->id.":%",
-//  			);
+//  			];
 //  			// Supprimer l'objet
 //  			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
       if ($ok) {
@@ -249,8 +248,12 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->tableName)) return false;
+		// Test si l'objet existe, pas besoin de load
+		if (is_bool($this->isExist)) {
+		  return $this->isExist;
+		}
 		// Paramètres de la requête
-		$params = array('id' => $this->id, 'group' => $this->group);
+		$params = ['id' => $this->id, 'group' => $this->group];
 		$whereClause = "datatree_name = :id AND group_uid = :group";
 
 		$query = Sql\SqlObjectRequests::getObject;
@@ -263,7 +266,8 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 
 		// Liste les objets
 		$res = Sql\DBMelanie::ExecuteQuery($query, $params);
-		return (count($res) >= 1);
+		$this->isExist = (count($res) >= 1);
+		return $this->isExist;
 	}
 
 	/**
@@ -289,7 +293,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 		if (!isset($this->id)) return false;
 
 		// Params
-		$params = array ( MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name] => $this->id );
+		$params = [MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name] => $this->id];
 
 		// Replace
 		$query = str_replace("{event_range}", "", Sql\SqlCalendarRequests::listAllEvents);
@@ -318,7 +322,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 			$event_end = $end->format("Y-m-d H:i:s");
 		}
 		// Params
-		$params = array ( MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name] => $this->id );
+		$params = [MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name] => $this->id];
 
 		// Range
 		$event_range = "";
@@ -349,7 +353,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 
 		if (!isset($this->ctag)) {
 			// Params
-			$params = array ( MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name] => $this->id );
+			$params = [MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name] => $this->id];
 
 			// Récupération du tag
 			Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlCalendarRequests::getCTag, $params, $this);
@@ -372,11 +376,11 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 			$query = str_replace('{pref_name}', 'timezone', Sql\SqlMelanieRequests::getUserPref);
 
 			// Params
-			$params = array (
+			$params = [
 					"user_uid" => $this->user_uid,
 					"pref_scope" => ConfigMelanie::PREF_SCOPE,
 					"pref_name" => ConfigMelanie::TZ_PREF_NAME
-					);
+			];
 
 			// Récupération du timezone
 			$res = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
@@ -400,11 +404,11 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 				&& isset($this->name)) {
 			$query = Sql\SqlObjectPropertyRequests::updateProperty;
 			// Params
-			$params = array (
+			$params = [
 					"datatree_id" => $this->object_id,
 					"attribute_value" => $this->name,
 					"attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
-			);
+			];
 			Sql\DBMelanie::ExecuteQuery($query, $params);
 		}
 	}

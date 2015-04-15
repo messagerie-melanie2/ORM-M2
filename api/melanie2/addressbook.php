@@ -96,7 +96,7 @@ class Addressbook extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getAllContacts()");
 		$_contacts = $this->objectmelanie->getAllContacts();
 		if (!isset($_contacts)) return null;
-		$contacts = array();
+		$contacts = [];
 		foreach ($_contacts as $_contact) {
 			$contact = new Contact($this->usermelanie, $this);
 			$contact->setObjectMelanie($_contact);

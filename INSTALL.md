@@ -4,8 +4,8 @@ Installation de l'ORM Mélanie2
 PREREQUIS
 ---------
 
-L'ORM est écrite en PHP et nécessite une version suppérieure ou égale à PHP 5.3 pour fonctionner.
-Les modules PHP nécessaire sont php5-ldap et php5-psql.
+L'ORM est écrite en PHP et nécessite une version supérieure ou égale à PHP 5.3 pour fonctionner.
+Les modules PHP nécessaire sont php5-ldap et php5-pgsql.
 L'ORM peut utiliser du cache via memcached et le module php5-memcache.
 
 

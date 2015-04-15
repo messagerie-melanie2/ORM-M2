@@ -235,8 +235,12 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 //  			);
 //  			// Supprimer l'objet
 //  			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
-            if ($ok) Sql\DBMelanie::Commit();
-            else Sql\DBMelanie::Rollback();
+      if ($ok) {
+        Sql\DBMelanie::Commit();
+        $this->initializeHasChanged();
+        $this->isExist = false;
+      }
+      else Sql\DBMelanie::Rollback();
 			return $ok;
 		}
 		return false;
@@ -283,7 +287,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	/**
 	 * Récupère la liste de toutes les tâches
 	 * need: $this->id
-	 * @return boolean
+	 * @return Task[]
 	 */
 	function getAllTasks() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getAllTasks()");
@@ -304,58 +308,68 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	function getCTag() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getCTag()");
 		if (!isset($this->id)) return false;
+		if (!isset($this->ctag)) {
+		  // Params
+		  $params = array( MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name] => $this->id );
 
-		// Params
-		$params = array( MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name] => $this->id );
+		  // Récupération du tag
+		  Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlTaskRequests::getCTag, $params, $this);
+		  if (!isset($this->ctag)) $this->ctag = md5($this->id);
+		  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getCTag() this->ctag: " . $this->ctag);
+		}
 
-		// Récupération du tag
-		Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlTaskRequests::getCTag, $params, $this);
-		if (!isset($this->ctag)) $this->ctag = md5($this->id);
-		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getCTag() this->ctag: " . $this->ctag);
 		return $this->ctag;
 	}
-	/**
-	 * Sauvegarde le nom de l'objet
-	 */
-	private function saveName() {
-	    // Si l'objet existe on fait un UPDATE
-	    if ($this->isExist
-	            && isset($this->object_id)
-	            && isset($this->name)) {
-	        $query = Sql\SqlObjectPropertyRequests::updateProperty;
-	        // Params
-	        $params = array (
-	            "datatree_id" => $this->object_id,
-	            "attribute_value" => $this->name,
-	            "attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
-	        );
-	        Sql\DBMelanie::ExecuteQuery($query, $params);
-	    }
-	}
 
-	/**
+  /**
 	 * Recupère le timezone par défaut pour le
 	 * need: $this->user_uid
 	 */
 	function getTimezone() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getTimezone()");
-		if (!isset($this->user_uid)) return false;
+		if (!isset($this->user_uid)) return ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
 
-		// Replace name
-		$query = str_replace('{pref_name}', 'timezone', Sql\SqlMelanieRequests::getUserPref);
+		if (!isset($this->timezone)) {
+			// Replace name
+			$query = str_replace('{pref_name}', 'timezone', Sql\SqlMelanieRequests::getUserPref);
 
-		// Params
-		$params = array (
-				"user_uid" => $this->user_uid,
-				"pref_scope" => ConfigMelanie::PREF_SCOPE,
-				"pref_name" => ConfigMelanie::TZ_PREF_NAME
-				);
+			// Params
+			$params = array (
+					"user_uid" => $this->user_uid,
+					"pref_scope" => ConfigMelanie::PREF_SCOPE,
+					"pref_name" => ConfigMelanie::TZ_PREF_NAME
+					);
 
-		// Récupération du timezone
-		$res = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
-		if (!isset($this->timezone)) $this->timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
-		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getTimezone() this->timezone: " . $this->timezone);
+			// Récupération du timezone
+			$res = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
+			// Test si le timezone est valide en PHP
+			try {
+				$tz = new \DateTimeZone($this->timezone);
+			} catch (\Exception $ex) {
+				$this->timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
+			}
+			M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getTimezone() this->timezone: " . $this->timezone);
+		}
 		return $this->timezone;
+	}
+
+	/**
+	 * Sauvegarde le nom de l'objet
+	 */
+	private function saveName() {
+	  // Si l'objet existe on fait un UPDATE
+	  if ($this->isExist
+	      && isset($this->object_id)
+	      && isset($this->name)) {
+	    $query = Sql\SqlObjectPropertyRequests::updateProperty;
+	    // Params
+	    $params = array (
+	        "datatree_id" => $this->object_id,
+	        "attribute_value" => $this->name,
+	        "attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
+	    );
+	    Sql\DBMelanie::ExecuteQuery($query, $params);
+	  }
 	}
 
 	/**

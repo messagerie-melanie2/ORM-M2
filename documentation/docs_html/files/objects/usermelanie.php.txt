@@ -423,4 +423,36 @@ class UserMelanie {
 		// Liste les listes de contacts de l'utilisateur
 		return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
 	}
+
+	/**
+	 * Recupère le timezone par défaut pour le
+	 * need: $this->uid
+	 */
+	function getTimezone() {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getTimezone()");
+	  if (!isset($this->uid)) return ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
+
+	  if (!isset($this->timezone)) {
+	    // Replace name
+	    $query = str_replace('{pref_name}', 'timezone', Sql\SqlMelanieRequests::getUserPref);
+
+	    // Params
+	    $params = array (
+	        "user_uid" => $this->uid,
+	        "pref_scope" => ConfigMelanie::PREF_SCOPE,
+	        "pref_name" => ConfigMelanie::TZ_PREF_NAME
+	    );
+
+	    // Récupération du timezone
+	    $res = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
+	    // Test si le timezone est valide en PHP
+	    try {
+	      $tz = new \DateTimeZone($this->timezone);
+	    } catch (\Exception $ex) {
+	      $this->timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
+	    }
+	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getTimezone() this->timezone: " . $this->timezone);
+	  }
+	  return $this->timezone;
+	}
 }

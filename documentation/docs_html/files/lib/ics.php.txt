@@ -132,6 +132,9 @@ class ICS {
 	const STATUS_TENTATIVE = 'TENTATIVE';
 	const STATUS_CONFIRMED = 'CONFIRMED';
 	const STATUS_CANCELLED = 'CANCELLED';
+	const STATUS_COMPLETED = 'COMPLETED';
+	const STATUS_NEEDS_ACTION = 'NEEDS-ACTION';
+	const STATUS_IN_PROCESS = 'IN-PROCESS';
 	/**
 	 * Summary (http://tools.ietf.org/html/rfc2445#section-4.8.1.12)
 	 */

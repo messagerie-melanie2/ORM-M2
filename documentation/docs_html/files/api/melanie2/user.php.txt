@@ -35,6 +35,8 @@ use LibMelanie\Log\M2Log;
  *
  * @property string $uid Identifiant unique de l'utilisateur
  * @property string $email Adresse email de l'utilisateur
+ *
+ * @method string getTimezone() Chargement l'évènement, en fonction du taskslist et de l'uid
  */
 class User extends Melanie2Object {
 	/**

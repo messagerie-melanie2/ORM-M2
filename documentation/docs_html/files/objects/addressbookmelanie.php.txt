@@ -247,8 +247,12 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 //  			);
 //  			// Supprimer l'objet
 //  			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
-            if ($ok) Sql\DBMelanie::Commit();
-            else Sql\DBMelanie::Rollback();
+      if ($ok) {
+        Sql\DBMelanie::Commit();
+        $this->initializeHasChanged();
+        $this->isExist = false;
+      }
+      else Sql\DBMelanie::Rollback();
 			return $ok;
 		}
 		return false;

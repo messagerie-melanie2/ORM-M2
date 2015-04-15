@@ -226,7 +226,12 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace("{where_clause}", $whereClause, $query);
 
 		// Supprimer l'évènement
-		return Sql\DBMelanie::ExecuteQuery($query, $params);
+		$ret = Sql\DBMelanie::ExecuteQuery($query, $params);
+		if ($ret) {
+		  $this->initializeHasChanged();
+		  $this->isExist = false;
+		}
+		return $ret;
 	}
 
 	/**
@@ -263,7 +268,6 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		$res = Sql\DBMelanie::ExecuteQuery($query, $params);
 		return (count($res) >= 1);
 	}
-
 
 	/**
 	 * Permet de récupérer la liste d'objet en utilisant les données passées
@@ -406,8 +410,8 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 							$i = 1;
 							foreach ($this->$key as $val) {
 								if ($i > 1) {
-									if ($opmapping[$mapKey] == MappingMelanie::diff) $clause .= " AND ";
-									else $clause .= " OR ";
+									if ($opmapping[$key] == MappingMelanie::diff) $whereClause .= " AND ";
+									else $whereClause .= " OR ";
 								} else $whereClause .= "(";
 								if ($is_case_unsensitive) {
     								$whereClause .= "LOWER($key) " . $opmapping[$key] . " ";

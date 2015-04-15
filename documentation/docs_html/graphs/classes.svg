@@ -109,26 +109,26 @@
 <text text-anchor="middle" x="320" y="-472.1" font-family="Times Roman,serif" font-size="11.00" fill="gray">Exceptions</text>
 </g>
 <g id="graph11" class="cluster"><title>cluster_\LibMelanie\Lib</title>
-<polyline fill="none" stroke="gray" points="36,-1388 132,-1388 "/>
-<path fill="none" stroke="gray" d="M132,-1388C138,-1388 144,-1394 144,-1400"/>
-<polyline fill="none" stroke="gray" points="144,-1400 144,-1774 "/>
+<polyline fill="none" stroke="gray" points="36,-1280 132,-1280 "/>
+<path fill="none" stroke="gray" d="M132,-1280C138,-1280 144,-1286 144,-1292"/>
+<polyline fill="none" stroke="gray" points="144,-1292 144,-1774 "/>
 <path fill="none" stroke="gray" d="M144,-1774C144,-1780 138,-1786 132,-1786"/>
 <polyline fill="none" stroke="gray" points="132,-1786 36,-1786 "/>
 <path fill="none" stroke="gray" d="M36,-1786C30,-1786 24,-1780 24,-1774"/>
-<polyline fill="none" stroke="gray" points="24,-1774 24,-1400 "/>
-<path fill="none" stroke="gray" d="M24,-1400C24,-1394 30,-1388 36,-1388"/>
+<polyline fill="none" stroke="gray" points="24,-1774 24,-1292 "/>
+<path fill="none" stroke="gray" d="M24,-1292C24,-1286 30,-1280 36,-1280"/>
 <text text-anchor="middle" x="84" y="-1772.1" font-family="Times Roman,serif" font-size="11.00" fill="gray">Lib</text>
 </g>
 <g id="graph12" class="cluster"><title>cluster_\LibMelanie\Interfaces</title>
-<polyline fill="none" stroke="gray" points="40,-1306 128,-1306 "/>
-<path fill="none" stroke="gray" d="M128,-1306C134,-1306 140,-1312 140,-1318"/>
-<polyline fill="none" stroke="gray" points="140,-1318 140,-1368 "/>
-<path fill="none" stroke="gray" d="M140,-1368C140,-1374 134,-1380 128,-1380"/>
-<polyline fill="none" stroke="gray" points="128,-1380 40,-1380 "/>
-<path fill="none" stroke="gray" d="M40,-1380C34,-1380 28,-1374 28,-1368"/>
-<polyline fill="none" stroke="gray" points="28,-1368 28,-1318 "/>
-<path fill="none" stroke="gray" d="M28,-1318C28,-1312 34,-1306 40,-1306"/>
-<text text-anchor="middle" x="84" y="-1366.1" font-family="Times Roman,serif" font-size="11.00" fill="gray">Interfaces</text>
+<polyline fill="none" stroke="gray" points="40,-1198 128,-1198 "/>
+<path fill="none" stroke="gray" d="M128,-1198C134,-1198 140,-1204 140,-1210"/>
+<polyline fill="none" stroke="gray" points="140,-1210 140,-1260 "/>
+<path fill="none" stroke="gray" d="M140,-1260C140,-1266 134,-1272 128,-1272"/>
+<polyline fill="none" stroke="gray" points="128,-1272 40,-1272 "/>
+<path fill="none" stroke="gray" d="M40,-1272C34,-1272 28,-1266 28,-1260"/>
+<polyline fill="none" stroke="gray" points="28,-1260 28,-1210 "/>
+<path fill="none" stroke="gray" d="M28,-1210C28,-1204 34,-1198 40,-1198"/>
+<text text-anchor="middle" x="84" y="-1258.1" font-family="Times Roman,serif" font-size="11.00" fill="gray">Interfaces</text>
 </g>
 <g id="graph13" class="cluster"><title>cluster_\LibMelanie\Cache</title>
 <polyline fill="none" stroke="gray" points="297,-60 343,-60 "/>
@@ -329,14 +329,14 @@
 <polygon fill="none" stroke="black" points="135.073,-1452.72 126.105,-1458.37 136.634,-1459.55 135.073,-1452.72"/>
 </g>
 <!-- \\LibMelanie\\Interfaces\\IObjectMelanie -->
-<g id="node63" class="node"><title>\\LibMelanie\\Interfaces\\IObjectMelanie</title>
-<polygon fill="none" stroke="black" points="131,-1350 37,-1350 37,-1314 131,-1314 131,-1350"/>
-<text text-anchor="middle" x="84" y="-1329.1" font-family="Times Roman,serif" font-size="11.00">IObjectMelanie</text>
+<g id="node65" class="node"><title>\\LibMelanie\\Interfaces\\IObjectMelanie</title>
+<polygon fill="none" stroke="black" points="131,-1242 37,-1242 37,-1206 131,-1206 131,-1242"/>
+<text text-anchor="middle" x="84" y="-1221.1" font-family="Times Roman,serif" font-size="11.00">IObjectMelanie</text>
 </g>
 <!-- \\LibMelanie\\Objects\\EventMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie -->
 <g id="edge18" class="edge"><title>\\LibMelanie\\Objects\\EventMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M275.347,-1404.86C255.16,-1400.27 231.142,-1394.15 210,-1387 182.974,-1377.86 153.716,-1365.26 130.203,-1354.43"/>
-<polygon fill="none" stroke="black" points="131.375,-1351.12 120.832,-1350.07 128.42,-1357.46 131.375,-1351.12"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M275.284,-1411.15C253.794,-1407.88 228.71,-1401.05 210,-1387 164.468,-1352.8 182.597,-1319.63 146,-1276 137.748,-1266.16 127.484,-1256.72 117.697,-1248.64"/>
+<polygon fill="none" stroke="black" points="119.64,-1245.72 109.644,-1242.21 115.268,-1251.18 119.64,-1245.72"/>
 </g>
 <!-- \\LibMelanie\\Objects\\HistoryMelanie -->
 <g id="node24" class="node"><title>\\LibMelanie\\Objects\\HistoryMelanie</title>
@@ -350,8 +350,8 @@
 </g>
 <!-- \\LibMelanie\\Objects\\HistoryMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie -->
 <g id="edge22" class="edge"><title>\\LibMelanie\\Objects\\HistoryMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M271.957,-1354.3C234.268,-1349.83 181.676,-1343.59 141.705,-1338.85"/>
-<polygon fill="none" stroke="black" points="141.914,-1335.35 131.572,-1337.64 141.09,-1342.3 141.914,-1335.35"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M271.74,-1351.61C251.88,-1346.96 229.102,-1340.03 210,-1330 177.05,-1312.7 174.48,-1299.96 146,-1276 135.396,-1267.08 123.76,-1257.31 113.461,-1248.68"/>
+<polygon fill="none" stroke="black" points="115.445,-1245.78 105.533,-1242.03 110.948,-1251.14 115.445,-1245.78"/>
 </g>
 <!-- \\LibMelanie\\Objects\\CalendarMelanie -->
 <g id="node25" class="node"><title>\\LibMelanie\\Objects\\CalendarMelanie</title>
@@ -365,8 +365,8 @@
 </g>
 <!-- \\LibMelanie\\Objects\\CalendarMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie -->
 <g id="edge30" class="edge"><title>\\LibMelanie\\Objects\\CalendarMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M266.91,-1682.45C246.648,-1679.19 224.869,-1672.03 210,-1657 122.339,-1568.42 211.307,-1490.14 146,-1384 139.558,-1373.53 130.277,-1364.14 120.85,-1356.32"/>
-<polygon fill="none" stroke="black" points="122.984,-1353.55 112.956,-1350.13 118.664,-1359.05 122.984,-1353.55"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M266.986,-1683.01C246.487,-1679.87 224.516,-1672.64 210,-1657 93.1771,-1531.16 231.266,-1425.04 146,-1276 140.011,-1265.53 131.066,-1256.24 121.821,-1248.5"/>
+<polygon fill="none" stroke="black" points="123.715,-1245.54 113.687,-1242.12 119.394,-1251.05 123.715,-1245.54"/>
 </g>
 <!-- \\LibMelanie\\Objects\\TaskslistMelanie -->
 <g id="node26" class="node"><title>\\LibMelanie\\Objects\\TaskslistMelanie</title>
@@ -380,8 +380,8 @@
 </g>
 <!-- \\LibMelanie\\Objects\\TaskslistMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie -->
 <g id="edge64" class="edge"><title>\\LibMelanie\\Objects\\TaskslistMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M268.44,-1628.22C247.927,-1624.98 225.554,-1617.89 210,-1603 136.749,-1532.88 201.454,-1468.9 146,-1384 139.218,-1373.62 129.74,-1364.21 120.233,-1356.34"/>
-<polygon fill="none" stroke="black" points="122.323,-1353.53 112.298,-1350.11 117.998,-1359.04 122.323,-1353.53"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M268.324,-1628.99C247.541,-1625.9 224.996,-1618.72 210,-1603 107.796,-1495.83 221.259,-1403.54 146,-1276 139.871,-1265.61 130.88,-1256.34 121.636,-1248.61"/>
+<polygon fill="none" stroke="black" points="123.536,-1245.65 113.512,-1242.22 119.209,-1251.16 123.536,-1245.65"/>
 </g>
 <!-- \\LibMelanie\\Objects\\ObjectMelanie -->
 <g id="node27" class="node"><title>\\LibMelanie\\Objects\\ObjectMelanie</title>
@@ -395,8 +395,8 @@
 </g>
 <!-- \\LibMelanie\\Objects\\ObjectMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie -->
 <g id="edge72" class="edge"><title>\\LibMelanie\\Objects\\ObjectMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M273.491,-1574.23C251.957,-1571.19 227.359,-1564.25 210,-1549 150.904,-1497.09 191.795,-1447.95 146,-1384 138.715,-1373.83 128.995,-1364.44 119.416,-1356.52"/>
-<polygon fill="none" stroke="black" points="121.474,-1353.69 111.459,-1350.23 117.133,-1359.18 121.474,-1353.69"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M273.351,-1575.37C251.386,-1572.64 226.46,-1565.63 210,-1549 122.339,-1460.42 211.307,-1382.14 146,-1276 139.558,-1265.53 130.277,-1256.14 120.85,-1248.32"/>
+<polygon fill="none" stroke="black" points="122.984,-1245.55 112.956,-1242.13 118.664,-1251.05 122.984,-1245.55"/>
 </g>
 <!-- \\LibMelanie\\Objects\\AttachmentMelanie -->
 <g id="node28" class="node"><title>\\LibMelanie\\Objects\\AttachmentMelanie</title>
@@ -410,8 +410,8 @@
 </g>
 <!-- \\LibMelanie\\Objects\\AttachmentMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie -->
 <g id="edge76" class="edge"><title>\\LibMelanie\\Objects\\AttachmentMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M258.22,-1515.87C241.355,-1511.9 223.914,-1505.45 210,-1495 164.468,-1460.8 182.597,-1427.63 146,-1384 137.748,-1374.16 127.484,-1364.72 117.697,-1356.64"/>
-<polygon fill="none" stroke="black" points="119.64,-1353.72 109.644,-1350.21 115.268,-1359.18 119.64,-1353.72"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M258.498,-1518.36C240.95,-1514.52 223.068,-1507.51 210,-1495 136.749,-1424.88 201.454,-1360.9 146,-1276 139.218,-1265.62 129.74,-1256.21 120.233,-1248.34"/>
+<polygon fill="none" stroke="black" points="122.323,-1245.53 112.298,-1242.11 117.998,-1251.04 122.323,-1245.53"/>
 </g>
 <!-- \\LibMelanie\\Objects\\AddressbookMelanie -->
 <g id="node29" class="node"><title>\\LibMelanie\\Objects\\AddressbookMelanie</title>
@@ -425,8 +425,8 @@
 </g>
 <!-- \\LibMelanie\\Objects\\AddressbookMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie -->
 <g id="edge82" class="edge"><title>\\LibMelanie\\Objects\\AddressbookMelanie&#45;&gt;\\LibMelanie\\Interfaces\\IObjectMelanie</title>
-<path fill="none" stroke="black" stroke-dasharray="1,5" d="M255.831,-1457.79C240.286,-1453.84 224.097,-1448.41 210,-1441 176.288,-1423.27 174.818,-1408.91 146,-1384 135.601,-1375.01 124.094,-1365.3 113.845,-1356.73"/>
-<polygon fill="none" stroke="black" points="115.862,-1353.85 105.941,-1350.13 111.378,-1359.23 115.862,-1353.85"/>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M255.996,-1462.93C239.482,-1458.95 222.779,-1452.23 210,-1441 150.904,-1389.09 191.795,-1339.95 146,-1276 138.715,-1265.83 128.995,-1256.44 119.416,-1248.52"/>
+<polygon fill="none" stroke="black" points="121.474,-1245.69 111.459,-1242.23 117.133,-1251.18 121.474,-1245.69"/>
 </g>
 <!-- \\LibMelanie\\Sql\\SqlCalendarRequests -->
 <g id="node31" class="node"><title>\\LibMelanie\\Sql\\SqlCalendarRequests</title>
@@ -504,7 +504,7 @@
 <text text-anchor="middle" x="320" y="-435.1" font-family="Times Roman,serif" font-size="11.00">UndefinedMappingException</text>
 </g>
 <!-- \\Exception -->
-<g id="node73" class="node"><title>\\Exception</title>
+<g id="node75" class="node"><title>\\Exception</title>
 <ellipse fill="none" stroke="black" cx="84" cy="-18" rx="61.8445" ry="18"/>
 <text text-anchor="middle" x="84" y="-13.9" font-family="Times Roman,serif" font-size="14.00" fill="gray">\Exception</text>
 </g>
@@ -588,13 +588,23 @@
 <polygon fill="none" stroke="black" points="111,-1432 57,-1432 57,-1396 111,-1396 111,-1432"/>
 <text text-anchor="middle" x="84" y="-1411.1" font-family="Times Roman,serif" font-size="11.00">ICS</text>
 </g>
+<!-- \\LibMelanie\\Lib\\TaskToICS -->
+<g id="node62" class="node"><title>\\LibMelanie\\Lib\\TaskToICS</title>
+<polygon fill="none" stroke="black" points="118,-1378 50,-1378 50,-1342 118,-1342 118,-1378"/>
+<text text-anchor="middle" x="84" y="-1357.1" font-family="Times Roman,serif" font-size="11.00">TaskToICS</text>
+</g>
+<!-- \\LibMelanie\\Lib\\ICSToTask -->
+<g id="node63" class="node"><title>\\LibMelanie\\Lib\\ICSToTask</title>
+<polygon fill="none" stroke="black" points="118,-1324 50,-1324 50,-1288 118,-1288 118,-1324"/>
+<text text-anchor="middle" x="84" y="-1303.1" font-family="Times Roman,serif" font-size="11.00">ICSToTask</text>
+</g>
 <!-- \\LibMelanie\\Cache\\Cache -->
-<g id="node65" class="node"><title>\\LibMelanie\\Cache\\Cache</title>
+<g id="node67" class="node"><title>\\LibMelanie\\Cache\\Cache</title>
 <polygon fill="none" stroke="black" points="347,-104 293,-104 293,-68 347,-68 347,-104"/>
 <text text-anchor="middle" x="320" y="-83.1" font-family="Times Roman,serif" font-size="11.00">Cache</text>
 </g>
 <!-- Exception -->
-<g id="node103" class="node"><title>Exception</title>
+<g id="node105" class="node"><title>Exception</title>
 <ellipse fill="none" stroke="black" cx="320" cy="-2748" rx="57.8712" ry="18"/>
 <text text-anchor="middle" x="320" y="-2743.9" font-family="Times Roman,serif" font-size="14.00">Exception</text>
 </g>

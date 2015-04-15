@@ -108,7 +108,7 @@ class TaskToICS {
 	 * @return VTodo
 	 */
 	private static function getVtodoFromTask(VObject\Component $vtodo, Task $task, Taskslist $taskslist = null, User $user = null) {
-	  M2Log::Log(M2Log::LEVEL_DEBUG, "TaskToICS->getVeventFromEvent()");
+	  M2Log::Log(M2Log::LEVEL_DEBUG, "TaskToICS->getVtodoFromTask()");
 	  // Timezone
 		if (isset($user)) {
 		  $timezone = $user->getTimezone();
@@ -119,7 +119,7 @@ class TaskToICS {
 		if (empty($timezone)) {
 		  $timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
 		}
-		M2Log::Log(M2Log::LEVEL_DEBUG, "EventToICS->getVtodoFromTask() timezone : " . $timezone);
+		M2Log::Log(M2Log::LEVEL_DEBUG, "TaskToICS->getVtodoFromTask() timezone : " . $timezone);
 		// Class
 		if (isset($task->class)) {
 			switch ($task->class) {

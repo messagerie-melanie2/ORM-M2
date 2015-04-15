@@ -192,11 +192,11 @@ class Attachment extends Melanie2Object {
 	 * @param String[] $case_unsensitive_fields Liste des champs pour lesquels on ne sera pas sensible à la casse
 	 * @return Attachment[] Array
 	 */
-	function getList($fields = array(), $filter = "", $operators = array(), $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = array()) {
+	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList()");
 		$_attachments = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields);
 		if (!isset($_attachments)) return null;
-		$attachments = array();
+		$attachments = [];
 		foreach ($_attachments as $_attachment) {
 			$attachment = new Attachment();
 			$attachment->setObjectMelanie($_attachment);
@@ -217,7 +217,7 @@ class Attachment extends Melanie2Object {
 	 * @param string $path
 	 */
 	protected function setMapPath($path) {
-	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapPath($path)");
+	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapPath()");
 	    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 	    if (is_string($path)) {
 	        if ($path == "") {

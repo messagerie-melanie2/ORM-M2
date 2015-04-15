@@ -35,7 +35,7 @@ use LibMelanie\Config\ConfigMelanie;
  */
 class Cache {
 	// Tableau de stockage des données SQL
-	private static $cache_sql = array();
+	private static $cache_sql = [];
 	/**
 	 * Connexion vers memcache
 	 * @var \Memcache
@@ -104,7 +104,7 @@ class Cache {
                         $table_name = $matches[2][0];
                     }
                     else {
-                        $table_name = array();
+                        $table_name = [];
                         // On trouve plusieurs tables dans la requête
                         foreach ($matches[2] as $match) {
                             // Suppression des doublons
@@ -148,16 +148,16 @@ class Cache {
 	            $table_name = $table_name[0];
 	        }
     	    // Création du cache pour la table
-    	    if (!isset(self::$cache_sql[$table_name])) self::$cache_sql[$table_name] = array();
+    	    if (!isset(self::$cache_sql[$table_name])) self::$cache_sql[$table_name] = [];
     	    // Création du cache pour les champs
     	    $hash_fields = md5(serialize($fields));
-    	    if (!isset(self::$cache_sql[$table_name][$hash_fields])) self::$cache_sql[$table_name][$hash_fields] = array();
+    	    if (!isset(self::$cache_sql[$table_name][$hash_fields])) self::$cache_sql[$table_name][$hash_fields] = [];
     	    // Création du cache pour la requête
     	    $hash_query = md5($query);
     	    if (!isset(self::$cache_sql[$table_name][$hash_fields][$hash_query])) self::$cache_sql[$table_name][$hash_fields][$hash_query] = array();
     	    // Création du cache pour les paramètres
     	    $hash_params = md5(serialize($params));
-    	    self::$cache_sql[$table_name][$hash_fields][$hash_query][$hash_params] = array();
+    	    self::$cache_sql[$table_name][$hash_fields][$hash_query][$hash_params] = [];
     	    // Ajout des resultats dans le cache
     	    self::$cache_sql[$table_name][$hash_fields][$hash_query][$hash_params][self::RESULTS] = $results;
     	    self::$cache_sql[$table_name][$hash_fields][$hash_query][$hash_params][self::TIME] = time();
@@ -184,7 +184,7 @@ class Cache {
 	                        }
 	                    }
 	                    else {
-	                        $table_name_hashs = array();
+	                        $table_name_hashs = [];
 	                        $table_name_hashs[] = $hash;
 	                        self::$memcache_cnx->add(md5(strtolower($table)), serialize($table_name_hashs), false, ConfigMelanie::CACHE_DELAY);
 	                    }
@@ -200,7 +200,7 @@ class Cache {
     	                }
     	            }
     	            else {
-    	                $table_name_hashs = array();
+    	                $table_name_hashs = [];
     	                $table_name_hashs[] = $hash;
     	                self::$memcache_cnx->add(md5(strtolower($table_name)), serialize($table_name_hashs), false, ConfigMelanie::CACHE_DELAY);
     	            }
@@ -237,7 +237,7 @@ class Cache {
                         $table_name = $matches[2][0];
                     }
                     else {
-                        $table_name = array();
+                        $table_name = [];
                         // On trouve plusieurs tables dans la requête
                         foreach ($matches[2] as $match) {
                             // Suppression des doublons
@@ -339,7 +339,7 @@ class Cache {
 	 * @param array $params
 	 * @return boolean
 	 */
-	static function deleteFromSQLCache($table_name = null, $fields = array(), $query = null, $params = array()) {
+	static function deleteFromSQLCache($table_name = null, $fields = [], $query = null, $params = []) {
 	    // Le cache est il activé
 	    if (!ConfigMelanie::CACHE_ENABLED) return null;
 	    if (empty($table_name)) {
@@ -354,7 +354,7 @@ class Cache {
                             $table_name = $matches[2][0];
                         }
                         else {
-                            $table_name = array();
+                            $table_name = [];
                             // On trouve plusieurs tables dans la requête
                             foreach ($matches[2] as $match) {
                                 // Suppression des doublons
@@ -394,7 +394,7 @@ class Cache {
 	        else {
 	            // Pas de table on vide toutes les données en cache
 	            unset(self::$cache_sql);
-	            self::$cache_sql = array();
+	            self::$cache_sql = [];
 	        }
 	    }
 	    else {

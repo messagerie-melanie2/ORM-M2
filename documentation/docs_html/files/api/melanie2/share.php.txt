@@ -136,11 +136,11 @@ class Share extends Melanie2Object {
 	 * @param String[] $case_unsensitive_fields Liste des champs pour lesquels on ne sera pas sensible à la casse
 	 * @return Share[] Array
 	 */
-	function getList($fields = array(), $filter = "", $operators = array(), $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = array()) {
+	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList()");
 		$_shares = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields);
 		if (!isset($_shares)) return null;
-		$shares = array();
+		$shares = [];
 		foreach ($_shares as $_share) {
 			$share = new Share();
 			$share->setObjectMelanie($_share);

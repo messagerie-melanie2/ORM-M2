@@ -127,7 +127,7 @@ class Sql {
 		}
 		// Mise en cache des statements
 		// MANTIS 3547: Réutiliser les prepare statements pour les requêtes identiques
-		$this->PreparedStatementCache = array();
+		$this->PreparedStatementCache = [];
 		$this->getConnection();
 	}
 
@@ -158,8 +158,8 @@ class Sql {
 		    }
 		}
 		// Connexion persistante ?
-		$driver = array(\PDO::ATTR_PERSISTENT => ($this->persistent == 'true'),
-					\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION);
+		$driver = [\PDO::ATTR_PERSISTENT => ($this->persistent == 'true'),
+					\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
 		try {
 			$this->connection = new \PDO($this->cnxstring, $this->username, $this->password, $driver);
 		}
@@ -171,8 +171,8 @@ class Sql {
 		// Connexion à la base de données en lecture
 		if (isset($this->cnxstring_read)) {
 		    // Connexion persistante ?
-		    $driver_read = array(\PDO::ATTR_PERSISTENT => ($this->persistent_read == 'true'),
-		        \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION);
+		    $driver_read = [\PDO::ATTR_PERSISTENT => ($this->persistent_read == 'true'),
+		        \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
 		    try {
 		        $this->connection_read = new \PDO($this->cnxstring_read, $this->username_read, $this->password_read, $driver_read);
 		    } catch (\PDOException $e) {
@@ -192,7 +192,7 @@ class Sql {
 	public function disconnect() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->disconnect()");
 		// Fermer tous les statements
-		$this->PreparedStatementCache = array();
+		$this->PreparedStatementCache = [];
 		// Deconnexion de la bdd
 		if (!is_null($this->connection)) {
 			$this->connection = null;
@@ -368,31 +368,31 @@ class Sql {
 		    }
 		}
 		try {
-		    if ($cached_statement && isset($this->PreparedStatementCache[$query])) {
-		        // Récupérer le statement depuis le cache
-		        $sth = $this->PreparedStatementCache[$query];
-		    }
-		    else {
-		        // Choix de la connexion lecture/ecriture
-		        if (strpos($query, "SELECT") === 0
-		                && !is_null($this->connection_read)
-		                && !$this->connection->inTransaction) {
-		            if (!isset($this->connection_read)) {
-		                return false;
-		            }
-		            $sth = $this->connection_read->prepare($query);
-		        }
-		        else {
-		            if (!isset($this->connection)) {
-		                return false;
-		            }
-		            $sth = $this->connection->prepare($query);
-		        }
-		        if ($cached_statement) {
-    		        // Mise en cache du statement
-    		        $this->PreparedStatementCache[$query] = $sth;
-		        }
-		    }
+	    if ($cached_statement && isset($this->PreparedStatementCache[$query])) {
+	        // Récupérer le statement depuis le cache
+	        $sth = $this->PreparedStatementCache[$query];
+	    }
+	    else {
+	        // Choix de la connexion lecture/ecriture
+	        if (strpos($query, "SELECT") === 0
+	                && !is_null($this->connection_read)
+	                && !$this->connection->inTransaction) {
+	            if (!isset($this->connection_read)) {
+	                return false;
+	            }
+	            $sth = $this->connection_read->prepare($query);
+	        }
+	        else {
+	            if (!isset($this->connection)) {
+	                return false;
+	            }
+	            $sth = $this->connection->prepare($query);
+	        }
+	        if ($cached_statement) {
+  		        // Mise en cache du statement
+  		        $this->PreparedStatementCache[$query] = $sth;
+	        }
+	    }
 			$sth->setFetchMode(\PDO::FETCH_INTO, $object);
 			if (isset($params)) $res = $sth->execute($params);
 			else $res = $sth->execute();
@@ -404,18 +404,18 @@ class Sql {
 		// Si la requête demarre par SELECT on retourne les resultats
 		// Sinon on retourne null (UPDATE/DELETE pas de resultat)
 		if (strpos($query, "SELECT") == 0) {
-	        if ($sth->fetch(\PDO::FETCH_INTO)) {
-	            Cache::setSQLToCache(null, is_array($params) ? array_keys($params) : $params, $query, $params, $object);
-	            $sth->closeCursor();
-	            // Retourne true, l'objet est trouvé
-	            return true;
-	        } else {
-	            // Retourne false, l'objet n'est pas trouvé
-	            return false;
-	        }
+      if ($sth->fetch(\PDO::FETCH_INTO)) {
+          Cache::setSQLToCache(null, is_array($params) ? array_keys($params) : $params, $query, $params, $object);
+          $sth->closeCursor();
+          // Retourne true, l'objet est trouvé
+          return true;
+      } else {
+          // Retourne false, l'objet n'est pas trouvé
+          return false;
+      }
 		} else {
-		    // Suppression dans le cache
-		    Cache::deleteFromSQLCache(null, null, $query);
+	    // Suppression dans le cache
+	    Cache::deleteFromSQLCache(null, null, $query);
 			return $res;
 		}
 		// Retourne null, pas de resultat

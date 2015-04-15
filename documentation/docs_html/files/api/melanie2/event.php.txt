@@ -65,6 +65,7 @@ use LibMelanie\Lib\EventToICS;
  * @property bool $deleted Défini si l'exception est un évènement ou juste une suppression
  * @property-read string $realuid UID réellement stocké dans la base de données (utilisé pour les exceptions) (Lecture seule)
  * @property string $ics ICS associé à l'évènement courant, calculé à la volée en attendant la mise en base de données
+ * @property-read VObject\Component\VCalendar $vcalendar Object VCalendar associé à l'évènement, peut permettre des manipulations sur les récurrences
  *
  * @method bool load() Chargement l'évènement, en fonction du calendar et de l'uid
  * @method bool exists() Test si l'évènement existe, en fonction du calendar et de l'uid
@@ -125,6 +126,12 @@ class Event extends Melanie2Object {
 	 * @var Attachment[]
 	 */
 	private $attachments;
+
+	/**
+	 * Object VCalendar disponible via le VObject
+	 * @var unknown
+	 */
+	private $vcalendar;
 
 	/****
 	 * CONSTANTES
@@ -520,7 +527,7 @@ class Event extends Melanie2Object {
 	    $attachments_folders = new Attachment();
 	    $attachments_folders->isfolder = true;
 	    $attachments_folders->path = $event_uid;
-	    $folders_list = array();
+	    $folders_list = [];
 	    // Récupère les dossiers lié à l'évènement
 	    $folders = $attachments_folders->getList();
 	    if (count($folders) > 0) {
@@ -531,7 +538,7 @@ class Event extends Melanie2Object {
 	      $attachments->isfolder = false;
 	      $attachments->path = $folders_list;
 	      // Lecture des pièces jointes pour chaque dossier de l'évènement
-	      $attachments = $attachments->getList(array('id', 'name', 'path'));
+	      $attachments = $attachments->getList(['id', 'name', 'path']);
 	      if (count($attachments) > 0) {
 	        foreach($attachments as $attachment) {
 	          // Supprime la pièce jointe
@@ -614,7 +621,7 @@ class Event extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->loadExceptions()");
 		$event = new Event($this->usermelanie, $this->calendarmelanie);
 		$event->uid = $this->uid.'%'.Exception::RECURRENCE_ID;
-		$events = $event->getList(null, null, array('uid' => MappingMelanie::like));
+		$events = $event->getList(null, null, ['uid' => MappingMelanie::like]);
 		if (isset($events[$this->uid.$this->calendar])) {
 			$this->modified = isset($events[$this->uid.$this->calendar]->modified) ? $events[$this->uid.$this->calendar]->modified : 0;
 			$this->setMapExceptions($events[$this->uid.$this->calendar]->getMapExceptions());
@@ -662,7 +669,8 @@ class Event extends Melanie2Object {
 		// Sauvegarde des exceptions
 		if (isset($this->exceptions)) {
 			foreach ($this->exceptions as $exception) {
-				$exMod = $exMod || $exception->save();
+			  $res = $exception->save();
+				$exMod = $exMod || !is_null($res);
 			}
 		}
 		if ($this->deleted) return null;
@@ -787,7 +795,14 @@ class Event extends Melanie2Object {
 					if (!isset($exceptions[$exception->uid.$exception->calendar])
 							|| !is_array($exceptions[$exception->uid.$exception->calendar]))
 						$exceptions[$exception->uid.$exception->calendar] = [];
-					$exception->deleted = false;
+					// Filtrer les exceptions qui n'ont pas de date
+					if (empty($exception->start)
+					    || empty($exception->end)) {
+					  $exception->deleted = true;
+					}
+					else {
+					  $exception->deleted = false;
+					}
 					$recId = new \DateTime(substr($exception->realuid, strlen($exception->realuid) - strlen(Exception::FORMAT_STR.Exception::RECURRENCE_ID), strlen(Exception::FORMAT_STR)));
 					$exception->recurrenceId = $recId->format(Exception::FORMAT_ID);
 					$exceptions[$exception->uid.$exception->calendar][$exception->recurrenceId] = $exception;
@@ -1212,5 +1227,14 @@ class Event extends Melanie2Object {
 	protected function getMapIcs() {
 	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapIcs()");
     return \LibMelanie\Lib\EventToICS::Convert($this, $this->calendarmelanie, $this->usermelanie);
+	}
+  /**
+   * Map current event to vcalendar
+   * @return VObject\Component\VCalendar $vcalendar
+   * @ignore
+   */
+	protected function getMapVcalendar() {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapVcalendar()");
+	  return \LibMelanie\Lib\EventToICS::getVCalendar($this, $this->calendarmelanie, $this->usermelanie);
 	}
 }

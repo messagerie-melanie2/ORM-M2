@@ -188,7 +188,7 @@ class Task extends Melanie2Object {
 	    }
 	    else {
 	        // Création de l'objet s'il n'existe pas
-	        if (!isset($this->attributes)) $this->attributes = array();
+	        if (!isset($this->attributes)) $this->attributes = [];
 	        $taskproperty = new TaskProperty();
 	        $taskproperty->task = $this->uid;
 	        if (isset($this->taskslistmelanie)) {
@@ -305,11 +305,11 @@ class Task extends Melanie2Object {
 	 * @param String[] $case_unsensitive_fields Liste des champs pour lesquels on ne sera pas sensible à la casse
 	 * @return Task[] Array
 	 */
-	function getList($fields = array(), $filter = "", $operators = array(), $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = array()) {
+	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList()");
 		$_tasks = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields);
 		if (!isset($_tasks)) return null;
-		$tasks = array();
+		$tasks = [];
 		foreach ($_tasks as $_task) {
 			$task = new Task($this->usermelanie, $this->taskslistmelanie);
 			$task->setObjectMelanie($_task);
@@ -338,7 +338,7 @@ class Task extends Melanie2Object {
 	private function loadAttributes() {
 	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->loadAttributes()");
 	    // Création de l'objet s'il n'existe pas
-	    if (!isset($this->attributes))	$this->attributes = array();
+	    if (!isset($this->attributes)) $this->attributes = [];
 	    // Génération de l'attribut pour le getList
 	    $taskproperty = new TaskProperty();
 	    $taskproperty->task = $this->uid;

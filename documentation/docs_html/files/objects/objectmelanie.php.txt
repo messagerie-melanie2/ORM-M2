@@ -55,7 +55,6 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	    // Défini la classe courante
 	    $this->get_class = get_class($this);
 
-		//M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
 		// Construteur appelé par PDO, ne fait rien pour l'instant
 		// L'appel a pdoConstruct sera fait ensuite
 		if (!isset($objectType)) return;
@@ -70,10 +69,10 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		// Intialisation des clés primaires de la table
 		if (isset($primaryKeys)) {
 			if (is_array($primaryKeys)) $this->primaryKeys = $primaryKeys;
-			else $this->primaryKeys = array($primaryKeys);
+			else $this->primaryKeys = [$primaryKeys];
 		} elseif (isset(MappingMelanie::$Primary_Keys[$this->objectType])) {
 			if (is_array(MappingMelanie::$Primary_Keys[$this->objectType])) $this->primaryKeys = MappingMelanie::$Primary_Keys[$this->objectType];
-			else $this->primaryKeys = array(MappingMelanie::$Primary_Keys[$this->objectType]);
+			else $this->primaryKeys = [MappingMelanie::$Primary_Keys[$this->objectType]];
 		}
 	    // Initialisation du backend SQL
 		Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
@@ -87,8 +86,12 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		if (!isset($this->tableName)) return false;
+		// Test si l'objet existe, pas besoin de load
+		if (is_bool($this->isExist)) {
+		  return $this->isExist;
+		}
 		// Paramètres de la requête
-		$params = array();
+		$params = [];
 		$whereClause = "";
 		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
 		foreach ($this->primaryKeys as $key) {
@@ -116,6 +119,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		// Récupération
 		$this->isExist = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
 		if ($this->isExist) $this->initializeHasChanged();
+		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load() isExist: ".$this->isExist);
 		return $this->isExist;
 	}
 
@@ -137,11 +141,14 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 			if ($haschanged) break;
 		}
 		if (!$haschanged) return null;
-
+		// Si isExist est à null c'est qu'on n'a pas encore testé
+		if (!is_bool($this->isExist)) {
+		  $this->isExist = $this->exists();
+		}
 		// Si l'objet existe on fait un UPDATE
 		if ($this->isExist) {
 			// Paramètres de la requête
-			$params = array();
+			$params = [];
 			$whereClause = "";
 			// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
 			foreach ($this->primaryKeys as $key) {
@@ -179,44 +186,38 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 			// Execute
 			$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
 		} else {
-			$this->isExist = $this->exists();
-			if ($this->isExist) {
-				// L'objet existe, on rappel save pour l'UPDATE
-				$this->save();
-			} else {
-				// C'est une Insertion
-				$insert = true;
-				// Test si les clés primaires sont bien instanciées
-				foreach ($this->primaryKeys as $key) {
-					if (!isset($this->$key)) return null;
-				}
-
-				// Si l'objet n'existe pas, on fait un INSERT
-				// Liste les insertion à faire
-				$data_fields = "";
-				$data_values = "";
-				$params = array();
-				foreach ($this->haschanged as $key => $value) {
-					if ($value) {
-						if ($data_fields != "") $data_fields .= ", ";
-						if ($data_values != "") $data_values .= ", ";
-						$data_fields .= $key;
-						$data_values .= ":".$key;
-						$params[$key] = $this->$key;
-					}
-				}
-				// Pas d'insert
-				if ($data_fields == "") return null;
-
-				// Replace
-				$query = Sql\SqlObjectRequests::insertObject;
-				$query = str_replace("{table_name}", $this->tableName, $query);
-				$query = str_replace("{data_fields}", $data_fields, $query);
-				$query = str_replace("{data_values}", $data_values, $query);
-
-				// Execute
-				$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
+			// C'est une Insertion
+			$insert = true;
+			// Test si les clés primaires sont bien instanciées
+			foreach ($this->primaryKeys as $key) {
+				if (!isset($this->$key)) return null;
 			}
+
+			// Si l'objet n'existe pas, on fait un INSERT
+			// Liste les insertion à faire
+			$data_fields = "";
+			$data_values = "";
+			$params = [];
+			foreach ($this->haschanged as $key => $value) {
+				if ($value) {
+					if ($data_fields != "") $data_fields .= ", ";
+					if ($data_values != "") $data_values .= ", ";
+					$data_fields .= $key;
+					$data_values .= ":".$key;
+					$params[$key] = $this->$key;
+				}
+			}
+			// Pas d'insert
+			if ($data_fields == "") return null;
+
+			// Replace
+			$query = Sql\SqlObjectRequests::insertObject;
+			$query = str_replace("{table_name}", $this->tableName, $query);
+			$query = str_replace("{data_fields}", $data_fields, $query);
+			$query = str_replace("{data_values}", $data_values, $query);
+
+			// Execute
+			$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
 		}
 		if ($this->isExist) $this->initializeHasChanged();
 		return $insert;
@@ -232,7 +233,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		if (!isset($this->primaryKeys)) return false;
 		if (!isset($this->tableName)) return false;
 		// Paramètres de la requête
-		$params = array();
+		$params = [];
 		$whereClause = "";
 		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
 		foreach ($this->primaryKeys as $key) {
@@ -273,8 +274,12 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		if (!isset($this->tableName)) return false;
+		// Test si l'objet existe, pas besoin de load
+		if (is_bool($this->isExist)) {
+		  return $this->isExist;
+		}
 		// Paramètres de la requête
-		$params = array();
+		$params = [];
 		$whereClause = "";
 		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
 		foreach ($this->primaryKeys as $key) {
@@ -290,7 +295,6 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 			if ($whereClause != "") $whereClause .= " AND ";
 			$whereClause .= "$mapKey = :$mapKey";
 		}
-
 		$query = Sql\SqlObjectRequests::getObject;
 		// Liste des champs
 		$query = str_replace("{fields_list}", "*", $query);
@@ -298,10 +302,10 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace("{table_name}", $this->tableName, $query);
 		// Clause where
 		$query = str_replace("{where_clause}", $whereClause, $query);
-
 		// Liste les objets
 		$res = Sql\DBMelanie::ExecuteQuery($query, $params);
-		return (count($res) >= 1);
+		$this->isExist = (count($res) >= 1);
+		return $this->isExist;
 	}
 
 	/**
@@ -319,11 +323,11 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 * @param String[] $case_unsensitive_fields Liste des champs pour lesquels on ne sera pas sensible à la casse
 	 * @return ObjectMelanie[] Array
 	 */
-	function getList($fields = array(), $filter = "", $operators = array(), $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = array()) {
+	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->getList()");
 		if (!isset($this->tableName)) return false;
 		// Mapping pour les operateurs
-		$opmapping = array();
+		$opmapping = [];
 		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
 		foreach ($operators as $key => $operator) {
 			// Récupèration des données de mapping
@@ -334,7 +338,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 			$opmapping[$key] = $operator;
 		}
 		// Mapping pour les champs
-		$fieldsmapping = array();
+		$fieldsmapping = [];
 		if (is_array($fields)) {
     		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
     		foreach ($fields as $key) {
@@ -348,7 +352,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		}
 		// Paramètres de la requête
 		$whereClause = "";
-		$params = array();
+		$params = [];
 		// Est-ce qu'un filtre est activé
 		if ($filter != "") {
 			// Recherche toutes les entrées du filtre

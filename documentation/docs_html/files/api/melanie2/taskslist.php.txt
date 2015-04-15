@@ -97,7 +97,7 @@ class Taskslist extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getAllTasks()");
 		$_tasks = $this->objectmelanie->getAllTasks();
 		if (!isset($_tasks)) return null;
-		$tasks = array();
+		$tasks = [];
 		foreach ($_tasks as $_task) {
 			$task = new Task($this->usermelanie, $this);
 			$task->setObjectMelanie($_task);

@@ -177,7 +177,7 @@ class Organizer extends Melanie2Object {
 		if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 		if (!isset($this->objectmelanie->organizer_attendees)) return null;
 		$_attendees = unserialize($this->objectmelanie->organizer_attendees);
-		$attendees = array();
+		$attendees = [];
 		foreach ($_attendees as $key => $_attendee) {
 			$attendee = new Attendee($this);
 			$attendee->setEmail($key);

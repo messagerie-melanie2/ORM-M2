@@ -61,8 +61,8 @@ class Calendar extends Melanie2Object {
 	 * @param UserMelanie $usermelanie
 	 */
 	function __construct($usermelanie = null) {
-	    // Défini la classe courante
-	    $this->get_class = get_class($this);
+    // Défini la classe courante
+    $this->get_class = get_class($this);
 
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
 		// Définition du calendrier melanie2
@@ -98,8 +98,8 @@ class Calendar extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getAllEvents()");
 		$_events = $this->objectmelanie->getAllEvents();
 		if (!isset($_events)) return null;
-		$events = array();
-		$exceptions = array();
+		$events = [];
+		$exceptions = [];
 		foreach ($_events as $_event) {
 			try {
 				if (strpos($_event->uid, Exception::RECURRENCE_ID) === false) {
@@ -111,8 +111,15 @@ class Calendar extends Melanie2Object {
 					$exception->setObjectMelanie($_event);
 					if (!isset($exceptions[$exception->uid.$exception->calendar])
 							|| !is_array($exceptions[$exception->uid.$exception->calendar]))
-						$exceptions[$exception->uid.$exception->calendar] = array();
-					$exception->deleted = false;
+						$exceptions[$exception->uid.$exception->calendar] = [];
+  				// Filtrer les exceptions qui n'ont pas de date
+					if (empty($exception->start)
+					    || empty($exception->end)) {
+					  $exception->deleted = true;
+					}
+					else {
+					  $exception->deleted = false;
+					}
 					$recId = new \DateTime(substr($exception->realuid, strlen($exception->realuid) - strlen(Exception::FORMAT_STR.Exception::RECURRENCE_ID), strlen(Exception::FORMAT_STR)));
 					$exception->recurrenceId = $recId->format(Exception::FORMAT_ID);
 					$exceptions[$exception->uid.$exception->calendar][$exception->recurrenceId] = $exception;
@@ -168,8 +175,8 @@ class Calendar extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getRangeEvents()");
 		$_events = $this->objectmelanie->getRangeEvents($start, $end);
 		if (!isset($_events) || $_events === false) return null;
-		$events = array();
-		$exceptions = array();
+		$events = [];
+		$exceptions = [];
 		foreach ($_events as $_event) {
 			try {
 				if (strpos($_event->uid, Exception::RECURRENCE_ID) === false) {
@@ -181,8 +188,15 @@ class Calendar extends Melanie2Object {
 					$exception->setObjectMelanie($_event);
 					if (!isset($exceptions[$exception->uid.$exception->calendar])
 							|| !is_array($exceptions[$exception->uid.$exception->calendar]))
-						$exceptions[$exception->uid.$exception->calendar] = array();
-					$exception->deleted = false;
+						$exceptions[$exception->uid.$exception->calendar] = [];
+  				// Filtrer les exceptions qui n'ont pas de date
+					if (empty($exception->start)
+					    || empty($exception->end)) {
+					  $exception->deleted = true;
+					}
+					else {
+					  $exception->deleted = false;
+					}
 					$recId = new \DateTime(substr($exception->realuid, strlen($exception->realuid) - strlen(Exception::FORMAT_STR.Exception::RECURRENCE_ID), strlen(Exception::FORMAT_STR)));
 					$exception->recurrenceId = $recId->format(Exception::FORMAT_ID);
 					$exceptions[$exception->uid.$exception->calendar][$exception->recurrenceId] = $exception;

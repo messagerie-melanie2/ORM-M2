@@ -113,7 +113,7 @@ class User extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getUserCalendars()");
 		$_calendars = $this->objectmelanie->getUserCalendars();
 		if (!isset($_calendars)) return null;
-		$calendars = array();
+		$calendars = [];
 		foreach ($_calendars as $_calendar) {
 			$calendar = new Calendar($this);
 			$calendar->setObjectMelanie($_calendar);
@@ -129,7 +129,7 @@ class User extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getSharedCalendars()");
 		$_calendars = $this->objectmelanie->getSharedCalendars();
 		if (!isset($_calendars)) return null;
-		$calendars = array();
+		$calendars = [];
 		foreach ($_calendars as $_calendar) {
 			$calendar = new Calendar($this);
 			$calendar->setObjectMelanie($_calendar);
@@ -158,7 +158,7 @@ class User extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getUserTaskslists()");
 		$_taskslists = $this->objectmelanie->getUserTaskslists();
 		if (!isset($_taskslists)) return null;
-		$taskslists = array();
+		$taskslists = [];
 		foreach ($_taskslists as $_taskslist) {
 			$taskslist = new Taskslist($this);
 			$taskslist->setObjectMelanie($_taskslist);
@@ -174,7 +174,7 @@ class User extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getSharedTaskslists()");
 		$_taskslists = $this->objectmelanie->getSharedTaskslists();
 		if (!isset($_taskslists)) return null;
-		$taskslists = array();
+		$taskslists = [];
 		foreach ($_taskslists as $_taskslist) {
 			$taskslist = new Taskslist($this);
 			$taskslist->setObjectMelanie($_taskslist);
@@ -203,7 +203,7 @@ class User extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getUserAddressbooks()");
 		$_addressbooks = $this->objectmelanie->getUserAddressbooks();
 		if (!isset($_addressbooks)) return null;
-		$addressbooks = array();
+		$addressbooks = [];
 		foreach ($_addressbooks as $_addressbook) {
 			$addressbook = new Addressbook($this);
 			$addressbook->setObjectMelanie($_addressbook);
@@ -219,7 +219,7 @@ class User extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getSharedAddressbooks()");
 		$_addressbooks = $this->objectmelanie->getSharedAddressbooks();
 		if (!isset($_addressbooks)) return null;
-		$addressbooks = array();
+		$addressbooks = [];
 		foreach ($_addressbooks as $_addressbook) {
 			$addressbook = new Addressbook($this);
 			$addressbook->setObjectMelanie($_addressbook);

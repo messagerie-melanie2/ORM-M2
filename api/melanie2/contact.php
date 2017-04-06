@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,9 +88,11 @@ use LibMelanie\Log\M2Log;
  * @property string $logo Logo du contact
  * @property string $logotype Type du fichier logo
  * @property string $timezone Timezone du contact
- * @property string $geo Geo ?
- * @property string $pager Pager ?
- * @property string $role Role du contact ?
+ * @property string $geo Geo
+ * @property string $pager Pager
+ * @property string $role Role du contact
+ *
+ * @property string $vcard VCard associé au contact courant, calculé à la volée en attendant la mise en base de données
  *
  * @method bool load() Chargement le contact, en fonction de l'addressbook et de l'uid
  * @method bool exists() Test si le contact existe, en fonction de l'addressbook et de l'uid
@@ -260,4 +262,22 @@ class Contact extends Melanie2Object {
 	/*****************************************************
 	 * DATA MAPPING
 	 */
+	/**
+	 * Map vcard to current contact
+	 * @ignore
+	 */
+	protected function setMapVcard($vcard) {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapVcard()");
+	  \LibMelanie\Lib\VCardToContact::Convert($vcard, $this, $this->addressbookmelanie, $this->usermelanie);
+	}
+	/**
+	 * Map current contact to vcard
+	 * @return string $vcard
+	 * @ignore
+	 */
+	protected function getMapVcard() {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapVcard()");
+	  return \LibMelanie\Lib\ContactToVCard::Convert($this, $this->addressbookmelanie, $this->usermelanie);
+	}
+
 }

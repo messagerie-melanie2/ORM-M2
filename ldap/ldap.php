@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -488,6 +488,8 @@ class Ldap {
 	}
 	/**
 	 * Recherche dans le LDAP
+	 * Effectue une recherche avec le filtre filter dans le dossier base_dn avec le paramétrage LDAP_SCOPE_SUBTREE.
+	 * C'est l'équivalent d'une recherche dans le dossier.
 	 * @param string $base_dn Base DN de recherche
 	 * @param string $filter Filtre de recherche
 	 * @param array $attributes Attributs à rechercher
@@ -498,6 +500,37 @@ class Ldap {
 	public function search($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
 	    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->search($base_dn, $filter)");
 	    return @ldap_search($this->connection, $base_dn, $filter, $attributes, $attrsonly, $sizelimit);
+	}
+	/**
+	 * Recherche dans le LDAP
+	 * Effectue une recherche avec le filtre filter dans le dossier base_dn avec la configuration LDAP_SCOPE_BASE.
+	 * C'est équivalent à lire une entrée dans un dossier.
+	 * @param string $base_dn Base DN de recherche
+	 * @param string $filter Filtre de recherche
+	 * @param array $attributes Attributs à rechercher
+	 * @param int $attrsonly Doit être défini à 1 si seuls les types des attributs sont demandés. S'il est défini à 0, les types et les valeurs des attributs sont récupérés, ce qui correspond au comportement par défaut.
+	 * @param int $sizelimit Vous permet de limiter le nombre d'entrées à récupérer. Le fait de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.
+	 * @return resource a search result identifier or false on error.
+	 */
+	public function read($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->read($base_dn, $filter)");
+	  return @ldap_read($this->connection, $base_dn, $filter, $attributes, $attrsonly, $sizelimit);
+	}
+	/**
+	 * Recherche dans le LDAP
+	 * Effectue une recherche avec le filtre filter dans le dossier base_dn avec l'option LDAP_SCOPE_ONELEVEL.
+	 * LDAP_SCOPE_ONELEVEL signifie que la recherche ne peut retourner des entrées que dans le niveau qui est immédiatement sous le niveau base_dn
+	 * (c'est l'équivalent de la commande ls, pour obtenir la liste des fichiers et dossiers du dossier courant).
+	 * @param string $base_dn Base DN de recherche
+	 * @param string $filter Filtre de recherche
+	 * @param array $attributes Attributs à rechercher
+	 * @param int $attrsonly Doit être défini à 1 si seuls les types des attributs sont demandés. S'il est défini à 0, les types et les valeurs des attributs sont récupérés, ce qui correspond au comportement par défaut.
+	 * @param int $sizelimit Vous permet de limiter le nombre d'entrées à récupérer. Le fait de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.
+	 * @return resource a search result identifier or false on error.
+	 */
+	public function ldap_list($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->ldap_list($base_dn, $filter)");
+	  return @ldap_list($this->connection, $base_dn, $filter, $attributes, $attrsonly, $sizelimit);
 	}
 	/**
 	 * Retourne les entrées trouvées via le Ldap search

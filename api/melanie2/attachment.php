@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -294,7 +294,7 @@ class Attachment extends Melanie2Object {
 	    $url = str_replace('%p', urlencode(substr($this->path, strlen(ConfigMelanie::DEFAULT_ATTACHMENTS_FOLDER) + 1)), $url);
 	    return $url;
 	  } else {
-	    return $this->data;
+	    return $this->objectmelanie->data;
 	  }
 	}
   /**
@@ -306,10 +306,32 @@ class Attachment extends Melanie2Object {
 	protected function setMapUrl($url) {
 	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapUrl($url)");
 	  if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-	  if ($this->type != self::TYPE_URL)
-	    return false;
 
-	  $this->data = $url;
+	  $this->objectmelanie->data = $url;
+	  $this->type = self::TYPE_URL;
+	  return true;
+	}
+
+	/**
+	 * Mapping type field
+	 * @throws Exceptions\ObjectMelanieUndefinedException
+	 * @return Attachment::TYPE_*
+	 */
+	protected function getMapType() {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapType()");
+	  if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    return $this->type;
+	}
+	/**
+	 * Mapping type field
+	 * @param Attachment::TYPE_* $type
+	 * @throws Exceptions\ObjectMelanieUndefinedException
+	 * @return boolean
+	 */
+	protected function setMapType($type) {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapType($type)");
+	  if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+	  $this->type = $type;
 	  return true;
 	}
 

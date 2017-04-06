@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,5 +40,6 @@ class SqlTaskRequests {
 	 * @var SELECT
 	 * @param :task_owner
 	 */
-	const getCTag = "SELECT md5(CAST(sum(task_ts) AS varchar)) as ctag FROM nag_tasks WHERE task_owner = :task_owner;";
+	//const getCTag = "SELECT md5(CAST(sum(task_ts) AS varchar)) as ctag FROM nag_tasks WHERE task_owner = :task_owner;";
+	const getCTag = "SELECT datatree_ctag as ctag FROM horde_datatree WHERE datatree_name = :task_owner AND group_uid = 'horde.shares.nag'";
 }

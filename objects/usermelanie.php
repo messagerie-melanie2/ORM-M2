@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,6 +125,8 @@ class UserMelanie {
 		// Replace name
 		$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['CalendarMelanie']['owner'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['CalendarMelanie']['id'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['CalendarMelanie']['ctag'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['CalendarMelanie']['synctoken'][MappingMelanie::name], $query);
 		$query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['CalendarMelanie']['name'][MappingMelanie::name], $query);
 		$query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['CalendarMelanie']['perm'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
@@ -169,6 +171,8 @@ class UserMelanie {
 		// Replace name
 		$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['CalendarMelanie']['owner'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['CalendarMelanie']['id'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['CalendarMelanie']['ctag'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['CalendarMelanie']['synctoken'][MappingMelanie::name], $query);
 		$query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['CalendarMelanie']['name'][MappingMelanie::name], $query);
 		$query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['CalendarMelanie']['perm'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
@@ -200,6 +204,8 @@ class UserMelanie {
 		// Replace name
 		$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['CalendarMelanie']['owner'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['CalendarMelanie']['id'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['CalendarMelanie']['ctag'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['CalendarMelanie']['synctoken'][MappingMelanie::name], $query);
 		$query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['CalendarMelanie']['name'][MappingMelanie::name], $query);
 		$query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['CalendarMelanie']['perm'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
@@ -233,6 +239,8 @@ class UserMelanie {
 		// Replace name
 		$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['owner'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['id'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['ctag'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['synctoken'][MappingMelanie::name], $query);
  		$query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['name'][MappingMelanie::name], $query);
  		$query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['perm'][MappingMelanie::name], $query);
  		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
@@ -277,6 +285,8 @@ class UserMelanie {
 	 	// Replace name
 	 	$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['owner'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['id'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['ctag'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['synctoken'][MappingMelanie::name], $query);
 		$query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['name'][MappingMelanie::name], $query);
 		$query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['perm'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
@@ -307,6 +317,8 @@ class UserMelanie {
 		// Replace name
 		$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['owner'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['id'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['ctag'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['synctoken'][MappingMelanie::name], $query);
 		$query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['name'][MappingMelanie::name], $query);
 		$query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['perm'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
@@ -339,6 +351,8 @@ class UserMelanie {
 		// Replace name
 		$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['owner'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['id'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['ctag'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['synctoken'][MappingMelanie::name], $query);
 		$query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['name'][MappingMelanie::name], $query);
 		$query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['perm'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
@@ -383,6 +397,8 @@ class UserMelanie {
 		// Replace name
 		$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['owner'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['id'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['ctag'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['synctoken'][MappingMelanie::name], $query);
 		$query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['name'][MappingMelanie::name], $query);
 		$query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['perm'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
@@ -413,6 +429,8 @@ class UserMelanie {
 		// Replace name
 		$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['owner'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['id'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['ctag'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['synctoken'][MappingMelanie::name], $query);
 		$query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['name'][MappingMelanie::name], $query);
 		$query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['perm'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);

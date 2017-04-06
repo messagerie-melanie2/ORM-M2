@@ -5,7 +5,7 @@
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  * Ce fichier est un exemple d'utilisation
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,14 @@ function microtime_float() {
 	return array_sum(explode(' ', microtime()));
 }
 
-include_once 'includes/includes_contacts.php';
+// Configuration du nom de l'application pour l'ORM
+if (!defined('CONFIGURATION_APP_LIBM2')) {
+  define('CONFIGURATION_APP_LIBM2', 'roundcube');
+}
+
+// // Définition des inclusions
+set_include_path(__DIR__.'/..');
+include_once 'includes/libm2.php';
 
 use LibMelanie\Api\Melanie2\User;
 use LibMelanie\Api\Melanie2\Contact;
@@ -53,24 +60,33 @@ M2Log::InitErrorLog($log);
 echo "########################\r\n";
 
 $user = new User();
-$user->uid = 'julien.test1';
+$user->uid = 'thomas.test1';
 
 $addressbook = new Addressbook($user);
-$addressbook->id = 'a0fad14abd4132c775749517386988fa';
+$addressbook->id = 'thomas.test1';
 
 $contact = new Contact($user, $addressbook);
-$contact->uid = '20121206171515.19613eg3fxsomw74@horde.ida.melanie2.i2';
-$contact->alias = '%o%';
+//$contact->uid = '20150402100009.8164365ihcjmnzt5@roundcube';
+$contact->uid = "20150402095827.19575mo7ac0phpyb@roundcube";
+// $contact->alias = '%o%';
 
-$contacts = $contact->getList(
-		array('uid', 'name', 'addressbook', 'alias'),
-		'(#alias#) AND #addressbook#',
-		array(
-				'uid' => MappingMelanie::like,
-				'alias' => MappingMelanie::like)
-);
+// $contacts = $contact->getList(
+// 		['uid', 'name', 'addressbook', 'alias'],
+// 		'(#alias#) AND #addressbook#',
+// 		[
+// 				'uid' => MappingMelanie::like,
+// 				'alias' => MappingMelanie::like]
+// );
 
-var_dump($contacts);
+// var_dump($contacts);
+
+if ($contact->load()) {
+  echo $contact->vcard;
+}
+
+$contact2 = new Contact($user, $addressbook);
+$contact2->vcard = $contact->vcard;
+var_dump($contact2);
 
 // $addressbooks = $user->getSharedAddressbooks();
 // var_dump($addressbooks);
@@ -85,15 +101,15 @@ var_dump($contacts);
 // $contact = new Contact($user, $addressbooks[0]);
 // $contact->lastname = 'Payen';
 // $contact->firstname = 'Thomas';
-// $contact->email = 'thomas.payen@personal.fr';
-// $contact->email1 = 'thomas.payen@work.com';
+// $contact->email = 'thomas.payen@i-carre.net';
+// $contact->email1 = 'thomas.payen@apitech.fr';
 // $contact->uid = '20130327134709.17573f3hb5qlnln1@zp.ac.melanie2.i2';
-// $contact->homephone = '04 78 78 78 78';
+// $contact->homephone = '04 78 95 96 56';
 // $contact->homecity = 'Lyon';
 // $contact->homestreet = 'JF Raclet';
 // $contact->homecountry = 'FR';
 // $contact->homepostalcode = '69 000';
-// $contact->workphone = '04 15 15 15 15';
+// $contact->workphone = '04 72 65 95 68';
 // $contact->workstreet = 'Saint Theobald';
 // $contact->workcity = 'L Isle D Abeau';
 // $contact->workcountry = 'FR';

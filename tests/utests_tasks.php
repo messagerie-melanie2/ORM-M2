@@ -5,7 +5,7 @@
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  * Ce fichier est un exemple d'utilisation
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,10 @@ function microtime_float() {
 	return array_sum(explode(' ', microtime()));
 }
 
+// Configuration du nom de l'application pour l'ORM
+if (!defined('CONFIGURATION_APP_LIBM2')) {
+	define('CONFIGURATION_APP_LIBM2', 'roundcube');
+}
 
 // // Définition des inclusions
 set_include_path(__DIR__.'/..');
@@ -57,11 +61,23 @@ echo "########################\r\n";
 
 $user = new User();
 $user->uid = 'thomas.test1';
-$takslist = $user->getDefaultTaskslist();
+// $takslist = $user->getDefaultTaskslist();
 
-var_dump($takslist);
+// var_dump($takslist);
 
+$result = [
+		'added' => [],
+		'modified' => [],
+		'deleted' => [],
+];
 
+$task = new \LibMelanie\Api\Melanie2\Task();
+$task->taskslist = 'thomas.payen';
+foreach ($task->getList(['uid']) as $_task) {
+	$result['added'][] = $_task->uid.'.ics';
+}
+
+var_export($result);
 
 // $taskslists = $user->getSharedTaskslists();
 // var_dump($taskslists);
@@ -71,11 +87,11 @@ var_dump($takslist);
 
 // $taskslist = $taskslists[0];
 
-// $list_uid = array(	'482e6a72-4587-4dc9-8ef0-bfdf283ac870',
+// $list_uid = [	'482e6a72-4587-4dc9-8ef0-bfdf283ac870',
 // 		'19c7acb6-cb53-419c-b9e3-9fb72c9cfee5',
 // 		'81c307ba-e550-426a-8343-7751a33dccef',
 // 		'ca52f55f-2bb9-4817-af89-dddfa712d14e',
-// 		'5d1007da-d203-4531-9af3-13ffab2869e7');
+// 		'5d1007da-d203-4531-9af3-13ffab2869e7'];
 
 // $task = new Task($user, $taskslist);
 
@@ -84,12 +100,12 @@ var_dump($takslist);
 // $task->uid = $list_uid;
 
 // $tasks = $task->getList(
-// 		array('uid', 'name', 'taskslist', 'start'), /* Champs à retourner par la requête */
+// 		['uid', 'name', 'taskslist', 'start'], /* Champs à retourner par la requête */
 // 		'(#name# OR #uid#) AND #taskslist#', /* Filtre à appliquer à la requête */
-// 		array( /* Liste des opérateurs à appliquer */
+// 		[ /* Liste des opérateurs à appliquer */
 // 				'name' => MappingMelanie::like, /* Utilisation du LIKE */
 // 				'uid' => MappingMelanie::eq /* Utilisation du différent (<>) */
-// 		)
+// 		]
 // );
 
 // var_dump($tasks);

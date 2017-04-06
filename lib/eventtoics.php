@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,11 +77,13 @@ class EventToICS {
 	 * @param Calendar $calendar
 	 * @param User $user
 	 * @param VObject\Component\VCalendar $vcalendar
+	 * @param boolean $useattachments Si l'ics doit inclure les pièces jointes
+	 * @param boolean $isfreebusy Si on ne retourne que les freebusy (pas de pièce jointe ou de participants)
 	 * @return string $ics
 	 */
-	public static function Convert(Event $event, Calendar $calendar = null, User $user = null, VObject\Component\VCalendar $vcalendar = null) {
+	public static function Convert(Event $event, Calendar $calendar = null, User $user = null, VObject\Component\VCalendar $vcalendar = null, $useattachments = true, $isfreebusy = false) {
     if (!isset($vcalendar)) {
-      $vcalendar = self::getVCalendar($event, $calendar, $user);
+      $vcalendar = self::getVCalendar($event, $calendar, $user, $useattachments, $isfreebusy);
     }
 		return $vcalendar->serialize();
 	}
@@ -93,11 +95,15 @@ class EventToICS {
 	 * @param Event $event
 	 * @param Calendar $calendar
 	 * @param User $user
+	 * @param boolean $useattachments Si l'ics doit inclure les pièces jointes
+	 * @param boolean $isfreebusy Si on ne retourne que les freebusy (pas de pièce jointe ou de participants)
 	 * @return VObject\Component\VCalendar $vcalendar
 	 */
-	public static function getVCalendar(Event $event, Calendar $calendar = null, User $user = null) {
+	public static function getVCalendar(Event $event, Calendar $calendar = null, User $user = null, $useattachments = true, $isfreebusy = false, $vcalendar = null) {
 	  M2Log::Log(M2Log::LEVEL_DEBUG, "EventToICS->getVCalendar()");
-	  $vcalendar = new VObject\Component\VCalendar();
+	  if (!isset($vcalendar)) {
+	    $vcalendar = new VObject\Component\VCalendar();
+	  }
 	  $vevent = $vcalendar->add('VEVENT');
 	  // PRODID et Version
 	  $vcalendar->PRODID = self::PRODID;
@@ -118,7 +124,7 @@ class EventToICS {
 	  // UID
 	  $vevent->UID = $event->uid;
 	  if (!$event->deleted) {
-	    $vevent = self::getVeventFromEvent($vevent, $event, $calendar, $user);
+	    $vevent = self::getVeventFromEvent($vevent, $event, $calendar, $user, $useattachments, $isfreebusy);
 	    // Type récurrence
 	    if (isset($event->recurrence->type)
 	        && $event->recurrence->type !== Recurrence::RECURTYPE_NORECUR) {
@@ -177,10 +183,11 @@ class EventToICS {
 	        }
 	        $date = $exdatetime->format('Ymd') . 'T' . $vevent->DTSTART->getDateTime()->format('His');
 	      }
-	      elseif ($vevent->DTSTART[ICS::VALUE] === ICS::VALUE_DATE_TIME) {
+	      elseif ($vevent->DTSTART[ICS::VALUE] == ICS::VALUE_DATE) {
 	        $exdatetime = new \DateTime($exception->recurrenceId, new \DateTimeZone($timezone));
 	        $date = $exdatetime->format('Ymd');
-	      } else {
+	      } 
+	      else {
 	        $exdatetime = new \DateTime($exception->recurrenceId, new \DateTimeZone($timezone));
 	        if (!isset($vevent->DTSTART)) {
 	          continue;
@@ -193,7 +200,7 @@ class EventToICS {
 	        $vexception = $vcalendar->add('VEVENT');
 	        // UID
 	        $vexception->UID = $exception->uid;
-	        if ($vevent->DTSTART[ICS::VALUE] === ICS::VALUE_DATE) {
+	        if ($vevent->DTSTART[ICS::VALUE] == ICS::VALUE_DATE) {
 	          $vexception->add(ICS::RECURRENCE_ID, $date, [ICS::VALUE => ICS::VALUE_DATE]);
 	        } else {
 	          if (isset($timezone)) {
@@ -202,13 +209,13 @@ class EventToICS {
 	            $vexception->add(ICS::RECURRENCE_ID, $date, [ICS::VALUE => ICS::VALUE_DATE_TIME]);
 	          }
 	        }
-	        $vexception = self::getVeventFromEvent($vexception, $exception, $calendar, $user);
+	        $vexception = self::getVeventFromEvent($vexception, $exception, $calendar, $user, $useattachments, $isfreebusy);
 	      }
 	    }
 	    // Gestion des EXDATE
 	    if (count($exdate) > 0) {
 	      foreach ($exdate as $date) {
-	        if ($vevent->DTSTART[ICS::VALUE] === ICS::VALUE_DATE) {
+	        if ($vevent->DTSTART[ICS::VALUE] == ICS::VALUE_DATE) {
 	          $vevent->add(ICS::EXDATE, $date, [ICS::VALUE => ICS::VALUE_DATE]);
 	        } else {
 	          if (isset($timezone)) {
@@ -230,8 +237,11 @@ class EventToICS {
 	 * @param Event $event
 	 * @param Calendar $calendar
 	 * @param User $user
+	 * @param boolean $useattachments Si l'ics doit inclure les pièces jointes
+	 * @param boolean $isfreebusy Si on ne retourne que les freebusy (pas de pièce jointe ou de participants)
+	 * @return VObject\Component $vevent
 	 */
-	private static function getVeventFromEvent(VObject\Component $vevent, Event $event, Calendar $calendar = null, User $user = null) {
+	private static function getVeventFromEvent(VObject\Component $vevent, Event $event, Calendar $calendar = null, User $user = null, $useattachments = true, $isfreebusy = false) {
 	  M2Log::Log(M2Log::LEVEL_DEBUG, "EventToICS->getVeventFromEvent()");
 	  // Timezone
 		if (isset($user)) {
@@ -285,36 +295,48 @@ class EventToICS {
 		  $date = $dateTime->format('Ymd\THis\Z');
 		  $vevent->add(ICS::DTSTAMP, $date);
 		  $vevent->add(ICS::LAST_MODIFIED, $date);
-		  $vevent->add(ICS::CREATED, $date);
+		  $created = $event->getAttribute(ICS::CREATED);
+		  if (isset($created))
+		    $vevent->add(ICS::CREATED, $created);
+		  else
+		    $vevent->add(ICS::CREATED, $date);
 		}
 
 		// DateTime
 		if (isset($event->start) && isset($event->end)) {
-			$dateTimeStart = new \DateTime($event->start);
-			$dateTimeEnd = new \DateTime($event->end);
+			$dateTimeStart = new \DateTime($event->start, new \DateTimeZone($timezone));
+			$dateTimeEnd = new \DateTime($event->end, new \DateTimeZone($timezone));
 
 			if ($dateTimeEnd->format('H:i:s') == $dateTimeStart->format('H:i:s') && $dateTimeStart->format('H:i:s') == "00:00:00") {
 				// All day event
 				$vevent->add(ICS::DTSTART, $dateTimeStart->format('Ymd'), [ICS::VALUE => ICS::VALUE_DATE]);
 				$vevent->add(ICS::DTEND, $dateTimeEnd->format('Ymd'), [ICS::VALUE => ICS::VALUE_DATE]);
 			} else {
-				$dateTimeStart->setTimezone(new \DateTimeZone($timezone));
-				$dateTimeEnd->setTimezone(new \DateTimeZone($timezone));
 				$vevent->DTSTART = $dateTimeStart;
 				$vevent->DTEND = $dateTimeEnd;
 			}
 		}
 
+		// Problème de user uid vide
+		$user_uid = $user->uid;
+		// Test si l'événement est privé, confidentiel ou public
 		if (($event->class == Event::CLASS_PRIVATE
 				|| $event->class == Event::CLASS_CONFIDENTIAL)
-				&& $event->owner != $user->uid
+				&& (($event->owner != $user_uid
 				&& isset($calendar)
-				&& $calendar->owner !=  $user->uid
-		    && !$calendar->asRight(\LibMelanie\Config\ConfigMelanie::PRIV)) {
+				&& $calendar->owner !=  $user_uid
+		    && !$calendar->asRight(\LibMelanie\Config\ConfigMelanie::PRIV)) || !isset($user_uid))) {
 			$vevent->SUMMARY = 'Événement privé';
+    } else if ($isfreebusy) {
+      $vevent->SUMMARY = '[' . self::convertStatusToFR($event->status) . '] Événement';
 		} else {
 			// Titre
-			if (isset($event->title) && $event->title != "") $vevent->SUMMARY = $event->title;
+			if (isset($event->title) && $event->title != "") {
+			  $vevent->SUMMARY = self::cleanUTF8String($event->title);
+			}
+			else {
+			  $vevent->SUMMARY = 'Sans titre';
+			}
 			// Catégories
 			if (isset($event->category) && $event->category != "") {
 			  $categories = explode(',', $event->category);
@@ -323,13 +345,19 @@ class EventToICS {
 			  }
 			}
 			// Description
-			if (isset($event->description) && $event->description != "") $vevent->DESCRIPTION = $event->description;
+			if (isset($event->description) && $event->description != "") {
+			  $vevent->DESCRIPTION = self::cleanUTF8String($event->description);
+			}
 			// Location
-			if (isset($event->location) && $event->location != "") $vevent->LOCATION = $event->location;
+			if (isset($event->location) && $event->location != "") {
+			  $vevent->LOCATION = self::cleanUTF8String($event->location);
+			}
 			// Alarm
 			if (isset($event->alarm) && $event->alarm != 0) {
 				$valarm = $vevent->add('VALARM');
-				$valarm->TRIGGER = '-PT'.$event->alarm.'M';
+				//$valarm->TRIGGER = '-PT'.$event->alarm.'M';
+				$valarm->TRIGGER = self::formatAlarm($event->alarm);
+				$valarm->TRIGGER[ICS::VALUE] = ICS::VALUE_DURATION;
 				$valarm->ACTION = ICS::ACTION_DISPLAY;
         // Attributs sur l'alarme
 				$x_moz_lastack = $event->getAttribute(ICS::X_MOZ_LASTACK);
@@ -343,14 +371,18 @@ class EventToICS {
 					&& is_array($organizer_attendees)
 					&& count($organizer_attendees) > 0) {
 				// Add organizer
-				$vevent->add(ICS::ORGANIZER,
-				    'mailto:'.$event->organizer->email,
-				    [
-				      ICS::CN => $event->organizer->name,
+				$params = [
 				      ICS::ROLE => ICS::ROLE_CHAIR,
 				      ICS::PARTSTAT => ICS::PARTSTAT_ACCEPTED,
 				      ICS::RSVP => 'TRUE',
-				    ]);
+				    ];
+				if (!empty($event->organizer->name)) {
+				  $params[ICS::CN] = $event->organizer->name;
+				}
+				$vevent->add(ICS::ORGANIZER,
+				    'mailto:'.$event->organizer->email,
+				    $params
+				    );
 				foreach ($organizer_attendees as $attendee) {
 					// Role
 					switch ($attendee->role) {
@@ -387,19 +419,27 @@ class EventToICS {
 							$partstat = ICS::PARTSTAT_TENTATIVE;
 							break;
 					}
-					// Add attendee
-					$vevent->add(ICS::ATTENDEE, 'mailto:'.$attendee->email, [
-    						ICS::CN => $attendee->name,
+					$params = [
     						ICS::PARTSTAT => $partstat,
     						ICS::ROLE => $role,
 					      ICS::RSVP => 'TRUE',
-					    ]);
+					    ];
+					if (!empty($attendee->name)) {
+					  $params[ICS::CN] = $attendee->name;
+					}
+					// Add attendee
+					$vevent->add(ICS::ATTENDEE, 'mailto:'.$attendee->email, $params);
 				}
 			}
 			// Calendar infos
 			if (isset($calendar)) {
+			  // Ne plus utiliser ces informations qui ne devraient pas être nécessaire
 			  $vevent->add(ICS::X_CALDAV_CALENDAR_ID, $calendar->id);
 			  $vevent->add(ICS::X_CALDAV_CALENDAR_OWNER, $calendar->owner);
+			  // MANTIS 4002: Ajouter le creator dans la description lors de la génération de l'ICS
+			  if ($event->owner != $calendar->owner) {
+			    $vevent->DESCRIPTION = "[".$event->owner."]\n\n" . $vevent->DESCRIPTION;
+			  }
 			}
 			// Sequence
 			$sequence = $event->getAttribute(ICS::SEQUENCE);
@@ -407,40 +447,48 @@ class EventToICS {
 			// X Moz Send Invitations
 			$send_invitation = $event->getAttribute(ICS::X_MOZ_SEND_INVITATIONS);
 			if (isset($send_invitation)) $vevent->add(ICS::X_MOZ_SEND_INVITATIONS, $send_invitation);
+			// X Moz Send Invitations Undisclosed
+			$send_invitation_undisclosed = $event->getAttribute(ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED);
+			if (isset($send_invitation_undisclosed)) $vevent->add(ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED, $send_invitation_undisclosed);
 			// X Moz Generation
 			$moz_generation = $event->getAttribute(ICS::X_MOZ_GENERATION);
 			if (isset($moz_generation)) $vevent->add(ICS::X_MOZ_GENERATION, $moz_generation);
+			// Transp
+			$transp = $event->getAttribute(ICS::TRANSP);
+			if (isset($transp)) $vevent->add(ICS::TRANSP, $transp);
 			// Gestion des pièces jointes
-			$attachments = $event->attachments;
-			if (isset($attachments)
-					&& is_array($attachments)
-					&& count($attachments) > 0) {
-				foreach ($attachments as $attachment) {
-					$params = [];
-					if ($attachment->type == Attachment::TYPE_URL) {
-						// Pièce jointe URL
-						$data = $attachment->data;
-					} else {
-						// Pièce jointe binaire
-						if (self::$USE_ATTACH_URL) {
-							// URL de téléchargement
-							$data = $attachment->url;
-							$params[ICS::X_CM2V3_SEND_ATTACH_INVITATION] = 'TRUE';
-							$params[ICS::X_CM2V3_ATTACH_HASH] = $attachment->hash;
-							$params[ICS::FMTTYPE] = $attachment->contenttype;
-						} else {
-							// Envoie du binaire directement
-							$data = $attachment->data;
-							$params[ICS::ENCODING] = ICS::ENCODING_BASE64;
-							$params[ICS::VALUE] = ICS::VALUE_BINARY;
-							$params[ICS::FMTTYPE] = $attachment->contenttype;
-						}
-						$params[ICS::X_MOZILLA_CALDAV_ATTACHMENT_NAME] = $attachment->name;
-						$params[ICS::SIZE] = $attachment->size;
-					}
-					// Add attachment
-					$vevent->add(ICS::ATTACH, $data, $params);
-				}
+			if ($useattachments) {
+			  $attachments = $event->attachments;
+			  if (isset($attachments)
+			      && is_array($attachments)
+			      && count($attachments) > 0) {
+	        foreach ($attachments as $attachment) {
+	          $params = [];
+	          if ($attachment->type == Attachment::TYPE_URL) {
+	            // Pièce jointe URL
+	            $data = $attachment->url;
+	          } else {
+	            // Pièce jointe binaire
+	            if (self::$USE_ATTACH_URL) {
+	              // URL de téléchargement
+	              $data = $attachment->url;
+	              $params[ICS::X_CM2V3_SEND_ATTACH_INVITATION] = 'TRUE';
+	              $params[ICS::X_CM2V3_ATTACH_HASH] = $attachment->hash;
+	              $params[ICS::FMTTYPE] = $attachment->contenttype;
+	            } else {
+	              // Envoie du binaire directement
+	              $data = $attachment->data;
+	              $params[ICS::ENCODING] = ICS::ENCODING_BASE64;
+	              $params[ICS::VALUE] = ICS::VALUE_BINARY;
+	              $params[ICS::FMTTYPE] = $attachment->contenttype;
+	            }
+	            $params[ICS::X_MOZILLA_CALDAV_ATTACHMENT_NAME] = $attachment->name;
+	            $params[ICS::SIZE] = $attachment->size;
+	          }
+	          // Add attachment
+	          $vevent->add(ICS::ATTACH, $data, $params);
+	        }
+	      }
 			}
 		}
 		return $vevent;
@@ -472,4 +520,76 @@ class EventToICS {
 			$standard->RRULE = 'FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10';
 		}
 	}
+
+	/**
+	 * Formatte l'alarme en minutes en un trigger ICS
+	 * @param int $alarm En minutes
+	 * @return string
+	 */
+	private static function formatAlarm($alarm) {
+	  if ($alarm < 0) {
+	    $trigger = "P";
+	    $alarm = - $alarm;
+	  }
+	  else {
+	    $trigger = "-P";
+	  }
+
+	  // Nombre de semaines, 10080 minutes
+	  if ($alarm >= 10080) {
+	    $nb_weeks = (int)($alarm / 10080);
+	    $alarm -= $nb_weeks * 10080;
+	    $trigger .= $nb_weeks."W";
+	  }
+	  // Nombre de jours, 1440 minutes
+    if ($alarm >= 1440) {
+      $nb_days = (int)($alarm / 1440);
+      $alarm -= $nb_days * 1440;
+      $trigger .= $nb_days."D";
+    }
+    if ($alarm > 0) {
+      $trigger .= "T";
+    }
+	  // Nombre d'heures, 60 minutes
+    if ($alarm >= 60) {
+      $nb_hours = (int)($alarm / 60);
+      $alarm -= $nb_hours * 60;
+      $trigger .= $nb_hours."H";
+    }
+	  // Nombre de minutes
+    if ($alarm > 0) {
+      $trigger .= $alarm."M";
+    }
+	  return $trigger;
+	}
+
+	/**
+	 * Nettoyage UTF8 des données
+	 * Utilisé pour éviter le bloquage des synchros par Lightning
+	 * @param string $string
+	 * @return mixed
+	 */
+	private static function cleanUTF8String($string) {
+    return preg_replace('/[\x01\x02\x03\x04\x05\x08\x13\x14\x19\x1E\x1C\x1B]/', '', $string);
+  }
+
+  /**
+   * Retourne la traduction francaise du status ICS
+   * @param string $status
+   * @return string
+   */
+  private static function convertStatusToFR($status) {
+    $convert = array(
+            'confirmed' => 'Confirmé',
+            'tentative' => 'Provisoire',
+            'cancelled' => 'Annulé',
+            'default' => 'Libre',
+    );
+    if (isset($convert[$status])) {
+      return $convert[$status];
+    }
+    else {
+      return $convert['default'];
+    }
+  }
 }

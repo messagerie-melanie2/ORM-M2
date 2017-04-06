@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,20 +35,27 @@ class SqlCalendarRequests {
 	 * @param REPLACE {event_range}
 	 * @param PDO :calendar_id
 	 */
-	const listAllEvents = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2	ON k1.event_uid = k2.event_uid AND k2.event_attendees <> ''	AND k2.event_attendees <> 'a:0:{}' WHERE k1.calendar_id = :calendar_id{event_range} ORDER BY event_start;";
+	const listAllEvents = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2	ON k1.event_uid = k2.event_uid AND char_length(k2.event_attendees) > 10 WHERE k1.calendar_id = :calendar_id{event_range};";
+
+	/**
+	 * @var SELECT
+	 * @param REPLACE {event_range}
+	 * @param PDO :calendar_id
+	 */
+	const listAllEventsFreebusy = "SELECT k1.* FROM kronolith_events k1 WHERE k1.calendar_id = :calendar_id{event_range};";
 
 	/**
 	 * @var SELECT
 	 * @param PDO :calendar_id, :event_uid
 	 */
-	const getEvent = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2	ON k1.event_uid = k2.event_uid AND k2.event_attendees <> ''	AND k2.event_attendees <> 'a:0:{}' WHERE k1.calendar_id = :calendar_id AND k1.event_uid = :event_uid;";
+	const getEvent = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2	ON k1.event_uid = k2.event_uid AND char_length(k2.event_attendees) > 10 WHERE k1.calendar_id = :calendar_id AND k1.event_uid = :event_uid;";
 
 	/**
 	 * @var SELECT
 	 * @param REPLACE {fields_list}
 	 * @param PDO :calendar_id, :event_uid
 	 */
-	const getListEvents = "SELECT {fields_list}, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2 ON k1.event_uid = k2.event_uid AND k2.event_attendees <> ''	AND k2.event_attendees <> 'a:0:{}' WHERE {where_clause};";
+	const getListEvents = "SELECT {fields_list}, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2 ON k1.event_uid = k2.event_uid AND char_length(k2.event_attendees) > 10 WHERE {where_clause};";
 
 	/**
 	 * @var SELECT
@@ -85,5 +92,6 @@ class SqlCalendarRequests {
 	 * @var SELECT
 	 * @param :calendar_id
 	 */
-	const getCTag = "SELECT md5(CAST(sum(event_modified) AS varchar)) as ctag FROM kronolith_events WHERE calendar_id = :calendar_id;";
+	//const getCTag = "SELECT md5(CAST(sum(event_modified) AS varchar)) as ctag FROM kronolith_events WHERE calendar_id = :calendar_id;";
+	const getCTag = "SELECT datatree_ctag as ctag FROM horde_datatree WHERE datatree_name = :calendar_id AND group_uid = 'horde.shares.kronolith'";
 }

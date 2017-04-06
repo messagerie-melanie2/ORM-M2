@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,6 +66,7 @@ use LibMelanie\Lib\EventToICS;
  * @property-read string $realuid UID réellement stocké dans la base de données (utilisé pour les exceptions) (Lecture seule)
  * @property string $ics ICS associé à l'évènement courant, calculé à la volée en attendant la mise en base de données
  * @property-read VObject\Component\VCalendar $vcalendar Object VCalendar associé à l'évènement, peut permettre des manipulations sur les récurrences
+ * @property $move Il s'ajout d'un MOVE, les participants sont conservés
  *
  * @method bool load() Chargement l'évènement, en fonction du calendar et de l'uid
  * @method bool exists() Test si l'évènement existe, en fonction du calendar et de l'uid
@@ -129,9 +130,28 @@ class Event extends Melanie2Object {
 
 	/**
 	 * Object VCalendar disponible via le VObject
-	 * @var unknown
+	 * @var VCalendar
 	 */
 	private $vcalendar;
+
+	/**
+	 * Défini s'il s'agit d'un move qui nécessite de conserver les participants
+	 * Dans ce cas les participants doivent être doublés
+	 * @var boolean
+	 */
+	private $move = false;
+
+	/**
+	 * La génération de l'ICS doit elle retourner des freebusy
+	 * Il n'y aura donc pas de participants, pièces jointes et informations supplémentaires
+	 * @var boolean
+	 */
+	public $ics_freebusy = false;
+  /**
+   * La génération de l'ICS doit elle retourner les pièces jointes ?
+   * @var boolean
+   */
+	public $ics_attachments = true;
 
 	/****
 	 * CONSTANTES
@@ -251,7 +271,17 @@ class Event extends Melanie2Object {
   		else {
   		    $eventproperty->calendar = $this->calendar;
   		}
-    	$eventproperty->user = '';
+  		// Problème de User avec DAViCal
+  		if (isset($this->calendarmelanie)) {
+  		  $eventproperty->user = $this->calendarmelanie->owner;
+  		}
+  		else if (isset($this->owner)) {
+  		  $eventproperty->user = $this->owner;
+  		}
+  		else {
+  		  $eventproperty->user = '';
+  		}
+
   		$eventproperty->key = $name;
   		$eventproperty->value = $value;
   		$this->attributes[$name] = $eventproperty;
@@ -311,7 +341,9 @@ class Event extends Melanie2Object {
 		// Récupération de l'organisateur
 		$organizer = $this->getMapOrganizer();
 		if (!$hasAttendees
-				|| $organizer->extern) return false;
+				|| $organizer->extern
+		    // MANTIS 4016: Gestion des COPY/MOVE
+		    || $this->move) return false;
 
 		if (!is_null($organizer->calendar)) {
 			$organizer_calendar_id = $organizer->calendar;
@@ -319,7 +351,12 @@ class Event extends Melanie2Object {
 			// Si l'évènement n'existe pas il faut essayer de récupérer l'évènement de l'organisateur
 			$listevents = new Event($this->usermelanie);
 			$listevents->uid = $this->uid;
-			$listevents->owner = $this->objectmelanie->organizer_uid;
+			// XXX: Problème dans la gestion des participants
+			// N'utiliser l'organizer uid que s'il existe ?
+			if (isset($this->objectmelanie->organizer_uid)
+			        && !empty($this->objectmelanie->organizer_uid)) {
+			    $listevents->owner = $this->objectmelanie->organizer_uid;
+			}
 			$events = $listevents->getList();
 			// Si l'évènement n'existe pas et que l'organisateur est différent, c'est un organisateur externe
 			if (count($events) == 0) {
@@ -347,25 +384,25 @@ class Event extends Melanie2Object {
 				    $organizer_calendar_id = $_event->getMapOrganizer()->calendar;
 				    break;
 				}
-				else {
-				    foreach ($_event->exceptions as $_exception) {
-				        $attendees = $_exception->attendees;
-				        if (isset($attendees)
-				                && count($attendees) > 0) {
-				            $organizer_event = $_event;
-				            $organizer_calendar_id = $_event->getMapOrganizer()->calendar;
-				            break;
-				        }
-				    }
+				else if (isset($_event->exceptions) && is_array($_event->exceptions)) {
+						foreach ($_event->exceptions as $_exception) {
+						    $attendees = $_exception->attendees;
+						    if (isset($attendees)
+						        && count($attendees) > 0) {
+ 			            $organizer_event = $_event;
+ 			            $organizer_calendar_id = $_event->getMapOrganizer()->calendar;
+ 			            break;
+  			        }
+						}
 				}
 			}
 			// Si l'organisateur n'est pas trouvé
 			if (!isset($organizer_calendar_id)) {
 			    // On considère également que c'est un organisateur externe
 			    $this->getMapOrganizer()->extern = true;
-		        $this->getMapOrganizer()->email = $organizer->email;
-		        $this->getMapOrganizer()->name = $organizer->name;
-		        return false;
+		      $this->getMapOrganizer()->email = $organizer->email;
+		      $this->getMapOrganizer()->name = $organizer->name;
+		      return false;
 			}
 		}
 		// Test si on est dans le calendrier de l'organisateur (dans ce cas on sauvegarde directement les participants)
@@ -381,9 +418,9 @@ class Event extends Melanie2Object {
 				if (!$organizer_event->load()) {
 				    // Si l'évènement de l'organisateur n'existe pas, on le considère en externe
 				    $this->getMapOrganizer()->extern = true;
-			        $this->getMapOrganizer()->email = $organizer->email;
-			        $this->getMapOrganizer()->name = $organizer->name;
-			        return false;
+			      $this->getMapOrganizer()->email = $organizer->email;
+			      $this->getMapOrganizer()->name = $organizer->name;
+			      return false;
 				}
 			}
 			if (!$this->deleted
@@ -402,13 +439,18 @@ class Event extends Melanie2Object {
 					$organizer_attendees = $organizer_event->getMapAttendees();
 					$invite = true;
 					foreach ($organizer_attendees as $attendee) {
-						if (strtolower($attendee->uid) == strtolower($this->usermelanie->uid)
-								&& $attendee->response != $response) {
-							$attendee->response = $response;
-							$organizer_event->setMapAttendees($organizer_attendees);
-							// Sauvegarde de l'evenement de l'organisateur
-							$save = true;
-							$invite = false;
+						if (strtolower($attendee->uid) == strtolower($this->usermelanie->uid)) {
+							if ($attendee->response != $response) {
+								$attendee->response = $response;
+								$organizer_event->setMapAttendees($organizer_attendees);
+								// Sauvegarde de l'evenement de l'organisateur
+								$save = true;
+								$invite = false;
+							}
+							else {
+								// MANTIS 0004471: Problème lorsque la réponse du participant ne change pas
+								$invite = false;
+							}
 							break;
 						}
 					}
@@ -588,7 +630,16 @@ class Event extends Melanie2Object {
   		else {
   		  $eventproperty->calendar = $this->calendar;
   		}
-  		$eventproperty->user = '';
+  		// Problème de User avec DAViCal
+  		if (isset($this->calendarmelanie)) {
+  			$eventproperty->user = $this->calendarmelanie->owner;
+  		}
+  		else if (isset($this->owner)) {
+  			$eventproperty->user = $this->owner;
+  		}
+  		else {
+  			$eventproperty->user = '';
+  		}
 	    $properties = $eventproperty->getList();
 	    // Récupération de la liste des attributs
 	    foreach ($properties as $property) {
@@ -673,7 +724,7 @@ class Event extends Melanie2Object {
 				$exMod = $exMod || !is_null($res);
 			}
 		}
-		if ($this->deleted) return null;
+		if ($this->deleted) return false;
 		if ($exMod) $this->modified = time();
 		if (!isset($this->owner)) {
 		  $this->owner = $this->usermelanie->uid;
@@ -1084,9 +1135,8 @@ class Event extends Melanie2Object {
 		}
 		// MANTIS 3615: Alimenter le champ recurrence master
 		// TODO: Supprimer cet ajout quand CalDAV utilisera l'ORM
-		if (count($recurrence_master) > 0) {
-		    $this->setAttribute('RECURRENCE-MASTER', implode(',', $recurrence_master));
-		}
+    $this->setAttribute('RECURRENCE-MASTER', implode(',', array_unique($recurrence_master)));
+
 		if (count($_exceptions) > 0) $this->objectmelanie->exceptions = implode(',', $_exceptions);
 		else $this->objectmelanie->exceptions = '';
 	}
@@ -1103,20 +1153,24 @@ class Event extends Melanie2Object {
 		if (!isset($this->exceptions)) {
 		    $this->exceptions = [];
 		}
-		$exceptions = explode(',', $this->objectmelanie->exceptions);
-		if (count($exceptions) != count($this->exceptions)) {
-    		foreach ($exceptions as $exception) {
-    		    $dateEx = new \DateTime($exception);
-    		    if (!isset($this->exceptions[$dateEx->format("Ymd")])) {
-    		        $ex = new Exception($this);
-    		        $dateStart = new \DateTime($this->objectmelanie->start);
-    		        $ex->recurrenceId = $dateEx->format("Y-m-d") . ' ' . $dateStart->format("H:i:s");
-    		        $ex->uid = $this->objectmelanie->uid;
-    		        $ex->load();
-    		        $this->exceptions[$dateEx->format("Ymd")] = $ex;
-    		    }
-		    }
-		}
+    $exceptions = explode(',', $this->objectmelanie->exceptions);
+    if (count($exceptions) != count($this->exceptions)) {
+    	foreach ($exceptions as $exception) {
+    	  // MANTIS 3881: Rendre la librairie moins sensible au format de données pour les exceptions
+    	  if (strtotime($exception) === false)
+    	      continue;
+    		$dateEx = new \DateTime($exception);
+    		if (!isset($this->exceptions[$dateEx->format("Ymd")])) {
+    			$ex = new Exception($this);
+    			$dateStart = new \DateTime($this->objectmelanie->start);
+    			$ex->recurrenceId = $dateEx->format("Y-m-d") . ' ' . $dateStart->format("H:i:s");
+    			$ex->uid = $this->objectmelanie->uid;
+    			$ex->load();
+    			$this->exceptions[$dateEx->format("Ymd")] = $ex;
+    		}
+    	}
+    }
+
 		return $this->exceptions;
 	}
 	/**
@@ -1160,7 +1214,7 @@ class Event extends Melanie2Object {
 	    // MANTIS 3615: Alimenter le champ recurrence master
 	    // TODO: Supprimer cet ajout quand CalDAV utilisera l'ORM
 	    if (count($recurrence_master) > 0) {
-	        $this->setAttribute('RECURRENCE-MASTER', implode(',', $recurrence_master));
+	        $this->setAttribute('RECURRENCE-MASTER', implode(',', array_unique($recurrence_master)));
 	    }
 	}
 
@@ -1226,7 +1280,7 @@ class Event extends Melanie2Object {
 	 */
 	protected function getMapIcs() {
 	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapIcs()");
-    return \LibMelanie\Lib\EventToICS::Convert($this, $this->calendarmelanie, $this->usermelanie);
+    return \LibMelanie\Lib\EventToICS::Convert($this, $this->calendarmelanie, $this->usermelanie, null, $this->ics_attachments, $this->ics_freebusy);
 	}
   /**
    * Map current event to vcalendar
@@ -1235,6 +1289,32 @@ class Event extends Melanie2Object {
    */
 	protected function getMapVcalendar() {
 	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapVcalendar()");
-	  return \LibMelanie\Lib\EventToICS::getVCalendar($this, $this->calendarmelanie, $this->usermelanie);
+	  return \LibMelanie\Lib\EventToICS::getVCalendar($this, $this->calendarmelanie, $this->usermelanie, $this->ics_attachments, $this->ics_freebusy, $this->vcalendar);
+	}
+	/**
+	 * Set current vcalendar for event
+	 * @param VObject\Component\VCalendar $vcalendar
+	 * @ignore
+	 */
+	protected function setMapVcalendar($vcalendar) {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapVcalendar()");
+    $this->vcalendar = $vcalendar;
+	}
+	/**
+	 * Map move param
+	 * @ignore
+	 */
+	protected function setMapMove($move) {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapMove()");
+	  $this->move = $move;
+	}
+	/**
+	 * Map move param
+	 * @return string $move
+	 * @ignore
+	 */
+	protected function getMapMove() {
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapMove()");
+	  return $this->move;
 	}
 }

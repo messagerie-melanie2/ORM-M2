@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,28 +35,28 @@ class SqlMelanieRequests {
 	 * @param Replace {datatree_id}, {user_uid}, {datatree_name}, {attribute_value}, {perm_object}
 	 * @param PDO :group_uid, :user_uid, :attribute_name
 	 */
-	const listUserObjects = "SELECT hd.datatree_id as {datatree_id}, user_uid as {user_uid}, datatree_name as {datatree_name}, attribute_value as {attribute_value}, '30' as {perm_object} FROM horde_datatree hd INNER JOIN horde_datatree_attributes USING (datatree_id) WHERE group_uid = :group_uid AND user_uid = :user_uid AND attribute_name = :attribute_name ORDER BY datatree_id;";
+	const listUserObjects = "SELECT hd.datatree_id as {datatree_id}, user_uid as {user_uid}, datatree_name as {datatree_name}, datatree_ctag as {datatree_ctag}, datatree_synctoken as {datatree_synctoken}, attribute_value as {attribute_value}, '30' as {perm_object} FROM horde_datatree hd INNER JOIN horde_datatree_attributes USING (datatree_id) WHERE group_uid = :group_uid AND user_uid = :user_uid AND attribute_name = :attribute_name ORDER BY datatree_id;";
 
 	/**
 	 * @var SELECT
 	 * @param Replace {datatree_id}, {user_uid}, {datatree_name}, {attribute_value}, {perm_object}
 	 * @param :user_uid, :pref_scope, :pref_name, :group_uid, :attribute_name, :attribute_perm, :attribute_permfg
 	 */
-	const getDefaultObject = "SELECT hd.datatree_id as {datatree_id}, hd.user_uid as {user_uid}, hd.datatree_name as {datatree_name}, hda2.attribute_value as {attribute_value}, hda1.attribute_value as {perm_object} FROM horde_prefs hp INNER JOIN horde_datatree hd ON hp.pref_value = hd.datatree_name INNER JOIN horde_datatree_attributes hda1 ON hd.datatree_id = hda1.datatree_id INNER JOIN horde_datatree_attributes hda2 ON (hd.datatree_id = hda2.datatree_id) WHERE (hda1.attribute_name = :attribute_perm OR hda1.attribute_name = :attribute_permfg) AND hda1.attribute_key = :user_uid AND hd.group_uid = :group_uid AND hda2.attribute_name = :attribute_name AND hp.pref_scope = :pref_scope AND hp.pref_name = :pref_name AND hp.pref_uid = :user_uid LIMIT 1;";
+	const getDefaultObject = "SELECT hd.datatree_id as {datatree_id}, hd.user_uid as {user_uid}, hd.datatree_name as {datatree_name}, hd.datatree_ctag as {datatree_ctag}, hd.datatree_synctoken as {datatree_synctoken}, hda2.attribute_value as {attribute_value}, hda1.attribute_value as {perm_object} FROM horde_prefs hp INNER JOIN horde_datatree hd ON hp.pref_value = hd.datatree_name INNER JOIN horde_datatree_attributes hda1 ON hd.datatree_id = hda1.datatree_id INNER JOIN horde_datatree_attributes hda2 ON (hd.datatree_id = hda2.datatree_id) WHERE (hda1.attribute_name = :attribute_perm OR hda1.attribute_name = :attribute_permfg) AND hda1.attribute_key = :user_uid AND hd.group_uid = :group_uid AND hda2.attribute_name = :attribute_name AND hp.pref_scope = :pref_scope AND hp.pref_name = :pref_name AND hp.pref_uid = :user_uid LIMIT 1;";
 
 	/**
 	 * @var SELECT
 	 * @param Replace {datatree_id}, {user_uid}, {datatree_name}, {attribute_value}, {perm_object}
 	 * @param PDO :group_uid, :user_uid, :attribute_name, :attribute_perm, :attribute_permfg
 	 */
-	const listSharedObjects = "SELECT hd1.datatree_id as {datatree_id}, hd1.user_uid as {user_uid}, hd1.datatree_name as {datatree_name}, hda2.attribute_value as {attribute_value}, hda1.attribute_value as {perm_object} FROM horde_datatree hd1 INNER JOIN horde_datatree_attributes hda1 ON hd1.datatree_id = hda1.datatree_id INNER JOIN horde_datatree_attributes hda2 ON (hd1.datatree_id = hda2.datatree_id) WHERE (hda1.attribute_name = :attribute_perm OR hda1.attribute_name = :attribute_permfg) AND hda1.attribute_key = :user_uid AND hd1.group_uid = :group_uid AND hda2.attribute_name = :attribute_name ORDER BY {attribute_value};";
+	const listSharedObjects = "SELECT hd1.datatree_id as {datatree_id}, hd1.user_uid as {user_uid}, hd1.datatree_name as {datatree_name}, hd1.datatree_ctag as {datatree_ctag}, hd1.datatree_synctoken as {datatree_synctoken}, hda2.attribute_value as {attribute_value}, hda1.attribute_value as {perm_object} FROM horde_datatree hd1 INNER JOIN horde_datatree_attributes hda1 ON hd1.datatree_id = hda1.datatree_id INNER JOIN horde_datatree_attributes hda2 ON (hd1.datatree_id = hda2.datatree_id) WHERE (hda1.attribute_name = :attribute_perm OR hda1.attribute_name = :attribute_permfg) AND hda1.attribute_key = :user_uid AND hd1.group_uid = :group_uid AND hda2.attribute_name = :attribute_name ORDER BY {attribute_value};";
 
 	/**
 	 * @var SELECT
 	 * @param Replace {datatree_id}, {user_uid}, {datatree_name}, {attribute_value}, {perm_object}
 	 * @param PDO :group_uid, :user_uid, :datatree_name, :attribute_name, :attribute_perm, :attribute_permfg
 	 */
-	const listObjectsByUid = "SELECT hd1.datatree_id as {datatree_id}, hd1.user_uid as {user_uid}, hd1.datatree_name as {datatree_name}, hda2.attribute_value as {attribute_value}, hda1.attribute_value as {perm_object} FROM horde_datatree hd1 INNER JOIN horde_datatree_attributes hda1 ON hd1.datatree_id = hda1.datatree_id INNER JOIN horde_datatree_attributes hda2 ON (hd1.datatree_id = hda2.datatree_id) WHERE (hda1.attribute_name = :attribute_perm OR hda1.attribute_name = :attribute_permfg) AND hda1.attribute_key = :user_uid AND hd1.group_uid = :group_uid AND hda2.attribute_name = :attribute_name AND hd1.datatree_name = :datatree_name";
+	const listObjectsByUid = "SELECT hd1.datatree_id as {datatree_id}, hd1.user_uid as {user_uid}, hd1.datatree_name as {datatree_name}, hd1.datatree_ctag as {datatree_ctag}, hd1.datatree_synctoken as {datatree_synctoken}, hda2.attribute_value as {attribute_value}, hda1.attribute_value as {perm_object} FROM horde_datatree hd1 INNER JOIN horde_datatree_attributes hda1 ON hd1.datatree_id = hda1.datatree_id INNER JOIN horde_datatree_attributes hda2 ON (hd1.datatree_id = hda2.datatree_id) WHERE (hda1.attribute_name = :attribute_perm OR hda1.attribute_name = :attribute_permfg) AND hda1.attribute_key = :user_uid AND hd1.group_uid = :group_uid AND hda2.attribute_name = :attribute_name AND hd1.datatree_name = :datatree_name";
 
 	/**
 	 * @var SELECT
@@ -75,7 +75,7 @@ class SqlMelanieRequests {
 	 * @var INSERT
 	 * @param PDO :datatree_id, :group_uid, :user_uid, :datatree_name
 	 */
-	const insertObject = "INSERT INTO horde_datatree (datatree_id, group_uid, user_uid, datatree_name, datatree_parents) VALUES (:datatree_id, :group_uid, :user_uid, :datatree_name, '');";
+	const insertObject = "INSERT INTO horde_datatree (datatree_id, group_uid, user_uid, datatree_name, datatree_ctag, datatree_parents) VALUES (:datatree_id, :group_uid, :user_uid, :datatree_name, :datatree_ctag, '');";
 
 	/**
 	 * Suppression d'un objet Mélanie2

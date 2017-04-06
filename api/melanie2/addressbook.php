@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,8 @@ use LibMelanie\Log\M2Log;
  * @property string $owner Identifiant du propriétaire de la liste de contacts
  * @property string $name Nom complet de la liste de contacts
  * @property int $perm Permission associée, utiliser asRight()
+ * @property string $ctag CTag de la liste de contacts
+ * @property int $synctoken SyncToken de la liste de contacts
  *
  * @method bool load() Charge les données de la liste de tâche depuis la base de données
  * @method bool exists() Test dans la base de données si le carnet d'adresse existe déjà

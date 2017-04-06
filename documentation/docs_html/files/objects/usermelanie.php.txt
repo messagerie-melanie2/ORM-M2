@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,11 +46,6 @@ class UserMelanie {
 	 * @var String $email
 	 */
 	private $email;
-	/**
-	 * Timezone de l'utilisateur
-	 * @var string
-	 */
-	public $timezone;
 
 	/**
 	 * Constructeur de la class
@@ -130,7 +125,7 @@ class UserMelanie {
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
 
 		// Params
-		$params = [
+		$params = array (
 				"group_uid" => ConfigMelanie::CALENDAR_GROUP_UID,
 				"user_uid" => $this->uid,
 				"attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
@@ -138,7 +133,7 @@ class UserMelanie {
 				"pref_scope" => ConfigMelanie::CALENDAR_PREF_SCOPE,
 				"pref_name" => ConfigMelanie::CALENDAR_PREF_DEFAULT_NAME,
 				"attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP,
-		];
+		);
 
 		// Calendrier par défaut de l'utilisateur
 		$calendar = Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
@@ -174,11 +169,11 @@ class UserMelanie {
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
 
 		// Params
-		$params = [
+		$params = array (
 				"group_uid" => ConfigMelanie::CALENDAR_GROUP_UID,
 				"user_uid" => $this->uid,
 				"attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME
-		];
+		);
 
 		// Liste les calendriers de l'utilisateur
 		return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
@@ -205,13 +200,13 @@ class UserMelanie {
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
 
 		// Params
-		$params = [
+		$params = array (
 				"group_uid" => ConfigMelanie::CALENDAR_GROUP_UID,
 				"user_uid" => $this->uid,
 				"attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
 				"attribute_perm" => ConfigMelanie::ATTRIBUTE_NAME_PERM,
 				"attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP,
-		];
+		);
 
 		// Liste les calendriers de l'utilisateur
 		return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
@@ -238,7 +233,7 @@ class UserMelanie {
  		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
 
  		// Params
-		$params = [
+		$params = array (
 			"group_uid" => ConfigMelanie::TASKSLIST_GROUP_UID,
 			"user_uid" => $this->uid,
 			"attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
@@ -246,7 +241,7 @@ class UserMelanie {
 			"pref_scope" => ConfigMelanie::TASKSLIST_PREF_SCOPE,
 			"pref_name" => ConfigMelanie::TASKSLIST_PREF_DEFAULT_NAME,
 			"attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP,
-		];
+		);
 
 		// Liste de tâches par défaut de l'utilisateur
 		$tasklist = Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
@@ -282,11 +277,11 @@ class UserMelanie {
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
 
 		// Params
-		$params = [
+		$params = array (
 				"group_uid" => ConfigMelanie::TASKSLIST_GROUP_UID,
 				"user_uid" => $this->uid,
 				"attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME
-		];
+		);
 		// Liste les listes de tâches de l'utilisateur
 		return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
  	}
@@ -312,13 +307,13 @@ class UserMelanie {
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
 
 		// Params
-		$params = [
+		$params = array (
 			"group_uid" => ConfigMelanie::TASKSLIST_GROUP_UID,
 			"user_uid" => $this->uid,
 			"attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
 			"attribute_perm" => ConfigMelanie::ATTRIBUTE_NAME_PERM,
 			"attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP,
-		];
+		);
 		// Liste les listes de tâches de l'utilisateur
 		return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
 	}
@@ -344,7 +339,7 @@ class UserMelanie {
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
 
 		// Params
-		$params = [
+		$params = array (
 			"group_uid" => ConfigMelanie::ADDRESSBOOK_GROUP_UID,
 			"user_uid" => $this->uid,
 			"attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
@@ -352,7 +347,7 @@ class UserMelanie {
 			"pref_scope" => ConfigMelanie::ADDRESSBOOK_PREF_SCOPE,
 			"pref_name" => ConfigMelanie::ADDRESSBOOK_PREF_DEFAULT_NAME,
 			"attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP,
-		];
+		);
 
 		// Liste de tâches par défaut de l'utilisateur
 		$addressbook = Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
@@ -388,11 +383,11 @@ class UserMelanie {
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
 
 		// Params
-		$params = [
+		$params = array (
 			"group_uid" => ConfigMelanie::ADDRESSBOOK_GROUP_UID,
 			"user_uid" => $this->uid,
 			"attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME
-		];
+		);
 		// Liste les listes de contacts de l'utilisateur
 		return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
 	}
@@ -418,46 +413,14 @@ class UserMelanie {
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
 
 		// Params
-		$params = [
+		$params = array (
 	 		"group_uid" => ConfigMelanie::ADDRESSBOOK_GROUP_UID,
 		 	"user_uid" => $this->uid,
 		 	"attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
 		 	"attribute_perm" => ConfigMelanie::ATTRIBUTE_NAME_PERM,
 			"attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP,
-		];
+		);
 		// Liste les listes de contacts de l'utilisateur
 		return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
-	}
-
-	/**
-	 * Recupère le timezone par défaut pour le
-	 * need: $this->uid
-	 */
-	function getTimezone() {
-	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getTimezone()");
-	  if (!isset($this->uid)) return ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
-
-	  if (!isset($this->timezone)) {
-	    // Replace name
-	    $query = str_replace('{pref_name}', 'timezone', Sql\SqlMelanieRequests::getUserPref);
-
-	    // Params
-	    $params = [
-	        "user_uid" => $this->uid,
-	        "pref_scope" => ConfigMelanie::PREF_SCOPE,
-	        "pref_name" => ConfigMelanie::TZ_PREF_NAME
-	    ];
-
-	    // Récupération du timezone
-	    $res = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
-	    // Test si le timezone est valide en PHP
-	    try {
-	      $tz = new \DateTimeZone($this->timezone);
-	    } catch (\Exception $ex) {
-	      $this->timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
-	    }
-	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getTimezone() this->timezone: " . $this->timezone);
-	  }
-	  return $this->timezone;
 	}
 }

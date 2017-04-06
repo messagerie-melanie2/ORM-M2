@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -232,7 +232,8 @@ class TaskToICS {
 			// Alarm
 			if (isset($task->alarm) && $task->alarm != 0) {
 				$valarm = $vtodo->add('VALARM');
-				$valarm->TRIGGER = '-PT'.$event->alarm.'M';
+				$valarm->TRIGGER = self::formatAlarm($task->alarm);
+				$valarm->TRIGGER[ICS::VALUE] = ICS::VALUE_DURATION;
 				$valarm->ACTION = ICS::ACTION_DISPLAY;
 				// Attributs sur l'alarme
 				$x_moz_lastack = $task->getAttribute(ICS::X_MOZ_LASTACK);
@@ -253,6 +254,48 @@ class TaskToICS {
 			if (isset($moz_generation)) $vtodo->add(ICS::X_MOZ_GENERATION, $moz_generation);
 		}
 		return $vtodo;
+	}
+	
+	/**
+	 * Formatte l'alarme en minutes en un trigger ICS
+	 * @param int $alarm En minutes
+	 * @return string
+	 */
+	private static function formatAlarm($alarm) {
+		if ($alarm < 0) {
+			$trigger = "P";
+			$alarm = - $alarm;
+		}
+		else {
+			$trigger = "-P";
+		}
+		
+		// Nombre de semaines, 10080 minutes
+		if ($alarm >= 10080) {
+			$nb_weeks = (int)($alarm / 10080);
+			$alarm -= $nb_weeks * 10080;
+			$trigger .= $nb_weeks."W";
+		}
+		// Nombre de jours, 1440 minutes
+		if ($alarm >= 1440) {
+			$nb_days = (int)($alarm / 1440);
+			$alarm -= $nb_days * 1440;
+			$trigger .= $nb_days."D";
+		}
+		if ($alarm > 0) {
+			$trigger .= "T";
+		}
+		// Nombre d'heures, 60 minutes
+		if ($alarm >= 60) {
+			$nb_hours = (int)($alarm / 60);
+			$alarm -= $nb_hours * 60;
+			$trigger .= $nb_hours."H";
+		}
+		// Nombre de minutes
+		if ($alarm > 0) {
+			$trigger .= $alarm."M";
+		}
+		return $trigger;
 	}
 
 	/**

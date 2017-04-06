@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,6 +76,8 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 		// Replace name
 		$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping[$this->objectType]['owner'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping[$this->objectType]['ctag'][MappingMelanie::name], $query);
+		$query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping[$this->objectType]['synctoken'][MappingMelanie::name], $query);
 		$query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping[$this->objectType]['name'][MappingMelanie::name], $query);
 		$query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping[$this->objectType]['perm'][MappingMelanie::name], $query);
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping[$this->objectType]['object_id'][MappingMelanie::name], $query);
@@ -137,6 +139,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 			$params = [
 					'datatree_id' => $datatree_id,
 					'datatree_name' => $datatree_name,
+					'datatree_ctag' => md5($datatree_name),
 					'user_uid' => $this->user_uid,
 					'group_uid' => isset($this->group) ?  $this->group : ConfigMelanie::CALENDAR_GROUP_UID,
 			];
@@ -305,11 +308,13 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 	/**
 	 * Récupère la liste des évènements entre start et end
 	 * need: $this->id
-	 * @param string $event_start
-	 * @param string $event_end
+	 * @param string $start Date de début
+	 * @param string $end Date de fin
+	 * @param int $modified Date de derniere modification des événements
+	 * @param boolean $is_freebusy Est-ce que l'on cherche des freebusy
 	 * @return boolean
 	 */
-	function getRangeEvents($event_start = null, $event_end = null) {
+	function getRangeEvents($event_start = null, $event_end = null, $modified = null, $is_freebusy = false) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getRangeEvents($event_start, $event_end)");
 		if (!isset($this->id)) return false;
 		// DateTime
@@ -326,17 +331,34 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 
 		// Range
 		$event_range = "";
-		if (isset($event_end)) {
+		if (isset($event_end) && isset($event_start)) {
+		  $event_range .= " AND ((k1.event_start >= :event_start AND k1.event_start <= :event_end) OR (k1.event_end >= :event_start AND k1.event_end <= :event_end) OR (k1.event_end >= :event_end AND k1.event_start <= :event_start) OR (k1.event_recurtype >= 1 AND k1.event_recurenddate >= :event_start AND k1.event_end <= :event_end))";
+		  $params['event_end'] = $event_end;
+		  $params['event_start'] = $event_start;
+		}
+		else if (isset($event_end)) {
 			$event_range .= " AND (k1.event_start <= :event_end OR (k1.event_recurtype >= 1 AND k1.event_recurenddate <= :event_end))";
 			$params['event_end'] = $event_end;
 		}
-		if (isset($event_start)) {
+		else if (isset($event_start)) {
 			$event_range .= " AND (k1.event_end >= :event_start OR (k1.event_recurtype >= 1 AND k1.event_recurenddate >= :event_start))";
 			$params['event_start'] = $event_start;
 		}
+		if (isset($modified)) {
+		  $event_range .= " AND k1.event_modified >= :modified";
+		  $params['modified'] = $modified;
+		}
+
+		// Gestion de la requête
+		if ($is_freebusy) {
+		  $query = Sql\SqlCalendarRequests::listAllEventsFreebusy;
+		}
+		else {
+		  $query = Sql\SqlCalendarRequests::listAllEvents;
+		}
 
 		// Replace
-		$query = str_replace("{event_range}", $event_range, Sql\SqlCalendarRequests::listAllEvents);
+		$query = str_replace("{event_range}", $event_range, $query);
 
 		// Liste les evenements du calendrier
 		return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\Objects\EventMelanie');

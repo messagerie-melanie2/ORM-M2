@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,10 +26,10 @@ use LibMelanie\Api\Melanie2\Task;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Api\Melanie2\User;
 use LibMelanie\Api\Melanie2\Taskslist;
+use Sabre\VObject;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
 require_once 'vendor/autoload.php';
-use Sabre\VObject;
 
 /**
  * Class de génération de l'évènement en fonction de l'ICS
@@ -103,12 +103,11 @@ class ICSToTask {
 			else $task->category = '';
 			// VALARM
 			if (isset($vtodo->VALARM)) {
-        $alarmDate = $vtodo->VALARM->getEffectiveTriggerTime();
-        $startDate = $vtodo->DTSTART->getDateTime();
-        $task->alarm = ($startDate->format("U") - $alarmDate->format("U")) / 60;
-        if ($task->alarm === 0) {
-          $task->alarm = 1;
-        }
+				$triggerDuration = VObject\DateTimeParser::parseDuration($vtodo->VALARM->TRIGGER);
+				$task->alarm = $triggerDuration->format('%i') + $triggerDuration->format('%h') * 60;
+				if ($task->alarm === 0) {
+					$task->alarm = 1;
+				}
         if (isset($vtodo->{ICS::X_MOZ_LASTACK})) $task->setAttribute(ICS::X_MOZ_LASTACK, $vtodo->{ICS::X_MOZ_LASTACK});
         if (isset($vtodo->{ICS::X_MOZ_SNOOZE_TIME})) $task->setAttribute(ICS::X_MOZ_SNOOZE_TIME, $vtodo->{ICS::X_MOZ_SNOOZE_TIME});
 			} else $task->alarm = 0;
@@ -133,14 +132,29 @@ class ICSToTask {
 			if (isset($vtodo->DUE)) $task->due = $vtodo->DUE->getDateTime()->format('U');
 			else $task->due = null;
 			// COMPLETED
-			if (isset($vtodo->COMPLETED)) $task->completed_date = $vtodo->COMPLETED->getDateTime()->format('U');
-			else $task->completed_date = null;
+			if (isset($vtodo->COMPLETED)) {
+				$task->completed_date = $vtodo->COMPLETED->getDateTime()->format('U');			
+			}
+			else {
+				$task->completed_date = null;
+			}
 			// Parent
 			if (isset($vtodo->{ICS::RELATED_TO})) $task->parent = $vtodo->{ICS::RELATED_TO};
 			else $task->parent = null;
 			// Percent complete
-			if (isset($vtodo->{ICS::PERCENT_COMPLETE})) $task->percent_complete = $vtodo->{ICS::PERCENT_COMPLETE}->getValue();
-			else $task->percent_complete = null;
+			if (isset($vtodo->{ICS::PERCENT_COMPLETE})) {
+				$task->percent_complete = $vtodo->{ICS::PERCENT_COMPLETE}->getValue();
+				if ($task->percent_complete == 100) {
+					$task->completed = 1;
+				}
+				else {
+					$task->completed = 0;
+				}
+			}
+			else {
+				$task->percent_complete = null;
+				$task->completed = 0;
+			}
 
 			// CLASS
 			if (isset($vtodo->CLASS)) {

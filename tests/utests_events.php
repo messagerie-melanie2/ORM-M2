@@ -5,7 +5,7 @@
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  * Ce fichier est un exemple d'utilisation
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,6 +61,9 @@ use LibMelanie\Api\Melanie2\Organizer;
 use LibMelanie\Lib\EventToICS;
 use LibMelanie\Lib\ICSToEvent;
 use LibMelanie\Config\ConfigSQL;
+use LibMelanie\Api\Melanie2\Attachment;
+use LibMelanie\Api\Melanie2\CalendarSync;
+
 
 $log = function ($message) {
 	echo "[LibM2] $message \r\n";
@@ -72,23 +75,64 @@ echo "########################\r\n";
 
 //ConfigSQL::setCurrentBackend(ConfigSQL::$HORDE_1);
 
+// Définition de l'utilisateur
 $user = new User();
 $user->uid = 'thomas.payen';
 
+// Définition du calendrier associé à l'utilisateur
 $calendar = new Calendar($user);
 $calendar->id = 'thomas.payen';
 $calendar->load();
 
+// if ($calendar->load()) {
+// 	echo $calendar->synctoken;
+	
+// 	$syncs = new CalendarSync($calendar);
+// 	$syncs->token = 6;
+// 	$results = $syncs->listCalendarSync(5);
+	
+// 	var_export($results);
+// }
 
-$events = $calendar->getAllEvents();
+$results = [
+		'syncToken' => $calendar->synctoken,
+];
 
-var_dump($events);
-
-
-foreach($events as $event) {
-    var_dump($event->exceptions);
+$event = new \LibMelanie\Api\Melanie2\Event();
+$event->calendar = $calendar->id;
+$events = $event->getList(['uid']);
+$result = [
+		'added' => [],
+];
+foreach ($events as $event) {
+	$result['added'][] = $event->uid;
 }
 
+$results = array_merge($results, $result);
+
+var_export($results);
+
+// // Est-ce que l'utilisateur a les droits d'écriture ?
+// if ($calendar->load()
+//     && $calendar->asRight(ConfigMelanie::WRITE)) {
+//   // Définition de l'événement à créer
+//   $event = new Event($user, $calendar);
+//   $event->title = "La réunion MCE";
+//   $event->location = "Tour séquoia - La défense";
+//   $event->start = "2015-09-16 09:30:00";
+//   $event->end = "2015-09-16 17:30:00";
+
+//   // Sauvegarde du nouvel événement
+//   $event->save();
+// }
+
+// if ($event->load()) {
+//   $vcalendar = $event->vcalendar;
+//   $vcalendar->expand(new DateTime('2015-03-22'), new DateTime('2015-03-29'));
+//   echo $vcalendar->serialize();
+// }
+
+echo "\r\n\r\n";
 echo "#### 1: ".(memory_get_usage()/1024/1024) . ' MiB'." ######\r\n";
 echo "#### Cycles: ".gc_collect_cycles()." ######\r\n";
 echo "#### 2: ".(memory_get_usage()/1024/1024) . ' MiB'." ######\r\n";

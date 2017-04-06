@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,6 @@ use LibMelanie\Log\M2Log;
  * @property string $path [TYPE_BINARY] Chemin vers la pièce jointe
  * @property string $owner [TYPE_BINARY] Propriétaire de la pièce jointe
  * @property string $data Données encodées de la pièce jointe
- * @property string $url URL vers la pièce jointe
  * @property Attachment::TYPE_* $type Type de la pièce jointe / Binaire ou URL (Binaire par défaut)
  *
  * @property-read string $hash Lecture du HASH lié aux données de la pièce jointe (lecture seule)
@@ -76,10 +75,10 @@ class Attachment extends Melanie2Object {
 	 * Constructeur de l'objet
 	 */
 	public function __construct() {
-    // Défini la classe courante
-    $this->get_class = get_class($this);
+	    // Défini la classe courante
+	    $this->get_class = get_class($this);
 
-	  //M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
+		//M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
 		// Définition de la pièce jointe melanie2
 		$this->objectmelanie = new AttachmentMelanie();
 	}
@@ -112,33 +111,8 @@ class Attachment extends Melanie2Object {
 	function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
 		if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-
 		// Si c'est une pièce jointe de type URL l'enregistrement est différent
 		if ($this->type === self::TYPE_URL) return null;
-
-		// Création du chemin s'il n'existe pas déjà
-		$path = trim(str_replace(self::PATH_ROOT, '', $this->objectmelanie->path), '/');
-		if (!empty($path)) {
-  		$paths = explode('/', $path);
-  		$current_path = "";
-  		foreach($paths as $path) {
-  		  // Creation du dossier
-  		  $_folder = new Attachment();
-  		  $_folder->name = $path;
-  		  $_folder->path = $current_path;
-    		if (!$_folder->load()) {
-    		  $_folder->isfolder = true;
-    		  $_folder->modified = time();
-    		  $_folder->owner = $this->objectmelanie->owner;
-    		  $_folder->save();
-    		} else {
-          break;
-    		}
-    		if ($current_path != "") $current_path .= "/";
-    		$current_path .= $path;
-  		}
-		}
-
 		// TODO: Test - Nettoyage mémoire
 		gc_collect_cycles();
 		// Sauvegarde l'objet
@@ -192,11 +166,11 @@ class Attachment extends Melanie2Object {
 	 * @param String[] $case_unsensitive_fields Liste des champs pour lesquels on ne sera pas sensible à la casse
 	 * @return Attachment[] Array
 	 */
-	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
+	function getList($fields = array(), $filter = "", $operators = array(), $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = array()) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList()");
 		$_attachments = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields);
 		if (!isset($_attachments)) return null;
-		$attachments = [];
+		$attachments = array();
 		foreach ($_attachments as $_attachment) {
 			$attachment = new Attachment();
 			$attachment->setObjectMelanie($_attachment);
@@ -217,7 +191,7 @@ class Attachment extends Melanie2Object {
 	 * @param string $path
 	 */
 	protected function setMapPath($path) {
-	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapPath()");
+	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapPath($type)");
 	    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 	    if (is_string($path)) {
 	        if ($path == "") {
@@ -280,37 +254,6 @@ class Attachment extends Melanie2Object {
 	        $this->objectmelanie->data = bin2hex($data);
 	    }
 	    return true;
-	}
-
-	/**
-	 * Mapping url field
-	 */
-	protected function getMapUrl() {
-	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapUrl()");
-	  if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-	  if ($this->type == self::TYPE_BINARY) {
-	    $url = ConfigMelanie::ATTACHMENT_DOWNLOAD_URL;
-	    $url = str_replace('%f', urlencode($this->name), $url);
-	    $url = str_replace('%p', urlencode(substr($this->path, strlen(ConfigMelanie::DEFAULT_ATTACHMENTS_FOLDER) + 1)), $url);
-	    return $url;
-	  } else {
-	    return $this->data;
-	  }
-	}
-  /**
-   * Mapping url field
-   * @param string $url
-   * @throws Exceptions\ObjectMelanieUndefinedException
-   * @return boolean
-   */
-	protected function setMapUrl($url) {
-	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapUrl($url)");
-	  if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-	  if ($this->type != self::TYPE_URL)
-	    return false;
-
-	  $this->data = $url;
-	  return true;
 	}
 
 	/**

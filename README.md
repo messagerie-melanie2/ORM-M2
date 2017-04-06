@@ -17,7 +17,8 @@ Définition ORM
 Un ORM (object-relationnal mapping) va permettre de faire le lien entre une base de
 données et des objets. Ces objets seront formattés de façon à être facilement exploitable par les
 applications.
-Notre librairie est un ORM écrit en PHP5 objet qui permet le mapping d'une base de données relationnelle vers des objets PHP. Cela permet de faciliter l'impémentation d'un accés lecture/écriture vers une base de données depuis une ou plusieurs applications.
+Notre librairie est un ORM écrit en PHP qui permet le mapping de la base de données Horde
+Mélanie2.
 
 Intérêt de cette librairie pour Mélanie2
 ----------------------------------------
@@ -25,15 +26,8 @@ Intérêt de cette librairie pour Mélanie2
 La base de données Mélanie2 (Horde) a un schema très spécifique qui n'a pas évolué depuis
 des années. Or, de plus en plus d'applications de présentation et de synchronisation utilisent cette
 base de données. L'idée est donc de faciliter le développement de ces applications en proposant des
-méthodes de développement simple pour l'accès à ces données.
-
-Au sein de Mélanie2, cette librairie a premièrement été utilisée pour le développement de la solution 
-de synchronisation mobile Zpush2. Elle permet l'accès aux données d'agendas, contacts et tâches en faisant 
-le lien entre la solution de synchronisation et la base de données Mélanie2.
-
-Dernièrement elle a également été implémentée dans le nouveau Webmail Mélanie2 : Roundcube. 
-Elle permet l'accès aux contacts Mélanie2 via un plugin spécifique. Elle est également utilisée 
-dans les drivers Mélanie2 des plugins Calendar et Tasklist développés par Kolab.
+méthodes de développement simple pour l'accès à ces données. De plus des API de type service
+Web peuvent être proposé afin d'implémenter cette librairie pour d'autres langages que le PHP.
 
 
 INSTALLATION
@@ -47,7 +41,7 @@ LICENCE
 
 L'ORM Mélanie2 est distribuée sous licence GPLv3 (http://www.gnu.org/licenses/gpl.html)
 
-ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

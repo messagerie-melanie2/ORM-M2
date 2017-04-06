@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,8 +35,6 @@ use LibMelanie\Log\M2Log;
  *
  * @property string $uid Identifiant unique de l'utilisateur
  * @property string $email Adresse email de l'utilisateur
- *
- * @method string getTimezone() Chargement l'évènement, en fonction du taskslist et de l'uid
  */
 class User extends Melanie2Object {
 	/**
@@ -113,7 +111,7 @@ class User extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getUserCalendars()");
 		$_calendars = $this->objectmelanie->getUserCalendars();
 		if (!isset($_calendars)) return null;
-		$calendars = [];
+		$calendars = array();
 		foreach ($_calendars as $_calendar) {
 			$calendar = new Calendar($this);
 			$calendar->setObjectMelanie($_calendar);
@@ -129,7 +127,7 @@ class User extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getSharedCalendars()");
 		$_calendars = $this->objectmelanie->getSharedCalendars();
 		if (!isset($_calendars)) return null;
-		$calendars = [];
+		$calendars = array();
 		foreach ($_calendars as $_calendar) {
 			$calendar = new Calendar($this);
 			$calendar->setObjectMelanie($_calendar);
@@ -158,7 +156,7 @@ class User extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getUserTaskslists()");
 		$_taskslists = $this->objectmelanie->getUserTaskslists();
 		if (!isset($_taskslists)) return null;
-		$taskslists = [];
+		$taskslists = array();
 		foreach ($_taskslists as $_taskslist) {
 			$taskslist = new Taskslist($this);
 			$taskslist->setObjectMelanie($_taskslist);
@@ -174,7 +172,7 @@ class User extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getSharedTaskslists()");
 		$_taskslists = $this->objectmelanie->getSharedTaskslists();
 		if (!isset($_taskslists)) return null;
-		$taskslists = [];
+		$taskslists = array();
 		foreach ($_taskslists as $_taskslist) {
 			$taskslist = new Taskslist($this);
 			$taskslist->setObjectMelanie($_taskslist);
@@ -203,7 +201,7 @@ class User extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getUserAddressbooks()");
 		$_addressbooks = $this->objectmelanie->getUserAddressbooks();
 		if (!isset($_addressbooks)) return null;
-		$addressbooks = [];
+		$addressbooks = array();
 		foreach ($_addressbooks as $_addressbook) {
 			$addressbook = new Addressbook($this);
 			$addressbook->setObjectMelanie($_addressbook);
@@ -219,7 +217,7 @@ class User extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getSharedAddressbooks()");
 		$_addressbooks = $this->objectmelanie->getSharedAddressbooks();
 		if (!isset($_addressbooks)) return null;
-		$addressbooks = [];
+		$addressbooks = array();
 		foreach ($_addressbooks as $_addressbook) {
 			$addressbook = new Addressbook($this);
 			$addressbook->setObjectMelanie($_addressbook);

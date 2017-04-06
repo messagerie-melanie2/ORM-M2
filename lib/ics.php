@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -554,6 +554,10 @@ class ICS {
 	 * Lightning doit il envoyer les invitations aux participants
 	 */
 	const X_MOZ_SEND_INVITATIONS = 'X-MOZ-SEND-INVITATIONS';
+  /**
+   * Lightning doit il envoyer les invitations aux nouveaux participants
+   */
+	const X_MOZ_SEND_INVITATIONS_UNDISCLOSED = 'X-MOZ-SEND-INVITATIONS-UNDISCLOSED';
 	/**
 	 * Nom d'une pièce jointe (non défini dans les RFC ??)
 	 */
@@ -566,6 +570,12 @@ class ICS {
 	 * DTSTAMP recu par invitation
 	 */
 	const X_MOZ_RECEIVED_DTSTAMP = 'X-MOZ-RECEIVED-DTSTAMP';
+
+	// EVOLUTION ICS
+  /**
+   * Attachment name for Evolution
+   */
+	const X_EVOLUTION_CALDAV_ATTACHMENT_NAME = 'X-EVOLUTION-CALDAV-ATTACHMENT-NAME';
 
 	// Others X
 	/**
@@ -582,6 +592,10 @@ class ICS {
 	 * Hash de la pièce jointe pour la mise en cache sur le client
 	 */
 	const X_CM2V3_ATTACH_HASH = 'X-CM2V3-ATTACH-HASH';
+	/**
+	 * Action effectuée par le Courrielleur : CREATE, MOVE, DELETE, COPY
+	 */
+	const X_CM2V3_ACTION = 'X-CM2V3-ACTION';
 
 	// CALDAV X
 	/**

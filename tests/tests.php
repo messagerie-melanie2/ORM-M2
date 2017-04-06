@@ -5,7 +5,7 @@
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  * Ce fichier est un exemple d'utilisation
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

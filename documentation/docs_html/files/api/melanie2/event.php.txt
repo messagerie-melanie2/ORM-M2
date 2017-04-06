@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,8 +64,6 @@ use LibMelanie\Lib\EventToICS;
  *
  * @property bool $deleted Défini si l'exception est un évènement ou juste une suppression
  * @property-read string $realuid UID réellement stocké dans la base de données (utilisé pour les exceptions) (Lecture seule)
- * @property string $ics ICS associé à l'évènement courant, calculé à la volée en attendant la mise en base de données
- * @property-read VObject\Component\VCalendar $vcalendar Object VCalendar associé à l'évènement, peut permettre des manipulations sur les récurrences
  *
  * @method bool load() Chargement l'évènement, en fonction du calendar et de l'uid
  * @method bool exists() Test si l'évènement existe, en fonction du calendar et de l'uid
@@ -107,11 +105,6 @@ class Event extends Melanie2Object {
 	 */
 	private $exceptions;
 	/**
-	 * Tableau d'exceptions a supprimer au moment du save
-	 * @var Exception[]
-	 */
-	private $deleted_exceptions;
-	/**
 	 * Tableau d'attributs pour l'évènement
 	 * @var string[$attribute]
 	 */
@@ -126,12 +119,6 @@ class Event extends Melanie2Object {
 	 * @var Attachment[]
 	 */
 	private $attachments;
-
-	/**
-	 * Object VCalendar disponible via le VObject
-	 * @var unknown
-	 */
-	private $vcalendar;
 
 	/****
 	 * CONSTANTES
@@ -153,8 +140,8 @@ class Event extends Melanie2Object {
 	 * @param \LibMelanie\Objects\CalendarMelanie $calendarmelanie
 	 */
 	public function __construct($usermelanie = null, $calendarmelanie = null) {
-    // Défini la classe courante
-    $this->get_class = get_class($this);
+	    // Défini la classe courante
+	    $this->get_class = get_class($this);
 
 		//M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
 		// Définition de l'évènement melanie2
@@ -241,20 +228,20 @@ class Event extends Melanie2Object {
 		    $this->deleteAttribute($name);
 		}
 		else {
-  		// Création de l'objet s'il n'existe pas
-  		if (!isset($this->attributes)) $this->attributes = [];
-  		$eventproperty = new EventProperty();
-  		$eventproperty->event = $this->realuid;
-  		if (isset($this->calendarmelanie)) {
-  		    $eventproperty->calendar = $this->calendarmelanie->id;
-  		}
-  		else {
-  		    $eventproperty->calendar = $this->calendar;
-  		}
-    	$eventproperty->user = '';
-  		$eventproperty->key = $name;
-  		$eventproperty->value = $value;
-  		$this->attributes[$name] = $eventproperty;
+    		// Création de l'objet s'il n'existe pas
+    		if (!isset($this->attributes)) $this->attributes = array();
+    		$eventproperty = new EventProperty();
+    		$eventproperty->event = $this->realuid;
+    		if (isset($this->calendarmelanie)) {
+    		    $eventproperty->calendar = $this->calendarmelanie->id;
+    		}
+    		else {
+    		    $eventproperty->calendar = $this->calendar;
+    		}
+    		$eventproperty->user = isset($this->owner) ? $this->owner : $this->usermelanie->uid;
+    		$eventproperty->key = $name;
+    		$eventproperty->value = $value;
+    		$this->attributes[$name] = $eventproperty;
 		}
 	}
 	/**
@@ -262,7 +249,7 @@ class Event extends Melanie2Object {
 	 * @param array $attributes
 	 */
 	public function setAttributes($attributes) {
-	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setAttributes()");
+	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setAttribute($name)");
 	  // Positionne la liste des attributs
     $this->attributes = $attributes;
     $this->attributes_loaded = true;
@@ -513,54 +500,6 @@ class Event extends Melanie2Object {
 	}
 
 	/**
-	 * Suppression de la liste des pièces jointes liées à l'évènement
-	 */
-	protected function deleteAttachments() {
-	  $event_uid = $this->objectmelanie->uid;
-	  $_events = new Event();
-	  $_events->uid = $event_uid;
-	  $nb_events = $_events->getList('count');
-	  $count = $nb_events['']->events_count;
-	  unset($nb_events);
-	  // Si c'est le dernier evenement avec le même uid on supprime toutes les pièces jointes
-	  if ($count === 0) {
-	    $attachments_folders = new Attachment();
-	    $attachments_folders->isfolder = true;
-	    $attachments_folders->path = $event_uid;
-	    $folders_list = [];
-	    // Récupère les dossiers lié à l'évènement
-	    $folders = $attachments_folders->getList();
-	    if (count($folders) > 0) {
-	      foreach($folders as $folder) {
-	        $folders_list[] = $folder->path . '/' . $folder->name;
-	      }
-	      $attachments = new Attachment();
-	      $attachments->isfolder = false;
-	      $attachments->path = $folders_list;
-	      // Lecture des pièces jointes pour chaque dossier de l'évènement
-	      $attachments = $attachments->getList(['id', 'name', 'path']);
-	      if (count($attachments) > 0) {
-	        foreach($attachments as $attachment) {
-	          // Supprime la pièce jointe
-	          $attachment->delete();
-	        }
-	      }
-	      foreach($folders as $folder) {
-	        // Supprime le dossier
-	        $folder->delete();
-	      }
-	    }
-	    $folder = new Attachment();
-	    $folder->isfolder = true;
-	    $folder->path = '';
-	    $folder->name = $event_uid;
-	    if ($folder->load()) {
-	      $folder->delete();
-	    }
-	  }
-	}
-
-	/**
 	 * Sauvegarde les attributs dans la base de données
 	 */
 	protected function saveAttributes() {
@@ -578,17 +517,17 @@ class Event extends Melanie2Object {
 	protected function loadAttributes() {
 	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->loadAttributes()");
 	    // Création de l'objet s'il n'existe pas
-	    if (!isset($this->attributes))	$this->attributes = [];
+	    if (!isset($this->attributes))	$this->attributes = array();
 	    // Génération de l'attribut pour le getList
 	    $eventproperty = new EventProperty();
 	    $eventproperty->event = $this->realuid;
 	    if (isset($this->calendarmelanie)) {
 		    $eventproperty->calendar = $this->calendarmelanie->id;
-  		}
-  		else {
-  		  $eventproperty->calendar = $this->calendar;
-  		}
-  		$eventproperty->user = '';
+		}
+		else {
+		    $eventproperty->calendar = $this->calendar;
+		}
+	    $eventproperty->user = isset($this->owner) ? $this->owner : $this->usermelanie->uid;
 	    $properties = $eventproperty->getList();
 	    // Récupération de la liste des attributs
 	    foreach ($properties as $property) {
@@ -621,7 +560,7 @@ class Event extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->loadExceptions()");
 		$event = new Event($this->usermelanie, $this->calendarmelanie);
 		$event->uid = $this->uid.'%'.Exception::RECURRENCE_ID;
-		$events = $event->getList(null, null, ['uid' => MappingMelanie::like]);
+		$events = $event->getList(null, null, array('uid' => MappingMelanie::like));
 		if (isset($events[$this->uid.$this->calendar])) {
 			$this->modified = isset($events[$this->uid.$this->calendar]->modified) ? $events[$this->uid.$this->calendar]->modified : 0;
 			$this->setMapExceptions($events[$this->uid.$this->calendar]->getMapExceptions());
@@ -656,28 +595,16 @@ class Event extends Melanie2Object {
 		if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 		// Sauvegarde des participants
 		$this->saveAttendees();
-		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() delete " . count($this->deleted_exceptions));
-		// Supprimer les exceptions
-		if (isset($this->deleted_exceptions)
-		    && count($this->deleted_exceptions) > 0) {
-		  foreach($this->deleted_exceptions as $exception) {
-		    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() delete " . $exception->uid);
-		    $exception->delete();
-		  }
-		}
 		$exMod = false;
 		// Sauvegarde des exceptions
 		if (isset($this->exceptions)) {
+			$this->objectmelanie->modified = time();
 			foreach ($this->exceptions as $exception) {
-			  $res = $exception->save();
-				$exMod = $exMod || !is_null($res);
+				$exMod = $exMod || $exception->save();
 			}
 		}
 		if ($this->deleted) return null;
 		if ($exMod) $this->modified = time();
-		if (!isset($this->owner)) {
-		  $this->owner = $this->usermelanie->uid;
-		}
 		// Sauvegarde l'objet
 		$insert = $this->objectmelanie->save();
 		if (!is_null($insert)) {
@@ -715,10 +642,8 @@ class Event extends Melanie2Object {
 		}
 		// Suppression de l'objet
 		if ($this->objectmelanie->delete()) {
-	    // Suppression des attributs liés à l'évènement
-	    $this->deleteAttributes();
-	    // Suppression des pièces jointes de l'évènement
-	    $this->deleteAttachments();
+		    // Suppression des attributs liés à l'évènement
+		    $this->deleteAttributes();
 			// Gestion de l'historique
 			$history = new HistoryMelanie();
 			$history->uid = ConfigMelanie::CALENDAR_PREF_SCOPE . ":" . $this->objectmelanie->calendar . ":" . $this->objectmelanie->uid;
@@ -765,14 +690,14 @@ class Event extends Melanie2Object {
 	 * @param String[] $case_unsensitive_fields Liste des champs pour lesquels on ne sera pas sensible à la casse
 	 * @return Event[] Array
 	 */
-	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
+	function getList($fields = array(), $filter = "", $operators = array(), $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = array()) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList()");
 		$_events = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields);
 		if (!isset($_events)) return null;
-		$events = [];
-		$exceptions = [];
+		$events = array();
+		$exceptions = array();
 		// MANTIS 3680: Charger tous les attributs lors d'un getList
-		$events_uid = [];
+		$events_uid = array();
 		// Traitement de la liste des évènements
 		foreach ($_events as $_event) {
 			try {
@@ -789,30 +714,49 @@ class Event extends Melanie2Object {
 					$events[$event->uid.$event->calendar] = $event;
 					// MANTIS 3680: Charger tous les attributs lors d'un getList
 					$events_uid[] = $event->uid;
+					$event->setAttributes(array());
 				} else {
 					$exception = new Exception(null, $this->usermelanie, $calendar);
 					$exception->setObjectMelanie($_event);
 					if (!isset($exceptions[$exception->uid.$exception->calendar])
 							|| !is_array($exceptions[$exception->uid.$exception->calendar]))
-						$exceptions[$exception->uid.$exception->calendar] = [];
-					// Filtrer les exceptions qui n'ont pas de date
-					if (empty($exception->start)
-					    || empty($exception->end)) {
-					  $exception->deleted = true;
-					}
-					else {
-					  $exception->deleted = false;
-					}
+						$exceptions[$exception->uid.$exception->calendar] = array();
+					$exception->deleted = false;
 					$recId = new \DateTime(substr($exception->realuid, strlen($exception->realuid) - strlen(Exception::FORMAT_STR.Exception::RECURRENCE_ID), strlen(Exception::FORMAT_STR)));
 					$exception->recurrenceId = $recId->format(Exception::FORMAT_ID);
 					$exceptions[$exception->uid.$exception->calendar][$exception->recurrenceId] = $exception;
 					// MANTIS 3680: Charger tous les attributs lors d'un getList
 					$events_uid[] = $exception->realuid;
+					$exception->setAttributes(array());
 				}
 			}
 			catch (\Exception $ex) {
 				M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList() Exception: " . $ex);
 			}
+		}
+		// MANTIS 3680: Charger tous les attributs lors d'un getList
+		if (count($events_uid) > 0) {
+		    try {
+		        $attributes = new EventProperty();
+		        $attributes->event = $events_uid;
+		        foreach ($attributes->getList() as $attribute) {
+		            if (isset($events[$attribute->event.$attribute->calendar])) {
+		                $events[$attribute->event.$attribute->calendar]->setAttribute($attribute->name, $attribute->value);
+		            }
+		            elseif (strpos($attribute->event, Exception::RECURRENCE_ID) !== false) {
+		                $recId = new \DateTime(substr($attribute->event, strlen($attribute->event) - strlen(Exception::FORMAT_STR.Exception::RECURRENCE_ID), strlen(Exception::FORMAT_STR)));
+		                $recurrenceId = $recId->format(Exception::FORMAT_ID);
+		                $exception_uid = substr($attribute->event, 0,  strlen($attribute->event) - strlen(Exception::FORMAT_STR.Exception::RECURRENCE_ID));
+		                if (isset($exceptions[$exception_uid.$attribute->calendar])
+		                        && isset($exceptions[$exception_uid.$attribute->calendar][$recurrenceId])) {
+		                    $exceptions[$exception_uid.$attribute->calendar][$recurrenceId]->setAttribute($attribute->name, $attribute->value);
+		                }
+		            }
+		        }
+		    }
+		    catch (\Exception $ex) {
+		        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList() Exception: " . $ex);
+		    }
 		}
 		// Détruit les variables pour libérer le plus rapidement de la mémoire
 		unset($_events);
@@ -877,9 +821,9 @@ class Event extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapClass()");
 		if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 		if (isset(MappingMelanie::$MapClassObjectMelanie[$this->objectmelanie->class]))
-		  return MappingMelanie::$MapClassObjectMelanie[$this->objectmelanie->class];
+			return MappingMelanie::$MapClassObjectMelanie[$this->objectmelanie->class];
 		else
-		  return self::CLASS_PUBLIC;
+			return MappingMelanie::$MapClassObjectMelanie[self::CLASS_PUBLIC];
 	}
 
 	/**
@@ -901,7 +845,7 @@ class Event extends Melanie2Object {
 		if (isset(MappingMelanie::$MapStatusObjectMelanie[$this->objectmelanie->status]))
 			return MappingMelanie::$MapStatusObjectMelanie[$this->objectmelanie->status];
 		else
-			return self::STATUS_CONFIRMED;
+			return MappingMelanie::$MapStatusObjectMelanie[self::STATUS_CONFIRMED];
 	}
 
 	/**
@@ -949,7 +893,7 @@ class Event extends Melanie2Object {
 	protected function setMapAttendees($attendees) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapAttendees()");
 		if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-		$_attendees = [];
+		$_attendees = array();
 		if (!empty($attendees)) {
 			foreach ($attendees as $attendee) {
 				$_attendees[$attendee->email] = $attendee->render();
@@ -974,10 +918,10 @@ class Event extends Melanie2Object {
 		elseif (isset($this->objectmelanie->organizer_attendees)
 				&& $this->objectmelanie->organizer_attendees != ""
 				&& $this->objectmelanie->organizer_attendees != "a:0:{}") $object_attendees = $this->objectmelanie->organizer_attendees;
-		else return [];
-		if ($object_attendees == "") return [];
+		else return array();
+		if ($object_attendees == "") return array();
 		$_attendees = unserialize($object_attendees);
-		$attendees = [];
+		$attendees = array();
 		if (is_array($_attendees)
 		        && count($_attendees) > 0) {
     		foreach ($_attendees as $key => $_attendee) {
@@ -1024,7 +968,7 @@ class Event extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapExceptions()");
 		if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 
-		$_exceptions = [];
+		$_exceptions = array();
 		// Get the TZ
 		try {
 		    if (isset($this->calendarmelanie)) $tz = $this->calendarmelanie->getTimezone();
@@ -1037,48 +981,30 @@ class Event extends Melanie2Object {
 		$user_timezone = new \DateTimeZone(!empty($tz) ? $tz : date_default_timezone_get());
 		// MANTIS 3615: Alimenter le champ recurrence master
 		// TODO: Supprimer cet ajout quand CalDAV utilisera l'ORM
-		$recurrence_master = [];
-		if (!is_array($exceptions)) {
-		  $exceptions = [$exceptions];
-		}
-	  // Rechercher les exceptions à supprimer au moment du save
-	  if (isset($this->exceptions)
-	      && is_array($this->exceptions)
-	      && count($this->exceptions) > 0) {
-	    $this->deleted_exceptions = [];
-	    foreach($this->exceptions as $_exception) {
-	      $date = new \DateTime($_exception->recurrenceId);
-	      $_recId = $date->format("Ymd");
-	      $deleteEx = true;
-	      foreach($exceptions as $exception) {
-	        $date = new \DateTime($exception->recurrenceId);
-	        $recId = $date->format("Ymd");
-          if ($_recId == $recId
-              && (!$exception->deleted || $_exception->deleted)) {
-            $deleteEx = false;
-            break;
-          }
-	      }
-	      if ($deleteEx) {
-          $this->deleted_exceptions[] = $_exception;
-	      }
-	    }
-	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapExceptions() deleted_exceptions : " . count($this->deleted_exceptions));
-	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapExceptions() old exceptions : " . count($this->exceptions));
-	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapExceptions() new exceptions : " . count($exceptions));
-	  }
-		$this->exceptions = [];
-		foreach ($exceptions as $exception) {
-			$date = new \DateTime($exception->recurrenceId, new \DateTimeZone('GMT'));
+		$recurrence_master = array();
+		if (is_array($exceptions)) {
+			$this->exceptions = array();
+			foreach ($exceptions as $exception) {
+				$date = new \DateTime($exception->recurrenceId, new \DateTimeZone('GMT'));
+				$date->setTimezone($user_timezone);
+				$recId = $date->format("Ymd");
+				$_exceptions[] = $recId;
+				$this->exceptions[$recId] = $exception;
+				// MANTIS 3615: Alimenter le champ recurrence master
+				// TODO: Supprimer cet ajout quand CalDAV utilisera l'ORM
+				if (!$exception->deleted) {
+				    $recurrence_master[] = $recId;
+				}
+			}
+		} else {
+			$date = new \DateTime($exceptions->recurrenceId, new \DateTimeZone('GMT'));
 			$date->setTimezone($user_timezone);
 			$recId = $date->format("Ymd");
-			if (!in_array($recId, $_exceptions)) {
-			  $_exceptions[] = $recId;
-			}
-			$this->exceptions[$recId] = $exception;
+			$_exceptions[] = $recId;
+			$this->exceptions = array($recId => $exceptions);
 			// MANTIS 3615: Alimenter le champ recurrence master
 			// TODO: Supprimer cet ajout quand CalDAV utilisera l'ORM
-			if (!$exception->deleted) {
+			if (!$exceptions->deleted) {
 			    $recurrence_master[] = $recId;
 			}
 		}
@@ -1098,10 +1024,10 @@ class Event extends Melanie2Object {
 	protected function getMapExceptions() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapExceptions()");
 		if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-		if (!isset($this->objectmelanie->exceptions) || $this->objectmelanie->exceptions == "") return [];
+		if (!isset($this->objectmelanie->exceptions) || $this->objectmelanie->exceptions == "") return array();
 
 		if (!isset($this->exceptions)) {
-		    $this->exceptions = [];
+		    $this->exceptions = array();
 		}
 		$exceptions = explode(',', $this->objectmelanie->exceptions);
 		if (count($exceptions) != count($this->exceptions)) {
@@ -1130,7 +1056,7 @@ class Event extends Melanie2Object {
 
 	    if (!isset($this->exceptions)
 	            && !is_array($this->exceptions)) {
-	        $this->exceptions = [];
+	        $this->exceptions = array();
 	    }
 	    // Get the TZ
 	    if (isset($this->calendarmelanie)) $tz = $this->calendarmelanie->getTimezone();
@@ -1183,7 +1109,6 @@ class Event extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapAttachments()");
 		if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 		if (!isset($this->attachments)) {
-		  $this->attachments = [];
 			// Récupération des pièces jointes binaires
 			$attachment = new Attachment();
 			$path = ConfigMelanie::ATTACHMENTS_PATH;
@@ -1202,7 +1127,7 @@ class Event extends Melanie2Object {
 					if (isset($uri) && $uri !== "") {
 						M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapAttachments(): $uri");
 						$attachment = new Attachment();
-						$attachment->url = $uri;
+						$attachment->data = $uri;
 						$attachment->type = Attachment::TYPE_URL;
 						$this->attachments[] = $attachment;
 					}
@@ -1210,31 +1135,5 @@ class Event extends Melanie2Object {
 			}
 		}
 		return $this->attachments;
-	}
-	/**
-	 * Map ics to current event
-	 * @ignore
-	 */
-	protected function setMapIcs($ics) {
-	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapsIcs()");
-    \LibMelanie\Lib\ICSToEvent::Convert($ics, $this, $this->calendarmelanie, $this->usermelanie);
-	}
-	/**
-	 * Map current event to ics
-	 * @return string $ics
-	 * @ignore
-	 */
-	protected function getMapIcs() {
-	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapIcs()");
-    return \LibMelanie\Lib\EventToICS::Convert($this, $this->calendarmelanie, $this->usermelanie);
-	}
-  /**
-   * Map current event to vcalendar
-   * @return VObject\Component\VCalendar $vcalendar
-   * @ignore
-   */
-	protected function getMapVcalendar() {
-	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapVcalendar()");
-	  return \LibMelanie\Lib\EventToICS::getVCalendar($this, $this->calendarmelanie, $this->usermelanie);
 	}
 }

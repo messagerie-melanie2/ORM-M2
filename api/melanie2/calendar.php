@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,6 +37,8 @@ use LibMelanie\Log\M2Log;
  * @property string $owner Identifiant du propriétaire du calendrier
  * @property string $name Nom complet du calendrier
  * @property int $perm Permission associée, utiliser asRight()
+ * @property string $ctag CTag du calendrier
+ * @property int $synctoken SyncToken du calendrier
  *
  * @method bool load() Charge les données du calendrier depuis la base de données
  * @method bool exists() Non implémentée
@@ -169,11 +171,13 @@ class Calendar extends Melanie2Object {
 	 * need: $this->id
 	 * @param string $start Date de début
 	 * @param string $end Date de fin
+	 * @param int $modified Date de derniere modification des événements
+	 * @param boolean $is_freebusy Est-ce que l'on cherche des freebusy
 	 * @return Event[]
 	 */
-	public function getRangeEvents($start = null, $end = null) {
+	public function getRangeEvents($start = null, $end = null, $modified = null, $is_freebusy = false) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getRangeEvents()");
-		$_events = $this->objectmelanie->getRangeEvents($start, $end);
+		$_events = $this->objectmelanie->getRangeEvents($start, $end, $modified, $is_freebusy);
 		if (!isset($_events) || $_events === false) return null;
 		$events = [];
 		$exceptions = [];

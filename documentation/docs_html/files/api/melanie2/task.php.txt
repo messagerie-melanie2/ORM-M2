@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,8 +63,6 @@ use LibMelanie\Log\M2Log;
  * @property int $percent_complete Pourcentage de réalisation pour la tâche
  * @property string $status Status de la tâche
  *
- * @property string $ics ICS associé à l'évènement courant, calculé à la volée en attendant la mise en base de données
- *
  * @method bool load() Chargement l'évènement, en fonction du taskslist et de l'uid
  * @method bool exists() Test si l'évènement existe, en fonction du taskslist et de l'uid
  * @method bool save() Sauvegarde l'évènement et l'historique dans la base de données
@@ -99,7 +97,6 @@ class Task extends Melanie2Object {
 	const CLASS_CONFIDENTIAL = ConfigMelanie::CONFIDENTIAL;
 
 	// PRIORITY Fields
-	const PRIORITY_NO = ConfigMelanie::NO_PRIORITY;
 	const PRIORITY_VERY_HIGH = ConfigMelanie::VERY_HIGH;
 	const PRIORITY_HIGH = ConfigMelanie::HIGH;
 	const PRIORITY_NORMAL = ConfigMelanie::NORMAL;
@@ -188,7 +185,7 @@ class Task extends Melanie2Object {
 	    }
 	    else {
 	        // Création de l'objet s'il n'existe pas
-	        if (!isset($this->attributes)) $this->attributes = [];
+	        if (!isset($this->attributes)) $this->attributes = array();
 	        $taskproperty = new TaskProperty();
 	        $taskproperty->task = $this->uid;
 	        if (isset($this->taskslistmelanie)) {
@@ -305,11 +302,11 @@ class Task extends Melanie2Object {
 	 * @param String[] $case_unsensitive_fields Liste des champs pour lesquels on ne sera pas sensible à la casse
 	 * @return Task[] Array
 	 */
-	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
+	function getList($fields = array(), $filter = "", $operators = array(), $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = array()) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList()");
 		$_tasks = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields);
 		if (!isset($_tasks)) return null;
-		$tasks = [];
+		$tasks = array();
 		foreach ($_tasks as $_task) {
 			$task = new Task($this->usermelanie, $this->taskslistmelanie);
 			$task->setObjectMelanie($_task);
@@ -338,7 +335,7 @@ class Task extends Melanie2Object {
 	private function loadAttributes() {
 	    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->loadAttributes()");
 	    // Création de l'objet s'il n'existe pas
-	    if (!isset($this->attributes)) $this->attributes = [];
+	    if (!isset($this->attributes))	$this->attributes = array();
 	    // Génération de l'attribut pour le getList
 	    $taskproperty = new TaskProperty();
 	    $taskproperty->task = $this->uid;
@@ -468,22 +465,5 @@ class Task extends Melanie2Object {
 	    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 	    $status = $this->getAttribute('STATUS');
 	    return isset($status);
-	}
-	/**
-	 * Map ics to current task
-	 * @ignore
-	 */
-	protected function setMapIcs($ics) {
-	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->setMapsIcs()");
-	  \LibMelanie\Lib\ICSToTask::Convert($ics, $this, $this->calendarmelanie, $this->usermelanie);
-	}
-	/**
-	 * Map current task to ics
-	 * @return string $ics
-	 * @ignore
-	 */
-	protected function getMapIcs() {
-	  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getMapIcs()");
-	  return \LibMelanie\Lib\TaskToICS::Convert($this, $this->calendarmelanie, $this->usermelanie);
 	}
 }

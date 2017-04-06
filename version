@@ -1,8 +1,82 @@
-ORM M2 - Version 0.1.9
-ORM M2 - Build 201504071511
+ORM M2 - Version 0.2.5.2
+ORM M2 - Build 201704061008
 ORM M2 - Liste des changements
 
-ORM M2 - 0.1.9 (Pas encore publiée) [ Afficher les bogues ]
+ORM M2 - 0.2.5.2 (Pas encore publiée) [ Afficher les bogues ]
+=====================================
+- 0004487: [Tâches] Gérer la table nag_sync (thomas.payen) - résolu.
+- 0004485: [Général] Prise en compte du SyncToken (thomas.payen) - résolu.
+- 0004486: [Agenda] Gérer la table kronolith_sync (thomas.payen) - résolu.
+
+[3 bogues]
+
+ORM M2 - 0.2.5.1 (Pas encore publiée) [ Afficher les bogues ]
+=====================================
+- 0004519: [Agenda] Ne pas retourner les recurrence id dans le Sync (thomas.payen) - résolu.
+- 0004517: [Tâches] [ICS] Une tâche terminée ne passe pas completed à 1 (thomas.payen) - résolu.
+- 0004516: [Tâches] La methode getList des tâches ne retourne toujours qu'une tâche (thomas.payen) - résolu.
+- 0004510: [Tâches] Problème de conversion ICS des tâches avec alarme (thomas.payen) - résolu.
+- 0004507: [Agenda] Problème de gération des EXDATE en journée entière (thomas.payen) - résolu.
+- 0004481: [Général] Modifier les méthodes getCTag pour récupérer directement le ctag (thomas.payen) - résolu.
+- 0004479: [Agenda] Le mode freebusy n'est pas correctement redescendu à l'événement (thomas.payen) - résolu.
+- 0004471: [Agenda] Problème lorsque la réponse du participant ne change pas (thomas.payen) - résolu.
+- 0004468: [Agenda] Problème d'utilisateur dans l'attribut (thomas.payen) - résolu.
+
+[9 bogues]
+
+ORM M2 - 0.2.5 (Pas encore publiée) [ Afficher les bogues ]
+===================================
+- 0004324: [Agenda] Le nom de la base de données pour les sauvegardes j-1 et j-2 a changé. (thomas.payen) - résolu.
+- 0004290: [Agenda] Lorsqu'une seule occurrence modifiée est supprimé le RECURRENCE-MASTER n'est pas nettoyé (thomas.payen) - résolu.
+- 0004286: [Agenda] L'enregistrement des attributs n'enregistre pas l'utilisateur (thomas.payen) - résolu.
+
+[3 bogues]
+
+ORM M2 - 0.2.4 (Publiée 07/06/2016) [ Afficher les bogues ]
+===================================
+- 0004259: [Agenda] Problème dans la gestion des privés pour l'ICS (thomas.payen) - résolu.
+- 0004258: [Agenda] Alimenter un titre même pour un événement sans titre (thomas.payen) - résolu.
+
+[2 bogues]
+
+ORM M2 - 0.2.3 (Publiée 19/04/2016) [ Afficher les bogues ]
+===================================
+- 0004232: [Agenda] Gestion des événements privés quand l'utilisateur n'existe pas (thomas.payen) - résolu.
+
+[1 bogue]
+
+ORM M2 - 0.2.2 (Publiée 01/02/2016) [ Afficher les bogues ]
+===================================
+- 0004177: [Agenda] Problème de timezone pour la génération ICS (thomas.payen) - résolu.
+- 0004159: [Agenda] Gérer un vcalendar externe au moment de l'export ICS (thomas.payen) - résolu.
+- 0004157: [Agenda] La méthode getRangeEvent ne retourne pas tous les événements (thomas.payen) - résolu.
+
+[3 bogues]
+
+ORM M2 - 0.2.1 (Publiée 19/11/2015) [ Afficher les bogues ]
+===================================
+- 0004005: [Général] Stockage du ctag en base de données (thomas.payen) - résolu.
+- 0004130: [Agenda] Mise en place d'un trigger pour le calcul du ctag (thomas.payen) - résolu.
+- 0003628: [Agenda] Génération des disponibilités via les freebusy (thomas.payen) - résolu.
+- 0004132: [Contacts] Utiliser le nouveau calcul de ctag (thomas.payen) - résolu.
+
+[4 bogues]
+
+ORM M2 - 0.2 (Publiée 21/06/2015) [ Afficher les bogues ]
+=================================
+- 0004102: [Agenda] Optimiser les requêtes avec la mise en place d'index (thomas.payen) - résolu.
+- 0004103: [Agenda] Calculer une date de fin approximative pour un count (thomas.payen) - résolu.
+- 0004016: [Agenda] Gestion des COPY/MOVE (thomas.payen) - résolu.
+- 0003625: [Contacts] Conversion d'un contact en vcard et inversement (thomas.payen) - résolu.
+- 0004010: [Général] Problème dans l'enregistrement des pièces jointes URL (thomas.payen) - résolu.
+- 0003997: [Agenda] Ne pas supprimer une pièce jointe URL quand le binaire existe (thomas.payen) - résolu.
+- 0004002: [Agenda] Ajouter le creator dans la description lors de la génération de l'ICS (thomas.payen) - résolu.
+- 0003881: [Agenda] Rendre la librairie moins sensible au format de données pour les exceptions (thomas.payen) - résolu.
+- 0003875: [Agenda] Changement d'organisateur (thomas.payen) - résolu.
+
+[9 bogues]
+
+ORM M2 - 0.1.9 (Publiée 20/03/2015) [ Afficher les bogues ]
 ===================================
 - 0003830: [Agenda] Gestion des exceptions sans date (thomas.payen) - résolu.
 - 0003803: [Général] Modifier le isExists des objet pour déterminer le Creation/Modification (thomas.payen) - résolu.

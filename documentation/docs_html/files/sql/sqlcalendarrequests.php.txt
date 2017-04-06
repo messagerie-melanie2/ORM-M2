@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ class SqlCalendarRequests {
 	 * @param REPLACE {event_range}
 	 * @param PDO :calendar_id
 	 */
-	const listAllEvents = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2	ON k1.event_uid = k2.event_uid AND k2.event_attendees <> ''	AND k2.event_attendees <> 'a:0:{}' WHERE k1.calendar_id = :calendar_id{event_range} ORDER BY event_start;";
+	const listAllEvents = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2	ON k1.event_uid = k2.event_uid AND k2.event_attendees <> ''	AND k2.event_attendees <> 'a:0:{}' WHERE k1.calendar_id = :calendar_id{event_range};";
 
 	/**
 	 * @var SELECT

@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -170,10 +170,14 @@ class Recurrence extends Melanie2Object {
 	  if (isset($rdata[ICS::FREQ])) {
 	    // Always default the recurInterval to 1.
 	    $recurrence->interval = isset($rdata[ICS::INTERVAL]) ? $rdata[ICS::INTERVAL] : 1;
+	    $recurrence->days = array();
+	    // MANTIS 4103: Calculer une date de fin approximative pour un count
+	    $nbdays = $recurrence->interval;
 
 	    switch (strtoupper($rdata[ICS::FREQ])) {
 	      case ICS::FREQ_DAILY:
 	        $recurrence->type = self::RECURTYPE_DAILY;
+	        $nbdays = $nbdays + 7;
 	        break;
 
 	      case ICS::FREQ_WEEKLY:
@@ -185,6 +189,7 @@ class Recurrence extends Melanie2Object {
 	            $recurrence->days = explode(',', $rdata[ICS::BYDAY]);
 	          }
 	        }
+	        $nbdays = $nbdays * 7 + 14;
 	        break;
 
 	      case ICS::FREQ_MONTHLY:
@@ -198,6 +203,7 @@ class Recurrence extends Melanie2Object {
 	        } else {
 	          $recurrence->type = self::RECURTYPE_MONTHLY;
 	        }
+	        $nbdays = $nbdays * 31 + 31;
 	        break;
 
 	      case ICS::FREQ_YEARLY:
@@ -213,6 +219,7 @@ class Recurrence extends Melanie2Object {
 	        } else {
 	          $recurrence->type = self::RECURTYPE_YEARLY;
 	        }
+	        $nbdays = $nbdays * 366 + 300;
 	        break;
 	    }
 	    if (isset($rdata[ICS::UNTIL])) {
@@ -246,7 +253,10 @@ class Recurrence extends Melanie2Object {
 	      $recurrence->count = '';
 	    } elseif (isset($rdata[ICS::COUNT])) {
 	      $recurrence->count = intval($rdata[ICS::COUNT]);
-	      $recurrence->enddate = "9999-12-31 00:00:00";
+	      // MANTIS 4103: Calculer une date de fin approximative pour un count
+        $enddate = new \DateTime($event->end);
+        $enddate->add(new \DateInterval("P".$nbdays."D"));
+        $recurrence->enddate = $enddate->format('Y-m-d H:i:s');
 	    } else {
 	      $recurrence->enddate = "9999-12-31 00:00:00";
 	      $recurrence->count = '';
@@ -280,19 +290,6 @@ class Recurrence extends Melanie2Object {
 	  $_recurrence = $this;
 	  // Si une recurrence est bien definie dans l'evenement
 	  if ($_recurrence->type !== self::RECURTYPE_NORECUR) {
-	    if (isset($_recurrence->count)
-	        && intval($_recurrence->count) > 0) {
-	      // Gestion du nombre d'occurences
-	      $recurrence['COUNT'] = intval($_recurrence->count);
-	    }
-	    elseif (isset($_recurrence->enddate)) {
-	      // Gestion d'une date de fin
-	      $recurrence['UNTIL'] = new \DateTime($_recurrence->enddate, new \DateTimeZone('UTC'));
-	      if ($recurrence['UNTIL']->format('Y') == '9999') {
-	        // Si l'année est en 9999 on considère qu'il n'y a de date de fin
-	        unset($recurrence['UNTIL']);
-	      }
-	    }
 	    switch ($_recurrence->type) {
 	      case self::RECURTYPE_DAILY:
 	        $recurrence[ICS::FREQ] = ICS::FREQ_DAILY;
@@ -364,6 +361,19 @@ class Recurrence extends Melanie2Object {
 	        $recurrence[ICS::BYMONTH] = $monthofyear;
 	        break;
 	    }
+	    if (isset($_recurrence->count)
+	        && intval($_recurrence->count) > 0) {
+        // Gestion du nombre d'occurences
+        $recurrence['COUNT'] = intval($_recurrence->count);
+      }
+      elseif (isset($_recurrence->enddate)) {
+        // Gestion d'une date de fin
+        $recurrence['UNTIL'] = new \DateTime($_recurrence->enddate, new \DateTimeZone('UTC'));
+        if ($recurrence['UNTIL']->format('Y') == '9999') {
+          // Si l'année est en 9999 on considère qu'il n'y a de date de fin
+          unset($recurrence['UNTIL']);
+        }
+      }
 	  }
 	  return $recurrence;
 	}

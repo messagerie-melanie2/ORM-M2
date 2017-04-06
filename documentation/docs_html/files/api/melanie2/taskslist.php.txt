@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -97,11 +97,11 @@ class Taskslist extends Melanie2Object {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getAllTasks()");
 		$_tasks = $this->objectmelanie->getAllTasks();
 		if (!isset($_tasks)) return null;
-		$tasks = [];
+		$tasks = array();
 		foreach ($_tasks as $_task) {
 			$task = new Task($this->usermelanie, $this);
 			$task->setObjectMelanie($_task);
-			$tasks[$_task->uid.$_task->taskslist] = $task;
+			$tasks[$_task->id] = $task;
 		}
 		// Détruit les variables pour libérer le plus rapidement de la mémoire
 		unset($_tasks);

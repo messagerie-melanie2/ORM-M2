@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright (C) 2015  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -133,6 +133,7 @@ class ConfigMelanie {
 	const NAME = "name";
 
 	// Priority
+	const NO_PRIORITY = "no_priority";
 	const VERY_HIGH = "very_high";
 	const HIGH = "high";
 	const NORMAL = "normal";
@@ -159,7 +160,7 @@ class ConfigMelanie {
 	// URL pour le téléchargement automatique d'une pièce jointe
 	// %f -> nom du fichier/de la pièce jointe
 	// %p -> chemin relatif vers la pièce jointe (sans le DEFAULT_ATTACHMENTS_FOLDER défini plus haut)
-	const ATTACHMENT_DOWNLOAD_URL = "";
+	const ATTACHMENT_DOWNLOAD_URL = "https://melanie2web.melanie2.i2/services/download/?module=kronolith&actionID=download_file&file=%f&vfsKey=%p&fn=%f";
 	const DEFAULT_ATTACHMENT_CONTENTTYPE = "application/binary";
 
 	// Défini si le timezone doit être ajouté à l'ICS

@@ -25,6 +25,12 @@
  * @author PNE Messagerie/Apitech
  *
  */
+
+// Configuration du nom de l'application pour l'ORM
+if (!defined('CONFIGURATION_APP_LIBM2')) {
+	define('CONFIGURATION_APP_LIBM2', 'roundcube');
+}
+
 // Inclure le fichier includes.php
 include_once 'includes/libm2.php';
 

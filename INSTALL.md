@@ -19,7 +19,7 @@ Configuration du fichier php.ini
 Ajouter dans la configuration du php.ini (cli ou apache2) le chemin vers la librairie dans le champs "include_path".
 
 Exemple:
-> ; UNIX: "/path1:/path2"
+> ; UNIX: "/path1:/path2"  
 > include_path = ".:/usr/share/php:/usr/share/libM2/LibrarySqlMelanie2"
 
 Bien inclure le répertoire "LibrarySqlMelanie2/".

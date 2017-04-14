@@ -1,14 +1,15 @@
 ORM M2 - Version 0.2.5.2
-ORM M2 - Build 201704061008
+ORM M2 - Build 201704111028
 ORM M2 - Liste des changements
 
 ORM M2 - 0.2.5.2 (Pas encore publiée) [ Afficher les bogues ]
 =====================================
+- 0004530: [Agenda] [ICS] Passer le statut par défaut en libre (thomas.payen) - résolu.
 - 0004487: [Tâches] Gérer la table nag_sync (thomas.payen) - résolu.
 - 0004485: [Général] Prise en compte du SyncToken (thomas.payen) - résolu.
 - 0004486: [Agenda] Gérer la table kronolith_sync (thomas.payen) - résolu.
 
-[3 bogues]
+[4 bogues]
 
 ORM M2 - 0.2.5.1 (Pas encore publiée) [ Afficher les bogues ]
 =====================================

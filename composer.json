@@ -15,11 +15,6 @@
 	"require-dev": {
         "composer/composer": "*"
     },
-	"autoload" : {
-		"psr-4" : {
-			"LibMelanie\\" : "src/"
-		}
-	},
 	"authors" : [
 		{
 			"name" : "Thomas Payen",

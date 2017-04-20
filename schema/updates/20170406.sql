@@ -4,7 +4,7 @@
 -- Création de la table kronolith_sync pour lister les synchronisations des événements
 --
 
-CREATE TABLE public.kronolith_sync
+CREATE TABLE kronolith_sync
 (
 	token bigint NOT NULL,
 	calendar_id VARCHAR(255) NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE public.kronolith_sync
 -- Création de la table nag_sync pour lister les synchronisations des tâches
 --
 
-CREATE TABLE public.nag_sync
+CREATE TABLE nag_sync
 (
 	token bigint NOT NULL,
 	taskslist_id VARCHAR(255) NOT NULL,

@@ -1,0 +1,31 @@
+{
+	"name": "messagerie-melanie2/ORM-M2",
+	"version": "0.3",
+    "version_normalized": "0.3.0.0",
+	"description": "ORM pour l'accès aux données Mélanie2",
+	"keywords": [ "ORM", "Calendar", "Addressbook", "Tasks" ],
+	"homepage": "https://github.com/messagerie-melanie2/ORM-M2",
+	"license": "GPLv3",
+	"type": "library",
+	"require" : {
+		"php"		: ">=5.3.1",
+		"ext-ldap"	: "*",
+		"ext-pgsql"	: "*"
+	},
+	"require-dev": {
+        "composer/composer": "*"
+    },
+	"autoload" : {
+		"psr-4" : {
+			"LibMelanie\\" : "src/"
+		}
+	},
+	"authors" : [
+		{
+			"name" : "Thomas Payen",
+			"email" : "thomas.payen@i-carre.net",
+			"homepage" : "https://github.com/tpayen",
+			"role" : "Developer"
+		}
+	]
+}

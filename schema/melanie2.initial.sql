@@ -1,7 +1,7 @@
--- Schema du 20170307
+-- Schema du 20170420
 
 --
--- Name: update_addressbook_ctag(); Type: FUNCTION; Schema: public;
+-- Name: update_addressbook_ctag(); Type: FUNCTION
 --
 
 CREATE FUNCTION update_addressbook_ctag() RETURNS trigger
@@ -32,25 +32,41 @@ $$;
 
 
 --
--- Name: update_calendar_ctag(); Type: FUNCTION; Schema: public;
+-- Name: update_calendar_ctag(); Type: FUNCTION
 --
 
-CREATE OR REPLACE FUNCTION update_calendar_ctag() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
+CREATE OR REPLACE FUNCTION update_calendar_ctag()
+  RETURNS trigger AS
+$BODY$
 DECLARE
     calendar_ctag varchar;
     p_calendar_id varchar;
+    p_event_uid varchar;
+    p_action varchar;
+    a_datatree_synctoken bigint;
 BEGIN
     IF (TG_OP = 'DELETE') THEN
-            p_calendar_id := OLD.calendar_id;
-        ELSE
-            p_calendar_id := NEW.calendar_id;
-        END IF;
+		p_calendar_id := OLD.calendar_id;
+		p_event_uid := OLD.event_uid;
+		p_action := 'del';
+    ELSIF (TG_OP = 'INSERT') THEN
+		p_calendar_id := NEW.calendar_id;
+		p_event_uid := NEW.event_uid;
+		p_action := 'add';
+    ELSIF (TG_OP = 'UPDATE') THEN
+		p_calendar_id := NEW.calendar_id;
+		p_event_uid := NEW.event_uid;
+		p_action := 'mod';
+    END IF;
         
     SELECT md5(CAST(sum(k.event_modified) AS varchar)) INTO calendar_ctag FROM kronolith_events k WHERE k.calendar_id = p_calendar_id;
+    IF NOT FOUND THEN
+        calendar_ctag := md5(p_calendar_id);
+    END IF;
+    UPDATE horde_datatree SET datatree_ctag = calendar_ctag, datatree_synctoken = datatree_synctoken + 1 WHERE datatree_name = p_calendar_id AND group_uid = 'horde.shares.kronolith';
+    SELECT datatree_synctoken INTO a_datatree_synctoken FROM horde_datatree WHERE datatree_name = p_calendar_id AND group_uid = 'horde.shares.kronolith';
     IF FOUND THEN
-        UPDATE horde_datatree SET datatree_ctag = calendar_ctag WHERE datatree_name = p_calendar_id AND group_uid = 'horde.shares.kronolith';
+        INSERT INTO kronolith_sync VALUES (a_datatree_synctoken, p_calendar_id, p_event_uid, p_action);
     END IF;
 
     IF (TG_OP = 'DELETE') THEN
@@ -59,29 +75,46 @@ BEGIN
         RETURN NEW;
     END IF;
 END;
-$$;
+$BODY$
+LANGUAGE plpgsql;
 
 
 --
--- Name: update_taskslist_ctag(); Type: FUNCTION; Schema: public;
+-- Name: update_taskslist_ctag(); Type: FUNCTION
 --
 
-CREATE OR REPLACE FUNCTION update_taskslist_ctag() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
+CREATE OR REPLACE FUNCTION update_taskslist_ctag()
+  RETURNS trigger AS
+$BODY$
 DECLARE
     taskslist_ctag varchar;
     p_taskslist_id varchar;
+    p_task_uid varchar;
+    p_action varchar;
+    a_datatree_synctoken bigint;
 BEGIN
     IF (TG_OP = 'DELETE') THEN
-            p_taskslist_id := OLD.task_owner;
-        ELSE
-            p_taskslist_id := NEW.task_owner;
-        END IF;
+		p_taskslist_id := OLD.task_owner;
+		p_task_uid := OLD.task_uid;
+		p_action := 'del';
+    ELSIF (TG_OP = 'INSERT') THEN
+		p_taskslist_id := NEW.task_owner;
+		p_task_uid := NEW.task_uid;
+		p_action := 'add';
+    ELSIF (TG_OP = 'UPDATE') THEN
+		p_taskslist_id := NEW.task_owner;
+		p_task_uid := NEW.task_uid;
+		p_action := 'mod';
+    END IF;
         
     SELECT md5(CAST(sum(n.task_ts) AS varchar)) INTO taskslist_ctag FROM nag_tasks n WHERE n.task_owner = p_taskslist_id;
+    IF NOT FOUND THEN
+        taskslist_ctag := md5(p_taskslist_id);
+    END IF;
+    UPDATE horde_datatree SET datatree_ctag = taskslist_ctag, datatree_synctoken = datatree_synctoken + 1 WHERE datatree_name = p_taskslist_id AND group_uid = 'horde.shares.nag';
+    SELECT datatree_synctoken INTO a_datatree_synctoken FROM horde_datatree WHERE datatree_name = p_taskslist_id AND group_uid = 'horde.shares.nag';
     IF FOUND THEN
-        UPDATE horde_datatree SET datatree_ctag = taskslist_ctag WHERE datatree_name = p_taskslist_id AND group_uid = 'horde.shares.nag';
+        INSERT INTO nag_sync VALUES (a_datatree_synctoken, p_taskslist_id, p_task_uid, p_action);
     END IF;
 
     IF (TG_OP = 'DELETE') THEN
@@ -90,11 +123,12 @@ BEGIN
         RETURN NEW;
     END IF;
 END;
-$$;
+$BODY$
+LANGUAGE plpgsql;
 
 
 --
--- Name: horde_datatree; Type: TABLE; Schema: public;
+-- Name: horde_datatree; Type: TABLE
 --
 
 CREATE TABLE horde_datatree (
@@ -112,7 +146,7 @@ CREATE TABLE horde_datatree (
 );
 
 --
--- Name: horde_datatree_attributes; Type: TABLE; Schema: public; 
+-- Name: horde_datatree_attributes; Type: TABLE
 --
 
 CREATE TABLE horde_datatree_attributes (
@@ -123,7 +157,7 @@ CREATE TABLE horde_datatree_attributes (
 );
 
 --
--- Name: horde_datatree_seq; Type: SEQUENCE; Schema: public;
+-- Name: horde_datatree_seq; Type: SEQUENCE
 --
 
 CREATE SEQUENCE horde_datatree_seq
@@ -134,7 +168,7 @@ CREATE SEQUENCE horde_datatree_seq
     CACHE 1;
 
 --
--- Name: horde_histories; Type: TABLE; Schema: public; 
+-- Name: horde_histories; Type: TABLE
 --
 
 CREATE TABLE horde_histories (
@@ -148,7 +182,7 @@ CREATE TABLE horde_histories (
 );
 
 --
--- Name: horde_histories_seq; Type: SEQUENCE; Schema: public;
+-- Name: horde_histories_seq; Type: SEQUENCE
 --
 
 CREATE SEQUENCE horde_histories_seq
@@ -159,7 +193,7 @@ CREATE SEQUENCE horde_histories_seq
     CACHE 1;
 
 --
--- Name: horde_prefs; Type: TABLE; Schema: public; 
+-- Name: horde_prefs; Type: TABLE
 --
 
 CREATE TABLE horde_prefs (
@@ -171,7 +205,7 @@ CREATE TABLE horde_prefs (
 
 
 --
--- Name: horde_vfs; Type: TABLE; Schema: public; 
+-- Name: horde_vfs; Type: TABLE
 --
 
 CREATE TABLE horde_vfs (
@@ -185,7 +219,7 @@ CREATE TABLE horde_vfs (
 );
 
 --
--- Name: horde_vfs_seq; Type: SEQUENCE; Schema: public;
+-- Name: horde_vfs_seq; Type: SEQUENCE
 --
 
 CREATE SEQUENCE horde_vfs_seq
@@ -196,7 +230,7 @@ CREATE SEQUENCE horde_vfs_seq
     CACHE 1;
 
 --
--- Name: kronolith_events; Type: TABLE; Schema: public; 
+-- Name: kronolith_events; Type: TABLE
 --
 
 CREATE TABLE kronolith_events (
@@ -225,7 +259,7 @@ CREATE TABLE kronolith_events (
 );
 
 --
--- Name: lightning_attributes; Type: TABLE; Schema: public; 
+-- Name: lightning_attributes; Type: TABLE
 --
 
 CREATE TABLE lightning_attributes (
@@ -237,7 +271,7 @@ CREATE TABLE lightning_attributes (
 );
 
 --
--- Name: nag_tasks; Type: TABLE; Schema: public; 
+-- Name: nag_tasks; Type: TABLE
 --
 
 CREATE TABLE nag_tasks (
@@ -263,7 +297,7 @@ CREATE TABLE nag_tasks (
 
 
 --
--- Name: turba_objects; Type: TABLE; Schema: public; 
+-- Name: turba_objects; Type: TABLE
 --
 
 CREATE TABLE turba_objects (
@@ -321,7 +355,60 @@ CREATE TABLE turba_objects (
 );
 
 --
--- Name: horde_datatree_pkey; Type: CONSTRAINT; Schema: public; 
+-- Name: kronolith_sync; Type: TABLE
+--
+
+CREATE TABLE kronolith_sync
+(
+	token bigint NOT NULL,
+	calendar_id VARCHAR(255) NOT NULL,
+	event_uid VARCHAR(255) NOT NULL,
+	action VARCHAR(3) NOT NULL, -- add, mod, del
+	CONSTRAINT kronolith_sync_pkey PRIMARY KEY (token, calendar_id)
+);
+
+
+--
+-- Name: nag_sync; Type: TABLE
+--
+
+CREATE TABLE nag_sync
+(
+	token bigint NOT NULL,
+	taskslist_id VARCHAR(255) NOT NULL,
+	task_uid VARCHAR(255) NOT NULL,
+	action VARCHAR(3) NOT NULL, -- add, mod, del
+	CONSTRAINT nag_sync_pkey PRIMARY KEY (token, taskslist_id)
+);
+
+
+--
+-- Name: pamela_tentativescnx; Type: TABLE
+--
+
+CREATE TABLE pamela_tentativescnx
+(
+  uid character varying(128) NOT NULL,
+  lastcnx integer NOT NULL,
+  nbtentatives integer NOT NULL,
+  CONSTRAINT pamela_tentativescnx_pkey PRIMARY KEY (uid)
+);
+
+
+--
+-- Name: pamela_mailcount; Type: TABLE
+--
+
+CREATE TABLE pamela_mailcount
+(
+  uid character varying(255) NOT NULL,
+  send_time timestamp without time zone NOT NULL,
+  nb_dest integer NOT NULL DEFAULT 0,
+  address_ip character varying(16) NOT NULL DEFAULT '0.0.0.0'::character varying
+);
+
+--
+-- Name: horde_datatree_pkey; Type: CONSTRAINT
 --
 
 ALTER TABLE ONLY horde_datatree
@@ -329,7 +416,7 @@ ALTER TABLE ONLY horde_datatree
 
 
 --
--- Name: horde_histories_pkey; Type: CONSTRAINT; Schema: public; 
+-- Name: horde_histories_pkey; Type: CONSTRAINT
 --
 
 ALTER TABLE ONLY horde_histories
@@ -337,7 +424,7 @@ ALTER TABLE ONLY horde_histories
 
 
 --
--- Name: horde_prefs_pkey; Type: CONSTRAINT; Schema: public; 
+-- Name: horde_prefs_pkey; Type: CONSTRAINT
 --
 
 ALTER TABLE ONLY horde_prefs
@@ -345,7 +432,7 @@ ALTER TABLE ONLY horde_prefs
 
 
 --
--- Name: horde_vfs_pkey; Type: CONSTRAINT; Schema: public; 
+-- Name: horde_vfs_pkey; Type: CONSTRAINT
 --
 
 ALTER TABLE ONLY horde_vfs
@@ -353,7 +440,7 @@ ALTER TABLE ONLY horde_vfs
 
 
 --
--- Name: kronolith_events_pkey; Type: CONSTRAINT; Schema: public; 
+-- Name: kronolith_events_pkey; Type: CONSTRAINT
 --
 
 ALTER TABLE ONLY kronolith_events
@@ -361,7 +448,7 @@ ALTER TABLE ONLY kronolith_events
 
 
 --
--- Name: lightning_attributes_pkey; Type: CONSTRAINT; Schema: public; 
+-- Name: lightning_attributes_pkey; Type: CONSTRAINT
 --
 
 ALTER TABLE ONLY lightning_attributes
@@ -369,7 +456,7 @@ ALTER TABLE ONLY lightning_attributes
 
 
 --
--- Name: nag_tasks_pkey; Type: CONSTRAINT; Schema: public; 
+-- Name: nag_tasks_pkey; Type: CONSTRAINT
 --
 
 ALTER TABLE ONLY nag_tasks
@@ -377,7 +464,7 @@ ALTER TABLE ONLY nag_tasks
 
 
 --
--- Name: turba_objects_pkey; Type: CONSTRAINT; Schema: public; 
+-- Name: turba_objects_pkey; Type: CONSTRAINT
 --
 
 ALTER TABLE ONLY turba_objects
@@ -385,163 +472,184 @@ ALTER TABLE ONLY turba_objects
 
 
 --
--- Name: datatree_attribute_idx; Type: INDEX; Schema: public; 
+-- Name: datatree_attribute_idx; Type: INDEX
 --
 
 CREATE INDEX datatree_attribute_idx ON horde_datatree_attributes USING btree (datatree_id);
 
 
 --
--- Name: datatree_attribute_key_idx; Type: INDEX; Schema: public; 
+-- Name: datatree_attribute_key_idx; Type: INDEX
 --
 
 CREATE INDEX datatree_attribute_key_idx ON horde_datatree_attributes USING btree (attribute_key);
 
 
 --
--- Name: datatree_attribute_name_idx; Type: INDEX; Schema: public; 
+-- Name: datatree_attribute_name_idx; Type: INDEX
 --
 
 CREATE INDEX datatree_attribute_name_idx ON horde_datatree_attributes USING btree (attribute_name);
 
 
 --
--- Name: datatree_attribute_value_idx; Type: INDEX; Schema: public; 
+-- Name: datatree_attribute_value_idx; Type: INDEX
 --
 
 CREATE INDEX datatree_attribute_value_idx ON horde_datatree_attributes USING btree (attribute_value);
 
 
 --
--- Name: datatree_datatree_name_idx; Type: INDEX; Schema: public; 
+-- Name: datatree_datatree_name_idx; Type: INDEX
 --
 
 CREATE INDEX datatree_datatree_name_idx ON horde_datatree USING btree (datatree_name);
 
 
 --
--- Name: datatree_group_idx; Type: INDEX; Schema: public; 
+-- Name: datatree_group_idx; Type: INDEX
 --
 
 CREATE INDEX datatree_group_idx ON horde_datatree USING btree (group_uid);
 
 
 --
--- Name: datatree_order_idx; Type: INDEX; Schema: public; 
+-- Name: datatree_order_idx; Type: INDEX
 --
 
 CREATE INDEX datatree_order_idx ON horde_datatree USING btree (datatree_order);
 
 
 --
--- Name: datatree_serialized_idx; Type: INDEX; Schema: public; 
+-- Name: datatree_serialized_idx; Type: INDEX
 --
 
 CREATE INDEX datatree_serialized_idx ON horde_datatree USING btree (datatree_serialized);
 
 
 --
--- Name: datatree_user_idx; Type: INDEX; Schema: public; 
+-- Name: datatree_user_idx; Type: INDEX
 --
 
 CREATE INDEX datatree_user_idx ON horde_datatree USING btree (user_uid);
 
 
 --
--- Name: history_action_idx; Type: INDEX; Schema: public; 
+-- Name: history_action_idx; Type: INDEX
 --
 
 CREATE INDEX history_action_idx ON horde_histories USING btree (history_action);
 
 
 --
--- Name: history_ts_idx; Type: INDEX; Schema: public; 
+-- Name: history_ts_idx; Type: INDEX
 --
 
 CREATE INDEX history_ts_idx ON horde_histories USING btree (history_ts);
 
 
 --
--- Name: history_uid_idx; Type: INDEX; Schema: public; 
+-- Name: history_uid_idx; Type: INDEX
 --
 
 CREATE INDEX history_uid_idx ON horde_histories USING btree (object_uid);
 
 
 --
--- Name: kronolith_calendar_idx; Type: INDEX; Schema: public; 
+-- Name: kronolith_calendar_idx; Type: INDEX
 --
 
 CREATE INDEX kronolith_calendar_idx ON kronolith_events USING btree (calendar_id);
 
 
 --
--- Name: kronolith_uid_idx; Type: INDEX; Schema: public; 
+-- Name: kronolith_uid_idx; Type: INDEX
 --
 
 CREATE INDEX kronolith_uid_idx ON kronolith_events USING btree (event_uid);
 
 
 --
--- Name: nag_start_idx; Type: INDEX; Schema: public; 
+-- Name: nag_start_idx; Type: INDEX
 --
 
 CREATE INDEX nag_start_idx ON nag_tasks USING btree (task_start);
 
 
 --
--- Name: nag_tasklist_idx; Type: INDEX; Schema: public; 
+-- Name: nag_tasklist_idx; Type: INDEX
 --
 
 CREATE INDEX nag_tasklist_idx ON nag_tasks USING btree (task_owner);
 
 
 --
--- Name: nag_uid_idx; Type: INDEX; Schema: public; 
+-- Name: nag_uid_idx; Type: INDEX
 --
 
 CREATE INDEX nag_uid_idx ON nag_tasks USING btree (task_uid);
 
 --
--- Name: turba_email_idx; Type: INDEX; Schema: public; 
+-- Name: turba_email_idx; Type: INDEX
 --
 
 CREATE INDEX turba_email_idx ON turba_objects USING btree (object_email);
 
 
 --
--- Name: turba_firstname_idx; Type: INDEX; Schema: public; 
+-- Name: turba_firstname_idx; Type: INDEX
 --
 
 CREATE INDEX turba_firstname_idx ON turba_objects USING btree (object_firstname);
 
 
 --
--- Name: turba_lastname_idx; Type: INDEX; Schema: public; 
+-- Name: turba_lastname_idx; Type: INDEX
 --
 
 CREATE INDEX turba_lastname_idx ON turba_objects USING btree (object_lastname);
 
 
 --
--- Name: turba_owner_idx; Type: INDEX; Schema: public; 
+-- Name: turba_owner_idx; Type: INDEX
 --
 
 CREATE INDEX turba_owner_idx ON turba_objects USING btree (owner_id);
 
 
 --
--- Name: vfs_name_idx; Type: INDEX; Schema: public; 
+-- Name: vfs_name_idx; Type: INDEX
 --
 
 CREATE INDEX vfs_name_idx ON horde_vfs USING btree (vfs_name);
 
 
 --
--- Name: vfs_path_idx; Type: INDEX; Schema: public; 
+-- Name: vfs_path_idx; Type: INDEX
 --
 
 CREATE INDEX vfs_path_idx ON horde_vfs USING btree (vfs_path);
+
+
+--
+-- Name: pamela_mailcount_nb_dest_idx; Type: INDEX
+--
+
+CREATE INDEX pamela_mailcount_nb_dest_idx ON pamela_mailcount USING btree (nb_dest);
+
+  
+--
+-- Name: pamela_mailcount_send_time_idx; Type: INDEX
+--
+
+CREATE INDEX pamela_mailcount_send_time_idx ON pamela_mailcount USING btree (send_time);
+
+  
+--
+-- Name: pamela_mailcount_uid_idx; Type: INDEX
+--
+
+CREATE INDEX pamela_mailcount_uid_idx ON pamela_mailcount USING btree (uid COLLATE pg_catalog."default");
 
 
 --
@@ -552,15 +660,17 @@ CREATE TRIGGER trigger_addressbook_ctag AFTER INSERT OR DELETE OR UPDATE ON turb
 
 
 --
--- Name: trigger_calendar_ctag; Type: TRIGGER; Schema: public;
+-- Name: trigger_calendar_ctag; Type: TRIGGER
 --
 
 CREATE TRIGGER trigger_calendar_ctag AFTER INSERT OR DELETE OR UPDATE ON kronolith_events FOR EACH ROW EXECUTE PROCEDURE update_calendar_ctag();
 
 
 --
--- Name: trigger_taskslist_ctag; Type: TRIGGER; Schema: public;
+-- Name: trigger_taskslist_ctag; Type: TRIGGER
 --
 
 CREATE TRIGGER trigger_taskslist_ctag AFTER INSERT OR DELETE OR UPDATE ON nag_tasks FOR EACH ROW EXECUTE PROCEDURE update_taskslist_ctag();
+
+
 

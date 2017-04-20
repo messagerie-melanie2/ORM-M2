@@ -3,10 +3,10 @@ Librairie ORM Mélanie2
 
 Développé par le PNE Annuaire et Messagerie/MEDDE
 
+ATTENTION
+---------
 
-Version
--------
-
+La version de l'ORM sur git est une version en développement, **elle ne doit pas être utilisée en production**.
 Pour récupérer les versions de production veuillez vous adresser au PNE Annuaire et Messagerie du MEDDE.
 Cette version peut être utilisée pour le développement d'applications en utilisant une base de données spécifique.
 
@@ -31,7 +31,7 @@ méthodes de développement simple pour l'accès à ces données. De plus des AP
 Web peuvent être proposé afin d'implémenter cette librairie pour d'autres langages que le PHP.
 
 
-Installation
+INSTALLATION
 ------------
 
 L'installation de l'ORM est expliquée dans le fichier INSTALL.md disponible dans le même projet.

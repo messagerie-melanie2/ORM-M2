@@ -1,3 +1,17 @@
+ORM M2 - 0.3.0.2
+------
+- Refactoring de l'arborescence pour la gestion du case sensitive de vendor
+
+
+ORM M2 - 0.3.0.1
+------
+- Problème de composer
+
+
+ORM M2 - 0.3
+------
+- 0004522: Passer en vendor avec un composer
+
 ORM M2 - 0.2.5.2
 ------
 - 0004530: [Agenda] [ICS] Passer le statut par défaut en libre

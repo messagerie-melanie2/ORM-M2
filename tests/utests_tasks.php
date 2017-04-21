@@ -43,7 +43,7 @@ if (!defined('CONFIGURATION_APP_LIBM2')) {
 
 // // Définition des inclusions
 set_include_path(__DIR__.'/..');
-include_once 'includes/includes.php';
+include_once 'includes/libm2.php';
 
 use LibMelanie\Api\Melanie2\User;
 use LibMelanie\Api\Melanie2\Task;

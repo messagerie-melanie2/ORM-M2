@@ -29,6 +29,20 @@ else if (@file_exists(__DIR__ . '/../env.php')) {
   require_once(__DIR__ . '/../env.php');
 }
 
+// Utilisation des contantes par défaut
+if (!defined('CONFIGURATION_TYPE_LIBM2')) {
+  define('CONFIGURATION_TYPE_LIBM2', DEFAULT_CONFIGURATION_TYPE_LIBM2);
+}
+if (!defined('ENVIRONNEMENT_LIBM2')) {
+  define('ENVIRONNEMENT_LIBM2', DEFAULT_ENVIRONNEMENT_LIBM2);
+}
+if (!defined('CONFIGURATION_PATH_LIBM2')) {
+  define('CONFIGURATION_PATH_LIBM2', DEFAULT_CONFIGURATION_PATH_LIBM2);
+}
+if (!defined('CONFIGURATION_MODE_LIBM2')) {
+  define('CONFIGURATION_MODE_LIBM2', DEFAULT_CONFIGURATION_MODE_LIBM2);
+}
+
 // Chargement de la configuration de l'application
 if (CONFIGURATION_TYPE_LIBM2 == TYPE_EXTERNAL) {
     // Type de configuration externe, a aller chercher dans /etc

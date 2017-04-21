@@ -44,7 +44,7 @@ define('MODE_MULTIPLE', 'multiple');
  * Dans ce cas la configuration chargée sera fonction du ENVIRONNEMENT_LIBM2
  * La configuration TYPE_EXTERNAL va les lire les données dans un répertoire configuré dans CONFIGURATION_PATH_LIBM2
  */
-define('CONFIGURATION_TYPE_LIBM2', TYPE_EXTERNAL);
+define('DEFAULT_CONFIGURATION_TYPE_LIBM2', TYPE_EXTERNAL);
 
 /**
  * **** CONFIGURATION INTERNE *****
@@ -52,7 +52,7 @@ define('CONFIGURATION_TYPE_LIBM2', TYPE_EXTERNAL);
 /**
  * Choix de l'environnement à configurer, si utilisation de la configuration interne
  */
-define('ENVIRONNEMENT_LIBM2', '');
+define('DEFAULT_ENVIRONNEMENT_LIBM2', '');
 
 /**
  * *** CONFIGURATION EXTERNE ******
@@ -60,7 +60,7 @@ define('ENVIRONNEMENT_LIBM2', '');
 /**
  * Chemin vers la configuration externe
  */
-define('CONFIGURATION_PATH_LIBM2', '/etc/LibM2');
+define('DEFAULT_CONFIGURATION_PATH_LIBM2', '/etc/LibM2');
 
 /**
  * MODE_SIMPLE ou MODE_MULTIPLE pour la configuration TYPE_EXTERNAL
@@ -69,4 +69,4 @@ define('CONFIGURATION_PATH_LIBM2', '/etc/LibM2');
  * Dans ce cas la configuration va être lu dans le répertoire correspondant au CONFIGURATION_APP_LIBM2
  * qui doit être configuré dans l'application
  */
-define('CONFIGURATION_MODE_LIBM2', MODE_SIMPLE);
+define('DEFAULT_CONFIGURATION_MODE_LIBM2', MODE_SIMPLE);

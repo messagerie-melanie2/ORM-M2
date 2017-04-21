@@ -22,8 +22,8 @@
 
 /* Chargement de l'environnement */
 require_once(__DIR__ . '/../src/Config/confenv.php');
-if (@file_exists(CONFIGURATION_PATH_LIBM2. '/env.php')) {
-  require_once(CONFIGURATION_PATH_LIBM2. '/env.php');
+if (@file_exists(DEFAULT_CONFIGURATION_PATH_LIBM2. '/env.php')) {
+  require_once(DEFAULT_CONFIGURATION_PATH_LIBM2. '/env.php');
 }
 else if (@file_exists(__DIR__ . '/../env.php')) {
   require_once(__DIR__ . '/../env.php');

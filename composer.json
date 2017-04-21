@@ -1,7 +1,7 @@
 {
 	"name": "messagerie-melanie2/ORM-M2",
-	"version": "0.3.0.6",
-    "version_normalized": "0.3.0.6",
+	"version": "0.3.0.7",
+    "version_normalized": "0.3.0.7",
 	"description": "ORM pour l'accès aux données Mélanie2",
 	"keywords": [ "ORM", "Calendar", "Addressbook", "Tasks" ],
 	"homepage": "https://github.com/messagerie-melanie2/ORM-M2",

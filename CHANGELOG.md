@@ -1,3 +1,18 @@
+ORM M2 - 0.3.0.5
+------
+- Modification du env.php
+
+
+ORM M2 - 0.3.0.4
+------
+- Inversion files dans le composer
+
+
+ORM M2 - 0.3.0.3
+------
+- Ajout du includes_conf dans le composer
+
+
 ORM M2 - 0.3.0.2
 ------
 - Refactoring de l'arborescence pour la gestion du case sensitive de vendor

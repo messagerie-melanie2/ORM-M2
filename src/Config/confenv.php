@@ -39,9 +39,6 @@ define('MODE_SIMPLE', 'simple');
 define('MODE_MULTIPLE', 'multiple');
 
 /**
- * **** PARTIE CONFIGURATION A MODIFIER SI BESOIN ***
- */
-/**
  * Configuration externe ou interne
  * La configuration TYPE_INTERNAL va lire les données dans le répertoire /config de l'ORM
  * Dans ce cas la configuration chargée sera fonction du ENVIRONNEMENT_LIBM2
@@ -72,4 +69,4 @@ define('CONFIGURATION_PATH_LIBM2', '/etc/LibM2');
  * Dans ce cas la configuration va être lu dans le répertoire correspondant au CONFIGURATION_APP_LIBM2
  * qui doit être configuré dans l'application
  */
-define('CONFIGURATION_MODE_LIBM2', MODE_MULTIPLE);
+define('CONFIGURATION_MODE_LIBM2', MODE_SIMPLE);

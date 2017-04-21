@@ -1,7 +1,7 @@
 {
 	"name": "messagerie-melanie2/ORM-M2",
-	"version": "0.3.0.2",
-    "version_normalized": "0.3.0.2",
+	"version": "0.3.0.3",
+    "version_normalized": "0.3.0.3",
 	"description": "ORM pour l'accès aux données Mélanie2",
 	"keywords": [ "ORM", "Calendar", "Addressbook", "Tasks" ],
 	"homepage": "https://github.com/messagerie-melanie2/ORM-M2",
@@ -18,7 +18,8 @@
 	"autoload" : {
 		"psr-4" : {
 			"LibMelanie\\" : "src/"
-		}
+		},
+		"files": ["includes/includes_conf.php"]
 	},
 	"authors" : [
 		{

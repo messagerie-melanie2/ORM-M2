@@ -259,7 +259,8 @@ class Recurrence extends Melanie2Object {
       } elseif (isset($rdata[ICS::COUNT])) {
         $recurrence->count = intval($rdata[ICS::COUNT]);
         // MANTIS 4103: Calculer une date de fin approximative pour un count
-        $enddate = new \DateTime($event->end);
+        $nbdays = $nbdays * $recurrence->count;
+        $enddate = new \DateTime($this->event->end);
         $enddate->add(new \DateInterval("P" . $nbdays . "D"));
         $recurrence->enddate = $enddate->format('Y-m-d H:i:s');
       } else {

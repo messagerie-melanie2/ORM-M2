@@ -424,8 +424,9 @@ class EventToICS {
     						ICS::ROLE => $role,
 					      ICS::RSVP => 'TRUE',
 					    ];
-					if (!empty($attendee->name)) {
-					  $params[ICS::CN] = $attendee->name;
+					$attendee_name = $attendee->name;
+					if (!empty($attendee_name)) {
+					  $params[ICS::CN] = $attendee_name;
 					}
 					// Add attendee
 					$vevent->add(ICS::ATTENDEE, 'mailto:'.$attendee->email, $params);

@@ -28,20 +28,20 @@ namespace LibMelanie;
  * @package Librairie Mélanie2
  */
 class Version {
-
-    /**
-     * Numéro de version
-     */
-    const VERSION = '0.3.0.7';
-    
-    /**
-     * Numéro de version normalisé
-     */
-    const NORMALIZED_VERSION = '0.3.0.7';
-    
-    /**
-     * Build
-     */
-    const BUILD = '20170421155352';
-
+  
+  /**
+   * Numéro de version
+   */
+  const VERSION = '0.3.0.9';
+  
+  /**
+   * Numéro de version normalisé
+   */
+  const NORMALIZED_VERSION = '0.3.0.9';
+  
+  /**
+   * Build
+   */
+  const BUILD = '20170518104752';
+  
 }

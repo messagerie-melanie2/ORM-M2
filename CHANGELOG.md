@@ -1,3 +1,13 @@
+ORM M2 - 0.3.0.9
+------
+- 0004566: La conversion d'un participant en ICS perd le CN
+
+
+ORM M2 - 0.3.0.8
+------
+- 0004537: Le calcul de la date de fin de récurrence n'est pas correct
+
+
 ORM M2 - 0.3.0.7
 ------
 - Problème d'utilisation du default path pour l'env

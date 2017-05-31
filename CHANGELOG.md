@@ -1,3 +1,7 @@
+ORM M2 - 0.3.0.11
+------
+- Problème de génération des ICS en mode vendor
+
 ORM M2 - 0.3.0.10
 ------
 - 0004567: La date de fin de récurrence ne devrait pas être calculé

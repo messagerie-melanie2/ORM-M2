@@ -26,7 +26,7 @@ use LibMelanie\Api\Melanie2\User;
 use LibMelanie\Api\Melanie2\Calendar;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
-require_once 'vendor/autoload.php';
+@include_once 'vendor/autoload.php';
 use Sabre\VObject;
 
 /**

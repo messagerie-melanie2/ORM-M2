@@ -29,7 +29,7 @@ use LibMelanie\Api\Melanie2\Taskslist;
 use Sabre\VObject;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
-require_once 'vendor/autoload.php';
+@include_once 'vendor/autoload.php';
 
 /**
  * Class de génération de l'évènement en fonction de l'ICS

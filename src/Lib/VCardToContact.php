@@ -28,7 +28,7 @@ use LibMelanie\Api\Melanie2\Addressbook;
 use LibMelanie\Log\M2Log;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
-require_once 'vendor/autoload.php';
+@include_once 'vendor/autoload.php';
 use Sabre\VObject;
 
 /**

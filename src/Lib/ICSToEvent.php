@@ -109,10 +109,33 @@ class ICSToEvent {
       if (isset($recurrence_id) && empty($object->owner)) {
         $object->owner = isset($user) && isset($user->uid) ? $user->uid : $event->owner;
       }
+      // DTSTART & DTEND
+      if (isset($vevent->DTSTART) && isset($vevent->DTEND)) {
+        $startDate = $vevent->DTSTART->getDateTime();
+        $endDate = $vevent->DTEND->getDateTime();
+      }
+      else if (isset($vevent->DTSTART) && isset($vevent->DURATION)) {
+        $startDate = $vevent->DTSTART->getDateTime();
+        $endDate = clone $startDate;
+        $duration = new \DateInterval(strval($vevent->DURATION));
+        $endDate->add($duration);
+      }
+      // Gestion du Timezone GMT
+      if ($startDate->getTimezone()->getName() == 'UTC') {
+        $startDate->setTimezone(new \DateTimeZone($timezone));
+      }
+      if ($endDate->getTimezone()->getName() == 'UTC') {
+        $endDate->setTimezone(new \DateTimeZone($timezone));
+      }
+      $object->start = $startDate->format(self::DB_DATE_FORMAT);
+      $object->end = $endDate->format(self::DB_DATE_FORMAT);
+      
       // Recurrence ID
       if (isset($recurrence_id)) {
         $date = $recurrence_id->getDateTime();
-        $date->setTimezone(new \DateTimeZone($timezone));
+        if ($date->getTimezone()->getName() == 'UTC') {
+          $date->setTimezone(new \DateTimeZone($timezone));
+        }        
         $object->recurrenceId = $date->format(self::SHORT_DB_DATE_FORMAT);
       }
       // Cas du FAKED MASTER
@@ -157,8 +180,7 @@ class ICSToEvent {
       // VALARM
       if (isset($vevent->VALARM)) {
         $alarmDate = $vevent->VALARM->getEffectiveTriggerTime();
-        if (isset($vevent->DTSTART)) {
-          $startDate = $vevent->DTSTART->getDateTime();
+        if (isset($startDate)) {
           $object->alarm = ($startDate->format("U") - $alarmDate->format("U")) / 60;
           if ($object->alarm === 0) {
             $object->alarm = 1;
@@ -223,13 +245,7 @@ class ICSToEvent {
         $object->setAttribute(ICS::CREATED, $vevent->CREATED->getValue());
       } else {
         $object->deleteAttribute(ICS::CREATED);
-      }
-      // DTSTART & DTEND
-      if (isset($vevent->DTSTART) && isset($vevent->DTEND)) {
-        $object->start = $vevent->DTSTART->getDateTime()->format(self::DB_DATE_FORMAT);
-        ;
-        $object->end = $vevent->DTEND->getDateTime()->format(self::DB_DATE_FORMAT);
-      }
+      }      
       // CLASS
       if (isset($vevent->CLASS)) {
         switch ($vevent->CLASS->getValue()) {

@@ -1,3 +1,8 @@
+ORM M2 - 0.3.0.12
+------
+- 0004585: [ICS] Conversion DURATION en DTEND
+- 0004591: [ICS] Gestion du GMT pour DTSTART et DTEND
+
 ORM M2 - 0.3.0.11
 ------
 - Problème de génération des ICS en mode vendor

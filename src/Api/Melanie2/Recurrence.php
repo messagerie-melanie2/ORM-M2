@@ -29,7 +29,7 @@ use LibMelanie\Lib\ICS;
  * Classe recurrence pour Melanie2
  * Doit être lié à un objet Event pour écrire directement dans les API
  * Certains champs sont mappés directement
- *
+ * 
  * @author PNE Messagerie/Apitech
  * @package Librairie Mélanie2
  * @subpackage API Mélanie2
@@ -45,7 +45,7 @@ class Recurrence extends Melanie2Object {
   // Accès aux objets associés
   /**
    * Evenement associé à l'objet
-   *
+   * 
    * @var EventMelanie
    */
   private $event;
@@ -71,8 +71,8 @@ class Recurrence extends Melanie2Object {
   
   /**
    * Constructeur de l'objet
-   *
-   * @param Event $event
+   * 
+   * @param Event $event          
    */
   function __construct($event = null) {
     // Défini la classe courante
@@ -97,8 +97,8 @@ class Recurrence extends Melanie2Object {
    */
   /**
    * Mapping type field
-   *
-   * @param Recurrence::RECURTYPE $type
+   * 
+   * @param Recurrence::RECURTYPE $type          
    * @ignore
    *
    */
@@ -106,11 +106,11 @@ class Recurrence extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapType($type)");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-      $this->objectmelanie->type = MappingMelanie::$MapRecurtypeObjectMelanie[$type];
+    $this->objectmelanie->type = MappingMelanie::$MapRecurtypeObjectMelanie[$type];
   }
   /**
    * Mapping type field
-   *
+   * 
    * @ignore
    *
    */
@@ -118,12 +118,12 @@ class Recurrence extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRecurtype()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-      return MappingMelanie::$MapRecurtypeObjectMelanie[$this->objectmelanie->type];
+    return MappingMelanie::$MapRecurtypeObjectMelanie[$this->objectmelanie->type];
   }
   
   /**
    * Mapping days field
-   *
+   * 
    * @param
    *          array of Recurrence::RECURDAYS $days
    * @ignore
@@ -133,18 +133,18 @@ class Recurrence extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapDays()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-      $this->objectmelanie->days = MappingMelanie::NODAY;
-      if (is_array($days)) {
-        foreach ($days as $day) {
-          $this->objectmelanie->days += intval(MappingMelanie::$MapRecurdaysObjectMelanie[$day]);
-        }
-      } else {
-        $this->objectmelanie->days += intval(MappingMelanie::$MapRecurdaysObjectMelanie[$days]);
+    $this->objectmelanie->days = MappingMelanie::NODAY;
+    if (is_array($days)) {
+      foreach ($days as $day) {
+        $this->objectmelanie->days += intval(MappingMelanie::$MapRecurdaysObjectMelanie[$day]);
       }
+    } else {
+      $this->objectmelanie->days += intval(MappingMelanie::$MapRecurdaysObjectMelanie[$days]);
+    }
   }
   /**
    * Mapping days field
-   *
+   * 
    * @ignore
    *
    */
@@ -152,18 +152,18 @@ class Recurrence extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDays()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-      $days = [];
-      foreach (MappingMelanie::$MapRecurdaysObjectMelanie as $day) {
-        if (is_integer(MappingMelanie::$MapRecurdaysObjectMelanie[$day]) && MappingMelanie::$MapRecurdaysObjectMelanie[$day] & $this->objectmelanie->days)
-          $days[] = $day;
-      }
-      return $days;
+    $days = [];
+    foreach (MappingMelanie::$MapRecurdaysObjectMelanie as $day) {
+      if (is_integer(MappingMelanie::$MapRecurdaysObjectMelanie[$day]) && MappingMelanie::$MapRecurdaysObjectMelanie[$day] & $this->objectmelanie->days)
+        $days[] = $day;
+    }
+    return $days;
   }
   
   /**
    * Parses an iCalendar 2.0 recurrence rule.
    * based on Horde_Date_Recurrence class
-   *
+   * 
    * @link http://rfc.net/rfc2445.html#s4.3.10
    * @link http://rfc.net/rfc2445.html#s4.8.5
    * @link http://www.shuchow.com/vCalAddendum.html
@@ -186,7 +186,7 @@ class Recurrence extends Melanie2Object {
           $recurrence->type = self::RECURTYPE_DAILY;
           $nbdays = $nbdays + 7;
           break;
-          
+        
         case ICS::FREQ_WEEKLY :
           $recurrence->type = self::RECURTYPE_WEEKLY;
           if (isset($rdata[ICS::BYDAY])) {
@@ -198,7 +198,7 @@ class Recurrence extends Melanie2Object {
           }
           $nbdays = $nbdays * 7 + 14;
           break;
-          
+        
         case ICS::FREQ_MONTHLY :
           if (isset($rdata[ICS::BYDAY])) {
             $recurrence->type = self::RECURTYPE_MONTHLY_BYDAY;
@@ -212,7 +212,7 @@ class Recurrence extends Melanie2Object {
           }
           $nbdays = $nbdays * 31 + 31;
           break;
-          
+        
         case ICS::FREQ_YEARLY :
           if (isset($rdata[ICS::BYYEARDAY])) {
             $recurrence->type = self::RECURTYPE_YEARLY;
@@ -282,7 +282,7 @@ class Recurrence extends Melanie2Object {
   /**
    * Creates an iCalendar 2.0 recurrence rule.
    * based on Horde_Date_Recurrence class
-   *
+   * 
    * @link http://rfc.net/rfc2445.html#s4.3.10
    * @link http://rfc.net/rfc2445.html#s4.8.5
    * @link http://www.shuchow.com/vCalAddendum.html
@@ -304,7 +304,7 @@ class Recurrence extends Melanie2Object {
             $recurrence[ICS::INTERVAL] = $_recurrence->interval;
           }
           break;
-          
+        
         case self::RECURTYPE_WEEKLY :
           $recurrence[ICS::FREQ] = ICS::FREQ_WEEKLY;
           if (isset($_recurrence->interval)) {
@@ -316,7 +316,7 @@ class Recurrence extends Melanie2Object {
             $recurrence[ICS::BYDAY] = implode(',', $_recurrence->days);
           }
           break;
-          
+        
         case self::RECURTYPE_MONTHLY :
           $recurrence[ICS::FREQ] = ICS::FREQ_MONTHLY;
           if (isset($_recurrence->interval)) {
@@ -326,7 +326,7 @@ class Recurrence extends Melanie2Object {
           $start = new \DateTime($this->event->start);
           $recurrence[ICS::BYMONTHDAY] = $start->format('d');
           break;
-          
+        
         case self::RECURTYPE_MONTHLY_BYDAY :
           $start = new \DateTime($this->event->start);
           $day_of_week = $start->format('w');
@@ -349,7 +349,7 @@ class Recurrence extends Melanie2Object {
           }
           $recurrence[ICS::BYDAY] = $nth_weekday . $vcaldays[$day_of_week];
           break;
-          
+        
         case self::RECURTYPE_YEARLY :
           $recurrence[ICS::FREQ] = ICS::FREQ_YEARLY;
           if (isset($_recurrence->interval)) {
@@ -357,7 +357,7 @@ class Recurrence extends Melanie2Object {
             $recurrence[ICS::INTERVAL] = $_recurrence->interval;
           }
           break;
-          
+        
         case self::RECURTYPE_YEARLY_BYDAY :
           $start = new \DateTime($this->event->start);
           $monthofyear = $start->format('m'); // 01 à 12

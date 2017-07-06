@@ -1,3 +1,7 @@
+ORM M2 - 0.3.0.13
+------
+- HOTFIX journée entère 0004585: [ICS] Conversion DURATION en DTEND
+
 ORM M2 - 0.3.0.12
 ------
 - 0004585: [ICS] Conversion DURATION en DTEND

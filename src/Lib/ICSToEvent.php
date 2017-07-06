@@ -120,11 +120,12 @@ class ICSToEvent {
         $duration = new \DateInterval(strval($vevent->DURATION));
         $endDate->add($duration);
       }
+      $allDay = $startDate->format('H:i:s') && $endDate->format('H:i:s');
       // Gestion du Timezone GMT
-      if ($startDate->getTimezone()->getName() == 'UTC') {
+      if ($startDate->getTimezone()->getName() == 'UTC' && !$allDay) {
         $startDate->setTimezone(new \DateTimeZone($timezone));
       }
-      if ($endDate->getTimezone()->getName() == 'UTC') {
+      if ($endDate->getTimezone()->getName() == 'UTC' && !$allDay) {
         $endDate->setTimezone(new \DateTimeZone($timezone));
       }
       $object->start = $startDate->format(self::DB_DATE_FORMAT);

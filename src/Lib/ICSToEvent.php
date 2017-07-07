@@ -120,7 +120,7 @@ class ICSToEvent {
         $duration = new \DateInterval(strval($vevent->DURATION));
         $endDate->add($duration);
       }
-      $allDay = $startDate->format('H:i:s') && $endDate->format('H:i:s');
+      $allDay = isset($vevent->DTSTART->parameters[ICS::VALUE]) && $vevent->DTSTART->parameters[ICS::VALUE] == ICS::VALUE_DATE;
       // Gestion du Timezone GMT
       if ($startDate->getTimezone()->getName() == 'UTC' && !$allDay) {
         $startDate->setTimezone(new \DateTimeZone($timezone));

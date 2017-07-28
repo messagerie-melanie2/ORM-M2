@@ -1,3 +1,7 @@
+ORM M2 - 0.3.0.15
+------
+- 0004618: La classe CalendarSync doit gérer les récurrences
+
 ORM M2 - 0.3.0.14
 ------
 - HOTFIX journée entère 0004585: [ICS] Conversion DURATION en DTEND
@@ -197,4 +201,3 @@ ORM M2 - 0.1.3
 - 0002887: [Agenda] Grouper le chargement des attributs supplémentaires
 - 0002888: [Général] Pouvoir récupérer une liste d'objets à partir de champs multivalués
 - 0002892: [Agenda] La méthode getList associe les évènements à un calendrier non chargé
-

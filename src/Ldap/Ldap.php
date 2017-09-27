@@ -689,13 +689,25 @@ class Ldap {
 	    return isset($this->config[$name]);
 	}
 	/**
+	 * Retourne si un mapping du champ existe pour le serveur LDAP
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function issetMapping($name) {
+	  return isset($this->config['mapping'][$name]);
+	}
+	/**
 	 * Retourne le nom du champ mappé configuré pour le serveur LDAP
 	 * @param string $name
+	 * @param string $defaultValue
 	 * @return NULL|string Nom du champ mappé
 	 */
-	public function getMapping($name) {
-	  if (!isset($this->config['mapping']) || !isset($this->config['mapping'][$name])) return $name;
-	  return $this->config['mapping'][$name];
+	public function getMapping($name, $defaultValue = null) {
+	  if (!isset($this->config['mapping']) || !isset($this->config['mapping'][$name])) {
+	    if (isset($defaultValue)) return $defaultValue;
+	    else return $name;
+	  }
+    return $this->config['mapping'][$name];
 	}
 	/**
 	 * Retourne les champs mappés

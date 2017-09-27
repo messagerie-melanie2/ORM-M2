@@ -40,6 +40,9 @@ use LibMelanie\Log\M2Log;
  */
 class CalendarSync extends Melanie2Object {
 
+  // Constantes
+  const RECURRENCE_ID = '@RECURRENCE-ID';
+  
   /**
    * Mapping des actions entre la base et SabreDAV
    *
@@ -115,7 +118,13 @@ class CalendarSync extends Melanie2Object {
       $_calendarSyncs = $this->objectmelanie->getList(null, null, $operators, 'token', false, $limit);
       foreach ($_calendarSyncs as $_calendarSync) {
         $mapAct = self::$actionMapper[$_calendarSync->action];
-        $result[$mapAct][] = $_calendarSync->uid . '.ics';
+        // MANTIS 0004667: [CalendarSync] Nettoyer les uid en @RECURRENCE-ID
+        $uid = $_calendarSync->uid;
+        if (strpos($uid, self::RECURRENCE_ID) !== false) {
+          $uid = substr($uid, 0, strlen($uid) - 24);
+          $mapAct = self::$actionMapper['mod'];
+        }        
+        $result[$mapAct][] = $uid . '.ics';
       }
     } else {
       $event = new \LibMelanie\Api\Melanie2\Event();

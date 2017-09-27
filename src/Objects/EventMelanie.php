@@ -22,10 +22,8 @@
 namespace LibMelanie\Objects;
 
 use LibMelanie\Lib\MagicObject;
-use LibMelanie\Lib\HistoryMelanie;
 use LibMelanie\Interfaces\IObjectMelanie;
 use LibMelanie\Sql;
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Config\ConfigSQL;
 use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Log\M2Log;
@@ -240,6 +238,14 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		  $this->isExist = false;
 		}
 		return $ret;
+	}
+	
+	/**
+	 * Permet de forcer la variable isExist
+	 * @param boolean $isExist
+	 */
+	function setExist($isExist) {
+	  $this->isExist = $isExist;
 	}
 
 	/**

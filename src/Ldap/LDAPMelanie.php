@@ -90,7 +90,8 @@ class LDAPMelanie {
 	public static function GetUidFromMail($email) {
 		$infos = Ldap::GetUserInfosFromEmail($email);
 		if (is_null($infos)) return null;
-		return $infos['uid'][0];
+		$ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$SEARCH_LDAP);
+		return $infos[$ldap->getMapping('uid')][0];
 	}
 
 	/**
@@ -101,7 +102,8 @@ class LDAPMelanie {
 	public static function GetMailFromUid ($uid) {
 		$infos = Ldap::GetUserInfos($uid);
 		if (is_null($infos)) return null;
-		return $infos['mineqmelmailemission'][0];
+		$ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$SEARCH_LDAP);
+		return $infos[$ldap->getMapping('mail', 'mineqmelmailemission')][0];
 	}
 
 	/**
@@ -112,7 +114,8 @@ class LDAPMelanie {
 	public static function GetNameFromUid ($uid) {
 		$infos = Ldap::GetUserInfos($uid);
 		if (is_null($infos)) return null;
-		return $infos['cn'][0];
+		$ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$SEARCH_LDAP);
+		return $infos[$ldap->getMapping('cn')][0];
 	}
 }
 ?>

@@ -21,7 +21,6 @@ namespace LibMelanie\Lib;
 use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Api\Melanie2\Exception;
 use LibMelanie\Api\Melanie2\Event;
-use LibMelanie\Log\M2Log;
 use LibMelanie\Api\Melanie2\User;
 use LibMelanie\Api\Melanie2\Calendar;
 
@@ -120,16 +119,18 @@ class ICSToEvent {
         $duration = new \DateInterval(strval($vevent->DURATION));
         $endDate->add($duration);
       }
-      $allDay = isset($vevent->DTSTART->parameters[ICS::VALUE]) && $vevent->DTSTART->parameters[ICS::VALUE] == ICS::VALUE_DATE;
-      // Gestion du Timezone GMT
-      if ($startDate->getTimezone()->getName() == 'UTC' && !$allDay) {
-        $startDate->setTimezone(new \DateTimeZone($timezone));
-      }
-      if ($endDate->getTimezone()->getName() == 'UTC' && !$allDay) {
-        $endDate->setTimezone(new \DateTimeZone($timezone));
-      }
-      $object->start = $startDate->format(self::DB_DATE_FORMAT);
-      $object->end = $endDate->format(self::DB_DATE_FORMAT);
+      if (isset($startDate)) {
+        $allDay = isset($vevent->DTSTART->parameters[ICS::VALUE]) && $vevent->DTSTART->parameters[ICS::VALUE] == ICS::VALUE_DATE;
+        // Gestion du Timezone GMT
+        if ($startDate->getTimezone()->getName() == 'UTC' && !$allDay) {
+          $startDate->setTimezone(new \DateTimeZone($timezone));
+        }
+        if ($endDate->getTimezone()->getName() == 'UTC' && !$allDay) {
+          $endDate->setTimezone(new \DateTimeZone($timezone));
+        }
+        $object->start = $startDate->format(self::DB_DATE_FORMAT);
+        $object->end = $endDate->format(self::DB_DATE_FORMAT);
+      }      
       
       // Recurrence ID
       if (isset($recurrence_id)) {

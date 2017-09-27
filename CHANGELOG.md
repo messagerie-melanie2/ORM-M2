@@ -1,3 +1,9 @@
+ORM M2 - 0.3.0.16
+------
+- 0004669: Modifier la class "Event" pour que la methode "exists" retourne true dans le cas d'un Faked Master
+- 0004668: [ICS] Conversion d'un événement sans DTSTART
+- 0004667: [CalendarSync] Nettoyer les uid en @RECURRENCE-ID
+
 ORM M2 - 0.3.0.15
 ------
 - 0004618: La classe CalendarSync doit gérer les récurrences

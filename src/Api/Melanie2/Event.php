@@ -691,6 +691,7 @@ class Event extends Melanie2Object {
     if (isset($events[$this->uid . $this->calendar])) {
       $this->modified = isset($events[$this->uid . $this->calendar]->modified) ? $events[$this->uid . $this->calendar]->modified : 0;
       $this->setMapExceptions($events[$this->uid . $this->calendar]->getMapExceptions());
+      $this->objectmelanie->setExist(true);
     }
     if (count($this->exceptions) > 0) {
       $this->deleted = true;

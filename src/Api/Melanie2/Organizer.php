@@ -211,7 +211,7 @@ class Organizer extends Melanie2Object {
    * @param string $email          
    */
   protected function setMapEmail($email) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapEmail()");
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapEmail($email)");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
     if ($this->organizer_email != $email) {

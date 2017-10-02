@@ -398,7 +398,7 @@ class Event extends Melanie2Object {
           $organizer_event = $_event;
           $organizer_calendar_id = $_event->getMapOrganizer()->calendar;
           break;
-        } else if (isset($_event->exceptions) && is_array($_event->exceptions)) {
+        }/* else if (isset($_event->exceptions) && is_array($_event->exceptions)) {
           foreach ($_event->exceptions as $_exception) {
             $attendees = $_exception->attendees;
             if (isset($attendees) && count($attendees) > 0) {
@@ -407,7 +407,7 @@ class Event extends Melanie2Object {
               break;
             }
           }
-        }
+        }*/
       }
       // Si l'organisateur n'est pas trouvé
       if (!isset($organizer_calendar_id)) {
@@ -484,7 +484,7 @@ class Event extends Melanie2Object {
         // Exceptions de l'évènement de l'organisateur
         $organizer_event_exceptions = $organizer_event->getMapExceptions();
         // Parcour les exceptions pour le traitement
-        foreach ($this->getMapExceptions() as $recurrenceId => $exception) {
+        foreach ($this->exceptions as $recurrenceId => $exception) {
           if (!$exception->deleted) {
             if (!isset($exception->attendees))
               continue;

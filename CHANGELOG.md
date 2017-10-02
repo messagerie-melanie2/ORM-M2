@@ -1,3 +1,9 @@
+ORM M2 - 0.3.0.17
+------
+- Ajouter l'email dans les logs de l'organisateur
+- 0004675: Mauvaise détermination du calendrier de l'organisateur lors d'un FAKED MASTER
+- 0004677: Enregistrer le récurrence id d'une exception
+
 ORM M2 - 0.3.0.16
 ------
 - 0004669: Modifier la class "Event" pour que la methode "exists" retourne true dans le cas d'un Faked Master

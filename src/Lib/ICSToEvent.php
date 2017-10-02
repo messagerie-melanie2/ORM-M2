@@ -23,6 +23,7 @@ use LibMelanie\Api\Melanie2\Exception;
 use LibMelanie\Api\Melanie2\Event;
 use LibMelanie\Api\Melanie2\User;
 use LibMelanie\Api\Melanie2\Calendar;
+use LibMelanie\Log\M2Log;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
 @include_once 'vendor/autoload.php';
@@ -95,7 +96,7 @@ class ICSToEvent {
     foreach ($vcalendar->VEVENT as $vevent) {
       $recurrence_id = $vevent->{ICS::RECURRENCE_ID};
       if (isset($recurrence_id)) {
-        $object = new Exception($event);
+        $object = new Exception($event, $user, $calendar);
       } else {
         $object = $event;
       }
@@ -105,8 +106,9 @@ class ICSToEvent {
       else
         $object->uid = $vevent->UID;
       // Owner
-      if (isset($recurrence_id) && empty($object->owner)) {
-        $object->owner = isset($user) && isset($user->uid) ? $user->uid : $event->owner;
+      if (isset($recurrence_id) && (!isset($object->owner) || empty($object->owner))) {
+        M2Log::Log(M2Log::LEVEL_DEBUG, "ICSToEvent::Convert() SetOwner = " . isset($user) && isset($user->uid) ? $user->uid : $calendar->owner);
+        $object->owner = isset($user) && isset($user->uid) ? $user->uid : $calendar->owner;
       }
       // DTSTART & DTEND
       if (isset($vevent->DTSTART) && isset($vevent->DTEND)) {
@@ -139,6 +141,7 @@ class ICSToEvent {
           $date->setTimezone(new \DateTimeZone($timezone));
         }        
         $object->recurrenceId = $date->format(self::SHORT_DB_DATE_FORMAT);
+        $object->setAttribute(ICS::RECURRENCE_ID, $date->format(self::DB_DATE_FORMAT));
       }
       // Cas du FAKED MASTER
       if (isset($vevent->{ICS::X_MOZ_FAKED_MASTER}) && intval($vevent->{ICS::X_MOZ_FAKED_MASTER}->getValue()) == 1) {
@@ -452,7 +455,7 @@ class ICSToEvent {
         $object->recurrence->rrule = $vevent->RRULE->getParts();
         if (isset($vevent->EXDATE)) {
           foreach ($vevent->EXDATE as $exdate) {
-            $exception = new \LibMelanie\Api\Melanie2\Exception($event, $user, $calendar);
+            $exception = new Exception($event, $user, $calendar);
             $date = $exdate->getDateTime();
             $date->setTimezone(new \DateTimeZone($timezone));
             $exception->recurrenceId = $date->format(self::SHORT_DB_DATE_FORMAT);

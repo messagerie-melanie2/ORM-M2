@@ -153,19 +153,34 @@ class EventToICS {
 	    $first = true;
 	    $starttime = '';
 	    foreach ($event->exceptions as $exception) {
+	      $exRecId = $exception->getAttribute(ICS::RECURRENCE_ID);
+	      if (!isset($exRecId)) {
+	        if ($exception->deleted) {
+	          $exRecId = date('Y-m-d', strtotime($exception->recurrenceId)) . ' ' . date('H:i:s', strtotime($event->start));
+	        }
+	        else {
+	          $exRecId = date('Y-m-d', strtotime($exception->recurrenceId)) . ' ' . date('H:i:s', strtotime($exception->start));
+	        }	        
+	      }
+	      $exdatetime = new \DateTime($exRecId, new \DateTimeZone($timezone));
+	      
 	      if ($event->deleted) {
 	        if ($first) {
 	          $first = false;
 	          $starttime = new \DateTime($exception->start, new \DateTimeZone($timezone));
 	          $endtime = new \DateTime($exception->end, new \DateTimeZone($timezone));
-	          $vevent->DTSTART = $starttime;
-	          $rdate = clone $starttime;
-	          $rdate->setTimezone(new \DateTimeZone('UTC'));
-	          $date = $rdate->format('Ymd') . 'T' . $rdate->format('His') . 'Z';
+	          $rdate_d = clone $exdatetime;
+	          $rdate_d->setTimezone(new \DateTimeZone('UTC'));	          	         
 	          if ($starttime->format('His') == '000000' && $endtime->format('His') == '000000') {
+	            $date = $rdate_d->format('Ymd');
 	            $vevent->add(ICS::RDATE, $date, [ICS::VALUE => ICS::VALUE_DATE]);
+	            $vevent->add(ICS::DTSTART, $exdatetime->format('Ymd'), [ICS::VALUE => ICS::VALUE_DATE]);
 	          } else {
+	            $rdate_h = clone $starttime;
+	            $rdate_h->setTimezone(new \DateTimeZone('UTC'));
+	            $date = $rdate_d->format('Ymd') . 'T' . $rdate_h->format('His') . 'Z';
 	            $vevent->add(ICS::RDATE, $date, [ICS::VALUE => ICS::VALUE_DATE_TIME]);
+	            $vevent->DTSTART = clone $exdatetime;
 	          }
 	          $dateTime = new \DateTime('@'.$exception->modified, new \DateTimeZone($timezone));
 	          $dateTime->setTimezone(new \DateTimeZone('UTC'));
@@ -173,26 +188,28 @@ class EventToICS {
 	          $vevent->add(ICS::DTSTAMP, $date);
 	          $vevent->add(ICS::LAST_MODIFIED, $date);
 	          $vevent->add(ICS::CREATED, $date);
-	          $vevent->SUMMARY = $exception->title;
-	          $vevent->add(ICS::X_MOZ_GENERATION, count($event->exceptions));
+	          //$vevent->SUMMARY = $exception->title;
+	          //$vevent->add(ICS::X_MOZ_GENERATION, count($event->exceptions));
 	          $vevent->add(ICS::X_MOZ_FAKED_MASTER, "1");
-	        }
-	        $exdatetime = new \DateTime($exception->recurrenceId, new \DateTimeZone($timezone));
+	        }	        
 	        if (!isset($vevent->DTSTART)) {
 	          continue;
 	        }
-	        $date = $exdatetime->format('Ymd') . 'T' . $vevent->DTSTART->getDateTime()->format('His');
+	        if ($vevent->DTSTART[ICS::VALUE] == ICS::VALUE_DATE) {
+	          $date = $exdatetime->format('Ymd');
+	        }
+	        else {
+	          $date = $exdatetime->format('Ymd') . 'T' . $exdatetime->format('His');
+	        }
 	      }
 	      elseif ($vevent->DTSTART[ICS::VALUE] == ICS::VALUE_DATE) {
-	        $exdatetime = new \DateTime($exception->recurrenceId, new \DateTimeZone($timezone));
 	        $date = $exdatetime->format('Ymd');
 	      } 
 	      else {
-	        $exdatetime = new \DateTime($exception->recurrenceId, new \DateTimeZone($timezone));
 	        if (!isset($vevent->DTSTART)) {
 	          continue;
 	        }
-	        $date = $exdatetime->format('Ymd') . 'T' . $vevent->DTSTART->getDateTime()->format('His');
+	        $date = $exdatetime->format('Ymd') . 'T' . $exdatetime->format('His');
 	      }
 	      if ($exception->deleted && !$event->deleted) {
 	        $exdate[] = $date;
@@ -438,7 +455,7 @@ class EventToICS {
 			  $vevent->add(ICS::X_CALDAV_CALENDAR_ID, $calendar->id);
 			  $vevent->add(ICS::X_CALDAV_CALENDAR_OWNER, $calendar->owner);
 			  // MANTIS 4002: Ajouter le creator dans la description lors de la génération de l'ICS
-			  if ($event->owner != $calendar->owner) {
+			  if ($event->owner != $calendar->owner && !empty($event->owner) && strpos($vevent->DESCRIPTION, "[".$event->owner."]") === false) {
 			    $vevent->DESCRIPTION = "[".$event->owner."]\n\n" . $vevent->DESCRIPTION;
 			  }
 			}

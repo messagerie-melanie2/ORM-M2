@@ -17,11 +17,9 @@
  */
 namespace LibMelanie\Api\Melanie2;
 
-use LibMelanie\Lib\Melanie2Object;
 use LibMelanie\Objects\EventMelanie;
 use LibMelanie\Objects\HistoryMelanie;
 use LibMelanie\Config\ConfigMelanie;
-use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Exceptions;
 use LibMelanie\Log\M2Log;
 
@@ -77,6 +75,7 @@ class Exception extends Event {
   // Constantes
   const RECURRENCE_ID = '@RECURRENCE-ID';
   const FORMAT_ID = 'Ymd';
+  const FORMAT_REC_ID = 'Y-m-d H:i:s';
   const FORMAT_STR = 'YYYYmmdd';
   
   /**
@@ -193,6 +192,9 @@ class Exception extends Event {
     if ($this->deleted)
       return false;
     
+    if (!isset($this->owner)) {
+      $this->owner = $this->usermelanie->uid;
+    }
     // Sauvegarde l'objet
     $insert = $this->objectmelanie->save();
     if (!is_null($insert)) {

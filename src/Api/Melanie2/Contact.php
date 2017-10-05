@@ -191,7 +191,7 @@ class Contact extends Melanie2Object {
       return $history->save();
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() Error: return false");
     return false;
   }
@@ -220,7 +220,7 @@ class Contact extends Melanie2Object {
       return $history->save();
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->delete() Error: return false");
     return false;
   }
@@ -234,7 +234,7 @@ class Contact extends Melanie2Object {
   function load() {
     $ret = $this->objectmelanie->load();
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $ret;
   }
   
@@ -274,7 +274,7 @@ class Contact extends Melanie2Object {
       $contacts[$_contact->id] = $contact;
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $contacts;
   }
   

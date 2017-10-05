@@ -560,7 +560,7 @@ class Event extends Melanie2Object {
       }
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return true;
   }
   
@@ -698,7 +698,7 @@ class Event extends Melanie2Object {
       return true;
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return false;
   }
   
@@ -768,7 +768,7 @@ class Event extends Melanie2Object {
         return $insert;
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save() Rien a sauvegarder: return null");
     return null;
   }
@@ -809,7 +809,7 @@ class Event extends Melanie2Object {
         return true;
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->delete() Error: return false");
     return false;
   }
@@ -829,7 +829,7 @@ class Event extends Melanie2Object {
     else
       $this->deleted = false;
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $ret;
   }
   
@@ -943,7 +943,7 @@ class Event extends Melanie2Object {
     // Détruit les variables pour libérer le plus rapidement de la mémoire
     unset($exceptions);
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $events;
   }
   

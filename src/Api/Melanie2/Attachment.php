@@ -141,7 +141,7 @@ class Attachment extends Melanie2Object {
     }
     
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     // Sauvegarde l'objet
     return $this->objectmelanie->save();
   }
@@ -160,7 +160,7 @@ class Attachment extends Melanie2Object {
     if ($this->type === self::TYPE_URL)
       return null;
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     // Suppression de l'objet
     return $this->objectmelanie->delete();
   }
@@ -179,7 +179,7 @@ class Attachment extends Melanie2Object {
     if ($this->type === self::TYPE_URL)
       return null;
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     // Charge l'objet
     return $this->objectmelanie->load();
   }
@@ -224,7 +224,7 @@ class Attachment extends Melanie2Object {
     // Détruit les variables pour libérer le plus rapidement de la mémoire
     unset($_attachments);
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $attachments;
   }
   

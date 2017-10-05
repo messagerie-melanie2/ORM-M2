@@ -134,7 +134,7 @@ class TaskProperty extends Melanie2Object {
       $taskproperties[] = $taskproperty;
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $taskproperties;
   }
 

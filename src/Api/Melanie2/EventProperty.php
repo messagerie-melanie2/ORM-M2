@@ -135,7 +135,7 @@ class EventProperty extends Melanie2Object {
       $eventproperties[] = $eventproperty;
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $eventproperties;
   }
 

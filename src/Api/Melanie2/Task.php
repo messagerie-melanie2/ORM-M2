@@ -255,7 +255,7 @@ class Task extends Melanie2Object {
       return $history->save();
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() Error: return false");
     return false;
   }
@@ -286,7 +286,7 @@ class Task extends Melanie2Object {
       return $history->save();
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->delete() Error: return false");
     return false;
   }
@@ -300,7 +300,7 @@ class Task extends Melanie2Object {
   function load() {
     $ret = $this->objectmelanie->load();
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $ret;
   }
   
@@ -340,7 +340,7 @@ class Task extends Melanie2Object {
       $tasks[$_task->uid] = $task;
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $tasks;
   }
   

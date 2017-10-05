@@ -1,3 +1,7 @@
+ORM M2 - 0.3.0.18
+------
+- Suppression des appels au garbage collector suite à un problème de charge sur SabreDAV
+
 ORM M2 - 0.3.0.17
 ------
 - Ajouter l'email dans les logs de l'organisateur

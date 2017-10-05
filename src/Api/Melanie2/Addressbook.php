@@ -108,7 +108,7 @@ class Addressbook extends Melanie2Object {
     // Détruit les variables pour libérer le plus rapidement de la mémoire
     unset($_contacts);
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $contacts;
   }
 }

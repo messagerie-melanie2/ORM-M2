@@ -160,7 +160,7 @@ class Calendar extends Melanie2Object {
     // Détruit les variables pour libérer le plus rapidement de la mémoire
     unset($exceptions);
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $events;
   }
   
@@ -242,7 +242,7 @@ class Calendar extends Melanie2Object {
     // Détruit les variables pour libérer le plus rapidement de la mémoire
     unset($exceptions);
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $events;
   }
 }

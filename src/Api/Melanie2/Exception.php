@@ -216,7 +216,7 @@ class Exception extends Event {
         return $insert;
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save() Rien a sauvegarder: return null");
     return null;
   }
@@ -237,7 +237,7 @@ class Exception extends Event {
     else
       $this->deleted = false;
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $deleted;
   }
   
@@ -258,7 +258,7 @@ class Exception extends Event {
       $this->deleted = true;
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $exist;
   }
   

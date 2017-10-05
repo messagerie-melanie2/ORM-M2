@@ -153,7 +153,7 @@ class Share extends Melanie2Object {
       $shares[] = $share;
     }
     // TODO: Test - Nettoyage mémoire
-    gc_collect_cycles();
+    //gc_collect_cycles();
     return $shares;
   }
   

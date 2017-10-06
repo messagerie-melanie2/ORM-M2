@@ -1319,7 +1319,9 @@ class Event extends Melanie2Object {
       $path = str_replace('%e', $this->objectmelanie->uid, $path);
       $attachment->path = $path;
       M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapAttachments() path : " . $attachment->path);
-      $this->attachments = $attachment->getList();
+      // MANTIS 0004689: Mauvaise optimisation du chargement des pièces jointes
+      $fields = ["id", "type", "path", "name", "modified", "owner"];
+      $this->attachments = $attachment->getList($fields);
       
       // Récupération des pièces jointes URL
       $attach_uri = $this->getAttribute('ATTACH-URI');

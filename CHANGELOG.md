@@ -1,3 +1,7 @@
+ORM M2 - 0.3.0.19
+------
+- 0004689: Mauvaise optimisation du chargement des pièces jointes
+
 ORM M2 - 0.3.0.18
 ------
 - Suppression des appels au garbage collector suite à un problème de charge sur SabreDAV

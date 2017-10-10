@@ -123,8 +123,14 @@ class CalendarSync extends Melanie2Object {
         if (strpos($uid, self::RECURRENCE_ID) !== false) {
           $uid = substr($uid, 0, strlen($uid) - 24);
           $mapAct = self::$actionMapper['mod'];
+        }
+        // MANTIS 0004696: [SyncToken] Ne retourner qu'un seul uid
+        $uid = $uid . '.ics';
+        if (!in_array($uid, $result['added'])
+            && !in_array($uid, $result['modified'])
+            && !in_array($uid, $result['deleted'])) {
+          $result[$mapAct][] = $uid;
         }        
-        $result[$mapAct][] = $uid . '.ics';
       }
     } else {
       $event = new \LibMelanie\Api\Melanie2\Event();

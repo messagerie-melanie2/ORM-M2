@@ -1,3 +1,8 @@
+ORM M2 - 0.3.0.21
+------
+- 0004694: Forcer le Timezone quand il est différent de celui enregistré
+- 0004695: Enregistrer le timezone lors de la conversion depuis l'ICS
+
 ORM M2 - 0.3.0.20
 ------
 - Problème de typage pour l'Exception

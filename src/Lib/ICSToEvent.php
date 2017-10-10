@@ -23,11 +23,13 @@ use LibMelanie\Api\Melanie2\Exception;
 use LibMelanie\Api\Melanie2\Event;
 use LibMelanie\Api\Melanie2\User;
 use LibMelanie\Api\Melanie2\Calendar;
+use LibMelanie\Api\Melanie2\UserPrefs;
 use LibMelanie\Log\M2Log;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
 @include_once 'vendor/autoload.php';
 use Sabre\VObject;
+
 
 /**
  * Class de génération de l'évènement en fonction de l'ICS
@@ -87,7 +89,9 @@ class ICSToEvent {
   public static function Convert($ics, Event $event, Calendar $calendar = null, User $user = null) {
     $vcalendar = VObject\Reader::read($ics);
     // Gestion du timezone
-    if (isset($calendar)) {
+    if (isset($user)) {
+      $timezone = $user->getTimezone();
+    } else if (isset($calendar)) {
       $timezone = $calendar->getTimezone();
     } else {
       $timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
@@ -123,6 +127,17 @@ class ICSToEvent {
       }
       if (isset($startDate)) {
         $allDay = isset($vevent->DTSTART->parameters[ICS::VALUE]) && $vevent->DTSTART->parameters[ICS::VALUE] == ICS::VALUE_DATE;
+        // MANTIS 0004694: Forcer le Timezone quand il est différent de celui enregistré
+        if ($startDate->getTimezone()->getName() != 'UTC' && !$allDay && $startDate->getTimezone()->getName() != $timezone && isset($user)) {
+          $userPref = new UserPrefs($user);
+          $userPref->name = ConfigMelanie::TZ_PREF_NAME;
+          $userPref->scope = ConfigMelanie::PREF_SCOPE;
+          $userPref->value = $startDate->getTimezone()->getName();
+          $ret = $userPref->save();
+          if (!is_null($ret)) {
+            $timezone = $startDate->getTimezone()->getName();
+          }
+        }
         // Gestion du Timezone GMT
         if ($startDate->getTimezone()->getName() == 'UTC' && !$allDay) {
           $startDate->setTimezone(new \DateTimeZone($timezone));

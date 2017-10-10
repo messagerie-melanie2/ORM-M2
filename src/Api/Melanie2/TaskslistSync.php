@@ -111,7 +111,13 @@ class TaskslistSync extends Melanie2Object {
       ];
       foreach ($this->objectmelanie->getList(null, null, $operators, 'token', false, $limit) as $_taskslistSync) {
         $mapAct = self::$actionMapper[$_taskslistSync->action];
-        $result[$mapAct][] = $_taskslistSync->uid . '.ics';
+        // MANTIS 0004696: [SyncToken] Ne retourner qu'un seul uid
+        $uid = $_taskslistSync->uid . '.ics';
+        if (!in_array($uid, $result['added'])
+            && !in_array($uid, $result['modified'])
+            && !in_array($uid, $result['deleted'])) {
+          $result[$mapAct][] = $uid;
+        }     
       }
     } else {
       $task = new \LibMelanie\Api\Melanie2\Task();

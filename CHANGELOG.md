@@ -1,3 +1,8 @@
+ORM M2 - 0.3.0.20
+------
+- Problème de typage pour l'Exception
+- 0004692: Enregistrer la derniere requete SQL + ses parametres
+
 ORM M2 - 0.3.0.19
 ------
 - 0004689: Mauvaise optimisation du chargement des pièces jointes

@@ -115,6 +115,12 @@ class Sql {
    * @var resource
    */
   private $ret_sel;
+  /**
+   * Derniere requete utilisee, sert pour les logs shutdown
+   * 
+   * @var string
+   */
+  private static $last_request;
 
   /**
    * Constructor SQL
@@ -254,6 +260,8 @@ class Sql {
   public function executeQuery($query, $params, $class, $objectType, $cached_statement = true) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->executeQuery($query, $class)");
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->executeQuery() params : " . print_r($params, true));
+    // Sauvegarde de la derniere requete
+    self::$last_request = ['query' => $query, 'params' => $params];
     // Si la connexion n'est pas instanciée
     if (is_null($this->connection)) {
       // Throw exception, erreur
@@ -355,6 +363,8 @@ class Sql {
   public function executeQueryToObject($query, $params, $object, $cached_statement = true) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->executeQueryToObject($query, " . get_class($object) . ")");
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->executeQueryToObject() params : " . print_r($params, true));
+    // Sauvegarde de la derniere requete
+    self::$last_request = ['query' => $query, 'params' => $params];
     // Si la connexion n'est pas instanciée
     if (is_null($this->connection)) {
       // Throw exception, erreur
@@ -457,6 +467,14 @@ class Sql {
   public function rollBack() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->rollBack()");
     $this->connection->rollBack();
+  }
+  /**
+   * Retourne la derniere requete
+   * @return string
+   */
+  public static function getLastRequest() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Sql::getLastRequest()");
+    return self::$last_request;
   }
 }
 ?>

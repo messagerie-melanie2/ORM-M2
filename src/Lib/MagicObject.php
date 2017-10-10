@@ -139,7 +139,7 @@ abstract class MagicObject {
                                     $value = date('Y-m-d H:i:s', strtotime($value));
                             }
                         }
-                        catch (Exception $ex) {
+                        catch (\Exception $ex) {
                             M2Log::Log(M2Log::LEVEL_ERROR, "MagicObject->__set($name, $value) : Exception dans le format de date, utilisation de la valeur par defaut");
                             // Une erreur s'est produite, on met une valeur par défaut pour le pas bloquer la lecture des données
                             $value = "1970-01-01 00:00:00";

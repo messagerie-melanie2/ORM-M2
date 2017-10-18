@@ -442,6 +442,9 @@ class Event extends Melanie2Object {
         foreach ($this->attendees as $attendee) {
           if (strtolower($attendee->uid) == strtolower($this->usermelanie->uid)) {
             $response = $attendee->response;
+            // MANTIS 0004708: Lors d'un "s'inviter" utiliser les informations de l'ICS
+            $att_email = $attendee->email;
+            $att_name = $attendee->name;
             break;
           }
         }
@@ -468,8 +471,9 @@ class Event extends Melanie2Object {
           // S'inviter dans la réunion
           if ($invite && ConfigMelanie::SELF_INVITE) {
             $attendee = new Attendee($organizer_event);
-            $attendee->email = $this->usermelanie->email;
-            $attendee->name = '';
+            // MANTIS 0004708: Lors d'un "s'inviter" utiliser les informations de l'ICS
+            $attendee->email = isset($att_email) ? $att_email : $this->usermelanie->email;
+            $attendee->name = isset($att_name) ? $att_name : '';
             $attendee->response = $response;
             $attendee->role = Attendee::ROLE_REQ_PARTICIPANT;
             $organizer_attendees[] = $attendee;

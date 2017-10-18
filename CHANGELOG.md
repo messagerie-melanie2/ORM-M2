@@ -1,3 +1,8 @@
+ORM M2 - 0.3.0.22
+------
+- 0004708: Lors d'un "s'inviter" utiliser les informations de l'ICS
+- 0004706: L'enregistrement d'une pièce jointe depuis l'ICS ne se fait pas dans le bon dossier vfs
+
 ORM M2 - 0.3.0.21
 ------
 - 0004694: Forcer le Timezone quand il est différent de celui enregistré

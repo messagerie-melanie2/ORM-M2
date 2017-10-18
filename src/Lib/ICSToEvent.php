@@ -390,7 +390,8 @@ class ICSToEvent {
             }
             $_attach->modified = time();
             $_attach->owner = isset($user) ? $user->uid : $object->owner;
-            $_attach->path = $object->uid . '/' . $object->owner;
+            // MANTIS 0004706: L'enregistrement d'une pièce jointe depuis l'ICS ne se fait pas dans le bon dossier vfs
+            $_attach->path = $object->uid . '/' . $object->calendar;
             $_attach->isfolder = false;
             foreach ($attachments as $key => $attachment) {
               if ($attachment->path == $_attach->path && $attachment->name == $_attach->name) {

@@ -206,20 +206,23 @@ class ICSToEvent {
             $object->alarm = 1;
           }
         }
-        // X MOZ LASTACK
-        if (isset($vevent->{ICS::X_MOZ_LASTACK})) {
-          $object->setAttribute(ICS::X_MOZ_LASTACK, $vevent->{ICS::X_MOZ_LASTACK});
-        } else {
-          $object->deleteAttribute(ICS::X_MOZ_LASTACK);
-        }
-        // X MOZ SNOOZE TIME
-        if (isset($vevent->{ICS::X_MOZ_SNOOZE_TIME})) {
-          $object->setAttribute(ICS::X_MOZ_SNOOZE_TIME, $vevent->{ICS::X_MOZ_SNOOZE_TIME});
-        } else {
-          $object->deleteAttribute(ICS::X_MOZ_SNOOZE_TIME);
-        }
-      } else
+        if (!isset($recurrence_id)) {
+          // X MOZ LASTACK
+          if (isset($vevent->{ICS::X_MOZ_LASTACK})) {
+            $object->setAttribute(ICS::X_MOZ_LASTACK, $vevent->{ICS::X_MOZ_LASTACK}->getValue());
+          } else {
+            $object->deleteAttribute(ICS::X_MOZ_LASTACK);
+          }
+          // X MOZ SNOOZE TIME
+          if (isset($vevent->{ICS::X_MOZ_SNOOZE_TIME})) {
+            $object->setAttribute(ICS::X_MOZ_SNOOZE_TIME, $vevent->{ICS::X_MOZ_SNOOZE_TIME}->getValue());
+          } else {
+            $object->deleteAttribute(ICS::X_MOZ_SNOOZE_TIME);
+          }
+        }        
+      } else {
         $object->alarm = 0;
+      }        
       // SEQUENCE
       if (isset($vevent->SEQUENCE)) {
         $object->setAttribute(ICS::SEQUENCE, $vevent->SEQUENCE->getValue());

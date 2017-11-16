@@ -155,11 +155,11 @@ class EventToICS {
 	    foreach ($event->exceptions as $exception) {
 	      $exRecId = $exception->getAttribute(ICS::RECURRENCE_ID);
 	      if (!isset($exRecId)) {
-	        if ($exception->deleted) {
-	          $exRecId = date('Y-m-d', strtotime($exception->recurrenceId)) . ' ' . date('H:i:s', strtotime($event->start));
+	        if ($event->deleted) {
+	          $exRecId = date('Y-m-d', strtotime($exception->recurrenceId)) . ' ' . date('H:i:s', strtotime($exception->start));
 	        }
 	        else {
-	          $exRecId = date('Y-m-d', strtotime($exception->recurrenceId)) . ' ' . date('H:i:s', strtotime($exception->start));
+	          $exRecId = date('Y-m-d', strtotime($exception->recurrenceId)) . ' ' . date('H:i:s', strtotime($event->start));
 	        }	        
 	      }
 	      $exdatetime = new \DateTime($exRecId, new \DateTimeZone($timezone));
@@ -213,7 +213,7 @@ class EventToICS {
 	      }
 	      if ($exception->deleted && !$event->deleted) {
 	        $exdate[] = $date;
-	      } else {
+	      } else if (isset($exception->start) && isset($exception->end)) {
 	        $vexception = $vcalendar->add('VEVENT');
 	        // UID
 	        $vexception->UID = $exception->uid;
@@ -554,7 +554,7 @@ class EventToICS {
 	  }
 
 	  // Nombre de semaines, 10080 minutes
-	  if ($alarm >= 10080) {
+	  if ($alarm >= 10080 && ($alarm % 10080) === 0) {
 	    $nb_weeks = (int)($alarm / 10080);
 	    $alarm -= $nb_weeks * 10080;
 	    $trigger .= $nb_weeks."W";
@@ -588,7 +588,7 @@ class EventToICS {
 	 * @return mixed
 	 */
 	private static function cleanUTF8String($string) {
-    return preg_replace('/[\x01\x02\x03\x04\x05\x08\x13\x14\x19\x1E\x1C\x1B]/', '', $string);
+    return preg_replace('/[\x01\x02\x03\x04\x05\x08\x0B\x0E\x11\x12\x13\x14\x19\x1A\x1E\x1C\x1B\x1D\x1F]/', '', $string);
   }
 
   /**

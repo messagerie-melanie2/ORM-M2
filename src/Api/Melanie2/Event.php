@@ -282,25 +282,30 @@ class Event extends Melanie2Object {
       // Création de l'objet s'il n'existe pas
       if (!isset($this->attributes))
         $this->attributes = [];
-      $eventproperty = new EventProperty();
-      $eventproperty->event = $this->realuid;
-      if (isset($this->calendarmelanie)) {
-        $eventproperty->calendar = $this->calendarmelanie->id;
-      } else {
-        $eventproperty->calendar = $this->calendar;
+      if (isset($this->attributes[$name])) {
+        $this->attributes[$name]->value = $value;
       }
-      // Problème de User avec DAViCal
-      if (isset($this->calendarmelanie)) {
-        $eventproperty->user = $this->calendarmelanie->owner;
-      } else if (isset($this->owner)) {
-        $eventproperty->user = $this->owner;
-      } else {
-        $eventproperty->user = '';
+      else {
+        $eventproperty = new EventProperty();
+        $eventproperty->event = $this->realuid;
+        if (isset($this->calendarmelanie)) {
+          $eventproperty->calendar = $this->calendarmelanie->id;
+        } else {
+          $eventproperty->calendar = $this->calendar;
+        }
+        // Problème de User avec DAViCal
+        if (isset($this->calendarmelanie)) {
+          $eventproperty->user = $this->calendarmelanie->owner;
+        } else if (isset($this->owner)) {
+          $eventproperty->user = $this->owner;
+        } else {
+          $eventproperty->user = '';
+        }
+        
+        $eventproperty->key = $name;
+        $eventproperty->value = $value;
+        $this->attributes[$name] = $eventproperty;
       }
-      
-      $eventproperty->key = $name;
-      $eventproperty->value = $value;
-      $this->attributes[$name] = $eventproperty;
     }
   }
   /**

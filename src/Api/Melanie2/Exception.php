@@ -325,4 +325,22 @@ class Exception extends Event {
       throw new Exceptions\ObjectMelanieUndefinedException();
     return substr($this->objectmelanie->uid, 0, strlen($this->objectmelanie->uid) - strlen('-' . self::FORMAT_STR . self::RECURRENCE_ID));
   }
+  /**
+   * Mapping organizer field
+   */
+  protected function getMapOrganizer() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOrganizer()");
+    if (!isset($this->organizer)) {
+      if (isset($this->eventParent->organizer) && !empty($this->eventParent->organizer->uid)) {
+        $this->organizer = $this->eventParent->organizer;
+      }
+      else {
+        $this->organizer = new Organizer($this);
+        // Ajouter l'organisateur sur l'événement parent pour les occurrences suivantes
+        $this->eventParent->organizer = $this->organizer;
+      }
+    }      
+      
+    return $this->organizer;
+  }
 }

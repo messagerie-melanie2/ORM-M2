@@ -176,18 +176,33 @@ class EventToICS {
 	            $vevent->add(ICS::RDATE, $date, [ICS::VALUE => ICS::VALUE_DATE]);
 	            $vevent->add(ICS::DTSTART, $exdatetime->format('Ymd'), [ICS::VALUE => ICS::VALUE_DATE]);
 	          } else {
-	            $rdate_h = clone $starttime;
-	            $rdate_h->setTimezone(new \DateTimeZone('UTC'));
-	            $date = $rdate_d->format('Ymd') . 'T' . $rdate_h->format('His') . 'Z';
+	            $date = $rdate_d->format('Ymd') . 'T' . $rdate_d->format('His') . 'Z';
 	            $vevent->add(ICS::RDATE, $date, [ICS::VALUE => ICS::VALUE_DATE_TIME]);
 	            $vevent->DTSTART = clone $exdatetime;
 	          }
 	          $dateTime = new \DateTime('@'.$exception->modified, new \DateTimeZone($timezone));
 	          $dateTime->setTimezone(new \DateTimeZone('UTC'));
 	          $date = $dateTime->format('Ymd') . 'T' . $dateTime->format('His') . 'Z';
-	          $vevent->add(ICS::DTSTAMP, $date);
-	          $vevent->add(ICS::LAST_MODIFIED, $date);
-	          $vevent->add(ICS::CREATED, $date);
+	          // Attributs sur l'alarme
+	          $x_moz_lastack = $event->getAttribute(ICS::X_MOZ_LASTACK);
+	          if (isset($x_moz_lastack)) $vevent->{ICS::X_MOZ_LASTACK} = $x_moz_lastack;
+	          $x_moz_snooze_time = $event->getAttribute(ICS::X_MOZ_SNOOZE_TIME);
+	          if (isset($x_moz_snooze_time)) $vevent->{ICS::X_MOZ_SNOOZE_TIME} = $x_moz_snooze_time;
+	          // X Moz Generation
+	          $moz_generation = $event->getAttribute(ICS::X_MOZ_GENERATION);
+	          if (isset($moz_generation)) $vevent->add(ICS::X_MOZ_GENERATION, $moz_generation);
+	          // DTSTAMP
+	          $dtstamp = $event->getAttribute(ICS::DTSTAMP);
+	          if (isset($dtstamp)) $vevent->add(ICS::DTSTAMP, $dtstamp);
+	          else $vevent->add(ICS::DTSTAMP, $date);
+	          // LAST-MODIFIED
+	          $last_modified = $event->getAttribute(ICS::LAST_MODIFIED);
+	          if (isset($last_modified)) $vevent->add(ICS::LAST_MODIFIED, $last_modified);
+	          else $vevent->add(ICS::LAST_MODIFIED, $date);
+	          // CREATED 
+	          $created = $event->getAttribute(ICS::CREATED);
+	          if (isset($created)) $vevent->add(ICS::CREATED, $created);
+	          else $vevent->add(ICS::CREATED, $date);
 	          //$vevent->SUMMARY = $exception->title;
 	          //$vevent->add(ICS::X_MOZ_GENERATION, count($event->exceptions));
 	          $vevent->add(ICS::X_MOZ_FAKED_MASTER, "1");
@@ -387,19 +402,19 @@ class EventToICS {
 			if (!is_null($organizer_attendees)
 					&& is_array($organizer_attendees)
 					&& count($organizer_attendees) > 0) {
-				// Add organizer
-				$params = [
-				      ICS::ROLE => ICS::ROLE_CHAIR,
-				      ICS::PARTSTAT => ICS::PARTSTAT_ACCEPTED,
-				      ICS::RSVP => 'TRUE',
-				    ];
-				if (!empty($event->organizer->name)) {
-				  $params[ICS::CN] = $event->organizer->name;
-				}
-				$vevent->add(ICS::ORGANIZER,
-				    'mailto:'.$event->organizer->email,
-				    $params
-				    );
+			  // Add organizer
+		    $params = [
+		        ICS::ROLE => ICS::ROLE_CHAIR,
+		        ICS::PARTSTAT => ICS::PARTSTAT_ACCEPTED,
+		        ICS::RSVP => 'TRUE',
+		    ];
+		    if (!empty($event->organizer->name)) {
+		      $params[ICS::CN] = $event->organizer->name;
+		    }
+		    $vevent->add(ICS::ORGANIZER,
+		        'mailto:'.$event->organizer->email,
+		        $params
+        );
 				foreach ($organizer_attendees as $attendee) {
 					// Role
 					switch ($attendee->role) {
@@ -462,6 +477,12 @@ class EventToICS {
 			// Sequence
 			$sequence = $event->getAttribute(ICS::SEQUENCE);
 			if (isset($sequence)) $vevent->SEQUENCE = $sequence;
+			// RECEIVED-SEQUENCE
+			$received_sequence = $event->getAttribute(ICS::X_MOZ_RECEIVED_SEQUENCE);
+			if (isset($received_sequence)) $vevent->add(ICS::X_MOZ_RECEIVED_SEQUENCE, $received_sequence);
+			// RECEIVED-DTSTAMP
+			$received_dtstamp = $event->getAttribute(ICS::X_MOZ_RECEIVED_DTSTAMP);
+			if (isset($received_dtstamp)) $vevent->add(ICS::X_MOZ_RECEIVED_DTSTAMP, $received_dtstamp);
 			// X Moz Send Invitations
 			$send_invitation = $event->getAttribute(ICS::X_MOZ_SEND_INVITATIONS);
 			if (isset($send_invitation)) $vevent->add(ICS::X_MOZ_SEND_INVITATIONS, $send_invitation);

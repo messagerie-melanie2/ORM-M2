@@ -160,6 +160,43 @@ class ICSToEvent {
       }
       // Cas du FAKED MASTER
       if (isset($vevent->{ICS::X_MOZ_FAKED_MASTER}) && intval($vevent->{ICS::X_MOZ_FAKED_MASTER}->getValue()) == 1) {
+        // X MOZ LASTACK
+        if (isset($vevent->{ICS::X_MOZ_LASTACK})) {
+          $object->setAttribute(ICS::X_MOZ_LASTACK, $vevent->{ICS::X_MOZ_LASTACK}->getValue());
+        } else {
+          $object->deleteAttribute(ICS::X_MOZ_LASTACK);
+        }
+        // X MOZ SNOOZE TIME
+        if (isset($vevent->{ICS::X_MOZ_SNOOZE_TIME})) {
+          $object->setAttribute(ICS::X_MOZ_SNOOZE_TIME, $vevent->{ICS::X_MOZ_SNOOZE_TIME}->getValue());
+        } else {
+          $object->deleteAttribute(ICS::X_MOZ_SNOOZE_TIME);
+        }
+        // X MOZ GENERATION
+        if (isset($vevent->{ICS::X_MOZ_GENERATION})) {
+          $object->setAttribute(ICS::X_MOZ_GENERATION, $vevent->{ICS::X_MOZ_GENERATION}->getValue());
+        } else {
+          $object->deleteAttribute(ICS::X_MOZ_GENERATION);
+        }
+        // DTSTAMP
+        if (isset($vevent->{ICS::DTSTAMP})) {
+          $object->setAttribute(ICS::DTSTAMP, $vevent->{ICS::DTSTAMP}->getValue());
+        } else {
+          $object->deleteAttribute(ICS::DTSTAMP);
+        }
+        // LAST-MODIFIED
+        if (isset($vevent->{ICS::LAST_MODIFIED})) {
+          $object->setAttribute(ICS::LAST_MODIFIED, $vevent->{ICS::LAST_MODIFIED}->getValue());
+        } else {
+          $object->deleteAttribute(ICS::LAST_MODIFIED);
+        }
+        // CREATED
+        if (isset($vevent->{ICS::CREATED})) {
+          $object->setAttribute(ICS::CREATED, $vevent->{ICS::CREATED}->getValue());
+        } else {
+          $object->deleteAttribute(ICS::CREATED);
+        }
+        
         $object->deleted = true;
         continue;
       }
@@ -228,6 +265,18 @@ class ICSToEvent {
         $object->setAttribute(ICS::SEQUENCE, $vevent->SEQUENCE->getValue());
       } else {
         $object->deleteAttribute(ICS::SEQUENCE);
+      }
+      // X-MOZ-RECEIVED-SEQUENCE
+      if (isset($vevent->{ICS::X_MOZ_RECEIVED_SEQUENCE})) {
+        $object->setAttribute(ICS::X_MOZ_RECEIVED_SEQUENCE, $vevent->{ICS::X_MOZ_RECEIVED_SEQUENCE}->getValue());
+      } else {
+        $object->deleteAttribute(ICS::X_MOZ_RECEIVED_SEQUENCE);
+      }
+      // X-MOZ-RECEIVED-DTSTAMP
+      if (isset($vevent->{ICS::X_MOZ_RECEIVED_DTSTAMP})) {
+        $object->setAttribute(ICS::X_MOZ_RECEIVED_DTSTAMP, $vevent->{ICS::X_MOZ_RECEIVED_DTSTAMP}->getValue());
+      } else {
+        $object->deleteAttribute(ICS::X_MOZ_RECEIVED_DTSTAMP);
       }
       // X Moz Send Invitations
       if (isset($vevent->{ICS::X_MOZ_SEND_INVITATIONS})) {

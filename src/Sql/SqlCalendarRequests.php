@@ -72,9 +72,9 @@ class SqlCalendarRequests {
 
 	/**
 	 * @var UPDATE
-	 * @param PDO :event_uid, :event_modified
+	 * @param PDO :event_uid
 	 */
-	const updateMeetingEtag = "UPDATE kronolith_events SET event_modified = :event_modified WHERE event_uid = :event_uid;";
+	const updateMeetingEtag = "UPDATE kronolith_events SET event_modified = event_modified + 1,  event_modified_json = event_modified_json + 1 WHERE event_uid = :event_uid;";
 
 	/**
 	 * @var INSERT

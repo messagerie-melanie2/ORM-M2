@@ -255,7 +255,24 @@ CREATE TABLE kronolith_events (
     event_recurcount integer,
     event_recurtype smallint,
     event_recurinterval smallint,
-    event_recurdays smallint
+    event_recurdays smallint,
+    event_realuid varchar(255),
+	event_created integer,
+	event_modified_json integer,
+	event_timezone TEXT,
+	event_all_day smallint,
+	event_is_deleted smallint,
+	event_is_exception smallint,
+	event_recurrence_id TEXT,
+	event_organizer_json TEXT,
+	organizer_calendar_id varchar(255),
+	event_transparency varchar(10),
+	event_sequence integer,
+	event_priority smallint,
+	event_alarm_json TEXT,
+	event_recurrence_json TEXT,
+	event_attachments_json TEXT,
+	event_properties_json TEXT
 );
 
 --

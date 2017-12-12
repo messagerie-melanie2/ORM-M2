@@ -25,6 +25,7 @@ use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Exceptions;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Lib\EventToICS;
+use LibMelanie\Lib\ICS;
 
 /**
  * Classe evenement pour Melanie2,
@@ -46,11 +47,17 @@ use LibMelanie\Lib\EventToICS;
  * @property string $location Lieu de l'évènement
  * @property Event::STATUS_* $status Statut de l'évènement
  * @property Event::CLASS_* $class Class de l'évènement (privé/public)
+ * @property Event::TRANSP_* $transparency Etat de transparence de l'événement
+ * @property Event::PRIORITY_* $priority Priorité de l'événement
+ * @property int $sequence Séquence de l'événement
  * @property int $alarm Alarme en minute (TODO: class Alarm)
  * @property Attendee[] $attendees Tableau d'objets Attendee
  * @property boolean $hasattendees Est-ce que cette instance de l'événement a des participants
  * @property string $start String au format compatible DateTime, date de début
  * @property string $end String au format compatible DateTime, date de fin
+ * @property string $timezone Timezone de l'événement
+ * @property boolean $all_day Est-ce que c'est un événement journée entière
+ * @property int $created Timestamp de création de l'évènement
  * @property int $modified Timestamp de la modification de l'évènement
  * @property Recurrence $recurrence objet Recurrence
  * @property Organizer $organizer objet Organizer
@@ -100,6 +107,12 @@ class Event extends Melanie2Object {
    * @var boolean
    */
   protected $deleted;
+  /**
+   * UID reel enregistré temporairement
+   * 
+   * @var string
+   */
+  protected $tmpuid;
   /**
    * Tableau d'exceptions pour la récurrence
    * 
@@ -173,6 +186,16 @@ class Event extends Melanie2Object {
   const STATUS_CONFIRMED = ConfigMelanie::CONFIRMED;
   const STATUS_CANCELLED = ConfigMelanie::CANCELLED;
   const STATUS_NONE = ConfigMelanie::NONE;
+  // TRANS Fields
+  const TRANS_TRANSPARENT = ICS::TRANSP_TRANSPARENT;
+  const TRANS_OPAQUE = ICS::TRANSP_OPAQUE;
+  // PRIORITY Fields
+  const PRIORITY_NO = 0;
+  const PRIORITY_VERY_HIGH = 1;
+  const PRIORITY_HIGH = 2;
+  const PRIORITY_NORMAL = 3;
+  const PRIORITY_LOW = 4;
+  const PRIORITY_VERY_LOW = 5;
   
   /**
    * Constructeur de l'objet
@@ -415,7 +438,7 @@ class Event extends Melanie2Object {
             }
           }
         }
-      }
+      }      
       // Si l'organisateur n'est pas trouvé
       if (!isset($organizer_calendar_id)) {
         // On considère également que c'est un organisateur externe
@@ -425,6 +448,8 @@ class Event extends Melanie2Object {
         return false;
       }
     }
+    // Positionner le calendar_id de l'organisateur dans l'événement
+    $this->objectmelanie->organizer_calendar_id = $organizer_calendar_id;
     // Test si on est dans le calendrier de l'organisateur (dans ce cas on sauvegarde directement les participants)
     if ($organizer_calendar_id != $this->calendar) {
       // Définition de la sauvegarde de l'évènement de l'organisateur
@@ -766,6 +791,8 @@ class Event extends Melanie2Object {
     if (!isset($this->owner)) {
       $this->owner = $this->usermelanie->uid;
     }
+    // Positionnement du realuid
+    $this->objectmelanie->realuid = $this->tmpuid;
     // Sauvegarde l'objet
     $insert = $this->objectmelanie->save();
     if (!is_null($insert)) {
@@ -971,14 +998,94 @@ class Event extends Melanie2Object {
    * DATA MAPPING
    */
   /**
+   * Détermine si les nouvelles données en JSON peuvent être utilisés
+   * 
+   * @return boolean
+   */
+  public function useJsonData() {
+    return $this->objectmelanie->modified_json === $this->objectmelanie->modified;
+  }
+  /**
+   * Détermine si on est dans le nouveau schéma de l'ORM
+   * 
+   * @return boolean
+   */
+  private function useNewMode() {
+    return defined('ConfigMelanie::USE_NEW_MODE') && ConfigMelanie::USE_NEW_MODE;
+  }
+  /**
+   * Mapping uid field
+   *
+   * @param string $uid
+   */
+  protected function setMapUid($uid) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapUid($uid)");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->objectmelanie->uid = $uid;
+    $this->tmpuid = $uid;
+  }
+  /**
+   * Mapping modified field
+   *
+   * @param integer $modified
+   */
+  protected function setMapModified($modified) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapModified($modified)");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->objectmelanie->modified = $modified;
+    $this->objectmelanie->modified_json = $modified;
+  }
+  /**
+   * Mapping timezone field
+   */
+  protected function getMapTimezone() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapTimezone()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if ($this->useJsonData()) {
+      $timezone = $this->objectmelanie->timezone;
+    }
+    else {
+      if (isset($this->usermelanie)) {
+        $timezone = $this->usermelanie->getTimezone();
+      }
+      if (!isset($timezone) && isset($this->calendarmelanie)) {
+        $timezone = $this->calendarmelanie->getTimezone();
+      }
+    }
+    if (!isset($timezone)) {
+      $timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
+    }
+    
+    return $timezone;
+  }
+  
+  /**
+   * Mapping all_day field
+   */
+  protected function getMapAll_day() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapAll_day()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if ($this->useJsonData()) {
+      $all_day = $this->objectmelanie->all_day;
+    }
+    else {
+      $all_day = strpos($this->objectmelanie->start, ' 00:00:00') !== false && strpos($this->objectmelanie->end, ' 00:00:00') !== false;
+    }
+    if (!isset($all_day)) {
+      $all_day = true;
+    }
+    
+    return $all_day;
+  }
+  
+  /**
    * Mapping class field
    * 
    * @param Event::CLASS_* $class          
    */
   protected function setMapClass($class) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapClass($class)");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset(MappingMelanie::$MapClassObjectMelanie[$class]))
       $this->objectmelanie->class = MappingMelanie::$MapClassObjectMelanie[$class];
   }
@@ -987,8 +1094,7 @@ class Event extends Melanie2Object {
    */
   protected function getMapClass() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapClass()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset(MappingMelanie::$MapClassObjectMelanie[$this->objectmelanie->class]))
       return MappingMelanie::$MapClassObjectMelanie[$this->objectmelanie->class];
     else
@@ -1002,8 +1108,7 @@ class Event extends Melanie2Object {
    */
   protected function setMapStatus($status) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapStatus($status)");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset(MappingMelanie::$MapStatusObjectMelanie[$status]))
       $this->objectmelanie->status = MappingMelanie::$MapStatusObjectMelanie[$status];
   }
@@ -1012,12 +1117,63 @@ class Event extends Melanie2Object {
    */
   protected function getMapStatus() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapStatus()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset(MappingMelanie::$MapStatusObjectMelanie[$this->objectmelanie->status]))
       return MappingMelanie::$MapStatusObjectMelanie[$this->objectmelanie->status];
     else
       return self::STATUS_CONFIRMED;
+  }
+  
+  /**
+   * Mapping transparency field
+   *
+   * @param Event::TRANSP_* $transparency
+   */
+  protected function setMapTransparency($transparency) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapTransparency($transparency)");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->objectmelanie->transparency = $transparency;
+    // Si on est dans l'ancien mode, il faut enregistré en paramètres
+    if (!$this->useNewMode()) {
+      $this->setAttribute(ICS::TRANSP, $transparency);
+    }
+  }
+  /**
+   * Mapping transparency field
+   */
+  protected function getMapTransparency() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapTransparency()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if ($this->useJsonData()) {
+      $transparency = $this->objectmelanie->transparency;
+    }
+    else {
+      $transparency = $this->getAttribute(ICS::TRANSP);
+    }
+    if (!isset($transparency)) {
+      $transparency = self::TRANS_OPAQUE;
+    }
+    
+    return $this->objectmelanie->transparency;
+  }
+  
+  /**
+   * Mapping priority field
+   *
+   * @param Event::PRIORITY_* $priority
+   */
+  protected function setMapPriority($priority) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapPriority($priority)");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->objectmelanie->priority = $priority;
+  }
+  /**
+   * Mapping priority field
+   */
+  protected function getMapPriority() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapPriority()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    return $this->objectmelanie->priority;
   }
   
   /**
@@ -1027,8 +1183,7 @@ class Event extends Melanie2Object {
    */
   protected function setMapRecurrence($recurrence) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRecurrence()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->recurrence = $recurrence;
     $this->recurrence->setObjectMelanie($this->objectmelanie);
   }
@@ -1049,8 +1204,7 @@ class Event extends Melanie2Object {
    */
   protected function setMapOrganizer($organizer) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapOrganizer()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->organizer = $organizer;
     $this->organizer->setObjectMelanie($this->objectmelanie);
   }
@@ -1071,8 +1225,7 @@ class Event extends Melanie2Object {
    */
   protected function setMapAttendees($attendees) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapAttendees()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $_attendees = [];
     if (!empty($attendees)) {
       foreach ($attendees as $attendee) {
@@ -1086,8 +1239,7 @@ class Event extends Melanie2Object {
    */
   protected function getMapAttendees() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapAttendees()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     // Récupération des participants
     $object_attendees = null;
     // Participants directement dans l'objet
@@ -1126,8 +1278,7 @@ class Event extends Melanie2Object {
    */
   protected function getMapRealUid() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRealUid()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     return $this->objectmelanie->uid;
   }
   
@@ -1145,7 +1296,7 @@ class Event extends Melanie2Object {
    */
   protected function getMapDeleted() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDeleted()");
-    return $this->deleted || $this->start == '1970-01-01 00:00:00';
+    return $this->deleted || !isset($this->start) || $this->start == '1970-01-01 00:00:00';
   }
   
   /**
@@ -1157,8 +1308,7 @@ class Event extends Melanie2Object {
    */
   protected function setMapExceptions($exceptions) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapExceptions()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     
     $_exceptions = [];
     // Get the TZ
@@ -1235,8 +1385,7 @@ class Event extends Melanie2Object {
    */
   protected function getMapExceptions() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapExceptions()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (!isset($this->objectmelanie->exceptions) || $this->objectmelanie->exceptions == "")
       return [];
     
@@ -1272,8 +1421,7 @@ class Event extends Melanie2Object {
    */
   public function addException($exception) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->addException()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     
     if (!isset($this->exceptions) && !is_array($this->exceptions)) {
       $this->exceptions = [];
@@ -1319,8 +1467,7 @@ class Event extends Melanie2Object {
    */
   protected function setMapAttachments($attachments) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapAttachments()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->attachments = $attachments;
   }
   /**
@@ -1332,8 +1479,7 @@ class Event extends Melanie2Object {
    */
   protected function getMapAttachments() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapAttachments()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (!isset($this->attachments)) {
       $this->attachments = [];
       // Récupération des pièces jointes binaires

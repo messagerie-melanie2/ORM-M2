@@ -490,6 +490,8 @@ class ICS {
 	 * RSVP Expectation (http://tools.ietf.org/html/rfc2445#section-4.2.17)
 	 */
 	const RSVP = 'RSVP';
+	const RSVP_TRUE = 'TRUE';
+	const RSVP_FALSE = 'FALSE';
 	/**
 	 * Sent By (http://tools.ietf.org/html/rfc2445#section-4.2.18)
 	 * "TRUE" / "FALSE"

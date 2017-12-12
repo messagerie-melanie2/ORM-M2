@@ -88,19 +88,12 @@ class ICSToEvent {
    */
   public static function Convert($ics, Event $event, Calendar $calendar = null, User $user = null) {
     $vcalendar = VObject\Reader::read($ics);
-    // Gestion du timezone
-    if (isset($user)) {
-      $timezone = $user->getTimezone();
-    } else if (isset($calendar)) {
-      $timezone = $calendar->getTimezone();
-    } else {
-      $timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
-    }
     $exceptions = [];
     foreach ($vcalendar->VEVENT as $vevent) {
       $recurrence_id = $vevent->{ICS::RECURRENCE_ID};
       if (isset($recurrence_id)) {
         $object = new Exception($event, $user, $calendar);
+        $object->recurrence_id = $recurrence_id;
       } else {
         $object = $event;
       }
@@ -126,34 +119,17 @@ class ICSToEvent {
         $endDate->add($duration);
       }
       if (isset($startDate)) {
-        $allDay = isset($vevent->DTSTART->parameters[ICS::VALUE]) && $vevent->DTSTART->parameters[ICS::VALUE] == ICS::VALUE_DATE;
-        // MANTIS 0004694: Forcer le Timezone quand il est différent de celui enregistré
-        if ($startDate->getTimezone()->getName() != 'UTC' && !$allDay && $startDate->getTimezone()->getName() != $timezone && isset($user)) {
-          $userPref = new UserPrefs($user);
-          $userPref->name = ConfigMelanie::TZ_PREF_NAME;
-          $userPref->scope = ConfigMelanie::PREF_SCOPE;
-          $userPref->value = $startDate->getTimezone()->getName();
-          $ret = $userPref->save();
-          if (!is_null($ret)) {
-            $timezone = $startDate->getTimezone()->getName();
-          }
-        }
-        // Gestion du Timezone GMT
-        if ($startDate->getTimezone()->getName() == 'UTC' && !$allDay) {
-          $startDate->setTimezone(new \DateTimeZone($timezone));
-        }
-        if ($endDate->getTimezone()->getName() == 'UTC' && !$allDay) {
-          $endDate->setTimezone(new \DateTimeZone($timezone));
-        }
+        $object->all_day = isset($vevent->DTSTART->parameters[ICS::VALUE]) && $vevent->DTSTART->parameters[ICS::VALUE] == ICS::VALUE_DATE;
         $object->start = $startDate->format(self::DB_DATE_FORMAT);
         $object->end = $endDate->format(self::DB_DATE_FORMAT);
+        $object->timezone = $startDate->getTimezone()->getName();
       }      
       
       // Recurrence ID
       if (isset($recurrence_id)) {
         $date = $recurrence_id->getDateTime();
         if ($date->getTimezone()->getName() == 'UTC') {
-          $date->setTimezone(new \DateTimeZone($timezone));
+          $date->setTimezone(new \DateTimeZone($object->timezone));
         }        
         $object->recurrenceId = $date->format(self::SHORT_DB_DATE_FORMAT);
         $object->setAttribute(ICS::RECURRENCE_ID, $date->format(self::DB_DATE_FORMAT));
@@ -193,6 +169,7 @@ class ICSToEvent {
         // CREATED
         if (isset($vevent->{ICS::CREATED})) {
           $object->setAttribute(ICS::CREATED, $vevent->{ICS::CREATED}->getValue());
+          $object->created = strtotime($vevent->CREATED->getValue());
         } else {
           $object->deleteAttribute(ICS::CREATED);
         }
@@ -263,6 +240,7 @@ class ICSToEvent {
       // SEQUENCE
       if (isset($vevent->SEQUENCE)) {
         $object->setAttribute(ICS::SEQUENCE, $vevent->SEQUENCE->getValue());
+        $object->sequence = $vevent->SEQUENCE->getValue();
       } else {
         $object->deleteAttribute(ICS::SEQUENCE);
       }
@@ -298,7 +276,7 @@ class ICSToEvent {
       }
       // TRANSP
       if (isset($vevent->TRANSP)) {
-        $object->setAttribute(ICS::TRANSP, $vevent->TRANSP->getValue());
+        $object->transparency = $vevent->TRANSP->getValue();
       } else {
         $object->deleteAttribute(ICS::TRANSP);
       }
@@ -315,6 +293,7 @@ class ICSToEvent {
       // CREATED
       if (isset($vevent->CREATED)) {
         $object->setAttribute(ICS::CREATED, $vevent->CREATED->getValue());
+        $object->created = strtotime($vevent->CREATED->getValue());
       } else {
         $object->deleteAttribute(ICS::CREATED);
       }      
@@ -357,6 +336,15 @@ class ICSToEvent {
           $paramters = $vevent->ORGANIZER->parameters;
           if (isset($paramters[ICS::CN])) {
             $object->organizer->name = $paramters[ICS::CN]->getValue();
+          }
+          if (isset($parameters[ICS::RSVP])) {
+            $object->organizer->rsvp = $paramters[ICS::RSVP]->getValue();
+          }
+          if (isset($parameters[ICS::ROLE])) {
+            $object->organizer->role = $paramters[ICS::ROLE]->getValue();
+          }
+          if (isset($parameters[ICS::PARTSTAT])) {
+            $object->organizer->partstat = $paramters[ICS::PARTSTAT]->getValue();
           }
         }
         $_attendees = [];
@@ -525,7 +513,7 @@ class ICSToEvent {
           foreach ($vevent->EXDATE as $exdate) {
             $exception = new Exception($event, $user, $calendar);
             $date = $exdate->getDateTime();
-            $date->setTimezone(new \DateTimeZone($timezone));
+            $date->setTimezone(new \DateTimeZone($object->timezone));
             $exception->recurrenceId = $date->format(self::SHORT_DB_DATE_FORMAT);
             $exception->deleted = true;
             $exception->uid = $event->uid;

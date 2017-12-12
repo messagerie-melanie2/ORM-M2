@@ -1,3 +1,7 @@
+ORM M2 - 0.4
+------
+- 0004004: Evolution du schéma de base de données
+
 ORM M2 - 0.3.0.24
 ------
 - 0004740: Considérer l'événement supprimé si start = 1970-01-01

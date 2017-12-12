@@ -17,7 +17,7 @@
  */
 namespace LibMelanie\Api\Melanie2;
 
-use LibMelanie\Objects\EventMelanie;
+use LibMelanie\Api\Melanie2\Event;
 use LibMelanie\Lib\Melanie2Object;
 use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Config\MappingMelanie;
@@ -46,9 +46,15 @@ class Recurrence extends Melanie2Object {
   /**
    * Evenement associé à l'objet
    * 
-   * @var EventMelanie
+   * @var Event
    */
   private $event;
+  /**
+   * Valeurs decodées de recurrence_json
+   *
+   * @var array
+   */
+  private $recurrence_json_decoded = null;
   
   // RECURDAYS Fields
   const RECURDAYS_NODAY = ConfigMelanie::NODAY;
@@ -104,8 +110,7 @@ class Recurrence extends Melanie2Object {
    */
   protected function setMapType($type) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapType($type)");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->objectmelanie->type = MappingMelanie::$MapRecurtypeObjectMelanie[$type];
   }
   /**
@@ -116,8 +121,7 @@ class Recurrence extends Melanie2Object {
    */
   protected function getMapType() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRecurtype()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     return MappingMelanie::$MapRecurtypeObjectMelanie[$this->objectmelanie->type];
   }
   
@@ -131,8 +135,7 @@ class Recurrence extends Melanie2Object {
    */
   protected function setMapDays($days) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapDays()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->objectmelanie->days = MappingMelanie::NODAY;
     if (is_array($days)) {
       foreach ($days as $day) {
@@ -173,6 +176,9 @@ class Recurrence extends Melanie2Object {
   protected function setMapRrule($rdata) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRrule()");
     $recurrence = $this;
+    
+    // Ajout des nouveaux paramètres
+    $this->objectmelanie->recurrence_json = json_encode($rdata);
     
     if (isset($rdata[ICS::FREQ])) {
       // Always default the recurInterval to 1.
@@ -290,110 +296,141 @@ class Recurrence extends Melanie2Object {
    */
   protected function getMapRrule() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRrule()");
-    // Tableau permettant de recuperer toutes les valeurs de la recurrence
-    $recurrence = [];
-    // Récupération des informations de récurrence de l'évènement
-    $_recurrence = $this;
-    // Si une recurrence est bien definie dans l'evenement
-    if ($_recurrence->type !== self::RECURTYPE_NORECUR) {
-      switch ($_recurrence->type) {
-        case self::RECURTYPE_DAILY :
-          $recurrence[ICS::FREQ] = ICS::FREQ_DAILY;
-          if (isset($_recurrence->interval)) {
-            // Recupere l'interval de recurrence
-            $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+    if (isset($this->event) && $this->event->useJsonData()) {
+      // Tableau permettant de recuperer toutes les valeurs de la recurrence
+      $recurrence = json_decode($this->objectmelanie->recurrence_json, true);
+    }
+    else {
+      // Tableau permettant de recuperer toutes les valeurs de la recurrence
+      $recurrence = [];
+      // Récupération des informations de récurrence de l'évènement
+      $_recurrence = $this;
+      // Si une recurrence est bien definie dans l'evenement
+      if ($_recurrence->type !== self::RECURTYPE_NORECUR) {
+        switch ($_recurrence->type) {
+          case self::RECURTYPE_DAILY :
+            $recurrence[ICS::FREQ] = ICS::FREQ_DAILY;
+            if (isset($_recurrence->interval)) {
+              // Recupere l'interval de recurrence
+              $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+            }
+            break;
+            
+          case self::RECURTYPE_WEEKLY :
+            $recurrence[ICS::FREQ] = ICS::FREQ_WEEKLY;
+            if (isset($_recurrence->interval)) {
+              // Recupere l'interval de recurrence
+              $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+            }
+            if (is_array($_recurrence->days) && count($_recurrence->days) > 0) {
+              // Jour de récurrence
+              $recurrence[ICS::BYDAY] = implode(',', $_recurrence->days);
+            }
+            break;
+            
+          case self::RECURTYPE_MONTHLY :
+            $recurrence[ICS::FREQ] = ICS::FREQ_MONTHLY;
+            if (isset($_recurrence->interval)) {
+              // Recupere l'interval de recurrence
+              $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+            }
+            $start = new \DateTime($this->event->start);
+            $recurrence[ICS::BYMONTHDAY] = $start->format('d');
+            break;
+            
+          case self::RECURTYPE_MONTHLY_BYDAY :
+            $start = new \DateTime($this->event->start);
+            $day_of_week = $start->format('w');
+            $nth_weekday = ceil($start->format('d') / 7);
+            
+            $vcaldays = [
+                'SU',
+                'MO',
+                'TU',
+                'WE',
+                'TH',
+                'FR',
+                'SA'
+            ];
+            
+            $recurrence[ICS::FREQ] = ICS::FREQ_MONTHLY;
+            if (isset($_recurrence->interval)) {
+              // Recupere l'interval de recurrence
+              $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+            }
+            $recurrence[ICS::BYDAY] = $nth_weekday . $vcaldays[$day_of_week];
+            break;
+            
+          case self::RECURTYPE_YEARLY :
+            $recurrence[ICS::FREQ] = ICS::FREQ_YEARLY;
+            if (isset($_recurrence->interval)) {
+              // Recupere l'interval de recurrence
+              $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+            }
+            break;
+            
+          case self::RECURTYPE_YEARLY_BYDAY :
+            $start = new \DateTime($this->event->start);
+            $monthofyear = $start->format('m'); // 01 à 12
+            $nth_weekday = ceil($start->format('d') / 7);
+            $day_of_week = $start->format('w');
+            $vcaldays = [
+                'SU',
+                'MO',
+                'TU',
+                'WE',
+                'TH',
+                'FR',
+                'SA'
+            ];
+            
+            $recurrence[ICS::FREQ] = ICS::FREQ_YEARLY;
+            if (isset($_recurrence->interval)) {
+              // Recupere l'interval de recurrence
+              $recurrence[ICS::INTERVAL] = $_recurrence->interval;
+            }
+            $recurrence[ICS::BYDAY] = $nth_weekday . $vcaldays[$day_of_week];
+            $recurrence[ICS::BYMONTH] = $monthofyear;
+            break;
+        }
+        if (isset($_recurrence->count) && intval($_recurrence->count) > 0) {
+          // Gestion du nombre d'occurences
+          $recurrence['COUNT'] = intval($_recurrence->count);
+        } elseif (isset($_recurrence->enddate)) {
+          // Gestion d'une date de fin
+          $recurrence['UNTIL'] = new \DateTime($_recurrence->enddate, new \DateTimeZone('UTC'));
+          if ($recurrence['UNTIL']->format('Y') == '9999') {
+            // Si l'année est en 9999 on considère qu'il n'y a de date de fin
+            unset($recurrence['UNTIL']);
           }
-          break;
-        
-        case self::RECURTYPE_WEEKLY :
-          $recurrence[ICS::FREQ] = ICS::FREQ_WEEKLY;
-          if (isset($_recurrence->interval)) {
-            // Recupere l'interval de recurrence
-            $recurrence[ICS::INTERVAL] = $_recurrence->interval;
-          }
-          if (is_array($_recurrence->days) && count($_recurrence->days) > 0) {
-            // Jour de récurrence
-            $recurrence[ICS::BYDAY] = implode(',', $_recurrence->days);
-          }
-          break;
-        
-        case self::RECURTYPE_MONTHLY :
-          $recurrence[ICS::FREQ] = ICS::FREQ_MONTHLY;
-          if (isset($_recurrence->interval)) {
-            // Recupere l'interval de recurrence
-            $recurrence[ICS::INTERVAL] = $_recurrence->interval;
-          }
-          $start = new \DateTime($this->event->start);
-          $recurrence[ICS::BYMONTHDAY] = $start->format('d');
-          break;
-        
-        case self::RECURTYPE_MONTHLY_BYDAY :
-          $start = new \DateTime($this->event->start);
-          $day_of_week = $start->format('w');
-          $nth_weekday = ceil($start->format('d') / 7);
-          
-          $vcaldays = [
-              'SU',
-              'MO',
-              'TU',
-              'WE',
-              'TH',
-              'FR',
-              'SA'
-          ];
-          
-          $recurrence[ICS::FREQ] = ICS::FREQ_MONTHLY;
-          if (isset($_recurrence->interval)) {
-            // Recupere l'interval de recurrence
-            $recurrence[ICS::INTERVAL] = $_recurrence->interval;
-          }
-          $recurrence[ICS::BYDAY] = $nth_weekday . $vcaldays[$day_of_week];
-          break;
-        
-        case self::RECURTYPE_YEARLY :
-          $recurrence[ICS::FREQ] = ICS::FREQ_YEARLY;
-          if (isset($_recurrence->interval)) {
-            // Recupere l'interval de recurrence
-            $recurrence[ICS::INTERVAL] = $_recurrence->interval;
-          }
-          break;
-        
-        case self::RECURTYPE_YEARLY_BYDAY :
-          $start = new \DateTime($this->event->start);
-          $monthofyear = $start->format('m'); // 01 à 12
-          $nth_weekday = ceil($start->format('d') / 7);
-          $day_of_week = $start->format('w');
-          $vcaldays = [
-              'SU',
-              'MO',
-              'TU',
-              'WE',
-              'TH',
-              'FR',
-              'SA'
-          ];
-          
-          $recurrence[ICS::FREQ] = ICS::FREQ_YEARLY;
-          if (isset($_recurrence->interval)) {
-            // Recupere l'interval de recurrence
-            $recurrence[ICS::INTERVAL] = $_recurrence->interval;
-          }
-          $recurrence[ICS::BYDAY] = $nth_weekday . $vcaldays[$day_of_week];
-          $recurrence[ICS::BYMONTH] = $monthofyear;
-          break;
-      }
-      if (isset($_recurrence->count) && intval($_recurrence->count) > 0) {
-        // Gestion du nombre d'occurences
-        $recurrence['COUNT'] = intval($_recurrence->count);
-      } elseif (isset($_recurrence->enddate)) {
-        // Gestion d'une date de fin
-        $recurrence['UNTIL'] = new \DateTime($_recurrence->enddate, new \DateTimeZone('UTC'));
-        if ($recurrence['UNTIL']->format('Y') == '9999') {
-          // Si l'année est en 9999 on considère qu'il n'y a de date de fin
-          unset($recurrence['UNTIL']);
         }
       }
     }
     return $recurrence;
+  }
+  /**
+   * Positionne la valeur du paramètre dans recurrence_json
+   *
+   * @param string $param
+   * @param string $value
+   */
+  private function setRecurrenceParam($param, $value) {
+    if (!isset($this->recurrence_json_decoded)) {
+      $this->recurrence_json_decoded = json_decode($this->objectmelanie->recurrence_json, true);
+    }
+    $this->recurrence_json_decoded[$param] = $value;
+    $this->objectmelanie->recurrence_json = json_encode($this->recurrence_json_decoded);
+  }
+  /**
+   * Retourne la valeur du paramètre dans recurrence_json
+   *
+   * @param string $param
+   * @return mixed
+   */
+  private function getRecurrenceParam($param) {
+    if (!isset($this->recurrence_json_decoded)) {
+      $this->recurrence_json_decoded = json_decode($this->objectmelanie->recurrence_json, true);
+    }
+    return isset($this->recurrence_json_decoded[$param]) ? $this->recurrence_json_decoded[$param] : null;
   }
 }

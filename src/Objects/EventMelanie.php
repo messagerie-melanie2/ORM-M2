@@ -299,14 +299,16 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList()");
 		// Mapping pour les operateurs
 		$opmapping = [];
-		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
-		foreach ($operators as $key => $operator) {
-			// Récupèration des données de mapping
-			if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-					&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
-				$key = MappingMelanie::$Data_Mapping[$this->objectType][$key][MappingMelanie::name];
-			}
-			$opmapping[$key] = $operator;
+		if (is_array($operators)) {
+  		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
+  		foreach ($operators as $key => $operator) {
+  			// Récupèration des données de mapping
+  			if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
+  					&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
+  				$key = MappingMelanie::$Data_Mapping[$this->objectType][$key][MappingMelanie::name];
+  			}
+  			$opmapping[$key] = $operator;
+  		}
 		}
 		// Mapping pour les champs
 		$fieldsmapping = [];
@@ -538,14 +540,6 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 			$mapKey = 'uid';
 		}
 		$params[$mapKey] = $this->uid;
-
-		if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-				&& isset(MappingMelanie::$Data_Mapping[$this->objectType]['modified'])) {
-			$mapKey = MappingMelanie::$Data_Mapping[$this->objectType]['modified'][MappingMelanie::name];
-		} else {
-			$mapKey = 'modified';
-		}
-		$params[$mapKey] = time();
 
 		// Execute
 		return Sql\DBMelanie::ExecuteQuery(Sql\SqlCalendarRequests::updateMeetingEtag, $params);

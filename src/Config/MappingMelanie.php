@@ -142,34 +142,50 @@ class MappingMelanie {
 			// Gestion des évènements : objet EventMelanie
 			"EventMelanie" => array(
 					"uid" 			=> array(self::name => "event_uid", self::type => self::string, self::size => 255),
+			    "realuid" 			=> array(self::name => "event_realuid", self::type => self::string, self::size => 255),
 					"calendar" 	=> array(self::name => "calendar_id", self::type => self::string, self::size => 255),
 					"id" 				=> array(self::name => "event_id", self::type => self::string, self::size => 32),
 					"owner" 		=> array(self::name => "event_creator_id", self::type => self::string, self::size => 255, self::defaut => ''),
 					"keywords" 	=> array(self::name => "event_keywords"),
 
 					// DATA
-					"title" 			=> array(self::name => "event_title", self::type => self::string, self::size => 255, self::defaut => ''),
-					"description" => array(self::name => "event_description", self::defaut => ''),
-					"category" 		=> array(self::name => "event_category", self::type => self::string, self::size => 80, self::defaut => ''),
-					"location" 		=> array(self::name => "event_location", self::defaut => ''),
-					"status" 			=> array(self::name => "event_status", self::type => self::integer, self::defaut => 2),
-					"class" 			=> array(self::name => "event_private", self::type => self::integer, self::defaut => 0),
-					"alarm" 			=> array(self::name => "event_alarm", self::type => self::integer, self::defaut => 0),
-					"attendees" 	=> array(self::name => "event_attendees"),
+					"title" 			  => array(self::name => "event_title", self::type => self::string, self::size => 255, self::defaut => ''),
+					"description"   => array(self::name => "event_description", self::defaut => ''),
+					"category" 		  => array(self::name => "event_category", self::type => self::string, self::size => 80, self::defaut => ''),
+					"location" 		  => array(self::name => "event_location", self::defaut => ''),
+					"status" 			  => array(self::name => "event_status", self::type => self::integer, self::defaut => 2),
+					"class" 			  => array(self::name => "event_private", self::type => self::integer, self::defaut => 0),
+			    "sequence" 			=> array(self::name => "event_sequence", self::type => self::integer, self::defaut => 0),
+			    "priority" 			=> array(self::name => "event_priority", self::type => self::integer, self::defaut => 0),
+					"alarm" 			  => array(self::name => "event_alarm", self::type => self::integer, self::defaut => 0),					
+			    "is_deleted"    => array(self::name => "event_is_deleted", self::type => self::integer, self::defaut => 0),
+			    "is_exception"  => array(self::name => "event_is_exception", self::type => self::integer, self::defaut => 0),
+			    "transparency" 	=> array(self::name => "event_transparency", self::type => self::string, self::size => 10, self::defaut => 'opaque'),
+			    "properties" 	  => array(self::name => "event_properties_json"),
+			    
+			    // ATTENDEES
+			    "attendees" 	           => array(self::name => "event_attendees"),
+			    "organizer_json" 	       => array(self::name => "event_organizer_json"),
+			    "organizer_calendar_id"  => array(self::name => "organizer_calendar_id"),
 
 					// TIME
-					"start" 		=> array(self::name => "event_start", self::type => self::date, self::format => "Y-m-d H:i:s"),
-					"end" 			=> array(self::name => "event_end", self::type => self::date, self::format => "Y-m-d H:i:s"),
-					"modified" 	=> array(self::name => "event_modified", self::type => self::timestamp, self::defaut => 0),
+			    "all_day"  	    => array(self::name => "event_all_day", self::type => self::integer, self::defaut => 0),
+					"start" 		    => array(self::name => "event_start", self::type => self::date, self::format => "Y-m-d H:i:s"),
+					"end" 			    => array(self::name => "event_end", self::type => self::date, self::format => "Y-m-d H:i:s"),
+			    "created" 	    => array(self::name => "event_created", self::type => self::timestamp, self::defaut => 0),
+					"modified" 	    => array(self::name => "event_modified", self::type => self::timestamp, self::defaut => 0),
+			    "modified_json" => array(self::name => "event_modified_json", self::type => self::timestamp, self::defaut => 0),
+			    "timezone"      => array(self::name => "event_timezone", self::type => self::string, self::defaut => 'Europe/Paris'),
 
 					// RECURRENCE
 					"exceptions" 			=> array(self::name => "event_exceptions"),
-					"exceptionsdate" 	=> array(self::name => "event_exceptions"),
 					"enddate" 				=> array(self::name => "event_recurenddate",self::type => self::date, self::format => "Y-m-d H:i:s"),
 					"count" 					=> array(self::name => "event_recurcount", self::type => self::integer),
 					"interval" 				=> array(self::name => "event_recurinterval", self::type => self::integer),
 					"type" 						=> array(self::name => "event_recurtype", self::type => self::integer, self::defaut => 0),
-					"days" 						=> array(self::name => "event_recurdays", self::type => self::integer)
+					"days" 						=> array(self::name => "event_recurdays", self::type => self::integer),
+			    "recurrence_id" 	=> array(self::name => "event_recurrence_id", self::type => self::date),
+			    "recurrence_json" => array(self::name => "event_recurrence_json"),
 			),
 			// Gestion des propriétés des évènements : objet EventProperties
 			"EventProperties" => array(

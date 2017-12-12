@@ -17,14 +17,11 @@
  */
 namespace LibMelanie\Api\Melanie2;
 
-use LibMelanie\Objects\ObjectMelanie;
 use LibMelanie\Ldap\LDAPMelanie;
 use LibMelanie\Lib\Melanie2Object;
-use LibMelanie\Objects\EventMelanie;
-use LibMelanie\Config\ConfigMelanie;
-use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Exceptions;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Lib\ICS;
 
 /**
  * Classe evenement pour Melanie2,
@@ -40,6 +37,10 @@ use LibMelanie\Log\M2Log;
  * @property-read Attendee[] $attendees Tableau d'objets Attendee pour l'organisateur (Lecture seule)
  * @property string $email Email de l'organisateur
  * @property string $uid Uid de l'organisateur
+ * @property string $role Role de l'organisateur
+ * @property string $partstat Statut de participation de l'organisateur
+ * @property string $sent_by Sent-By pour l'organisateur
+ * @property string $rsvp Repondez svp pour l'organisateur
  * @property bool $extern Boolean pour savoir si l'organisateur est externe au ministère
  */
 class Organizer extends Melanie2Object {
@@ -64,6 +65,12 @@ class Organizer extends Melanie2Object {
    * @var string
    */
   private $organizer_name = null;
+  /**
+   * Valeurs decodées de organizer_json
+   * 
+   * @var array
+   */
+  private $organizer_json_decoded = null;
   /**
    * Défini si l'organisateur est externe au ministère
    * Cela change la façon de le sauvegarder
@@ -114,8 +121,7 @@ class Organizer extends Melanie2Object {
    */
   protected function setMapUid($uid) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapUid($uid)");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->objectmelanie->organizer_uid = $uid;
   }
   /**
@@ -126,8 +132,7 @@ class Organizer extends Melanie2Object {
    */
   protected function getMapUid() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapName()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     return $this->objectmelanie->organizer_uid;
   }
   
@@ -168,30 +173,34 @@ class Organizer extends Melanie2Object {
    */
   protected function setMapCalendar($calendar) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapCalendar($calendar)");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->objectmelanie->organizer_calendar = $calendar;
+    $this->objectmelanie->organizer_calendar_id = $calendar;
   }
   /**
    * Mapping calendar field
    * 
    * @ignore
-   *
    */
   protected function getMapCalendar() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCalendar()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
-    return $this->objectmelanie->organizer_calendar;
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if ($this->event->useJsonData()) {
+      return $this->objectmelanie->organizer_calendar_id;
+    }
+    else {
+      return $this->objectmelanie->organizer_calendar;
+    }    
   }
   
   /**
    * Mapping organizer attendees field
+   * 
+   * @ignore
    */
   protected function getMapAttendees() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapAttendees()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (!isset($this->objectmelanie->organizer_attendees))
       return null;
     $_attendees = unserialize($this->objectmelanie->organizer_attendees);
@@ -208,12 +217,12 @@ class Organizer extends Melanie2Object {
   /**
    * Mapping organizer email field
    * 
-   * @param string $email          
+   * @param string $email
+   * @ignore   
    */
   protected function setMapEmail($email) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapEmail($email)");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if ($this->organizer_email != $email) {
       // Si l'organisateur est externe au ministère
       if ($this->extern) {
@@ -230,29 +239,37 @@ class Organizer extends Melanie2Object {
         }
       }
       $this->organizer_email = $email;
+      // Position du mail dans organizer_json
+      $this->setOrganizerParam('mailto', $email);
     }
   }
   /**
    * Mapping organizer email field
+   * 
+   * @ignore
    */
   protected function getMapEmail() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapEmail()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (is_null($this->organizer_email)) {
-      // Si l'organisateur est externe au ministère
-      $email = $this->event->getAttribute(self::ORGANIZER_EXTERN);
-      if (!is_null($email)) {
-        $this->organizer_email = $email;
-        $this->extern = true;
-      } else {
-        $email = LDAPMelanie::GetMailFromUid($this->objectmelanie->organizer_uid);
-        if (is_null($email)) {
-          $this->organizer_email = '';
+      if ($this->event->useJsonData()) {
+        $this->organizer_email = $this->getOrganizerParam('mailto');
+      }
+      else {
+        // Si l'organisateur est externe au ministère
+        $email = $this->event->getAttribute(self::ORGANIZER_EXTERN);
+        if (!is_null($email)) {
+          $this->organizer_email = $email;
           $this->extern = true;
         } else {
-          $this->organizer_email = $email;
-          $this->extern = false;
+          $email = LDAPMelanie::GetMailFromUid($this->objectmelanie->organizer_uid);
+          if (is_null($email)) {
+            $this->organizer_email = '';
+            $this->extern = true;
+          } else {
+            $this->organizer_email = $email;
+            $this->extern = false;
+          }
         }
       }
     }
@@ -268,41 +285,179 @@ class Organizer extends Melanie2Object {
    */
   protected function setMapName($name) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapName($name)");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     // Si l'organisateur est externe au ministère
     if ($this->organizer_name != $name && $this->extern) {
       $this->event->setAttribute(self::ORGANIZER_EXTERN_NAME, $name);
     }
     $this->organizer_name = $name;
+    // Position du name dans organizer_json
+    $this->setOrganizerParam(ICS::CN, $name);
   }
   /**
    * Mapping name field
    * 
    * @ignore
-   *
    */
   protected function getMapName() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapName()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (is_null($this->organizer_name)) {
-      // Si l'organisateur est externe au ministère
-      $name = $this->event->getAttribute(self::ORGANIZER_EXTERN_NAME);
-      if ($name) {
-        $this->organizer_name = $name;
-        $this->extern = true;
-      } else {
-        $name = LDAPMelanie::GetNameFromUid($this->objectmelanie->organizer_uid);
-        if (is_null($name)) {
-          $this->organizer_name = '';
+      if ($this->event->useJsonData()) {
+        $this->organizer_name = $this->getOrganizerParam(ICS::CN);
+      }
+      else {
+        // Si l'organisateur est externe au ministère
+        $name = $this->event->getAttribute(self::ORGANIZER_EXTERN_NAME);
+        if ($name) {
+          $this->organizer_name = $name;
           $this->extern = true;
         } else {
-          $this->organizer_name = $name;
-          $this->extern = false;
+          $name = LDAPMelanie::GetNameFromUid($this->objectmelanie->organizer_uid);
+          if (is_null($name)) {
+            $this->organizer_name = '';
+            $this->extern = true;
+          } else {
+            $this->organizer_name = $name;
+            $this->extern = false;
+          }
         }
       }
     }
     return $this->organizer_name;
+  }
+  /**
+   * Mapping role field
+   *
+   * @param string $role
+   * @ignore
+   */
+  protected function setMapRole($role) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRole($role)");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->setOrganizerParam(ICS::ROLE, $role);
+  }
+  /**
+   * Mapping role field
+   *
+   * @ignore
+   */
+  protected function getMapRole() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRole()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if ($this->event->useJsonData()) {
+      return $this->getOrganizerParam(ICS::ROLE);
+    }
+    else {
+      return ICS::ROLE_CHAIR;
+    }
+  }
+  /**
+   * Mapping partstat field
+   *
+   * @param string $partstat
+   * @ignore
+   */
+  protected function setMapPartstat($partstat) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapPartstat($partstat)");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->setOrganizerParam(ICS::PARTSTAT, $partstat);
+  }
+  /**
+   * Mapping partstat field
+   *
+   * @ignore
+   */
+  protected function getMapPartstat() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapPartstat()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if ($this->event->useJsonData()) {
+      return $this->getOrganizerParam(ICS::PARTSTAT);
+    }
+    else {
+      return ICS::PARTSTAT_ACCEPTED;
+    }
+  }
+  /**
+   * Mapping sent_by field
+   *
+   * @param string $partstat
+   * @ignore
+   */
+  protected function setMapSent_by($sent_by) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapSent_by($sent_by)");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->setOrganizerParam(ICS::SENT_BY, $sent_by);
+  }
+  /**
+   * Mapping sent_by field
+   *
+   * @ignore
+   */
+  protected function getMapSent_by() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapSent_by()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if ($this->event->useJsonData()) {
+      return $this->getOrganizerParam(ICS::SENT_BY);
+    }
+    else {
+      return null;
+    }
+  }
+  /**
+   * Mapping rsvp field
+   *
+   * @param string $rsvp
+   * @ignore
+   */
+  protected function setMapRsvp($rsvp) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRsvp($rsvp)");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->setOrganizerParam(ICS::RSVP, $sent_by);
+  }
+  /**
+   * Mapping rsvp field
+   *
+   * @ignore
+   */
+  protected function getMapRsvp() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRsvp()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if ($this->event->useJsonData()) {
+      return $this->getOrganizerParam(ICS::RSVP);
+    }
+    else {
+      return ICS::RSVP_TRUE;
+    }
+  }
+  /**
+   * Positionne la valeur du paramètre dans organizer_json
+   * 
+   * @param string $param
+   * @param string $value
+   */
+  private function setOrganizerParam($param, $value) {
+    if (!isset($this->organizer_json_decoded)) {
+      $this->organizer_json_decoded = json_decode($this->objectmelanie->organizer_json, true);
+    }
+    if (isset($value)) {
+      $this->organizer_json_decoded[$param] = $value;
+    }
+    else {
+      unset($this->organizer_json_decoded[$param]);      
+    }
+    $this->objectmelanie->organizer_json = json_encode($this->organizer_json_decoded);
+  }
+  /**
+   * Retourne la valeur du paramètre dans organizer_json
+   * 
+   * @param string $param
+   * @return mixed
+   */
+  private function getOrganizerParam($param) {
+    if (!isset($this->organizer_json_decoded)) {
+      $this->organizer_json_decoded = json_decode($this->objectmelanie->organizer_json, true);
+    }
+    return isset($this->organizer_json_decoded[$param]) ? $this->organizer_json_decoded[$param] : null;
   }
 }

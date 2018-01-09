@@ -1,3 +1,10 @@
+ORM M2 - 0.4.0.1
+------
+- 0004777: [Sync] encoder les uid retournés 
+- 0004789: [Nouveau schéma] Gérer les éléments de récurrence qui retourne un tableau
+- 0004814: [Nouveau schéma] Gérer les éléments de récurrence indépendemment
+- 0004817: Les data d'une pièce jointe chargée via getList() ne sont pas récupéré par le load()
+
 ORM M2 - 0.4
 ------
 - 0004004: Evolution du schéma de base de données

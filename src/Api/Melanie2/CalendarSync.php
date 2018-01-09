@@ -125,7 +125,7 @@ class CalendarSync extends Melanie2Object {
           $mapAct = self::$actionMapper['mod'];
         }
         // MANTIS 0004696: [SyncToken] Ne retourner qu'un seul uid
-        $uid = $uid . '.ics';
+        $uid = $this->uidencode($uid) . '.ics';
         if (!in_array($uid, $result['added'])
             && !in_array($uid, $result['modified'])
             && !in_array($uid, $result['deleted'])) {
@@ -155,15 +155,25 @@ class CalendarSync extends Melanie2Object {
       }
 
       foreach ($events as $_event) {
-        $result['added'][] = $_event->uid . '.ics';
+        $result['added'][] = $this->uidencode($_event->uid) . '.ics';
       }
     }
 
     return $result;
   }
 
-/**
- * ***************************************************
- * DATA MAPPING
- */
+  /**
+   * ***************************************************
+   * PRIVATE
+   */
+  /**
+   * Encodage d'un uid pour les uri (pour les / notamment)
+   * @param string $uid
+   * @return string
+   */
+  private function uidencode($uid) {
+    $search = ['/'];
+    $replace = ['%2F'];
+    return str_replace($search, $replace, $uid);
+  }
 }

@@ -102,6 +102,118 @@ class Recurrence extends Melanie2Object {
    * MAPPING
    */
   /**
+   * Mapping enddate field
+   * 
+   * @param string $enddate
+   * @ignore
+   */
+  protected function setMapEnddate($enddate) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapEnddate()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->objectmelanie->enddate = $enddate;
+    if ($enddate instanceof \DateTime) {
+      $enddate->setTimezone(new \DateTimeZone('UTC'));
+      if ($enddate->format('Y') != '9999') {
+        $this->setRecurrenceParam(ICS::UNTIL, $enddate->format('Ymd\THis\Z'));
+      }      
+    }
+    elseif ($enddate != '9999-12-31 00:00:00') {
+      $this->setRecurrenceParam(ICS::UNTIL, date('Ymd\THis\Z', strtotime($enddate)));
+    }
+    
+  }
+  /**
+   * Mapping enddate field
+   *
+   * @ignore
+   *
+   */
+  protected function getMapEnddate() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapEnddate()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if (isset($this->event) && $this->event->useJsonData()) {
+      $enddate = $this->getRecurrenceParam(ICS::UNTIL);
+      return date('Y-m-d H:i:s', strtotime($enddate));
+    }
+    else {
+      return $this->objectmelanie->enddate;
+    }
+    
+  }
+  /**
+   * Mapping count field
+   *
+   * @param integer $count
+   * @ignore
+   */
+  protected function setMapCount($count) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapCount($count)");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->objectmelanie->count = $count;
+    if (isset($count) && $count > 0) {
+      $this->setRecurrenceParam(ICS::COUNT, $count);
+    }
+    else {
+      $this->unsetRecurrenceParam(ICS::COUNT);
+    }
+  }
+  /**
+   * Mapping count field
+   *
+   * @ignore
+   *
+   */
+  protected function getMapCount() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCount()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if (isset($this->event) && $this->event->useJsonData()) {
+      return $this->getRecurrenceParam(ICS::COUNT); 
+    }
+    else {
+      return $this->objectmelanie->count;
+    }    
+  }
+  /**
+   * Mapping interval field
+   *
+   * @param integer $interval
+   * @ignore
+   */
+  protected function setMapInterval($interval) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapInterval($interval)");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->objectmelanie->interval = $interval;
+    if ($interval > 1) {    
+      $this->setRecurrenceParam(ICS::INTERVAL, $interval);
+    }
+    else {
+      $this->unsetRecurrenceParam(ICS::INTERVAL);
+    }
+  }
+  /**
+   * Mapping interval field
+   *
+   * @ignore
+   *
+   */
+  protected function getMapInterval() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapInterval()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if (isset($this->event) && $this->event->useJsonData()) {
+      if ($this->issetRecurrenceParam(ICS::INTERVAL)) {
+        return $this->getRecurrenceParam(ICS::INTERVAL);
+      }
+      else {
+        return 1;
+      }
+    }
+    else {
+      return $this->objectmelanie->interval;
+    }
+    
+  }
+  
+  /**
    * Mapping type field
    * 
    * @param Recurrence::RECURTYPE $type          
@@ -112,6 +224,25 @@ class Recurrence extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapType($type)");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->objectmelanie->type = MappingMelanie::$MapRecurtypeObjectMelanie[$type];
+    // Gérer la récurrence avancée
+    switch ($type) {
+      case self::RECURTYPE_DAILY:
+        $this->setRecurrenceParam(ICS::FREQ, ICS::FREQ_DAILY);
+        break;
+      case self::RECURTYPE_WEEKLY:
+        $this->setRecurrenceParam(ICS::FREQ, ICS::FREQ_WEEKLY);
+        break;
+      case self::RECURTYPE_MONTHLY:
+      case self::RECURTYPE_MONTHLY_BYDAY:
+        $this->setRecurrenceParam(ICS::FREQ, ICS::FREQ_MONTHLY);
+        break;
+      case self::RECURTYPE_YEARLY:
+      case self::RECURTYPE_YEARLY_BYDAY:
+        $this->setRecurrenceParam(ICS::FREQ, ICS::FREQ_YEARLY);
+        break;
+      default:
+        $this->unsetRecurrenceParam(ICS::FREQ);
+    }
   }
   /**
    * Mapping type field
@@ -122,7 +253,32 @@ class Recurrence extends Melanie2Object {
   protected function getMapType() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRecurtype()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    return MappingMelanie::$MapRecurtypeObjectMelanie[$this->objectmelanie->type];
+    if (isset($this->event) && $this->event->useJsonData()) {
+      switch ($this->getRecurrenceParam(ICS::FREQ)) {
+        case ICS::FREQ_DAILY:
+          return self::RECURTYPE_DAILY;
+        case ICS::FREQ_WEEKLY:
+          return self::RECURTYPE_WEEKLY;
+        case ICS::FREQ_MONTHLY:
+          if ($this->issetRecurrenceParam(ICS::BYDAY)) {
+            return self::RECURTYPE_MONTHLY_BYDAY;
+          }
+          else {
+            return self::RECURTYPE_MONTHLY;
+          }
+        case ICS::FREQ_YEARLY:
+          if ($this->issetRecurrenceParam(ICS::BYDAY)) {
+            return self::RECURTYPE_YEARLY_BYDAY;
+          }
+          else {
+            return self::RECURTYPE_YEARLY;
+          }
+      }
+    }
+    else {
+      return MappingMelanie::$MapRecurtypeObjectMelanie[$this->objectmelanie->type];
+    }
+    
   }
   
   /**
@@ -141,8 +297,21 @@ class Recurrence extends Melanie2Object {
       foreach ($days as $day) {
         $this->objectmelanie->days += intval(MappingMelanie::$MapRecurdaysObjectMelanie[$day]);
       }
+      if (empty($days)) {
+        $this->unsetRecurrenceParam(ICS::BYDAY);
+      }
+      else {
+        $this->setRecurrenceParam(ICS::BYDAY, $days);
+      }      
     } else {
       $this->objectmelanie->days += intval(MappingMelanie::$MapRecurdaysObjectMelanie[$days]);
+      if (empty($days)) {
+        $this->unsetRecurrenceParam(ICS::BYDAY);
+      }
+      else {
+        $this->setRecurrenceParam(ICS::BYDAY, [$days]);
+      }
+      
     }
   }
   /**
@@ -155,11 +324,16 @@ class Recurrence extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDays()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-    $days = [];
-    foreach (MappingMelanie::$MapRecurdaysObjectMelanie as $day) {
-      if (is_integer(MappingMelanie::$MapRecurdaysObjectMelanie[$day]) && MappingMelanie::$MapRecurdaysObjectMelanie[$day] & $this->objectmelanie->days)
-        $days[] = $day;
+    if (isset($this->event) && $this->event->useJsonData()) {
+      $days = $this->getRecurrenceParam(ICS::BYDAY);
     }
+    else {
+      $days = [];
+      foreach (MappingMelanie::$MapRecurdaysObjectMelanie as $day) {
+        if (is_integer(MappingMelanie::$MapRecurdaysObjectMelanie[$day]) && MappingMelanie::$MapRecurdaysObjectMelanie[$day] & $this->objectmelanie->days)
+          $days[] = $day;
+      }
+    }    
     return $days;
   }
   
@@ -177,15 +351,19 @@ class Recurrence extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRrule()");
     $recurrence = $this;
     
+    // Nettoyer la rdate
+    if (isset($rdata[ICS::EXDATE])) unset($rdata[ICS::EXDATE]);
+    if (isset($rdata['EXCEPTIONS'])) unset($rdata['EXCEPTIONS']);
+    
     // Ajout des nouveaux paramètres
     $this->objectmelanie->recurrence_json = json_encode($rdata);
     
     if (isset($rdata[ICS::FREQ])) {
       // Always default the recurInterval to 1.
-      $recurrence->interval = isset($rdata[ICS::INTERVAL]) ? $rdata[ICS::INTERVAL] : 1;
+      $this->objectmelanie->interval = isset($rdata[ICS::INTERVAL]) ? $rdata[ICS::INTERVAL] : 1;
       $recurrence->days = array();
       // MANTIS 4103: Calculer une date de fin approximative pour un count
-      $nbdays = $recurrence->interval;
+      $nbdays = $this->objectmelanie->interval;
       
       switch (strtoupper($rdata[ICS::FREQ])) {
         case ICS::FREQ_DAILY :
@@ -237,29 +415,22 @@ class Recurrence extends Melanie2Object {
       }
       if (isset($rdata[ICS::UNTIL])) {
         // Récupération du timezone
-        $calendar = $this->event->getCalendarMelanie();
-        if (isset($calendar)) {
-          $timezone = $calendar->getTimezone();
-        }
-        if (!isset($timezone)) {
-          $timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
-        }
+        $timezone = $this->event->timezone;
         // Génération de la date de fin de récurrence
-        $recurrence->enddate = $rdata[ICS::UNTIL];
-        $recurenddate = new \DateTime($recurrence->enddate, new \DateTimeZone($timezone));
+        $recurenddate = new \DateTime($rdata[ICS::UNTIL], new \DateTimeZone($timezone));
         $startdate = new \DateTime($this->event->start, new \DateTimeZone($timezone));
         $enddate = new \DateTime($this->event->end, new \DateTimeZone($timezone));
         // Est-ce que l'on est en journée entière ?
         if ($startdate->format('H:i:s') == '00:00:00' && $enddate->format('H:i:s') == '00:00:00') {
           // On position la date de fin de récurrence de la même façon
-          $recurrence->enddate = $recurenddate->format('Y-m-d') . ' 00:00:00';
+          $this->objectmelanie->enddate = $recurenddate->format('Y-m-d') . ' 00:00:00';
         } else {
           // On position la date de fin basé sur la date de début en UTC
           // Voir MANTIS 3584: Les récurrences avec une date de fin se terminent à J+1 sur mobile
           //$startdate->setTimezone(new \DateTimeZone('UTC'));
           //$recurrence->enddate = $recurenddate->format('Y-m-d') . ' ' . $startdate->format('H:i:s');
           $recurenddate->setTimezone(new \DateTimeZone('UTC'));
-          $recurrence->enddate = $recurenddate->format('Y-m-d H:i:s');
+          $this->objectmelanie->enddate = $recurenddate->format('Y-m-d H:i:s');
         }
         // MANTIS 3610: Impossible de modifier la date de fin d'un evt récurrent si celui-ci était paramétré avec un nombre d'occurrences
         // Forcer le count a 0
@@ -270,18 +441,18 @@ class Recurrence extends Melanie2Object {
         $nbdays = $nbdays * $recurrence->count;
         $enddate = new \DateTime($this->event->end);
         $enddate->add(new \DateInterval("P" . $nbdays . "D"));
-        $recurrence->enddate = $enddate->format('Y-m-d H:i:s');
+        $this->objectmelanie->enddate = $enddate->format('Y-m-d H:i:s');
       } else {
-        $recurrence->enddate = "9999-12-31 00:00:00";
-        $recurrence->count = '';
+        $this->objectmelanie->enddate = "9999-12-31 00:00:00";
+        $this->objectmelanie->count = '';
       }
     } else {
       // No recurrence data - event does not recur.
       $recurrence->type = self::RECURTYPE_NORECUR;
-      $recurrence->count = '';
-      $recurrence->enddate = '';
+      $this->objectmelanie->count = '';
+      $this->objectmelanie->enddate = '';
       $recurrence->days = '';
-      $recurrence->interval = '';
+      $this->objectmelanie->interval = '';
     }
   }
   
@@ -299,6 +470,15 @@ class Recurrence extends Melanie2Object {
     if (isset($this->event) && $this->event->useJsonData()) {
       // Tableau permettant de recuperer toutes les valeurs de la recurrence
       $recurrence = json_decode($this->objectmelanie->recurrence_json, true);
+      if (isset($recurrence[ICS::UNTIL]) && is_array($recurrence[ICS::UNTIL])) {
+        $recurrence[ICS::UNTIL] = new \DateTime($recurrence[ICS::UNTIL]['date'], new \DateTimeZone($recurrence[ICS::UNTIL]['timezone']));
+      }
+      if (isset($recurrence[ICS::BYDAY]) && is_array($recurrence[ICS::BYDAY])) {
+        $recurrence[ICS::BYDAY] = implode(',', $recurrence[ICS::BYDAY]);
+      }
+      // Nettoyer la recurrence
+      if (isset($recurrence[ICS::EXDATE])) unset($recurrence[ICS::EXDATE]);
+      if (isset($recurrence['EXCEPTIONS'])) unset($recurrence['EXCEPTIONS']);
     }
     else {
       // Tableau permettant de recuperer toutes les valeurs de la recurrence
@@ -432,5 +612,30 @@ class Recurrence extends Melanie2Object {
       $this->recurrence_json_decoded = json_decode($this->objectmelanie->recurrence_json, true);
     }
     return isset($this->recurrence_json_decoded[$param]) ? $this->recurrence_json_decoded[$param] : null;
+  }
+  /**
+   * Retourne si la valeur du paramètre existe dans recurrence_json
+   * 
+   * @param string $param
+   * @return boolean
+   */
+  private function issetRecurrenceParam($param) {
+    if (!isset($this->recurrence_json_decoded)) {
+      $this->recurrence_json_decoded = json_decode($this->objectmelanie->recurrence_json, true);
+    }
+    return isset($this->recurrence_json_decoded[$param]);
+  }
+  /**
+   * Supprime une valeur du paramètre dans recurrence_json
+   * @param string $param
+   */
+  private function unsetRecurrenceParam($param) {
+    if (!isset($this->recurrence_json_decoded)) {
+      $this->recurrence_json_decoded = json_decode($this->objectmelanie->recurrence_json, true);
+    }
+    if (isset($this->recurrence_json_decoded[$param])) {
+      unset($this->recurrence_json_decoded[$param]);
+      $this->objectmelanie->recurrence_json = json_encode($this->recurrence_json_decoded);
+    }
   }
 }

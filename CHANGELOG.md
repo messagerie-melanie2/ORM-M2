@@ -1,3 +1,8 @@
+ORM M2 - 0.4.0.2
+------
+- Problème dans la récupération du type de récurrence
+- Problème quand le UNTIL est un objet
+
 ORM M2 - 0.4.0.1
 ------
 - 0004777: [Sync] encoder les uid retournés 

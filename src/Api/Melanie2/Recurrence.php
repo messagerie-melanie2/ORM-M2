@@ -253,32 +253,7 @@ class Recurrence extends Melanie2Object {
   protected function getMapType() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRecurtype()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    if (isset($this->event) && $this->event->useJsonData()) {
-      switch ($this->getRecurrenceParam(ICS::FREQ)) {
-        case ICS::FREQ_DAILY:
-          return self::RECURTYPE_DAILY;
-        case ICS::FREQ_WEEKLY:
-          return self::RECURTYPE_WEEKLY;
-        case ICS::FREQ_MONTHLY:
-          if ($this->issetRecurrenceParam(ICS::BYDAY)) {
-            return self::RECURTYPE_MONTHLY_BYDAY;
-          }
-          else {
-            return self::RECURTYPE_MONTHLY;
-          }
-        case ICS::FREQ_YEARLY:
-          if ($this->issetRecurrenceParam(ICS::BYDAY)) {
-            return self::RECURTYPE_YEARLY_BYDAY;
-          }
-          else {
-            return self::RECURTYPE_YEARLY;
-          }
-      }
-    }
-    else {
-      return MappingMelanie::$MapRecurtypeObjectMelanie[$this->objectmelanie->type];
-    }
-    
+    return MappingMelanie::$MapRecurtypeObjectMelanie[$this->objectmelanie->type];
   }
   
   /**
@@ -417,7 +392,12 @@ class Recurrence extends Melanie2Object {
         // Récupération du timezone
         $timezone = $this->event->timezone;
         // Génération de la date de fin de récurrence
-        $recurenddate = new \DateTime($rdata[ICS::UNTIL], new \DateTimeZone($timezone));
+        if (is_object($rdata[ICS::UNTIL])) {
+          $recurenddate = $rdata[ICS::UNTIL];
+        }
+        else {
+          $recurenddate = new \DateTime($rdata[ICS::UNTIL], new \DateTimeZone($timezone));
+        }
         $startdate = new \DateTime($this->event->start, new \DateTimeZone($timezone));
         $enddate = new \DateTime($this->event->end, new \DateTimeZone($timezone));
         // Est-ce que l'on est en journée entière ?

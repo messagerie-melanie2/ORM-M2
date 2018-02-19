@@ -378,18 +378,26 @@ class EventToICS {
 					&& count($organizer_attendees) > 0) {
 			  // Add organizer
 		    $params = [];
-		    if (isset($event->organizer->role)) {
+		    $org_role = $event->organizer->role;
+		    if (isset($org_role)) {
 		      $params[ICS::ROLE] = $event->organizer->role;
 		    }
-		    if (isset($event->organizer->partstat)) {
+		    $org_partstat = $event->organizer->partstat;
+		    if (isset($org_partstat)) {
 		      $params[ICS::PARTSTAT] = $event->organizer->partstat;
 		    }
-		    if (isset($event->organizer->rsvp)) {
+		    $org_rsvp = $event->organizer->rsvp;
+		    if (isset($org_rsvp)) {
 		      $params[ICS::RSVP] = $event->organizer->rsvp;
 		    }
-		    if (isset($event->organizer->name)) {
+		    $org_name = $event->organizer->name;
+		    if (isset($org_name)) {
 		      $params[ICS::CN] = $event->organizer->name;
 		    }
+		    $org_sent_by = $event->organizer->sent_by;
+		    if (isset($org_sent_by)) {
+		      $params[ICS::SENT_BY] = $event->organizer->sent_by;
+		    }	      
 		    $vevent->add(ICS::ORGANIZER,
 		        'mailto:'.$event->organizer->email,
 		        $params

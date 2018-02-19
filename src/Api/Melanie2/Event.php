@@ -1019,7 +1019,7 @@ class Event extends Melanie2Object {
    * @param string $uid
    */
   protected function setMapUid($uid) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapUid($uid)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapUid(" . (is_string($uid) ? $uid : "") . ")");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->objectmelanie->uid = $uid;
     $this->tmpuid = $uid;

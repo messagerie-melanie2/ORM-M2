@@ -128,7 +128,7 @@ class ICSToEvent {
       // Recurrence ID
       if (isset($recurrence_id)) {
         $date = $recurrence_id->getDateTime();
-        if ($date->getTimezone()->getName() == 'UTC') {
+        if ($date->getTimezone()->getName() != $object->timezone) {
           $date->setTimezone(new \DateTimeZone($object->timezone));
         }        
         $object->recurrenceId = $date->format(self::SHORT_DB_DATE_FORMAT);
@@ -332,19 +332,25 @@ class ICSToEvent {
       // ATTENDEE
       if (isset($vevent->ATTENDEE)) {
         if (isset($vevent->ORGANIZER)) {
-          $object->organizer->email = str_replace('mailto:', '', strtolower($vevent->ORGANIZER->getValue()));
-          $paramters = $vevent->ORGANIZER->parameters;
-          if (isset($paramters[ICS::CN])) {
-            $object->organizer->name = $paramters[ICS::CN]->getValue();
+          
+          $parameters = $vevent->ORGANIZER->parameters;
+          if (isset($parameters[ICS::CN])) {
+            $object->organizer->name = $parameters[ICS::CN]->getValue();
           }
           if (isset($parameters[ICS::RSVP])) {
-            $object->organizer->rsvp = $paramters[ICS::RSVP]->getValue();
+            $object->organizer->rsvp = $parameters[ICS::RSVP]->getValue();
           }
           if (isset($parameters[ICS::ROLE])) {
-            $object->organizer->role = $paramters[ICS::ROLE]->getValue();
+            $object->organizer->role = $parameters[ICS::ROLE]->getValue();
           }
           if (isset($parameters[ICS::PARTSTAT])) {
-            $object->organizer->partstat = $paramters[ICS::PARTSTAT]->getValue();
+            $object->organizer->partstat = $parameters[ICS::PARTSTAT]->getValue();
+          }
+          if (isset($parameters[ICS::SENT_BY])) {
+            $object->organizer->email = str_replace('mailto:', '', strtolower($parameters[ICS::SENT_BY]->getValue()));
+          }
+          else {
+            $object->organizer->email = str_replace('mailto:', '', strtolower($vevent->ORGANIZER->getValue()));
           }
         }
         $_attendees = [];
@@ -354,9 +360,10 @@ class ICSToEvent {
           // Email de l'attendee
           $_attendee->email = str_replace('mailto:', '', strtolower($prop->getValue()));
           // Ne pas conserver de participant avec la même adresse mail que l'organisateur
-          if ($object->organizer->email == $_attendee->email) {
-            continue;
-          }
+          // Test de non suppression du participant pour voir
+          //if ($object->organizer->email == $_attendee->email) {
+          //  continue;
+          //}
           // Gestion du CNAME
           if (isset($attendee[ICS::CN]))
             $_attendee->name = $attendee[ICS::CN]->getValue();

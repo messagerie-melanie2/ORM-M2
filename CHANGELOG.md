@@ -1,3 +1,10 @@
+ORM M2 - 0.4.0.3
+------
+- 0004869: Support du ROLE CHAIR pour les participants
+- 0004870: Gestion du SENT BY dans l'ICS
+- 0004871: [Recurrence] Le décodage json du UNTIL ne fourni pas de DateTime
+- 0004873: Convertir la recurrence au bon timezone avant de l'enregistrer
+
 ORM M2 - 0.4.0.2
 ------
 - Problème dans la récupération du type de récurrence

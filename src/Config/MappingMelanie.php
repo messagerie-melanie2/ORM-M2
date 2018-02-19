@@ -452,11 +452,11 @@ class MappingMelanie {
 			self::ATT_TENTATIVE => ConfigMelanie::TENTATIVE
 	);
 
-	// Attendee role
-	const CHAIR = 1;
+	// Attendee role	
 	const REQ_PARTICIPANT = 1;
 	const OPT_PARTICIPANT = 2;
 	const NON_PARTICIPANT = 3;
+	const CHAIR = 4;
 	/**
 	 * Attendee role mapping
 	 */

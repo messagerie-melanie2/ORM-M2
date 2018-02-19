@@ -451,7 +451,30 @@ class Recurrence extends Melanie2Object {
       // Tableau permettant de recuperer toutes les valeurs de la recurrence
       $recurrence = json_decode($this->objectmelanie->recurrence_json, true);
       if (isset($recurrence[ICS::UNTIL]) && is_array($recurrence[ICS::UNTIL])) {
-        $recurrence[ICS::UNTIL] = new \DateTime($recurrence[ICS::UNTIL]['date'], new \DateTimeZone($recurrence[ICS::UNTIL]['timezone']));
+        try {
+          if (isset($recurrence[ICS::UNTIL]["timezone_type"]) && isset($recurrence[ICS::UNTIL]['timezone'])) {
+            switch ($recurrence[ICS::UNTIL]["timezone_type"]) {
+              case 1:
+                $recurrence[ICS::UNTIL] = \DateTime::createFromFormat("Y-m-d H:i:s.u O", $recurrence[ICS::UNTIL]['date'] . " " . $recurrence[ICS::UNTIL]['timezone']);
+              case 2:
+                $recurrence[ICS::UNTIL] = \DateTime::createFromFormat("Y-m-d H:i:s.u T", $recurrence[ICS::UNTIL]['date'] . " " . $recurrence[ICS::UNTIL]['timezone']);
+                break;
+              case 3:
+              default:
+                $recurrence[ICS::UNTIL] = \DateTime::createFromFormat("Y-m-d H:i:s.u", $recurrence[ICS::UNTIL]['date'], new \DateTimeZone($recurrence[ICS::UNTIL]['timezone']));
+                break;
+            }
+          }
+          else if (isset($recurrence[ICS::UNTIL]["timezone"])) {          
+            $recurrence[ICS::UNTIL] = new \DateTime($recurrence[ICS::UNTIL]['date'], new \DateTimeZone($recurrence[ICS::UNTIL]['timezone']));          
+          }
+          else {
+            $recurrence[ICS::UNTIL] = new \DateTime($recurrence[ICS::UNTIL]['date']);
+          }         
+        }
+        catch (\Exception $ex) {
+          $recurrence[ICS::UNTIL] = new \DateTime($recurrence[ICS::UNTIL]['date']);
+        }
       }
       if (isset($recurrence[ICS::BYDAY]) && is_array($recurrence[ICS::BYDAY])) {
         $recurrence[ICS::BYDAY] = implode(',', $recurrence[ICS::BYDAY]);

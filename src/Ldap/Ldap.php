@@ -242,7 +242,7 @@ class Ldap {
 	}
 
 	/**
-	 * Return les boites partagées accessible pour un utilisateur depuis le LDAP
+	 * Retourne les boites partagées accessible pour un utilisateur depuis le LDAP
 	 * @param string $username Identifiant de l'utilisateur recherché
 	 * @param string $filter [Optionnel] Filtre ldap à utiliser pour la recherche
 	 * @param array $ldap_attr [Optionnel] Liste des attributs ldap à retourner
@@ -289,7 +289,7 @@ class Ldap {
 	    return $infos;
 	}
 	/**
-	 * Return les boites partagées accessible pour un utilisateur depuis le LDAP
+	 * Retourne les boites partagées accessible en Emission ou Gestionnaire pour un utilisateur depuis le LDAP
 	 * @param string $username Identifiant de l'utilisateur recherché
 	 * @param string $filter [Optionnel] Filtre ldap à utiliser pour la recherche
 	 * @param array $ldap_attr [Optionnel] Liste des attributs ldap à retourner
@@ -336,7 +336,7 @@ class Ldap {
 	    return $infos;
 	}
 	/**
-	 * Retourne les boites dont l'utilisateur est gestionnaire
+	 * Retourne les boites partagées dont l'utilisateur est gestionnaire
 	 * @param string $username Identifiant de l'utilisateur recherché
 	 * @param string $filter [Optionnel] Filtre ldap à utiliser pour la recherche
 	 * @param array $ldap_attr [Optionnel] Liste des attributs ldap à retourner
@@ -384,7 +384,7 @@ class Ldap {
 	}
 
 	/**
-	 * Return les informations sur un utilisateur depuis son adresse email depuis le LDAP
+	 * Retourne les informations sur un utilisateur depuis son adresse email depuis le LDAP
 	 * @param string $email Adresse email de l'utilisateur
 	 * @param string $filter [Optionnel] Filtre ldap à utiliser pour la recherche
 	 * @param array $ldap_attr [Optionnel] Liste des attributs ldap à retourner

@@ -1,3 +1,8 @@
+ORM M2 - 0.4.0.4
+------
+- Ajout du getList dans la classe UserPrefs
+- Ajout des docs générés par ApiGen
+
 ORM M2 - 0.4.0.3
 ------
 - 0004869: Support du ROLE CHAIR pour les participants

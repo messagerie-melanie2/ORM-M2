@@ -49,7 +49,7 @@ class UserPrefs extends Melanie2Object {
    * 
    * @param UserMelanie $usermelanie          
    */
-  function __construct($usermelanie) {
+  function __construct($usermelanie = null) {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
@@ -58,6 +58,64 @@ class UserPrefs extends Melanie2Object {
     $this->objectmelanie = new ObjectMelanie('UserPrefs');
     
     // Définition des objets associés
+    if (isset($usermelanie)) {
+      $this->objectmelanie->user = $usermelanie->uid;
+    }
+  }
+  
+  /**
+   * Défini l'utilisateur Melanie
+   *
+   * @param UserMelanie $usermelanie
+   * @ignore
+   *
+   */
+  function setUserMelanie($usermelanie) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
     $this->objectmelanie->user = $usermelanie->uid;
+  }
+  
+  /**
+   * ***************************************************
+   * METHOD MAPPING
+   */
+  /**
+   * Permet de récupérer la liste d'objet en utilisant les données passées
+   * (la clause where s'adapte aux données)
+   * Il faut donc peut être sauvegarder l'objet avant d'appeler cette méthode
+   * pour réinitialiser les données modifiées (propriété haschanged)
+   *
+   * @param String[] $fields
+   *          Liste les champs à récupérer depuis les données
+   * @param String $filter
+   *          Filtre pour la lecture des données en fonction des valeurs déjà passé, exemple de filtre : "((#description# OR #title#) AND #start#)"
+   * @param String[] $operators
+   *          Liste les propriétés par operateur (MappingMelanie::like, MappingMelanie::supp, MappingMelanie::inf, MappingMelanie::diff)
+   * @param String $orderby
+   *          Tri par le champ
+   * @param bool $asc
+   *          Tri ascendant ou non
+   * @param int $limit
+   *          Limite le nombre de résultat (utile pour la pagination)
+   * @param int $offset
+   *          Offset de début pour les résultats (utile pour la pagination)
+   * @param String[] $case_unsensitive_fields
+   *          Liste des champs pour lesquels on ne sera pas sensible à la casse
+   * @return UserPrefs[] Array
+   */
+  function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getList()");
+    $_userprefs = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields);
+    if (!isset($_userprefs))
+      return null;
+    $userprefs = [];
+    foreach ($_userprefs as $_userpref) {
+      $userpref = new UserPrefs();
+      $userpref->setObjectMelanie($_userpref);
+      $userprefs[] = $userpref;
+    }
+    // TODO: Test - Nettoyage mémoire
+    //gc_collect_cycles();
+    return $userprefs;
   }
 }

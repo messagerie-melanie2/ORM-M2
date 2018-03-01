@@ -69,7 +69,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 		if (!isset($this->id)) return false;
 		if (!isset($this->user_uid)) return false;
 		// Test si l'objet existe, pas besoin de load
-		if (is_bool($this->isExist)) {
+		if (is_bool($this->isExist) && $this->isLoaded) {
 		  return $this->isExist;
 		}
 		$query = Sql\SqlMelanieRequests::listObjectsByUid;
@@ -97,6 +97,8 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 		if ($this->isExist) {
 			$this->initializeHasChanged();
 		}
+		// Les données sont chargées
+		$this->isLoaded = true;
 		return $this->isExist;
 	}
 

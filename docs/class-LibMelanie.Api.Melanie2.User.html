@@ -7,7 +7,7 @@
 	<title>Class LibMelanie\Api\Melanie2\User</title>
 
 	<script type="text/javascript" src="resources/combined.js?117538352"></script>
-	<script type="text/javascript" src="elementlist.js?3165602532"></script>
+	<script type="text/javascript" src="elementlist.js?3426988527"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360">
 
 </head>
@@ -67,6 +67,7 @@
 				<li><a href="class-LibMelanie.Api.Melanie2.Event.html">Event</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.EventProperty.html">EventProperty</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.Exception.html">Exception</a></li>
+				<li><a href="class-LibMelanie.Api.Melanie2.ObjectShare.html">ObjectShare</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.Organizer.html">Organizer</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.Recurrence.html">Recurrence</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.Share.html">Share</a></li>
@@ -159,7 +160,7 @@
 				PNE Messagerie/Apitech<br>
 				<b>Api</b>
 				<br>
-		<b>Located at</b> <a href="source-class-LibMelanie.Api.Melanie2.User.html#24-250" title="Go to source code">Api/Melanie2/User.php</a><br>
+		<b>Located at</b> <a href="source-class-LibMelanie.Api.Melanie2.User.html#24-326" title="Go to source code">Api/Melanie2/User.php</a><br>
 	</div>
 
 
@@ -177,7 +178,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#36-46" title="Go to source code">__construct</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#76-86" title="Go to source code">__construct</a>( )</code>
 
 		<div class="description short">
 			
@@ -199,37 +200,36 @@
 		</div>
 		</div></td>
 	</tr>
-	<tr data-order="setMapUid" id="_setMapUid">
+	<tr data-order="getObjectsShared" id="_getObjectsShared">
 
 		<td class="attributes"><code>
-			 protected 
-			
+			 public 
+			<code><a href="class-LibMelanie.Api.Melanie2.ObjectShare.html">LibMelanie\Api\Melanie2\ObjectShare</a>[]</code>
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
-		<a class="anchor" href="#_setMapUid">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#52-62" title="Go to source code">setMapUid</a>( <span>string <var>$uid</var></span> )</code>
+		<a class="anchor" href="#_getObjectsShared">#</a>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#92-106" title="Go to source code">getObjectsShared</a>( )</code>
 
 		<div class="description short">
 			
-<p>Mapping uid field</p>
+<p>Récupère la liste des objets de partage accessibles à l'utilisateur</p>
 
 		</div>
 
 		<div class="description detailed hidden">
 			
-<p>Mapping uid field</p>
+<p>Récupère la liste des objets de partage accessibles à l'utilisateur</p>
 
 
 
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$uid</var></dt>
-					<dd><code>string</code><br>$uid</dd>
-				</dl></div>
 
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-LibMelanie.Api.Melanie2.ObjectShare.html">LibMelanie\Api\Melanie2\ObjectShare</a>[]</code></code><br>Liste d'objets<br>
+				</div>
 
 
 
@@ -237,32 +237,38 @@
 		</div>
 		</div></td>
 	</tr>
-	<tr data-order="getMapUid" id="_getMapUid">
+	<tr data-order="getObjectsSharedEmission" id="_getObjectsSharedEmission">
 
 		<td class="attributes"><code>
-			 protected 
-			
+			 public 
+			<code><a href="class-LibMelanie.Api.Melanie2.ObjectShare.html">LibMelanie\Api\Melanie2\ObjectShare</a>[]</code>
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
-		<a class="anchor" href="#_getMapUid">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#63-71" title="Go to source code">getMapUid</a>( )</code>
+		<a class="anchor" href="#_getObjectsSharedEmission">#</a>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#107-121" title="Go to source code">getObjectsSharedEmission</a>( )</code>
 
 		<div class="description short">
 			
-<p>Mapping uid field</p>
+<p>Récupère la liste des objets de partage accessibles au moins en émission
+à l'utilisateur</p>
 
 		</div>
 
 		<div class="description detailed hidden">
 			
-<p>Mapping uid field</p>
+<p>Récupère la liste des objets de partage accessibles au moins en émission
+à l'utilisateur</p>
 
 
 
 
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-LibMelanie.Api.Melanie2.ObjectShare.html">LibMelanie\Api\Melanie2\ObjectShare</a>[]</code></code><br>Liste d'objets<br>
+				</div>
 
 
 
@@ -270,70 +276,38 @@
 		</div>
 		</div></td>
 	</tr>
-	<tr data-order="setMapEmail" id="_setMapEmail">
+	<tr data-order="getObjectsSharedGestionnaire" id="_getObjectsSharedGestionnaire">
 
 		<td class="attributes"><code>
-			 protected 
-			
+			 public 
+			<code><a href="class-LibMelanie.Api.Melanie2.ObjectShare.html">LibMelanie\Api\Melanie2\ObjectShare</a>[]</code>
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
-		<a class="anchor" href="#_setMapEmail">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#73-83" title="Go to source code">setMapEmail</a>( <span>string <var>$email</var></span> )</code>
+		<a class="anchor" href="#_getObjectsSharedGestionnaire">#</a>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#122-136" title="Go to source code">getObjectsSharedGestionnaire</a>( )</code>
 
 		<div class="description short">
 			
-<p>Mapping email field</p>
+<p>Récupère la liste des objets de partage accessibles en gestionnaire à
+l'utilisateur</p>
 
 		</div>
 
 		<div class="description detailed hidden">
 			
-<p>Mapping email field</p>
-
-
-
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$email</var></dt>
-					<dd><code>string</code><br>$email</dd>
-				</dl></div>
+<p>Récupère la liste des objets de partage accessibles en gestionnaire à
+l'utilisateur</p>
 
 
 
 
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="getMapEmail" id="_getMapEmail">
-
-		<td class="attributes"><code>
-			 protected 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_getMapEmail">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#84-92" title="Go to source code">getMapEmail</a>( )</code>
-
-		<div class="description short">
-			
-<p>Mapping email field</p>
-
-		</div>
-
-		<div class="description detailed hidden">
-			
-<p>Mapping email field</p>
-
-
-
-
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-LibMelanie.Api.Melanie2.ObjectShare.html">LibMelanie\Api\Melanie2\ObjectShare</a>[]</code></code><br>Liste d'objets<br>
+				</div>
 
 
 
@@ -352,7 +326,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getDefaultCalendar">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#98-111" title="Go to source code">getDefaultCalendar</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#137-150" title="Go to source code">getDefaultCalendar</a>( )</code>
 
 		<div class="description short">
 			
@@ -389,7 +363,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getUserCalendars">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#112-129" title="Go to source code">getUserCalendars</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#151-168" title="Go to source code">getUserCalendars</a>( )</code>
 
 		<div class="description short">
 			
@@ -426,7 +400,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getSharedCalendars">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#130-147" title="Go to source code">getSharedCalendars</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#169-186" title="Go to source code">getSharedCalendars</a>( )</code>
 
 		<div class="description short">
 			
@@ -465,7 +439,7 @@ partagés</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getDefaultTaskslist">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#149-162" title="Go to source code">getDefaultTaskslist</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#188-201" title="Go to source code">getDefaultTaskslist</a>( )</code>
 
 		<div class="description short">
 			
@@ -502,7 +476,7 @@ partagés</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getUserTaskslists">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#163-180" title="Go to source code">getUserTaskslists</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#202-219" title="Go to source code">getUserTaskslists</a>( )</code>
 
 		<div class="description short">
 			
@@ -539,7 +513,7 @@ partagés</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getSharedTaskslists">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#181-198" title="Go to source code">getSharedTaskslists</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#220-237" title="Go to source code">getSharedTaskslists</a>( )</code>
 
 		<div class="description short">
 			
@@ -578,7 +552,7 @@ sont partagés</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getDefaultAddressbook">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#200-213" title="Go to source code">getDefaultAddressbook</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#239-252" title="Go to source code">getDefaultAddressbook</a>( )</code>
 
 		<div class="description short">
 			
@@ -615,7 +589,7 @@ sont partagés</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getUserAddressbooks">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#214-231" title="Go to source code">getUserAddressbooks</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#253-270" title="Go to source code">getUserAddressbooks</a>( )</code>
 
 		<div class="description short">
 			
@@ -652,7 +626,7 @@ sont partagés</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getSharedAddressbooks">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#232-249" title="Go to source code">getSharedAddressbooks</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#271-288" title="Go to source code">getSharedAddressbooks</a>( )</code>
 
 		<div class="description short">
 			
@@ -680,6 +654,80 @@ sont partagés</p>
 		</div>
 		</div></td>
 	</tr>
+	<tr data-order="getMapServer_Host" id="_getMapServer_Host">
+
+		<td class="attributes"><code>
+			 protected 
+			mixed|null
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMapServer_Host">#</a>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#294-309" title="Go to source code">getMapServer_Host</a>( )</code>
+
+		<div class="description short">
+			
+<p>Récupération du champ server_host</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Récupération du champ server_host</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed|null</code><br>Valeur du serveur host, null si non trouvé<br>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getMapServer_User" id="_getMapServer_User">
+
+		<td class="attributes"><code>
+			 protected 
+			mixed|null
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMapServer_User">#</a>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#310-325" title="Go to source code">getMapServer_User</a>( )</code>
+
+		<div class="description short">
+			
+<p>Récupération du champ server_user</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Récupération du champ server_user</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed|null</code><br>Valeur du serveur user, null si non trouvé<br>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
 	</table>
 
 
@@ -697,17 +745,17 @@ sont partagés</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#m_getTimezone">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#33" title="Go to source code">getTimezone</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#70" title="Go to source code">getTimezone</a>( )</code>
 
 		<div class="description short">
 			
-<p>Chargement l'évènement, en fonction du taskslist et de l'uid</p>
+<p>[OSOLETE] Chargement du timezone de l'utilisateur</p>
 
 		</div>
 
 		<div class="description detailed hidden">
 			
-<p>Chargement l'évènement, en fonction du taskslist et de l'uid</p>
+<p>[OSOLETE] Chargement du timezone de l'utilisateur</p>
 
 
 
@@ -715,6 +763,114 @@ sont partagés</p>
 				<h4>Returns</h4>
 				<div class="list">
 					<code>string</code><br>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="authentification" id="m_authentification">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_authentification">#</a>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#71" title="Go to source code">authentification</a>( <span>mixed <var>$password</var> = </span> )</code>
+
+		<div class="description short">
+			
+<p>Authentification de l'utilisateur sur l'annuaire Mélanie2</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Authentification de l'utilisateur sur l'annuaire Mélanie2</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$password</var></dt>
+					<dd><code>mixed</code><br>$password</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="load" id="m_load">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_load">#</a>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#72" title="Go to source code">load</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="exists" id="m_exists">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#m_exists">#</a>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.User.html#73" title="Go to source code">exists</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br>
 				</div>
 
 
@@ -773,6 +929,58 @@ sont partagés</p>
 			</div>
 		</div></td>
 	</tr>
+	<tr data-order="fullname" id="m$fullname">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#32" title="Go to source code"><var>$fullname</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$fullname" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Nom complet de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Nom complet de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="name" id="m$name">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#33" title="Go to source code"><var>$name</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$name" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Nom de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Nom de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
 	<tr data-order="email" id="m$email">
 		<td class="attributes"><code>
 			public  
@@ -780,20 +988,908 @@ sont partagés</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.User.html#32" title="Go to source code"><var>$email</var></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#34" title="Go to source code"><var>$email</var></a>
 		</td>
 		<td class="description"><div>
 			<a href="#m$email" class="anchor">#</a>
 
 			<div class="description short">
 				
-<p>Adresse email de l'utilisateur</p>
+<p>Adresse email principale de l'utilisateur</p>
 
 			</div>
 
 			<div class="description detailed hidden">
 				
-<p>Adresse email de l'utilisateur</p>
+<p>Adresse email principale de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="email_list" id="m$email_list">
+		<td class="attributes"><code>
+			public  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#35" title="Go to source code"><var>$email_list</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$email_list" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Liste de toutes les adresses email de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Liste de toutes les adresses email de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="email_send" id="m$email_send">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#36" title="Go to source code"><var>$email_send</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$email_send" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Adresse email d'émission principale de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Adresse email d'émission principale de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="email_send_list" id="m$email_send_list">
+		<td class="attributes"><code>
+			public  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#37" title="Go to source code"><var>$email_send_list</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$email_send_list" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Liste de toutes les adresses email d'émission de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Liste de toutes les adresses email d'émission de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="password_need_change" id="m$password_need_change">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#38" title="Go to source code"><var>$password_need_change</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$password_need_change" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Est-ce que le mot de passe doit changer et pour quelle raison ? (Si la chaine
+n'est pas vide, le mot de passe doit changer)</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Est-ce que le mot de passe doit changer et pour quelle raison ? (Si la chaine
+n'est pas vide, le mot de passe doit changer)</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="shares" id="m$shares">
+		<td class="attributes"><code>
+			public  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#39" title="Go to source code"><var>$shares</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$shares" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Liste des partages de la boite (format &lt;uid&gt;:&lt;droit&gt;)</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Liste des partages de la boite (format &lt;uid&gt;:&lt;droit&gt;)</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="away_response" id="m$away_response">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#40" title="Go to source code"><var>$away_response</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$away_response" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Message d'absence de l'utilisateur (TODO: Objet pour traiter la syntaxe)</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Message d'absence de l'utilisateur (TODO: Objet pour traiter la syntaxe)</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="internet_access_admin" id="m$internet_access_admin">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#41" title="Go to source code"><var>$internet_access_admin</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$internet_access_admin" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Accés Internet positionné par l'administrateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Accés Internet positionné par l'administrateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="internet_access_user" id="m$internet_access_user">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#42" title="Go to source code"><var>$internet_access_user</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$internet_access_user" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Accés Internet positionné par l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Accés Internet positionné par l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="use_photo_ader" id="m$use_photo_ader">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#43" title="Go to source code"><var>$use_photo_ader</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$use_photo_ader" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Photo utilisable sur le réseau ADER (RIE)</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Photo utilisable sur le réseau ADER (RIE)</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="use_photo_intranet" id="m$use_photo_intranet">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#44" title="Go to source code"><var>$use_photo_intranet</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$use_photo_intranet" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Photo utilisable sur le réseau Intranet</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Photo utilisable sur le réseau Intranet</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="service" id="m$service">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#45" title="Go to source code"><var>$service</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$service" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Service de l'utilisateur dans l'annuaire Mélanie2</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Service de l'utilisateur dans l'annuaire Mélanie2</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="employee_number" id="m$employee_number">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#46" title="Go to source code"><var>$employee_number</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$employee_number" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Champ RH</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Champ RH</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="zone" id="m$zone">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#47" title="Go to source code"><var>$zone</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$zone" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Zone de diffusion de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Zone de diffusion de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="street" id="m$street">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#48" title="Go to source code"><var>$street</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$street" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Adresse - Rue de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Adresse - Rue de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="postalcode" id="m$postalcode">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#49" title="Go to source code"><var>$postalcode</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$postalcode" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Adresse - Code postal de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Adresse - Code postal de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="locality" id="m$locality">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#50" title="Go to source code"><var>$locality</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$locality" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Adresse - Ville de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Adresse - Ville de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="info" id="m$info">
+		<td class="attributes"><code>
+			public  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#51" title="Go to source code"><var>$info</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$info" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Champ d'information de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Champ d'information de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="description" id="m$description">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#52" title="Go to source code"><var>$description</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$description" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Description de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Description de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="phonenumber" id="m$phonenumber">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#53" title="Go to source code"><var>$phonenumber</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$phonenumber" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Numéro de téléphone de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Numéro de téléphone de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="faxnumber" id="m$faxnumber">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#54" title="Go to source code"><var>$faxnumber</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$faxnumber" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Numéro de fax de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Numéro de fax de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="mobilephone" id="m$mobilephone">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#55" title="Go to source code"><var>$mobilephone</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$mobilephone" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Numéro de mobile de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Numéro de mobile de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="roomnumber" id="m$roomnumber">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#56" title="Go to source code"><var>$roomnumber</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$roomnumber" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Numéro de bureau de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Numéro de bureau de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="title" id="m$title">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#57" title="Go to source code"><var>$title</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$title" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Titre de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Titre de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="business_category" id="m$business_category">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#58" title="Go to source code"><var>$business_category</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$business_category" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Catégorie professionnelle de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Catégorie professionnelle de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="vpn_profile" id="m$vpn_profile">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#59" title="Go to source code"><var>$vpn_profile</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$vpn_profile" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Profil VPN de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Profil VPN de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="update_personnal_info" id="m$update_personnal_info">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#60" title="Go to source code"><var>$update_personnal_info</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$update_personnal_info" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Est-ce que l'utilisateur a le droit de mettre à jour ses informations
+personnelles</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Est-ce que l'utilisateur a le droit de mettre à jour ses informations
+personnelles</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="server_routage" id="m$server_routage">
+		<td class="attributes"><code>
+			public  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#61" title="Go to source code"><var>$server_routage</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$server_routage" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Champ de routage pour le serveur de message de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Champ de routage pour le serveur de message de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="synchro_access_admin" id="m$synchro_access_admin">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#64" title="Go to source code"><var>$synchro_access_admin</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$synchro_access_admin" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Accés synchronisation mobile positionné par l'administrateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Accés synchronisation mobile positionné par l'administrateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="synchro_access_user" id="m$synchro_access_user">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#65" title="Go to source code"><var>$synchro_access_user</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$synchro_access_user" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Accés synchronisation mobile positionné par l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Accés synchronisation mobile positionné par l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="mission" id="m$mission">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#66" title="Go to source code"><var>$mission</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$mission" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Mission de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Mission de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="photo" id="m$photo">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#67" title="Go to source code"><var>$photo</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$photo" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Photo de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Photo de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="gender" id="m$gender">
+		<td class="attributes"><code>
+			public  
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#68" title="Go to source code"><var>$gender</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$gender" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Genre de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Genre de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="server_host" id="m$server_host">
+		<td class="attributes"><code>
+			public  read-only
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#62" title="Go to source code"><var>$server_host</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$server_host" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Host du serveur de messagerie de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Host du serveur de messagerie de l'utilisateur</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="server_user" id="m$server_user">
+		<td class="attributes"><code>
+			public  read-only
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.User.html#63" title="Go to source code"><var>$server_user</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$server_user" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>User du serveur de messagerie de l'utilisateur</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>User du serveur de messagerie de l'utilisateur</p>
 
 
 			</div>

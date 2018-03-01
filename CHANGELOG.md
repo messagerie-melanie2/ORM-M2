@@ -1,3 +1,9 @@
+ORM M2 - 0.4.0.5
+------
+- 0003624: Ajouter des attributs LDAP dans l'objet Melanie2\User
+- Ajout des URL CalDAV et CardDAV dans les conteneurs
+- Mise à jour du docs
+
 ORM M2 - 0.4.0.4
 ------
 - Ajout du getList dans la classe UserPrefs

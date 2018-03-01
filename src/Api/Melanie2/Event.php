@@ -1011,7 +1011,7 @@ class Event extends Melanie2Object {
    * @return boolean
    */
   private function useNewMode() {
-    return defined('ConfigMelanie::USE_NEW_MODE') && ConfigMelanie::USE_NEW_MODE;
+    return defined('\LibMelanie\Config\ConfigMelanie::USE_NEW_MODE') && ConfigMelanie::USE_NEW_MODE;
   }
   /**
    * Mapping uid field

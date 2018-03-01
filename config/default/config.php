@@ -26,74 +26,157 @@ namespace LibMelanie\Config;
  */
 class ConfigMelanie {
   /**
-   * Configuration du cache
+   * Configuraton du mode ORM
+   * false = Ancien schéma Horde
+   * true = Nouveau schéma Mélanie2
+   * @var boolean
    */
-  // Le cache est utilisé
+  const USE_NEW_MODE = false;
+  
+  /** Configuration générale */
+  /**
+   * Configuration du nom de l'application pour la table Histories
+   * @var string
+   */
+  const APP_NAME = 'App Name';
+  /**
+   * Authoriser le s'inviter dans l'agenda
+   * @var boolean
+   */
+  const SELF_INVITE = true;
+  /**
+   * Calendar default timezone
+   * @var string
+   */
+  const CALENDAR_DEFAULT_TIMEZONE = "Europe/Paris";
+  /**
+   * Configuration de l'URL CalDAV pour les calendriers
+   * %o -> owner du calendrier
+   * %u -> utilisateur courant
+   * %i -> identifiant du calendrier
+   * @var string
+   */
+  const CALENDAR_CALDAV_URL = "http://monserveur.com/calendars.php/calendars/%o/%i/";
+  /**
+   * Configuration de l'URL CalDAV pour les listes de tâches
+   * %o -> owner de la liste de tâches
+   * %u -> utilisateur courant
+   * %i -> identifiant de la liste de tâches
+   * @var string
+   */
+  const TASKSLIST_CALDAV_URL = "http://monserveur.com/taskslist.php/taskslist/%o/%i/";
+  /**
+   * Configuration de l'URL CardDAV pour les carnets d'adresses
+   * %o -> owner du carnet d'adresses
+   * %u -> utilisateur courant
+   * %i -> identifiant du carnets d'adresses
+   * @var string
+   */
+  const ADDRESSBOOK_CARDDAV_URL = "http://monserveur.com/contacts.php/contacts/%u/%i/";
+  /**
+   * Chemin par défaut du stockage des pièces jointes
+   * @var string
+   */
+  const DEFAULT_ATTACHMENTS_FOLDER = ".documents";
+  /**
+   * Chemin par défaut du stockage des pièces jointes pour les événements
+   * @var string
+   */
+  const ATTACHMENTS_EVENT_FOLDER = self::DEFAULT_ATTACHMENTS_FOLDER;
+  /**
+   * Stockage des pièces jointes dans un événement
+   * %e -> uid de l'évènement
+   * %u -> uid de l'utilisateur owner de l'évènement
+   * %c -> uid du calendrier contenant les pièces jointes
+   * @var string
+   */
+  const ATTACHMENTS_CALENDAR_FOLDER = ".documents/%e";
+  /**
+   * Stockage des pièces jointes dans un événement pour un calendrier
+   * %e -> uid de l'évènement
+   * %u -> uid de l'utilisateur owner de l'évènement
+   * %c -> uid du calendrier contenant les pièces jointes
+   * @var string
+   */
+  const ATTACHMENTS_PATH = ".documents/%e/%c";
+  /**
+   * URL pour le téléchargement automatique d'une pièce jointe
+   * %f -> nom du fichier/de la pièce jointe
+   * %p -> chemin relatif vers la pièce jointe (sans le DEFAULT_ATTACHMENTS_FOLDER défini plus haut)
+   * @var string
+   */
+  const ATTACHMENT_DOWNLOAD_URL = "http://monserveur.com/download/?action=download_file&file=%f&vfsKey=%p&fn=%f";
+  
+  /** Configuration du cache */
+  /**
+   * Activer le cache
+   * @var boolean
+   */
   const CACHE_ENABLED = false;
-  // Durée de stockage en cache (en sec)
+  /**
+   * Durée de stockage en cache (en sec)
+   * @var integer
+   */
   const CACHE_DELAY = 180;
-  // Type de Cache 'php' ou 'memcache'
+  /**
+   * Type de Cache 'php' ou 'memcache'
+   * @var string
+   */
   const CACHE_TYPE = 'memcache';
-  // Host vers memcache
+  /**
+   * Host vers le/les serveur(s) memcache
+   * @var string
+   */
   const CACHE_MEMCACHE_HOST = 'localhost:11211';
   
-  // S'inviter autoriser
-  const SELF_INVITE = true;
-  
-  // Generic config
+  /* Informations générales (normalement des changements ne sont pas nécessaire */
   const ATTRIBUTE_OWNER = 'owner';
   const ATTRIBUTE_NAME_NAME = 'name';
   const ATTRIBUTE_NAME_PERM = 'perm_users';
   const ATTRIBUTE_NAME_PERMGROUP = 'perm_usersfg';
   const PREF_SCOPE = 'horde';
-  const TZ_PREF_NAME = 'timezone';
-  
-  // Configuration du nom de l'application pour la table Histories
-  const APP_NAME = 'Z-Push';
-  
-  // General config
+  const TZ_PREF_NAME = 'timezone'; 
   const GENERAL_PREF_SCOPE = "horde";
   
-  // Calendar config
+  /* Calendar config */
   const CALENDAR_PREF_SCOPE = "kronolith";
   const CALENDAR_GROUP_UID = 'horde.shares.kronolith';
   const CALENDAR_PREF_DEFAULT_NAME = "default_share";
-  const CALENDAR_DEFAULT_TIMEZONE = "Europe/Paris";
   
-  // Tasklist config
+  /* Tasklist config */
   const TASKSLIST_PREF_SCOPE = "nag";
   const TASKSLIST_GROUP_UID = 'horde.shares.nag';
-  const TASKSLIST_PREF_DEFAULT_NAME = "default_tasklist";
+  const TASKSLIST_PREF_DEFAULT_NAME = "default_tasklist"; 
   
-  // Addressbook config
+  /* Addressbook config */
   const ADDRESSBOOK_PREF_SCOPE = "turba";
   const ADDRESSBOOK_GROUP_UID = 'horde.shares.turba';
-  const ADDRESSBOOK_PREF_DEFAULT_NAME = "default_dir";
+  const ADDRESSBOOK_PREF_DEFAULT_NAME = "default_dir"; 
   
-  // History config
+  /* History config */
   const HISTORY_ADD = "add";
   const HISTORY_MODIFY = "modify";
   const HISTORY_DELETE = "delete";
   
-  // ACL config
+  /* ACL config */
   const PRIV = "private";
   const FREEBUSY = "freebusy";
   const READ = "read";
   const DELETE = "delete";
   const WRITE = "write";
   
-  // Class configuration
-  // const PRIV = "private"; // -> see ACL
+  /* Class configuration */
+  // const PRIV = "private";
   const PUB = "public";
   const CONFIDENTIAL = "confidential";
   
-  // Status configuration
+  /* Status configuration */
   const TENTATIVE = "tentative";
   const CONFIRMED = "confirmed";
   const CANCELLED = "cancelled";
   const NONE = "none";
   
-  // Recurrence days
+  /* Recurrence days */
   const NODAY = "";
   const SUNDAY = "SU";
   const MONDAY = "MO";
@@ -103,7 +186,7 @@ class ConfigMelanie {
   const FRIDAY = "FR";
   const SATURDAY = "SA";
   
-  // Recurrence type
+  /* Recurrence type */
   const NORECUR = "";
   const DAILY = "daily";
   const WEEKLY = "weekly";
@@ -112,7 +195,7 @@ class ConfigMelanie {
   const YEARLY = "yearly";
   const YEARLY_BYDAY = "yearly_by_day";
   
-  // Attendee status
+  /* Attendee status */
   const RESPONSE = "response";
   const NEED_ACTION = "need_action";
   const ACCEPTED = "accepted";
@@ -120,7 +203,7 @@ class ConfigMelanie {
   const IN_PROCESS = "in_process";
   // const TENTATIVE = "tentative"; // -> see Status
   
-  // Attendee role
+  /* Attendee role */
   const ROLE = "attendance";
   const CHAIR = "chair";
   const REQ_PARTICIPANT = "req_participant";
@@ -128,7 +211,7 @@ class ConfigMelanie {
   const NON_PARTICIPANT = "non_participant";
   const NAME = "name";
   
-  // Priority
+  /* Priority */
   const NO_PRIORITY = "no_priority";
   const VERY_HIGH = "very_high";
   const HIGH = "high";
@@ -136,30 +219,18 @@ class ConfigMelanie {
   const LOW = "low";
   const VERY_LOW = "very_low";
   
-  // VFS Folder
+  /* VFS Folder */
   const TYPE_FILE = 1;
   const TYPE_FOLDER = 2;
   
-  // Completed
+  /* Completed */
   const COMPLETED = "completed";
   const NOTCOMPLETED = "notcompleted";
   
-  // Chemin par défaut du stockage des pièces jointes
-  // %e -> uid de l'évènement
-  // %u -> uid de l'utilisateur owner de l'évènement
-  // %c -> uid du calendrier contenant les pièces jointes
-  const DEFAULT_ATTACHMENTS_FOLDER = ".horde/kronolith/documents";
-  const ATTACHMENTS_EVENT_FOLDER = self::DEFAULT_ATTACHMENTS_FOLDER;
-  const ATTACHMENTS_CALENDAR_FOLDER = ".horde/kronolith/documents/%e";
-  const ATTACHMENTS_PATH = ".horde/kronolith/documents/%e/%c";
-  
-  // URL pour le téléchargement automatique d'une pièce jointe
-  // %f -> nom du fichier/de la pièce jointe
-  // %p -> chemin relatif vers la pièce jointe (sans le DEFAULT_ATTACHMENTS_FOLDER défini plus haut)
-  const ATTACHMENT_DOWNLOAD_URL = "https://melanie2web.melanie2.i2/services/download/?module=kronolith&actionID=download_file&file=%f&vfsKey=%p&fn=%f";
+  /* Content type par défaut */  
   const DEFAULT_ATTACHMENT_CONTENTTYPE = "application/binary";
   
-  // Défini si le timezone doit être ajouté à l'ICS
+  /* Défini si le timezone doit être ajouté à l'ICS */
   const ICS_ADD_TIMEZONE = true;
   
   /**
@@ -175,10 +246,14 @@ class ConfigMelanie {
       self::WRITE => 16
   );
   
-  // Optimisation des prepares statements
+  /**
+   * Optimisation des prepares statements
+   * true pour réutiliser au maximum les prepares statements
+   * @var boolean
+   */
   const REUSE_PREPARE_STATEMENT = true;
   
-  // Gestion des selaformes
+  /** Gestion des selaformes */
   /**
    * Utiliser les selaformes pour protéger les connexions SQL
    * 

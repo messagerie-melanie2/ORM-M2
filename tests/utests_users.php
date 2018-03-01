@@ -46,10 +46,7 @@ if (!defined('CONFIGURATION_APP_LIBM2')) {
 set_include_path(__DIR__.'/..');
 include_once 'includes/libm2.php';
 
-use LibMelanie\Api\Melanie2\User;
 use LibMelanie\Log\M2Log;
-use LibMelanie\Api\Melanie2\UserPrefs;
-use LibMelanie;
 
 
 $log = function ($message) {
@@ -64,17 +61,27 @@ echo "########################\r\n";
 
 // Définition de l'utilisateur
 $user = new LibMelanie\Api\Melanie2\User();
-$user->uid = 'thomas.payen';
+$user->uid = 'thomas.test1';
 
-// Gestion des prefs utilisateur
-$prefs = new LibMelanie\Api\Melanie2\UserPrefs($user);
-$prefs->scope = LibMelanie\Config\ConfigMelanie::GENERAL_PREF_SCOPE;
-$prefs->name = ["categories", "category_colors"];
-
-foreach ($prefs->getList() as $pref) {
-  echo $pref->name . ": " . $pref->value . "\r\n";
+if ($user->load()) {
+  echo "### USER \r\n";
+  echo $user->email . "\r\n";
+  echo $user->fullname . "\r\n";
+  echo $user->server_host . "\r\n";
+  echo "### Fin USER \r\n";
+  
+  if (!$user->authentification("Melanie2!")) {
+    echo "\r\nErreur d'authentification\r\n";
+  }
+  
+  foreach ($user->getObjectsSharedEmission() as $object) {
+    echo "\r\n### BALP \r\n";
+    echo $object->uid . "\r\n";
+    echo $object->fullname . "\r\n";
+    echo $object->mailbox->server_host . "\r\n";
+    echo "### Fin BALP \r\n";
+  }
 }
-
 
 echo "\r\n\r\n";
 echo "#### 1: ".(memory_get_usage()/1024/1024) . ' MiB'." ######\r\n";

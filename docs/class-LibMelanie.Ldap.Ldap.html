@@ -7,7 +7,7 @@
 	<title>Class LibMelanie\Ldap\Ldap</title>
 
 	<script type="text/javascript" src="resources/combined.js?117538352"></script>
-	<script type="text/javascript" src="elementlist.js?3165602532"></script>
+	<script type="text/javascript" src="elementlist.js?3426988527"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360">
 
 </head>
@@ -127,7 +127,7 @@
 
 				<b>Author:</b>
 				PNE Messagerie/Apitech<br>
-		<b>Located at</b> <a href="source-class-LibMelanie.Ldap.Ldap.html#28-726" title="Go to source code">Ldap/Ldap.php</a><br>
+		<b>Located at</b> <a href="source-class-LibMelanie.Ldap.Ldap.html#23-884" title="Go to source code">Ldap/Ldap.php</a><br>
 	</div>
 
 
@@ -145,7 +145,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_GetInstance">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#75-90" title="Go to source code">GetInstance</a>( <span>string <var>$server</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#77-94" title="Go to source code">GetInstance</a>( <span>string <var>$server</var></span> )</code>
 
 		<div class="description short">
 			
@@ -188,7 +188,7 @@ configuration du serveur</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#93-102" title="Go to source code">__construct</a>( <span>string <var>$config</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#99-110" title="Go to source code">__construct</a>( <span>string <var>$config</var></span> )</code>
 
 		<div class="description short">
 			
@@ -226,7 +226,7 @@ configuration du serveur</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#___destruct">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#104-109" title="Go to source code">__destruct</a>( )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#112-117" title="Go to source code">__destruct</a>( )</code>
 
 		<div class="description short">
 			
@@ -259,7 +259,7 @@ configuration du serveur</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_authenticate">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#112-129" title="Go to source code">authenticate</a>( <span>string <var>$dn</var></span>, <span>string <var>$password</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#122-140" title="Go to source code">authenticate</a>( <span>string <var>$dn</var></span>, <span>string <var>$password</var></span> )</code>
 
 		<div class="description short">
 			
@@ -303,7 +303,7 @@ configuration du serveur</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_anonymous">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#131-151" title="Go to source code">anonymous</a>( <span>boolean <var>$force</var> = <span class="php-keyword1">false</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#142-164" title="Go to source code">anonymous</a>( <span>boolean <var>$force</var> = <span class="php-keyword1">false</span></span> )</code>
 
 		<div class="description short">
 			
@@ -345,7 +345,7 @@ configuration du serveur</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_Authentification">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#154-193" title="Go to source code">Authentification</a>( <span>string <var>$username</var></span>, <span>string <var>$password</var></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#169-223" title="Go to source code">Authentification</a>( <span>string <var>$username</var></span>, <span>string <var>$password</var></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span>, <span>boolean <var>$useUserInfos</var> = <span class="php-keyword1">false</span></span> )</code>
 
 		<div class="description short">
 			
@@ -367,6 +367,9 @@ configuration du serveur</dd>
 					<dd><code>string</code><br>$password</dd>
 					<dt><var>$server</var></dt>
 					<dd><code>string</code><br>$server [Optionnel] Server LDAP utilisé pour la requête</dd>
+					<dt><var>$useUserInfos</var></dt>
+					<dd><code>boolean</code><br>$useUserInfos [Optionnel] Utiliser la méthode GetUserInfos pour chercher le DN
+(intéressant si les données sont en cache)</dd>
 				</dl></div>
 
 				<h4>Returns</h4>
@@ -391,7 +394,7 @@ configuration du serveur</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_GetUserInfos">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#194-242" title="Go to source code">GetUserInfos</a>( <span>string <var>$username</var></span>, <span>string <var>$filter</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$ldap_attr</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#224-277" title="Go to source code">GetUserInfos</a>( <span>string <var>$username</var></span>, <span>string <var>$filter</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$ldap_attr</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span> )</code>
 
 		<div class="description short">
 			
@@ -441,7 +444,7 @@ qu'une seule entrée</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_GetUserBalPartagees">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#244-290" title="Go to source code">GetUserBalPartagees</a>( <span>string <var>$username</var></span>, <span>string <var>$filter</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$ldap_attr</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#279-330" title="Go to source code">GetUserBalPartagees</a>( <span>string <var>$username</var></span>, <span>string <var>$filter</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$ldap_attr</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span> )</code>
 
 		<div class="description short">
 			
@@ -491,7 +494,7 @@ LDAP</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_GetUserBalEmission">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#291-337" title="Go to source code">GetUserBalEmission</a>( <span>string <var>$username</var></span>, <span>string <var>$filter</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$ldap_attr</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#331-382" title="Go to source code">GetUserBalEmission</a>( <span>string <var>$username</var></span>, <span>string <var>$filter</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$ldap_attr</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span> )</code>
 
 		<div class="description short">
 			
@@ -541,7 +544,7 @@ utilisateur depuis le LDAP</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_GetUserBalGestionnaire">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#338-384" title="Go to source code">GetUserBalGestionnaire</a>( <span>string <var>$username</var></span>, <span>string <var>$filter</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$ldap_attr</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#383-434" title="Go to source code">GetUserBalGestionnaire</a>( <span>string <var>$username</var></span>, <span>string <var>$filter</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$ldap_attr</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span> )</code>
 
 		<div class="description short">
 			
@@ -589,19 +592,19 @@ utilisateur depuis le LDAP</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_GetUserInfosFromEmail">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#386-433" title="Go to source code">GetUserInfosFromEmail</a>( <span>string <var>$email</var></span>, <span>string <var>$filter</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$ldap_attr</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#436-489" title="Go to source code">GetUserInfosFromEmail</a>( <span>string <var>$email</var></span>, <span>string <var>$filter</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$ldap_attr</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span> )</code>
 
 		<div class="description short">
 			
 <p>Retourne les informations sur un utilisateur depuis son adresse email depuis
-le LDAP</p>
+le LDAP Ne retourne qu'une seule entrée</p>
 
 		</div>
 
 		<div class="description detailed hidden">
 			
 <p>Retourne les informations sur un utilisateur depuis son adresse email depuis
-le LDAP</p>
+le LDAP Ne retourne qu'une seule entrée</p>
 
 
 
@@ -628,6 +631,54 @@ le LDAP</p>
 		</div>
 		</div></td>
 	</tr>
+	<tr data-order="GetMap" id="_GetMap">
+
+		<td class="attributes"><code>
+			 public static
+			null|string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_GetMap">#</a>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#490-509" title="Go to source code">GetMap</a>( <span>string <var>$name</var></span>, <span>string <var>$defaultValue</var> = <span class="php-keyword1">null</span></span>, <span>string <var>$server</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Retourne le nom du champ mappé configuré pour le serveur LDAP (par défault
+SEARCH)</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Retourne le nom du champ mappé configuré pour le serveur LDAP (par défault
+SEARCH)</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code><br>$name</dd>
+					<dt><var>$defaultValue</var></dt>
+					<dd><code>string</code><br>$defaultValue [Optionnel] valeur par défaut si le mapping n'existe pas</dd>
+					<dt><var>$server</var></dt>
+					<dd><code>string</code><br>$server [Optionnel] Server LDAP utilisé pour la requête</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>null|string</code><br>Nom du champ mappé<br>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
 	<tr data-order="setCache" id="_setCache">
 
 		<td class="attributes"><code>
@@ -639,7 +690,7 @@ le LDAP</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_setCache">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#436-446" title="Go to source code">setCache</a>( <span>string <var>$key</var></span>, <span>multitype <var>$value</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#514-526" title="Go to source code">setCache</a>( <span>string <var>$key</var></span>, <span>multitype <var>$value</var></span> )</code>
 
 		<div class="description short">
 			
@@ -679,7 +730,7 @@ le LDAP</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getCache">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#447-457" title="Go to source code">getCache</a>( <span>string <var>$key</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#527-539" title="Go to source code">getCache</a>( <span>string <var>$key</var></span> )</code>
 
 		<div class="description short">
 			
@@ -721,7 +772,7 @@ le LDAP</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_deleteCache">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#458-465" title="Go to source code">deleteCache</a>( <span>string <var>$key</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#540-548" title="Go to source code">deleteCache</a>( <span>string <var>$key</var></span> )</code>
 
 		<div class="description short">
 			
@@ -759,7 +810,7 @@ le LDAP</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_connect">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#468-477" title="Go to source code">connect</a>( )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#553-563" title="Go to source code">connect</a>( )</code>
 
 		<div class="description short">
 			
@@ -792,7 +843,7 @@ le LDAP</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_disconnect">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#478-488" title="Go to source code">disconnect</a>( )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#564-575" title="Go to source code">disconnect</a>( )</code>
 
 		<div class="description short">
 			
@@ -829,7 +880,7 @@ le LDAP</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_search">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#489-503" title="Go to source code">search</a>( <span>string <var>$base_dn</var></span>, <span>string <var>$filter</var></span>, <span>array <var>$attributes</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$attrsonly</var> = <span class="php-num">0</span></span>, <span>integer <var>$sizelimit</var> = <span class="php-num">0</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#576-596" title="Go to source code">search</a>( <span>string <var>$base_dn</var></span>, <span>string <var>$filter</var></span>, <span>array <var>$attributes</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$attrsonly</var> = <span class="php-num">0</span></span>, <span>integer <var>$sizelimit</var> = <span class="php-num">0</span></span> )</code>
 
 		<div class="description short">
 			
@@ -886,7 +937,7 @@ de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_read">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#504-518" title="Go to source code">read</a>( <span>string <var>$base_dn</var></span>, <span>string <var>$filter</var></span>, <span>array <var>$attributes</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$attrsonly</var> = <span class="php-num">0</span></span>, <span>integer <var>$sizelimit</var> = <span class="php-num">0</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#597-617" title="Go to source code">read</a>( <span>string <var>$base_dn</var></span>, <span>string <var>$filter</var></span>, <span>array <var>$attributes</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$attrsonly</var> = <span class="php-num">0</span></span>, <span>integer <var>$sizelimit</var> = <span class="php-num">0</span></span> )</code>
 
 		<div class="description short">
 			
@@ -943,7 +994,7 @@ de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_ldap_list">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#519-534" title="Go to source code">ldap_list</a>( <span>string <var>$base_dn</var></span>, <span>string <var>$filter</var></span>, <span>array <var>$attributes</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$attrsonly</var> = <span class="php-num">0</span></span>, <span>integer <var>$sizelimit</var> = <span class="php-num">0</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#618-639" title="Go to source code">ldap_list</a>( <span>string <var>$base_dn</var></span>, <span>string <var>$filter</var></span>, <span>array <var>$attributes</var> = <span class="php-keyword1">null</span></span>, <span>integer <var>$attrsonly</var> = <span class="php-num">0</span></span>, <span>integer <var>$sizelimit</var> = <span class="php-num">0</span></span> )</code>
 
 		<div class="description short">
 			
@@ -1004,7 +1055,7 @@ de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_get_entries">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#535-542" title="Go to source code">get_entries</a>( <span>resource <var>$search</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#640-649" title="Go to source code">get_entries</a>( <span>resource <var>$search</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1047,7 +1098,7 @@ on error.<br>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_count_entries">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#543-550" title="Go to source code">count_entries</a>( <span>resource <var>$search</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#650-659" title="Go to source code">count_entries</a>( <span>resource <var>$search</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1089,7 +1140,7 @@ on error.<br>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_first_entry">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#551-559" title="Go to source code">first_entry</a>( <span>resource <var>$search</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#660-671" title="Go to source code">first_entry</a>( <span>resource <var>$search</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1131,7 +1182,7 @@ on error.<br>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_next_entry">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#560-568" title="Go to source code">next_entry</a>( <span>resource <var>$search</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#672-683" title="Go to source code">next_entry</a>( <span>resource <var>$search</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1175,7 +1226,7 @@ it returns false.<br>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_get_dn">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#569-577" title="Go to source code">get_dn</a>( <span>resource <var>$entry</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#684-695" title="Go to source code">get_dn</a>( <span>resource <var>$entry</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1217,7 +1268,7 @@ it returns false.<br>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_mod_add">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#578-589" title="Go to source code">mod_add</a>( <span>string <var>$dn</var></span>, <span>array <var>$entry</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#696-710" title="Go to source code">mod_add</a>( <span>string <var>$dn</var></span>, <span>array <var>$entry</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1265,7 +1316,7 @@ sont réalisées par ldap_add().</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_mod_replace">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#590-601" title="Go to source code">mod_replace</a>( <span>string <var>$dn</var></span>, <span>array <var>$entry</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#711-725" title="Go to source code">mod_replace</a>( <span>string <var>$dn</var></span>, <span>array <var>$entry</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1313,7 +1364,7 @@ sont réalisées par ldap_modify().</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_mod_del">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#602-613" title="Go to source code">mod_del</a>( <span>string <var>$dn</var></span>, <span>array <var>$entry</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#726-740" title="Go to source code">mod_del</a>( <span>string <var>$dn</var></span>, <span>array <var>$entry</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1361,7 +1412,7 @@ sont réalisées par ldap_delete().</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_add">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#614-623" title="Go to source code">add</a>( <span>string <var>$dn</var></span>, <span>array <var>$entry</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#741-753" title="Go to source code">add</a>( <span>string <var>$dn</var></span>, <span>array <var>$entry</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1405,7 +1456,7 @@ sont réalisées par ldap_delete().</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_modify">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#624-634" title="Go to source code">modify</a>( <span>string <var>$dn</var></span>, <span>array <var>$entry</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#754-767" title="Go to source code">modify</a>( <span>string <var>$dn</var></span>, <span>array <var>$entry</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1451,7 +1502,7 @@ La structure de entry est la même que détaillée dans ldap_add().</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_delete">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#635-643" title="Go to source code">delete</a>( <span>string <var>$dn</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#768-778" title="Go to source code">delete</a>( <span>string <var>$dn</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1493,7 +1544,7 @@ La structure de entry est la même que détaillée dans ldap_add().</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_rename">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#644-655" title="Go to source code">rename</a>( <span>string <var>$dn</var></span>, <span>string <var>$newrdn</var></span>, <span>string <var>$newparent</var></span>, <span>boolean <var>$deleteoldrdn</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#779-795" title="Go to source code">rename</a>( <span>string <var>$dn</var></span>, <span>string <var>$newrdn</var></span>, <span>string <var>$newparent</var></span>, <span>boolean <var>$deleteoldrdn</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1542,7 +1593,7 @@ is retained as non-distinguished values of the entry.</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getError">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#656-663" title="Go to source code">getError</a>( )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#796-804" title="Go to source code">getError</a>( )</code>
 
 		<div class="description short">
 			
@@ -1579,7 +1630,7 @@ is retained as non-distinguished values of the entry.</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getConfig">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#666-674" title="Go to source code">getConfig</a>( <span>string <var>$name</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#809-820" title="Go to source code">getConfig</a>( <span>string <var>$name</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1621,7 +1672,7 @@ is retained as non-distinguished values of the entry.</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_setConfig">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#675-682" title="Go to source code">setConfig</a>( <span>string <var>$name</var></span>, <span>string|array <var>$value</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#821-831" title="Go to source code">setConfig</a>( <span>string <var>$name</var></span>, <span>string|array <var>$value</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1661,7 +1712,7 @@ is retained as non-distinguished values of the entry.</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_issetConfig">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#683-690" title="Go to source code">issetConfig</a>( <span>string <var>$name</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#832-841" title="Go to source code">issetConfig</a>( <span>string <var>$name</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1703,7 +1754,7 @@ is retained as non-distinguished values of the entry.</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_issetMapping">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#691-698" title="Go to source code">issetMapping</a>( <span>string <var>$name</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#842-850" title="Go to source code">issetMapping</a>( <span>string <var>$name</var></span> )</code>
 
 		<div class="description short">
 			
@@ -1745,7 +1796,7 @@ is retained as non-distinguished values of the entry.</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getMapping">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#699-711" title="Go to source code">getMapping</a>( <span>string <var>$name</var></span>, <span>string <var>$defaultValue</var> = <span class="php-keyword1">null</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#851-866" title="Go to source code">getMapping</a>( <span>string <var>$name</var></span>, <span>string <var>$defaultValue</var> = <span class="php-keyword1">null</span></span> )</code>
 
 		<div class="description short">
 			
@@ -1789,7 +1840,7 @@ is retained as non-distinguished values of the entry.</dd>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getMappingAttributes">#</a>
-		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#712-725" title="Go to source code">getMappingAttributes</a>( <span>array <var>$attributes</var></span> )</code>
+		<code><a href="source-class-LibMelanie.Ldap.Ldap.html#867-883" title="Go to source code">getMappingAttributes</a>( <span>array <var>$attributes</var></span> )</code>
 
 		<div class="description short">
 			

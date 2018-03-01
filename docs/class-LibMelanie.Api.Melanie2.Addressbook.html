@@ -7,7 +7,7 @@
 	<title>Class LibMelanie\Api\Melanie2\Addressbook</title>
 
 	<script type="text/javascript" src="resources/combined.js?117538352"></script>
-	<script type="text/javascript" src="elementlist.js?3165602532"></script>
+	<script type="text/javascript" src="elementlist.js?3426988527"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360">
 
 </head>
@@ -67,6 +67,7 @@
 				<li><a href="class-LibMelanie.Api.Melanie2.Event.html">Event</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.EventProperty.html">EventProperty</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.Exception.html">Exception</a></li>
+				<li><a href="class-LibMelanie.Api.Melanie2.ObjectShare.html">ObjectShare</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.Organizer.html">Organizer</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.Recurrence.html">Recurrence</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.Share.html">Share</a></li>
@@ -123,7 +124,7 @@
 
 	<div class="description">
 	
-<p>Classe liste de contacts pour Melanie2</p>
+<p>Classe de carnet d'adresses pour Melanie2</p>
 
 	</div>
 
@@ -159,7 +160,7 @@
 				PNE Messagerie/Apitech<br>
 				<b>Api</b>
 				<br>
-		<b>Located at</b> <a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#24-114" title="Go to source code">Api/Melanie2/Addressbook.php</a><br>
+		<b>Located at</b> <a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#25-133" title="Go to source code">Api/Melanie2/Addressbook.php</a><br>
 	</div>
 
 
@@ -177,7 +178,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#55-72" title="Go to source code">__construct</a>( <span>UserMelanie <var>$usermelanie</var> = <span class="php-keyword1">null</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#57-74" title="Go to source code">__construct</a>( <span>UserMelanie <var>$usermelanie</var> = <span class="php-keyword1">null</span></span> )</code>
 
 		<div class="description short">
 			
@@ -215,7 +216,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getAllContacts">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#91-113" title="Go to source code">getAllContacts</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#93-115" title="Go to source code">getAllContacts</a>( )</code>
 
 		<div class="description short">
 			
@@ -241,6 +242,39 @@
 		</div>
 		</div></td>
 	</tr>
+	<tr data-order="getMapCarddavurl" id="_getMapCarddavurl">
+
+		<td class="attributes"><code>
+			 protected 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMapCarddavurl">#</a>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#121-132" title="Go to source code">getMapCarddavurl</a>( )</code>
+
+		<div class="description short">
+			
+<p>Mapping carddavurl field</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Mapping carddavurl field</p>
+
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
 	</table>
 
 
@@ -258,17 +292,17 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#m_load">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#37" title="Go to source code">load</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#39" title="Go to source code">load</a>( )</code>
 
 		<div class="description short">
 			
-<p>Charge les données de la liste de tâche depuis la base de données</p>
+<p>Charge les données du carnet d'adresses depuis la base de données</p>
 
 		</div>
 
 		<div class="description detailed hidden">
 			
-<p>Charge les données de la liste de tâche depuis la base de données</p>
+<p>Charge les données du carnet d'adresses depuis la base de données</p>
 
 
 
@@ -295,17 +329,17 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#m_exists">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#38" title="Go to source code">exists</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#40" title="Go to source code">exists</a>( )</code>
 
 		<div class="description short">
 			
-<p>Test dans la base de données si le carnet d'adresse existe déjà</p>
+<p>Test dans la base de données si le carnet d'adresses existe déjà</p>
 
 		</div>
 
 		<div class="description detailed hidden">
 			
-<p>Test dans la base de données si le carnet d'adresse existe déjà</p>
+<p>Test dans la base de données si le carnet d'adresses existe déjà</p>
 
 
 
@@ -332,17 +366,17 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#m_save">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#39" title="Go to source code">save</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#41" title="Go to source code">save</a>( )</code>
 
 		<div class="description short">
 			
-<p>Création ou modification du carnet d'adresse</p>
+<p>Création ou modification du carnet d'adresses</p>
 
 		</div>
 
 		<div class="description detailed hidden">
 			
-<p>Création ou modification du carnet d'adresse</p>
+<p>Création ou modification du carnet d'adresses</p>
 
 
 
@@ -369,18 +403,18 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#m_delete">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#40" title="Go to source code">delete</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#42" title="Go to source code">delete</a>( )</code>
 
 		<div class="description short">
 			
-<p>Supprimer le carnet d'adresse et toutes ses données de la base de
+<p>Supprimer le carnet d'adresses et toutes ses données de la base de
 données</p>
 
 		</div>
 
 		<div class="description detailed hidden">
 			
-<p>Supprimer le carnet d'adresse et toutes ses données de la base de
+<p>Supprimer le carnet d'adresses et toutes ses données de la base de
 données</p>
 
 
@@ -408,19 +442,19 @@ données</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#m_getCTag">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#41" title="Go to source code">getCTag</a>( )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#43" title="Go to source code">getCTag</a>( )</code>
 
 		<div class="description short">
 			
-<p>Charge la propriété ctag avec l'identifiant de modification de la liste de
-tâche</p>
+<p>Charge la propriété ctag avec l'identifiant de modification du carnet
+d'adresses</p>
 
 		</div>
 
 		<div class="description detailed hidden">
 			
-<p>Charge la propriété ctag avec l'identifiant de modification de la liste de
-tâche</p>
+<p>Charge la propriété ctag avec l'identifiant de modification du carnet
+d'adresses</p>
 
 
 
@@ -443,7 +477,7 @@ tâche</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#m_asRight">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#42" title="Go to source code">asRight</a>( <span>mixed <var>$action</var> = </span> )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#44" title="Go to source code">asRight</a>( <span>mixed <var>$action</var> = </span> )</code>
 
 		<div class="description short">
 			
@@ -505,20 +539,20 @@ tâche</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#31" title="Go to source code"><var>$id</var></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#32" title="Go to source code"><var>$id</var></a>
 		</td>
 		<td class="description"><div>
 			<a href="#m$id" class="anchor">#</a>
 
 			<div class="description short">
 				
-<p>Identifiant unique de la liste de contacts</p>
+<p>Identifiant unique du carnet d'adresses</p>
 
 			</div>
 
 			<div class="description detailed hidden">
 				
-<p>Identifiant unique de la liste de contacts</p>
+<p>Identifiant unique du carnet d'adresses</p>
 
 
 			</div>
@@ -531,20 +565,20 @@ tâche</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#32" title="Go to source code"><var>$owner</var></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#33" title="Go to source code"><var>$owner</var></a>
 		</td>
 		<td class="description"><div>
 			<a href="#m$owner" class="anchor">#</a>
 
 			<div class="description short">
 				
-<p>Identifiant du propriétaire de la liste de contacts</p>
+<p>Identifiant du propriétaire du carnet d'adresses</p>
 
 			</div>
 
 			<div class="description detailed hidden">
 				
-<p>Identifiant du propriétaire de la liste de contacts</p>
+<p>Identifiant du propriétaire du carnet d'adresses</p>
 
 
 			</div>
@@ -557,20 +591,20 @@ tâche</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#33" title="Go to source code"><var>$name</var></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#34" title="Go to source code"><var>$name</var></a>
 		</td>
 		<td class="description"><div>
 			<a href="#m$name" class="anchor">#</a>
 
 			<div class="description short">
 				
-<p>Nom complet de la liste de contacts</p>
+<p>Nom complet du carnet d'adresses</p>
 
 			</div>
 
 			<div class="description detailed hidden">
 				
-<p>Nom complet de la liste de contacts</p>
+<p>Nom complet du carnet d'adresses</p>
 
 
 			</div>
@@ -583,7 +617,7 @@ tâche</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#34" title="Go to source code"><var>$perm</var></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#35" title="Go to source code"><var>$perm</var></a>
 		</td>
 		<td class="description"><div>
 			<a href="#m$perm" class="anchor">#</a>
@@ -609,20 +643,20 @@ tâche</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#35" title="Go to source code"><var>$ctag</var></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#36" title="Go to source code"><var>$ctag</var></a>
 		</td>
 		<td class="description"><div>
 			<a href="#m$ctag" class="anchor">#</a>
 
 			<div class="description short">
 				
-<p>CTag de la liste de contacts</p>
+<p>CTag du carnet d'adresses</p>
 
 			</div>
 
 			<div class="description detailed hidden">
 				
-<p>CTag de la liste de contacts</p>
+<p>CTag du carnet d'adresses</p>
 
 
 			</div>
@@ -635,20 +669,46 @@ tâche</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#36" title="Go to source code"><var>$synctoken</var></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#37" title="Go to source code"><var>$synctoken</var></a>
 		</td>
 		<td class="description"><div>
 			<a href="#m$synctoken" class="anchor">#</a>
 
 			<div class="description short">
 				
-<p>SyncToken de la liste de contacts</p>
+<p>SyncToken du carnet d'adresses</p>
 
 			</div>
 
 			<div class="description detailed hidden">
 				
-<p>SyncToken de la liste de contacts</p>
+<p>SyncToken du carnet d'adresses</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="carddavurl" id="m$carddavurl">
+		<td class="attributes"><code>
+			public  read-only
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-LibMelanie.Api.Melanie2.Addressbook.html#38" title="Go to source code"><var>$carddavurl</var></a>
+		</td>
+		<td class="description"><div>
+			<a href="#m$carddavurl" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>URL CardDAV pour le carnet d'adresses</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>URL CardDAV pour le carnet d'adresses</p>
 
 
 			</div>

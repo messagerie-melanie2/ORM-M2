@@ -4,7 +4,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="generator" content="ApiGen 2.8.0">
 
-	<title>Class LibMelanie\Api\Melanie2\Organizer</title>
+	<title>Class LibMelanie\Api\Melanie2\ObjectShare</title>
 
 	<script type="text/javascript" src="resources/combined.js?117538352"></script>
 	<script type="text/javascript" src="elementlist.js?3426988527"></script>
@@ -67,8 +67,8 @@
 				<li><a href="class-LibMelanie.Api.Melanie2.Event.html">Event</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.EventProperty.html">EventProperty</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.Exception.html">Exception</a></li>
-				<li><a href="class-LibMelanie.Api.Melanie2.ObjectShare.html">ObjectShare</a></li>
-				<li class="active"><a href="class-LibMelanie.Api.Melanie2.Organizer.html">Organizer</a></li>
+				<li class="active"><a href="class-LibMelanie.Api.Melanie2.ObjectShare.html">ObjectShare</a></li>
+				<li><a href="class-LibMelanie.Api.Melanie2.Organizer.html">Organizer</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.Recurrence.html">Recurrence</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.Share.html">Share</a></li>
 				<li><a href="class-LibMelanie.Api.Melanie2.Task.html">Task</a></li>
@@ -119,14 +119,12 @@
 	</div>
 
 <div id="content" class="class">
-	<h1>Class Organizer</h1>
+	<h1>Class ObjectShare</h1>
 
 
 	<div class="description">
 	
-<p>Classe evenement pour Melanie2, implémente les API de la librairie pour
-aller chercher les données dans la base de données Certains champs sont
-mappés directement ou passe par des classes externes</p>
+<p>Classe objet partagé LDAP pour Melanie2</p>
 
 	</div>
 
@@ -139,7 +137,7 @@ mappés directement ou passe par des classes externes</p>
 		</dd>
 		<dd style="padding-left:30px">
 			<img src="resources/inherit.png" alt="Extended by">
-<b><span>LibMelanie\Api\Melanie2\Organizer</span></b>			
+<b><span>LibMelanie\Api\Melanie2\ObjectShare</span></b>			
 			
 			
 		</dd>
@@ -162,7 +160,7 @@ mappés directement ou passe par des classes externes</p>
 				PNE Messagerie/Apitech<br>
 				<b>Api</b>
 				<br>
-		<b>Located at</b> <a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#26-463" title="Go to source code">Api/Melanie2/Organizer.php</a><br>
+		<b>Located at</b> <a href="source-class-LibMelanie.Api.Melanie2.ObjectShare.html#24-79" title="Go to source code">Api/Melanie2/ObjectShare.php</a><br>
 	</div>
 
 
@@ -180,7 +178,7 @@ mappés directement ou passe par des classes externes</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#89-109" title="Go to source code">__construct</a>( <span><code><a href="class-LibMelanie.Api.Melanie2.Event.html">LibMelanie\Api\Melanie2\Event</a></code> <var>$event</var> = <span class="php-keyword1">null</span></span> )</code>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.ObjectShare.html#50-60" title="Go to source code">__construct</a>( )</code>
 
 		<div class="description short">
 			
@@ -194,12 +192,44 @@ mappés directement ou passe par des classes externes</p>
 
 
 
-				<h4>Parameters</h4>
-				<div class="list"><dl>
-					<dt><var>$event</var></dt>
-					<dd><code><code><a href="class-LibMelanie.Api.Melanie2.Event.html">LibMelanie\Api\Melanie2\Event</a></code></code><br>$event</dd>
-				</dl></div>
 
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getMapMailbox" id="_getMapMailbox">
+
+		<td class="attributes"><code>
+			 protected 
+			<code><a href="class-LibMelanie.Api.Melanie2.User.html">LibMelanie\Api\Melanie2\User</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getMapMailbox">#</a>
+		<code><a href="source-class-LibMelanie.Api.Melanie2.ObjectShare.html#61-78" title="Go to source code">getMapMailbox</a>( )</code>
+
+		<div class="description short">
+			
+<p>Retourne la boite mail associée à l'objet de partage</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Retourne la boite mail associée à l'objet de partage</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-LibMelanie.Api.Melanie2.User.html">LibMelanie\Api\Melanie2\User</a></code></code><br>
+				</div>
 
 
 
@@ -218,46 +248,26 @@ mappés directement ou passe par des classes externes</p>
 
 	<table class="summary" id="constants">
 	<caption>Constants summary</caption>
-	<tr data-order="ORGANIZER_EXTERN" id="ORGANIZER_EXTERN">
+	<tr data-order="DELIMITER" id="DELIMITER">
 
 		<td class="attributes"><code>string</code></td>
 		<td class="name"><code>
-				<a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#82-86" title="Go to source code"><b>ORGANIZER_EXTERN</b></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.ObjectShare.html#38-43" title="Go to source code"><b>DELIMITER</b></a>
 		</code></td>
-		<td class="value"><code><span class="php-quote">&quot;ORGANIZER-EXTERN&quot;</span></code></td>
+		<td class="value"><code><span class="php-quote">'.-.'</span></code></td>
 		<td class="description"><div>
-			<a href="#ORGANIZER_EXTERN" class="anchor">#</a>
+			<a href="#DELIMITER" class="anchor">#</a>
 
 			<div class="description short">
 				
-<p>** CONSTANTES</p>
+<p>Délimiteur de l'objet de partage</p>
 
 			</div>
 
 			<div class="description detailed hidden">
 				
-<p>** CONSTANTES</p>
+<p>Délimiteur de l'objet de partage</p>
 
-
-			</div>
-		</div></td>
-	</tr>
-	<tr data-order="ORGANIZER_EXTERN_NAME" id="ORGANIZER_EXTERN_NAME">
-
-		<td class="attributes"><code>string</code></td>
-		<td class="name"><code>
-				<a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#87" title="Go to source code"><b>ORGANIZER_EXTERN_NAME</b></a>
-		</code></td>
-		<td class="value"><code><span class="php-quote">&quot;ORGANIZER-EXTERN-NAME&quot;</span></code></td>
-		<td class="description"><div>
-			<a href="#ORGANIZER_EXTERN_NAME" class="anchor">#</a>
-
-			<div class="description short">
-				
-			</div>
-
-			<div class="description detailed hidden">
-				
 
 			</div>
 		</div></td>
@@ -281,84 +291,6 @@ mappés directement ou passe par des classes externes</p>
 
 	<table class="summary" id="magicProperties">
 	<caption>Magic properties summary</caption>
-	<tr data-order="name" id="m$name">
-		<td class="attributes"><code>
-			public  
-			string
-		</code></td>
-
-		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#35" title="Go to source code"><var>$name</var></a>
-		</td>
-		<td class="description"><div>
-			<a href="#m$name" class="anchor">#</a>
-
-			<div class="description short">
-				
-<p>Nom de l'organisateur</p>
-
-			</div>
-
-			<div class="description detailed hidden">
-				
-<p>Nom de l'organisateur</p>
-
-
-			</div>
-		</div></td>
-	</tr>
-	<tr data-order="calendar" id="m$calendar">
-		<td class="attributes"><code>
-			public  
-			string
-		</code></td>
-
-		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#36" title="Go to source code"><var>$calendar</var></a>
-		</td>
-		<td class="description"><div>
-			<a href="#m$calendar" class="anchor">#</a>
-
-			<div class="description short">
-				
-<p>Calendrier de l'organisateur</p>
-
-			</div>
-
-			<div class="description detailed hidden">
-				
-<p>Calendrier de l'organisateur</p>
-
-
-			</div>
-		</div></td>
-	</tr>
-	<tr data-order="email" id="m$email">
-		<td class="attributes"><code>
-			public  
-			string
-		</code></td>
-
-		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#38" title="Go to source code"><var>$email</var></a>
-		</td>
-		<td class="description"><div>
-			<a href="#m$email" class="anchor">#</a>
-
-			<div class="description short">
-				
-<p>Email de l'organisateur</p>
-
-			</div>
-
-			<div class="description detailed hidden">
-				
-<p>Email de l'organisateur</p>
-
-
-			</div>
-		</div></td>
-	</tr>
 	<tr data-order="uid" id="m$uid">
 		<td class="attributes"><code>
 			public  
@@ -366,150 +298,124 @@ mappés directement ou passe par des classes externes</p>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#39" title="Go to source code"><var>$uid</var></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.ObjectShare.html#31" title="Go to source code"><var>$uid</var></a>
 		</td>
 		<td class="description"><div>
 			<a href="#m$uid" class="anchor">#</a>
 
 			<div class="description short">
 				
-<p>Uid de l'organisateur</p>
+<p>Identifiant unique de l'utilisateur</p>
 
 			</div>
 
 			<div class="description detailed hidden">
 				
-<p>Uid de l'organisateur</p>
+<p>Identifiant unique de l'utilisateur</p>
 
 
 			</div>
 		</div></td>
 	</tr>
-	<tr data-order="role" id="m$role">
+	<tr data-order="fullname" id="m$fullname">
 		<td class="attributes"><code>
 			public  
 			string
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#40" title="Go to source code"><var>$role</var></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.ObjectShare.html#32" title="Go to source code"><var>$fullname</var></a>
 		</td>
 		<td class="description"><div>
-			<a href="#m$role" class="anchor">#</a>
+			<a href="#m$fullname" class="anchor">#</a>
 
 			<div class="description short">
 				
-<p>Role de l'organisateur</p>
+<p>Nom complet de l'utilisateur</p>
 
 			</div>
 
 			<div class="description detailed hidden">
 				
-<p>Role de l'organisateur</p>
+<p>Nom complet de l'utilisateur</p>
 
 
 			</div>
 		</div></td>
 	</tr>
-	<tr data-order="partstat" id="m$partstat">
+	<tr data-order="email_send" id="m$email_send">
 		<td class="attributes"><code>
 			public  
 			string
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#41" title="Go to source code"><var>$partstat</var></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.ObjectShare.html#33" title="Go to source code"><var>$email_send</var></a>
 		</td>
 		<td class="description"><div>
-			<a href="#m$partstat" class="anchor">#</a>
+			<a href="#m$email_send" class="anchor">#</a>
 
 			<div class="description short">
 				
-<p>Statut de participation de l'organisateur</p>
+<p>Adresse email d'émission principale de l'utilisateur</p>
 
 			</div>
 
 			<div class="description detailed hidden">
 				
-<p>Statut de participation de l'organisateur</p>
+<p>Adresse email d'émission principale de l'utilisateur</p>
 
 
 			</div>
 		</div></td>
 	</tr>
-	<tr data-order="sent_by" id="m$sent_by">
+	<tr data-order="email_send_list" id="m$email_send_list">
 		<td class="attributes"><code>
 			public  
-			string
+			array
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#42" title="Go to source code"><var>$sent_by</var></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.ObjectShare.html#34" title="Go to source code"><var>$email_send_list</var></a>
 		</td>
 		<td class="description"><div>
-			<a href="#m$sent_by" class="anchor">#</a>
+			<a href="#m$email_send_list" class="anchor">#</a>
 
 			<div class="description short">
 				
-<p>Sent-By pour l'organisateur</p>
+<p>Liste de toutes les adresses email d'émission de l'utilisateur</p>
 
 			</div>
 
 			<div class="description detailed hidden">
 				
-<p>Sent-By pour l'organisateur</p>
+<p>Liste de toutes les adresses email d'émission de l'utilisateur</p>
 
 
 			</div>
 		</div></td>
 	</tr>
-	<tr data-order="rsvp" id="m$rsvp">
+	<tr data-order="mailbox" id="m$mailbox">
 		<td class="attributes"><code>
-			public  
-			string
+			public  read-only
+			<code><a href="class-LibMelanie.Api.Melanie2.User.html">LibMelanie\Api\Melanie2\User</a></code>
 		</code></td>
 
 		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#43" title="Go to source code"><var>$rsvp</var></a>
+				<a href="source-class-LibMelanie.Api.Melanie2.ObjectShare.html#35" title="Go to source code"><var>$mailbox</var></a>
 		</td>
 		<td class="description"><div>
-			<a href="#m$rsvp" class="anchor">#</a>
+			<a href="#m$mailbox" class="anchor">#</a>
 
 			<div class="description short">
 				
-<p>Repondez svp pour l'organisateur</p>
+<p>Récupère la boite mail associé à l'objet de partage</p>
 
 			</div>
 
 			<div class="description detailed hidden">
 				
-<p>Repondez svp pour l'organisateur</p>
-
-
-			</div>
-		</div></td>
-	</tr>
-	<tr data-order="extern" id="m$extern">
-		<td class="attributes"><code>
-			public  
-			boolean
-		</code></td>
-
-		<td class="name">
-				<a href="source-class-LibMelanie.Api.Melanie2.Organizer.html#44" title="Go to source code"><var>$extern</var></a>
-		</td>
-		<td class="description"><div>
-			<a href="#m$extern" class="anchor">#</a>
-
-			<div class="description short">
-				
-<p>Boolean pour savoir si l'organisateur est externe au ministère</p>
-
-			</div>
-
-			<div class="description detailed hidden">
-				
-<p>Boolean pour savoir si l'organisateur est externe au ministère</p>
+<p>Récupère la boite mail associé à l'objet de partage</p>
 
 
 			</div>

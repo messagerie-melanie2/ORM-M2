@@ -85,7 +85,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Test si l'objet existe, pas besoin de load
-		if (is_bool($this->isExist)) {
+		if (is_bool($this->isExist) && $this->isLoaded) {
 		  return $this->isExist;
 		}
 		// Paramètres de la requête
@@ -104,7 +104,10 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		}
 		// Liste les calendriers de l'utilisateur
 		$this->isExist = Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlCalendarRequests::getEvent, $params, $this);
-		if ($this->isExist) $this->initializeHasChanged();
+		if ($this->isExist) {
+		  $this->initializeHasChanged();
+		}
+		$this->isLoaded = true;
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load() isExist: ".$this->isExist);
 		return $this->isExist;
 	}

@@ -29,8 +29,48 @@ use LibMelanie\Log\M2Log;
  * @subpackage API Mélanie2
  *             @api
  * @property string $uid Identifiant unique de l'utilisateur
- * @property string $email Adresse email de l'utilisateur
- * @method string getTimezone() Chargement l'évènement, en fonction du taskslist et de l'uid
+ * @property string $fullname Nom complet de l'utilisateur
+ * @property string $name Nom de l'utilisateur
+ * @property string $email Adresse email principale de l'utilisateur
+ * @property array $email_list Liste de toutes les adresses email de l'utilisateur
+ * @property string $email_send Adresse email d'émission principale de l'utilisateur
+ * @property array $email_send_list Liste de toutes les adresses email d'émission de l'utilisateur
+ * @property string $password_need_change Est-ce que le mot de passe doit changer et pour quelle raison ? (Si la chaine n'est pas vide, le mot de passe doit changer)
+ * @property array $shares Liste des partages de la boite (format <uid>:<droit>)
+ * @property string $away_response Message d'absence de l'utilisateur (TODO: Objet pour traiter la syntaxe)
+ * @property string $internet_access_admin Accés Internet positionné par l'administrateur
+ * @property string $internet_access_user Accés Internet positionné par l'utilisateur
+ * @property string $use_photo_ader Photo utilisable sur le réseau ADER (RIE)
+ * @property string $use_photo_intranet Photo utilisable sur le réseau Intranet
+ * @property string $service Service de l'utilisateur dans l'annuaire Mélanie2
+ * @property string $employee_number Champ RH
+ * @property string $zone Zone de diffusion de l'utilisateur
+ * @property string $street Adresse - Rue de l'utilisateur
+ * @property string $postalcode Adresse - Code postal de l'utilisateur
+ * @property string $locality Adresse - Ville de l'utilisateur
+ * @property array $info Champ d'information de l'utilisateur
+ * @property string $description Description de l'utilisateur
+ * @property string $phonenumber Numéro de téléphone de l'utilisateur
+ * @property string $faxnumber Numéro de fax de l'utilisateur
+ * @property string $mobilephone Numéro de mobile de l'utilisateur
+ * @property string $roomnumber Numéro de bureau de l'utilisateur
+ * @property string $title Titre de l'utilisateur
+ * @property string $business_category Catégorie professionnelle de l'utilisateur
+ * @property string $vpn_profile Profil VPN de l'utilisateur
+ * @property string $update_personnal_info Est-ce que l'utilisateur a le droit de mettre à jour ses informations personnelles
+ * @property array $server_routage Champ de routage pour le serveur de message de l'utilisateur
+ * @property-read string $server_host Host du serveur de messagerie de l'utilisateur
+ * @property-read string $server_user User du serveur de messagerie de l'utilisateur
+ * @property string $synchro_access_admin Accés synchronisation mobile positionné par l'administrateur
+ * @property string $synchro_access_user Accés synchronisation mobile positionné par l'utilisateur
+ * @property string $mission Mission de l'utilisateur
+ * @property string $photo Photo de l'utilisateur
+ * @property string $gender Genre de l'utilisateur
+ * 
+ * @method string getTimezone() [OSOLETE] Chargement du timezone de l'utilisateur
+ * @method string authentification($password) Authentification de l'utilisateur sur l'annuaire Mélanie2
+ * @method bool load() Charge les données de l'utilisateur depuis l'annuaire Mélanie2 (en fonction de l'uid ou l'email)
+ * @method bool exists() Est-ce que l'utilisateur existe dans l'annuaire Mélanie2 (en fonction de l'uid ou l'email)
  */
 class User extends Melanie2Object {
   /**
@@ -44,57 +84,56 @@ class User extends Melanie2Object {
     // Définition de l'utilisateur melanie2
     $this->objectmelanie = new UserMelanie();
   }
-  
-  /**
-   * ***************************************************
-   * DATA MAPPING
-   */
-  /**
-   * Mapping uid field
-   * 
-   * @param string $uid          
-   */
-  protected function setMapUid($uid) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapUid($uid)");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
-    $this->objectmelanie->setUid($uid);
-  }
-  /**
-   * Mapping uid field
-   */
-  protected function getMapUid() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUid()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
-    return $this->objectmelanie->getUid();
-  }
-  
-  /**
-   * Mapping email field
-   * 
-   * @param string $email          
-   */
-  protected function setMapEmail($email) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapEmail($email)");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
-    $this->objectmelanie->setEmail($email);
-  }
-  /**
-   * Mapping email field
-   */
-  protected function getMapEmail() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapEmail()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
-    return $this->objectmelanie->getEmail();
-  }
-  
+   
   /**
    * ***************************************************
    * METHOD MAPPING
    */
+  /**
+   * Récupère la liste des objets de partage accessibles à l'utilisateur
+   *
+   * @return ObjectShare[] Liste d'objets
+   */
+  function getObjectsShared() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getBalpList()");
+    $list = $this->objectmelanie->getBalp();
+    $balp = [];
+    foreach ($list as $key => $object) {
+      $balp[$key] = new ObjectShare();
+      $balp[$key]->setObjectMelanie($object);
+    }
+    return $balp;
+  }
+  /**
+   * Récupère la liste des objets de partage accessibles au moins en émission à l'utilisateur
+   *
+   * @return ObjectShare[] Liste d'objets
+   */
+  function getObjectsSharedEmission() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getBalpListEmission()");
+    $list = $this->objectmelanie->getBalpEmission();
+    $balp = [];
+    foreach ($list as $key => $object) {
+      $balp[$key] = new ObjectShare();
+      $balp[$key]->setObjectMelanie($object);
+    }
+    return $balp;
+  }
+  /**
+   * Récupère la liste des objets de partage accessibles en gestionnaire à l'utilisateur
+   *
+   * @return ObjectShare[] Liste d'objets
+   */
+  function getObjectsSharedGestionnaire() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getBalpListGestionnaire()");
+    $list = $this->objectmelanie->getBalpGestionnaire();
+    $balp = [];
+    foreach ($list as $key => $object) {
+      $balp[$key] = new ObjectShare();
+      $balp[$key]->setObjectMelanie($object);
+    }
+    return $balp;
+  }
   /**
    * Retourne le calendrier par défaut
    * 
@@ -246,5 +285,42 @@ class User extends Melanie2Object {
       $addressbooks[$_addressbook->id] = $addressbook;
     }
     return $addressbooks;
+  }
+  
+  /**
+   * ***************************************************
+   * DATA MAPPING
+   */
+  /**
+   * Récupération du champ server_host
+   * 
+   * @return mixed|NULL Valeur du serveur host, null si non trouvé
+   */
+  protected function getMapServer_Host() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapServer_Host()");
+    $routage = $this->server_routage;
+    foreach ($routage as $route) {
+      if (strpos($route, '%') !== false) {
+        $route = explode('@', $route, 2);
+        return $route[1];
+      }
+    }
+    return null;
+  }
+  /**
+   * Récupération du champ server_user
+   * 
+   * @return mixed|NULL Valeur du serveur user, null si non trouvé
+   */
+  protected function getMapServer_User() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapServer_User()");
+    $routage = $this->server_routage;
+    foreach ($routage as $route) {
+      if (strpos($route, '%') !== false) {
+        $route = explode('@', $route, 2);
+        return $route[0];
+      }
+    }
+    return null;
   }
 }

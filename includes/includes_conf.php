@@ -59,5 +59,3 @@ else if (CONFIGURATION_TYPE_LIBM2 == TYPE_INTERNAL) {
     /* Chargement de la configuration de l'application en fonction de l'environnement */
     require_once(__DIR__ . '/../config/'.ENVIRONNEMENT_LIBM2.'/includes.php');
 }
-/* Chargement de la configuration de mapping */
-require_once(__DIR__ . '/../src/Config/MappingMelanie.php');

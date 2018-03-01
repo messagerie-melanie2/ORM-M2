@@ -66,7 +66,7 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Test si l'objet existe, pas besoin de load
-		if (is_bool($this->isExist)) {
+		if (is_bool($this->isExist) && $this->isLoaded) {
 		  return $this->isExist;
 		}
 		// Paramètres de la requête
@@ -86,7 +86,10 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 
 		// Liste les history
 		$this->isExist = Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlHistoryRequests::getHistory, $params, $this);
-		if ($this->isExist) $this->initializeHasChanged();
+		if ($this->isExist) {
+		  $this->initializeHasChanged();
+		}
+		$this->isLoaded = true;
 		return $this->isExist;
 	}
 

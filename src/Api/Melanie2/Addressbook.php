@@ -20,25 +20,27 @@ namespace LibMelanie\Api\Melanie2;
 use LibMelanie\Lib\Melanie2Object;
 use LibMelanie\Objects\AddressbookMelanie;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Config\ConfigMelanie;
 
 /**
- * Classe liste de contacts pour Melanie2
+ * Classe de carnet d'adresses pour Melanie2
  * 
  * @author PNE Messagerie/Apitech
  * @package Librairie Mélanie2
  * @subpackage API Mélanie2
  *             @api
- * @property string $id Identifiant unique de la liste de contacts
- * @property string $owner Identifiant du propriétaire de la liste de contacts
- * @property string $name Nom complet de la liste de contacts
+ * @property string $id Identifiant unique du carnet d'adresses
+ * @property string $owner Identifiant du propriétaire du carnet d'adresses
+ * @property string $name Nom complet du carnet d'adresses
  * @property int $perm Permission associée, utiliser asRight()
- * @property string $ctag CTag de la liste de contacts
- * @property int $synctoken SyncToken de la liste de contacts
- * @method bool load() Charge les données de la liste de tâche depuis la base de données
- * @method bool exists() Test dans la base de données si le carnet d'adresse existe déjà
- * @method bool save() Création ou modification du carnet d'adresse
- * @method bool delete() Supprimer le carnet d'adresse et toutes ses données de la base de données
- * @method void getCTag() Charge la propriété ctag avec l'identifiant de modification de la liste de tâche
+ * @property string $ctag CTag du carnet d'adresses
+ * @property int $synctoken SyncToken du carnet d'adresses
+ * @property-read string $carddavurl URL CardDAV pour le carnet d'adresses
+ * @method bool load() Charge les données du carnet d'adresses depuis la base de données
+ * @method bool exists() Test dans la base de données si le carnet d'adresses existe déjà
+ * @method bool save() Création ou modification du carnet d'adresses
+ * @method bool delete() Supprimer le carnet d'adresses et toutes ses données de la base de données
+ * @method void getCTag() Charge la propriété ctag avec l'identifiant de modification du carnet d'adresses
  * @method bool asRight($action) Retourne un boolean pour savoir si les droits sont présents
  */
 class Addressbook extends Melanie2Object {
@@ -110,5 +112,22 @@ class Addressbook extends Melanie2Object {
     // TODO: Test - Nettoyage mémoire
     //gc_collect_cycles();
     return $contacts;
+  }
+  
+  /**
+   * ***************************************************
+   * DATA MAPPING
+   */
+  /**
+   * Mapping carddavurl field
+   */
+  protected function getMapCarddavurl() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCarddavurl()");
+    if (!isset($this->objectmelanie)) throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
+    $url = null;
+    if (defined('\LibMelanie\Config\ConfigMelanie::ADDRESSBOOK_CARDDAV_URL')) {
+      $url = str_replace(['%u', '%o', '%i'], [$this->usermelanie->uid, $this->objectmelanie->owner, $this->objectmelanie->id], ConfigMelanie::ADDRESSBOOK_CARDDAV_URL);
+    }
+    return $url;
   }
 }

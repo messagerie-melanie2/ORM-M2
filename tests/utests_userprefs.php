@@ -67,12 +67,13 @@ $user = new LibMelanie\Api\Melanie2\User();
 $user->uid = 'thomas.payen';
 
 // Gestion des prefs utilisateur
-$prefs = new LibMelanie\Api\Melanie2\UserPrefs($user);
+$prefs = new LibMelanie\Api\Melanie2\UserPrefs();
 $prefs->scope = LibMelanie\Config\ConfigMelanie::GENERAL_PREF_SCOPE;
 $prefs->name = ["categories", "category_colors"];
+$prefs->user = ["thomas.payen", "thomas.test1"];
 
 foreach ($prefs->getList() as $pref) {
-  echo $pref->name . ": " . $pref->value . "\r\n";
+  echo $pref->user.  " -> " . $pref->name . ": " . $pref->value . "\r\n";
 }
 
 

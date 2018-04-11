@@ -68,7 +68,7 @@ use LibMelanie\Log\M2Log;
  * @property string $gender Genre de l'utilisateur
  * 
  * @method string getTimezone() [OSOLETE] Chargement du timezone de l'utilisateur
- * @method string authentification($password) Authentification de l'utilisateur sur l'annuaire Mélanie2
+ * @method bool authentification($password) Authentification de l'utilisateur sur l'annuaire Mélanie2
  * @method bool load() Charge les données de l'utilisateur depuis l'annuaire Mélanie2 (en fonction de l'uid ou l'email)
  * @method bool exists() Est-ce que l'utilisateur existe dans l'annuaire Mélanie2 (en fonction de l'uid ou l'email)
  */

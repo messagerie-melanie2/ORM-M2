@@ -19,6 +19,7 @@ namespace LibMelanie\Ldap;
 
 use LibMelanie;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Exceptions;
 
 /**
  * Gestion de la connexion LDAP
@@ -70,6 +71,12 @@ class Ldap {
    * @var bool
    */
   private $isAuthenticate = false;
+  /**
+   * Derniere requete utilisee, sert pour les logs shutdown
+   *
+   * @var string
+   */
+  private static $last_request;
   
   /**
    * ************ SINGLETON **
@@ -190,32 +197,36 @@ class Ldap {
       $dn = $infos['dn'];
     } else {
       // Connexion anonymous pour lire les données
-      $ldap->anonymous();
-      // Génération du filtre
-      $filter = $ldap->getConfig("authentification_filter");
-      if (isset($filter)) {
-        $filter = str_replace('%%username%%', $username, $filter);
-      } else {
-        $filter = "(uid=$username)";
+      if ($ldap->anonymous()) {
+        // Génération du filtre
+        $filter = $ldap->getConfig("authentification_filter");
+        if (isset($filter)) {
+          $filter = str_replace('%%username%%', $username, $filter);
+        } else {
+          $filter = "(uid=$username)";
+        }
+        if ($useUserInfos) {
+          $infos = self::GetUserInfos($username);
+          if (isset($infos) && $infos['dn']) {
+            $dn = $infos['dn'];
+          } else {
+            return false;
+          }
+        } else {
+          // Lancement de la recherche
+          $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, [
+              'dn'
+          ], 0, 1);
+          if ($sr && $ldap->count_entries($sr) == 1) {
+            $infos = $ldap->get_entries($sr);
+            $dn = $infos[0]['dn'];
+          } else {
+            return false;
+          }
+        }
       }
-      if ($useUserInfos) {
-        $infos = self::GetUserInfos($username);
-        if (isset($infos) && $infos['dn']) {
-          $dn = $infos['dn'];
-        } else {
-          return false;
-        }
-      } else {
-        // Lancement de la recherche
-        $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, [
-            'dn'
-        ], 0, 1);
-        if ($sr && $ldap->count_entries($sr) == 1) {
-          $infos = $ldap->get_entries($sr);
-          $dn = $infos[0]['dn'];
-        } else {
-          return false;
-        }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Authentification
@@ -261,15 +272,19 @@ class Ldap {
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
       // Connexion anonymous pour lire les données
-      $ldap->anonymous();
-      // Lancement de la recherche
-      $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr, 0, 1);
-      if ($sr && $ldap->count_entries($sr) == 1) {
-        $infos = $ldap->get_entries($sr);
-        $infos = $infos[0];
-        $ldap->setCache($keycache, $infos);
-      } else {
-        $ldap->deleteCache($keycache);
+      if ($ldap->anonymous()) {
+        // Lancement de la recherche
+        $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr, 0, 1);
+        if ($sr && $ldap->count_entries($sr) == 1) {
+          $infos = $ldap->get_entries($sr);
+          $infos = $infos[0];
+          $ldap->setCache($keycache, $infos);
+        } else {
+          $ldap->deleteCache($keycache);
+        }
+      }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -315,14 +330,18 @@ class Ldap {
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
       // Connexion anonymous pour lire les données
-      $ldap->anonymous();
-      // Lancement de la recherche
-      $sr = $ldap->search($ldap->getConfig("shared_base_dn"), $filter, $ldap_attr);
-      if ($sr && $ldap->count_entries($sr) > 0) {
-        $infos = $ldap->get_entries($sr);
-        $ldap->setCache($keycache, $infos);
-      } else {
-        $ldap->deleteCache($keycache);
+      if ($ldap->anonymous()) {
+        // Lancement de la recherche
+        $sr = $ldap->search($ldap->getConfig("shared_base_dn"), $filter, $ldap_attr);
+        if ($sr && $ldap->count_entries($sr) > 0) {
+          $infos = $ldap->get_entries($sr);
+          $ldap->setCache($keycache, $infos);
+        } else {
+          $ldap->deleteCache($keycache);
+        }
+      }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -367,14 +386,18 @@ class Ldap {
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
       // Connexion anonymous pour lire les données
-      $ldap->anonymous();
-      // Lancement de la recherche
-      $sr = $ldap->search($ldap->getConfig("shared_base_dn"), $filter, $ldap_attr);
-      if ($sr && $ldap->count_entries($sr) > 0) {
-        $infos = $ldap->get_entries($sr);
-        $ldap->setCache($keycache, $infos);
-      } else {
-        $ldap->deleteCache($keycache);
+      if ($ldap->anonymous()) {
+        // Lancement de la recherche
+        $sr = $ldap->search($ldap->getConfig("shared_base_dn"), $filter, $ldap_attr);
+        if ($sr && $ldap->count_entries($sr) > 0) {
+          $infos = $ldap->get_entries($sr);
+          $ldap->setCache($keycache, $infos);
+        } else {
+          $ldap->deleteCache($keycache);
+        }
+      }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -419,14 +442,18 @@ class Ldap {
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
       // Connexion anonymous pour lire les données
-      $ldap->anonymous();
-      // Lancement de la recherche
-      $sr = $ldap->search($ldap->getConfig("shared_base_dn"), $filter, $ldap_attr);
-      if ($sr && $ldap->count_entries($sr) > 0) {
-        $infos = $ldap->get_entries($sr);
-        $ldap->setCache($keycache, $infos);
-      } else {
-        $ldap->deleteCache($keycache);
+      if ($ldap->anonymous()) {
+        // Lancement de la recherche
+        $sr = $ldap->search($ldap->getConfig("shared_base_dn"), $filter, $ldap_attr);
+        if ($sr && $ldap->count_entries($sr) > 0) {
+          $infos = $ldap->get_entries($sr);
+          $ldap->setCache($keycache, $infos);
+        } else {
+          $ldap->deleteCache($keycache);
+        }
+      }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -473,15 +500,19 @@ class Ldap {
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
       // Connexion anonymous pour lire les données
-      $ldap->anonymous();
-      // Lancement de la recherche
-      $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr, 0, 1);
-      if ($sr && $ldap->count_entries($sr) == 1) {
-        $infos = $ldap->get_entries($sr);
-        $infos = $infos[0];
-        $ldap->setCache($keycache, $infos);
-      } else {
-        $ldap->deleteCache($keycache);
+      if ($ldap->anonymous()) {
+        // Lancement de la recherche
+        $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr, 0, 1);
+        if ($sr && $ldap->count_entries($sr) == 1) {
+          $infos = $ldap->get_entries($sr);
+          $infos = $infos[0];
+          $ldap->setCache($keycache, $infos);
+        } else {
+          $ldap->deleteCache($keycache);
+        }
+      }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -506,6 +537,14 @@ class Ldap {
     $ldap = self::GetInstance($server);
     
     return $ldap->getMapping($name, $defaultValue);
+  }
+  /**
+   * Retourne la derniere requete
+   * @return string
+   */
+  public static function getLastRequest() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getLastRequest()");
+    return self::$last_request;
   }
   
   /**
@@ -557,6 +596,9 @@ class Ldap {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->connect()");
     $this->connection = @ldap_connect($this->config['hostname'], isset($this->config['port']) ? $this->config['port'] : '389');
     ldap_set_option($this->connection, LDAP_OPT_REFERRALS, 0);
+    ldap_set_option($this->connection, LDAP_OPT_TIMELIMIT, 20);
+    ldap_set_option($this->connection, LDAP_OPT_TIMEOUT, 15);
+    ldap_set_option($this->connection, LDAP_OPT_NETWORK_TIMEOUT, 10);
     if (isset($this->config['version']))
       @ldap_set_option($this->connection, LDAP_OPT_PROTOCOL_VERSION, $this->config['version']);
     $this->isAnonymous = false;
@@ -592,6 +634,7 @@ class Ldap {
    */
   public function search($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->search($base_dn, $filter)");
+    self::$last_request = "ldap_search($base_dn, $filter, attributes, $attrsonly, $sizelimit)";
     return @ldap_search($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
   }
   /**
@@ -613,6 +656,7 @@ class Ldap {
    */
   public function read($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->read($base_dn, $filter)");
+    self::$last_request = "ldap_read($base_dn, $filter, attributes, $attrsonly, $sizelimit)";
     return @ldap_read($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
   }
   /**
@@ -635,6 +679,7 @@ class Ldap {
    */
   public function ldap_list($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->ldap_list($base_dn, $filter)");
+    self::$last_request = "ldap_list($base_dn, $filter, attributes, $attrsonly, $sizelimit)";
     return @ldap_list($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
   }
   /**
@@ -706,6 +751,7 @@ class Ldap {
    */
   public function mod_add($dn, $entry) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->mod_add($dn)");
+    self::$last_request = "ldap_mod_add($dn)";
     return @ldap_mod_add($this->connection, $dn, $entry);
   }
   /**
@@ -721,6 +767,7 @@ class Ldap {
    */
   public function mod_replace($dn, $entry) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->mod_replace($dn)");
+    self::$last_request = "ldap_mod_replace($dn)";
     return @ldap_mod_replace($this->connection, $dn, $entry);
   }
   /**
@@ -736,6 +783,7 @@ class Ldap {
    */
   public function mod_del($dn, $entry) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->mod_del($dn)");
+    self::$last_request = "ldap_mod_del($dn)";
     return @ldap_mod_del($this->connection, $dn, $entry);
   }
   /**
@@ -749,6 +797,7 @@ class Ldap {
    */
   public function add($dn, $entry) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->add($dn)");
+    self::$last_request = "ldap_add($dn)";
     return @ldap_add($this->connection, $dn, $entry);
   }
   /**
@@ -763,6 +812,7 @@ class Ldap {
    */
   public function modify($dn, $entry) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->modify($dn)");
+    self::$last_request = "ldap_modify($dn)";
     return @ldap_modify($this->connection, $dn, $entry);
   }
   /**
@@ -774,6 +824,7 @@ class Ldap {
    */
   public function delete($dn) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->delete($dn)");
+    self::$last_request = "ldap_delete($dn)";
     return @ldap_delete($this->connection, $dn);
   }
   /**
@@ -791,6 +842,7 @@ class Ldap {
    */
   public function rename($dn, $newrdn, $newparent, $deleteoldrdn) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->rename($dn)");
+    self::$last_request = "ldap_rename($dn, $newrdn)";
     return @ldap_rename($this->connection, $dn, $newrdn, $newparent, $deleteoldrdn);
   }
   /**

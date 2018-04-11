@@ -172,6 +172,9 @@ class ICSToEvent {
           $object->created = strtotime($vevent->CREATED->getValue());
         } else {
           $object->deleteAttribute(ICS::CREATED);
+          if (!isset($object->created)) {
+            $object->created = time();
+          }
         }
         
         $object->deleted = true;

@@ -1,3 +1,13 @@
+ORM M2 - 0.4.0.6
+------
+- Mise en place d'un timeout LDAP
+- Gestion du last request dans le driver LDAP
+- Passage du event_id en 64 caractères
+- 0004929: [ICS] Si l'organisateur est vide, ne pas considérer que c'est une réunion
+- Correction PHP Notice:  Undefined index: uid in ORM-M2/src/Ldap/LDAPMelanie.php on line 94
+- 0004911: Boucle de fonctionnement lorsque qu'on arrive pas à déterminer l'organisateur proprement
+- Si pas de CREATED dans l'ICS en calculer un
+
 ORM M2 - 0.4.0.5
 ------
 - 0003624: Ajouter des attributs LDAP dans l'objet Melanie2\User

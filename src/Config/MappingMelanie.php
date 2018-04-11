@@ -191,7 +191,7 @@ class MappingMelanie {
 	          "uid" 			=> [self::name => "event_uid", self::type => self::string, self::size => 255],
 	          "realuid" 			=> [self::name => "event_realuid", self::type => self::string, self::size => 255],
 	          "calendar" 	=> [self::name => "calendar_id", self::type => self::string, self::size => 255],
-	          "id" 				=> [self::name => "event_id", self::type => self::string, self::size => 32],
+	          "id" 				=> [self::name => "event_id", self::type => self::string, self::size => 64],
 	          "owner" 		=> [self::name => "event_creator_id", self::type => self::string, self::size => 255, self::defaut => ''],
 	          "keywords" 	=> [self::name => "event_keywords"],
 	          

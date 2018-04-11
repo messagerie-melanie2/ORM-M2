@@ -371,11 +371,15 @@ class EventToICS {
 				$x_moz_snooze_time = $event->getAttribute(ICS::X_MOZ_SNOOZE_TIME);
 				if (isset($x_moz_snooze_time)) $vevent->{ICS::X_MOZ_SNOOZE_TIME} = $x_moz_snooze_time;
 			}
+			// Récupérer l'organisateur
+			$organizer_email = trim($event->organizer->email);
 			// Traitement participants
 			$organizer_attendees = $event->attendees;
 			if (!is_null($organizer_attendees)
 					&& is_array($organizer_attendees)
-					&& count($organizer_attendees) > 0) {
+					&& count($organizer_attendees) > 0
+			    && isset($organizer_email)
+			    && !empty($organizer_email)) {
 			  // Add organizer
 		    $params = [];
 		    $org_role = $event->organizer->role;
@@ -399,7 +403,7 @@ class EventToICS {
 		      $params[ICS::SENT_BY] = $event->organizer->sent_by;
 		    }	      
 		    $vevent->add(ICS::ORGANIZER,
-		        'mailto:'.$event->organizer->email,
+		        'mailto:'.$organizer_email,
 		        $params
         );
 				foreach ($organizer_attendees as $attendee) {

@@ -99,7 +99,7 @@ class Organizer extends Melanie2Object {
     // Intialisation de l'email de l'organisateur
     $this->organizer_email = null;
     $this->organizer_name = null;
-    $this->extern = false;
+    $this->extern = null;
     
     // Définition de l'évènement melanie2
     if (isset($event)) {
@@ -146,11 +146,12 @@ class Organizer extends Melanie2Object {
   protected function setMapExtern($extern) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapExtern($extern)");
     // RAZ
-    if ($this->extern != $extern) {
+    if ($this->extern !== $extern) {
       // Intialisation de l'email et du nom de l'organisateur
       $this->organizer_email = null;
       $this->organizer_name = null;
     }
+    $this->setOrganizerParam('extern', $extern);
     $this->extern = $extern;
   }
   /**
@@ -161,6 +162,10 @@ class Organizer extends Melanie2Object {
    */
   protected function getMapExtern() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapExtern()");
+    $extern = $this->getOrganizerParam('extern');
+    if (isset($extern)) {
+      $this->extern = $extern;      
+    }
     return $this->extern;
   }
   
@@ -223,25 +228,27 @@ class Organizer extends Melanie2Object {
   protected function setMapEmail($email) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapEmail($email)");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    if ($this->organizer_email != $email) {
-      // Si l'organisateur est externe au ministère
-      if ($this->extern) {
+    if (!isset($this->extern)) {
+      $this->extern = $this->getOrganizerParam('extern');
+    }
+    // Si l'organisateur est externe au ministère
+    if (isset($this->extern) && $this->extern) {
+      $this->event->setAttribute(self::ORGANIZER_EXTERN, $email);
+    } else {
+      $uid = LDAPMelanie::GetUidFromMail($email);
+      if (is_null($uid)) {
+        $this->objectmelanie->organizer_uid = null;
+        $this->extern = true;
         $this->event->setAttribute(self::ORGANIZER_EXTERN, $email);
       } else {
-        $uid = LDAPMelanie::GetUidFromMail($email);
-        if (is_null($uid)) {
-          $this->objectmelanie->organizer_uid = null;
-          $this->extern = true;
-          $this->setMapEmail($email);
-        } else {
-          $this->objectmelanie->organizer_uid = $uid;
-          $this->extern = false;
-        }
+        $this->objectmelanie->organizer_uid = $uid;
+        $this->extern = false;
       }
-      $this->organizer_email = $email;
-      // Position du mail dans organizer_json
-      $this->setOrganizerParam('mailto', $email);
+      $this->setOrganizerParam('extern', $this->extern);
     }
+    $this->organizer_email = $email;
+    // Position du mail dans organizer_json
+    $this->setOrganizerParam('mailto', $email);
   }
   /**
    * Mapping organizer email field
@@ -271,6 +278,7 @@ class Organizer extends Melanie2Object {
             $this->extern = false;
           }
         }
+        $this->setOrganizerParam('extern', $this->extern);
       }
     }
     return $this->organizer_email;

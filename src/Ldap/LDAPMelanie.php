@@ -91,7 +91,7 @@ class LDAPMelanie {
 		$infos = Ldap::GetUserInfosFromEmail($email);
 		if (is_null($infos)) return null;
 		$ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$SEARCH_LDAP);
-		return $infos[$ldap->getMapping('uid')][0];
+		return isset($infos[$ldap->getMapping('uid')]) ? $infos[$ldap->getMapping('uid')][0] : null;
 	}
 
 	/**

@@ -179,7 +179,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 				if (!isset($this->$key)) return null;
 			}
 			// Gestion de l'event_id
-			if (!isset($this->id)) $this->id = md5($this->uid . $this->calendar);
+			if (!isset($this->id)) $this->id = hash('sha256', $this->uid . $this->calendar . uniqid(), false);
 			if (!isset($this->modified)) $this->modified = time();
 
 			// Si l'objet n'existe pas, on fait un INSERT

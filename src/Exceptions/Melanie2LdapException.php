@@ -19,29 +19,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace LibMelanie;
+namespace LibMelanie\Exceptions;
+
+use LibMelanie\Log\M2Log;
 
 /**
- * Cette classe permet d'avoir le numéro de version de l'ORM
+ * Exception sur l'annuaire pour la librairie Melanie2
  *
  * @author PNE Messagerie/Apitech
  * @package Librairie Mélanie2
+ * @subpackage Exceptions
+ *
  */
-class Version {
+class Melanie2LdapException extends \Exception {
+	/**
+	 * Message d'erreur de l'exception
+	 * @var string
+	 */
+	protected $errorMessage = "Erreur l'annuaire Mélanie2 n'est pas accessible";
+	/**
+	 * Code erreur de l 'exception
+	 * @var int
+	 */
+	protected $errorCode = 1;
 
-    /**
-     * Numéro de version
-     */
-    const VERSION = '0.4.0.6';
+	/**
+	 * Constructeur de l'exception
+	 * @param string $message
+	 * @param int $code
+	 */
+	function __construct($message = NULL, $code = NULL) {
+		// Error message
+		if (!isset($message))
+			$message = $this->errorMessage;
 
-    /**
-     * Numéro de version normalisé
-     */
-    const NORMALIZED_VERSION = '0.4.0.6';
+		// Error code
+		if (!isset($code))
+			$code = $this->errorCode;
 
-    /**
-     * Build
-     */
-    const BUILD = '20180411161552';
-
+		M2Log::Log(M2Log::LEVEL_ERROR, "LibMelanie\Exceptions\Melanie2LdapException->__construct($code, $message)");
+		parent::__construct($message, (int)$code);
+	}
 }

@@ -133,12 +133,53 @@ class Recurrence extends Melanie2Object {
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset($this->event) && $this->event->useJsonData()) {
       $enddate = $this->getRecurrenceParam(ICS::UNTIL);
+      if (isset($enddate) && is_array($enddate)) {
+        try {
+          if (isset($enddate["timezone_type"]) && isset($enddate['timezone'])) {
+            switch ($enddate["timezone_type"]) {
+              case 1:
+                $enddate = \DateTime::createFromFormat("Y-m-d H:i:s.u O", $enddate['date'] . " " . $enddate['timezone']);
+              case 2:
+                $enddate = \DateTime::createFromFormat("Y-m-d H:i:s.u T", $enddate['date'] . " " . $enddate['timezone']);
+                break;
+              case 3:
+              default:
+                $enddate = \DateTime::createFromFormat("Y-m-d H:i:s.u", $enddate['date'], new \DateTimeZone($enddate['timezone']));
+                break;
+            }
+          }
+          else if (isset($enddate["timezone"])) {
+            $enddate = new \DateTime($enddate['date'], new \DateTimeZone($enddate['timezone']));
+          }
+          else {
+            $enddate = new \DateTime($enddate);
+          }
+        }
+        catch (\Exception $ex) {
+          $enddate = new \DateTime($enddate['date']);
+        }
+      }
       return date('Y-m-d H:i:s', strtotime($enddate));
     }
     else {
       return $this->objectmelanie->enddate;
     }
-    
+  }
+  /**
+   * Mapping enddate field
+   *
+   * @ignore
+   *
+   */
+  protected function issetMapEnddate() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapEnddate()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if (isset($this->event) && $this->event->useJsonData()) {
+      return $this->issetRecurrenceParam(ICS::UNTIL);
+    }
+    else {
+      return isset($this->objectmelanie->enddate);
+    }
   }
   /**
    * Mapping count field
@@ -173,6 +214,23 @@ class Recurrence extends Melanie2Object {
       return $this->objectmelanie->count;
     }    
   }
+  /**
+   * Mapping count field
+   *
+   * @ignore
+   *
+   */
+  protected function issetMapCount() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapCount()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if (isset($this->event) && $this->event->useJsonData()) {
+      return $this->issetRecurrenceParam(ICS::COUNT);
+    }
+    else {
+      return isset($this->objectmelanie->count);
+    }
+  }
+  
   /**
    * Mapping interval field
    *
@@ -209,8 +267,23 @@ class Recurrence extends Melanie2Object {
     }
     else {
       return $this->objectmelanie->interval;
+    }    
+  }
+  /**
+   * Mapping interval field
+   *
+   * @ignore
+   *
+   */
+  protected function issetMapInterval() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapInterval()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if (isset($this->event) && $this->event->useJsonData()) {
+      return $this->issetRecurrenceParam(ICS::INTERVAL);
     }
-    
+    else {
+      return isset($this->objectmelanie->interval);
+    }    
   }
   
   /**
@@ -310,6 +383,22 @@ class Recurrence extends Melanie2Object {
       }
     }    
     return $days;
+  }
+  /**
+   * Mapping days field
+   *
+   * @ignore
+   *
+   */
+  protected function issetMapDays() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapDays()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if (isset($this->event) && $this->event->useJsonData()) {
+      return $this->issetRecurrenceParam(ICS::BYDAY);
+    }
+    else {
+      return isset($this->objectmelanie->days);
+    }
   }
   
   /**

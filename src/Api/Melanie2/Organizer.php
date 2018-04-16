@@ -421,7 +421,7 @@ class Organizer extends Melanie2Object {
   protected function setMapRsvp($rsvp) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRsvp($rsvp)");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    $this->setOrganizerParam(ICS::RSVP, $sent_by);
+    $this->setOrganizerParam(ICS::RSVP, $rsvp);
   }
   /**
    * Mapping rsvp field

@@ -1,3 +1,7 @@
+ORM M2 - 0.4.0.7
+------
+- 0004944: Problème dans la gestion du enddate
+
 ORM M2 - 0.4.0.6
 ------
 - Mise en place d'un timeout LDAP

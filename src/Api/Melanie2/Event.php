@@ -978,6 +978,7 @@ class Event extends Melanie2Object {
           $event->setMapDeleted(true);
           $event->modified = $modified;
           $event->setMapExceptions($_exceptions);
+          $event->setExist(true);
           $events[$event->uid . $event->calendar] = $event;
         }
       } else {

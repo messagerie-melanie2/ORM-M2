@@ -336,12 +336,16 @@ class Exception extends Event {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOrganizer()");
     if (!isset($this->organizer)) {
       if (isset($this->eventParent->organizer) && !empty($this->eventParent->organizer->uid)) {
-        $this->organizer = $this->eventParent->organizer;
+        $this->organizer = clone $this->eventParent->organizer;
+        $this->organizer->setEvent($this);
       }
       else {
         $this->organizer = new Organizer($this);
-        // Ajouter l'organisateur sur l'événement parent pour les occurrences suivantes
-        $this->eventParent->organizer = $this->organizer;
+        if (isset($this->eventParent)) {
+          // Ajouter l'organisateur sur l'événement parent pour les occurrences suivantes
+          $this->eventParent->organizer = clone $this->organizer;
+          $this->eventParent->organizer->setEvent($this->eventParent);
+        }        
       }
     }      
       

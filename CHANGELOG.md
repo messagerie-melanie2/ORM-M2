@@ -1,3 +1,9 @@
+ORM M2 - 0.4.0.8
+------
+- 0004945: Positionner le exist à true sur un Faked Master
+- 0004970: [ICS] Le owner n'est pas correctement récupéré pour les exceptions
+- 0004971: La définition d'un organisateur pour une exception ne fonctionne pas bien
+
 ORM M2 - 0.4.0.7
 ------
 - 0004944: Problème dans la gestion du enddate

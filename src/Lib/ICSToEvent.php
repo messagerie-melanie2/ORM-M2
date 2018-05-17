@@ -105,7 +105,12 @@ class ICSToEvent {
       // Owner
       if (isset($recurrence_id) && (!isset($object->owner) || empty($object->owner))) {
         M2Log::Log(M2Log::LEVEL_DEBUG, "ICSToEvent::Convert() SetOwner = " . isset($user) && isset($user->uid) ? $user->uid : $calendar->owner);
-        $object->owner = isset($user) && isset($user->uid) ? $user->uid : $calendar->owner;
+        if (isset($event) && isset($event->owner)) {
+          $object->owner = $event->owner;
+        }
+        else {
+          $object->owner = isset($user) && isset($user->uid) ? $user->uid : $calendar->owner;
+        }        
       }
       // DTSTART & DTEND
       if (isset($vevent->DTSTART) && isset($vevent->DTEND)) {

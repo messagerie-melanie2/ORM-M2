@@ -48,7 +48,7 @@ class EventToICS {
 	 * Identifiant de l'outil utilisant l'ICS (pour la génération)
 	 * @var string
 	 */
-	const PRODID = '-//ORM LibMelanie2 PHP/PNE Messagerie/MEDDE';
+	const PRODID = '-//ORM LibMelanie2 PHP/PNE Messagerie/MTES';
 	/**
 	 * Version ICalendar utilisé pour la génération de l'ICS
 	 * @var string
@@ -225,11 +225,13 @@ class EventToICS {
 	        $vexception = $vcalendar->add('VEVENT');
 	        // UID
 	        $vexception->UID = $exception->uid;
-	        if ($vevent->DTSTART[ICS::VALUE] == ICS::VALUE_DATE) {
-	          $vexception->add(ICS::RECURRENCE_ID, $date, [ICS::VALUE => ICS::VALUE_DATE]);
-	        } else {
-            $vexception->add(ICS::RECURRENCE_ID, $date, [ICS::VALUE => ICS::VALUE_DATE_TIME, ICS::TZID => $exception->timezone]);
-	        }
+	        if (!$isfreebusy || !$event->deleted) {
+	          if ($vevent->DTSTART[ICS::VALUE] == ICS::VALUE_DATE) {
+	            $vexception->add(ICS::RECURRENCE_ID, $date, [ICS::VALUE => ICS::VALUE_DATE]);
+	          } else {
+	            $vexception->add(ICS::RECURRENCE_ID, $date, [ICS::VALUE => ICS::VALUE_DATE_TIME, ICS::TZID => $exception->timezone]);
+	          }
+	        }	        
 	        $vexception = self::getVeventFromEvent($vexception, $exception, $calendar, $user, $useattachments, $isfreebusy);
 	      }
 	    }

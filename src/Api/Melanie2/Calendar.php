@@ -151,6 +151,7 @@ class Calendar extends Melanie2Object {
           $event->deleted = true;
           $event->modified = $modified;
           $event->exceptions = $_exceptions;
+          $event->getObjectMelanie()->setExist(true);
           $events[$event->uid . $event->calendar] = $event;
         }
       } else {
@@ -233,6 +234,7 @@ class Calendar extends Melanie2Object {
           $event->deleted = true;
           $event->modified = $modified;
           $event->exceptions = $_exceptions;
+          $event->getObjectMelanie()->setExist(true);
           $events[$event->uid . $event->calendar] = $event;
         }
       } else {

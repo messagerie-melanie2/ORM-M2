@@ -595,10 +595,10 @@ class Ldap {
   public function connect() {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->connect()");
     $this->connection = @ldap_connect($this->config['hostname'], isset($this->config['port']) ? $this->config['port'] : '389');
-    ldap_set_option($this->connection, LDAP_OPT_REFERRALS, 0);
-    ldap_set_option($this->connection, LDAP_OPT_TIMELIMIT, 20);
-    ldap_set_option($this->connection, LDAP_OPT_TIMEOUT, 15);
-    ldap_set_option($this->connection, LDAP_OPT_NETWORK_TIMEOUT, 10);
+    if (defined('LDAP_OPT_REFERRALS')) ldap_set_option($this->connection, LDAP_OPT_REFERRALS, 0);
+    if (defined('LDAP_OPT_TIMELIMIT')) ldap_set_option($this->connection, LDAP_OPT_TIMELIMIT, 20);
+    if (defined('LDAP_OPT_TIMEOUT')) ldap_set_option($this->connection, LDAP_OPT_TIMEOUT, 15);
+    if (defined('LDAP_OPT_NETWORK_TIMEOUT')) ldap_set_option($this->connection, LDAP_OPT_NETWORK_TIMEOUT, 10);
     if (isset($this->config['version']))
       @ldap_set_option($this->connection, LDAP_OPT_PROTOCOL_VERSION, $this->config['version']);
     $this->isAnonymous = false;

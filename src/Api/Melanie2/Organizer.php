@@ -109,6 +109,15 @@ class Organizer extends Melanie2Object {
   }
   
   /**
+   * Défini l'event associé à l'objet organizer
+   * @param Event $event
+   */
+  public function setEvent($event) {
+    $this->event = $event;
+    $this->objectmelanie = $this->event->getObjectMelanie();
+  }
+  
+  /**
    * ***************************************************
    * DATA MAPPING
    */

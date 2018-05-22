@@ -18,6 +18,7 @@
 namespace LibMelanie\Api\Melanie2;
 
 use LibMelanie\Ldap\LDAPMelanie;
+use LibMelanie\Ldap\Ldap;
 use LibMelanie\Lib\Melanie2Object;
 use LibMelanie\Exceptions;
 use LibMelanie\Log\M2Log;
@@ -190,6 +191,32 @@ class Organizer extends Melanie2Object {
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->objectmelanie->organizer_calendar = $calendar;
     $this->objectmelanie->organizer_calendar_id = $calendar;
+    if (isset($this->event) 
+        && $calendar == $this->event->calendar
+        && $this->event->getCalendarMelanie()->owner != $this->event->owner) {      
+      $infos = Ldap::GetUserInfos($this->event->getCalendarMelanie()->owner);
+      if (Ldap::GetMapValue($infos, 'user_type_entree', 'mineqtypeentree') == 'BALI') {
+        $newName = Ldap::GetMapValue($infos, 'user_cn', 'cn');
+        $oldName = $this->getMapName();
+        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapCalendar() oldName: $oldName");
+        if (isset($oldName)) {
+          $oldName = explode(' - ', $oldName, 2);
+          $oldName = $oldName[0];          
+        }
+        else {
+          $owner = $this->event->owner;
+          if (strpos($this->event->owner, '.-.')) {
+            $owner = explode('.-.', $owner, 2);
+            $owner = $owner[0];
+          }
+          $ownerInfos = Ldap::GetUserInfos($owner, null, Ldap::GetMap('user_display_name', 'displayname'));
+          $oldName = Ldap::GetMapValue($ownerInfos, 'user_display_name', 'displayname');
+        }
+        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapCalendar() oldName: $oldName");
+        $newName = str_replace(' - ', " (via $oldName) - ", $newName);
+        $this->setMapName($newName);
+      }
+    }
   }
   /**
    * Mapping calendar field
@@ -243,15 +270,28 @@ class Organizer extends Melanie2Object {
     // Si l'organisateur est externe au ministère
     if (isset($this->extern) && $this->extern) {
       $this->event->setAttribute(self::ORGANIZER_EXTERN, $email);
-    } else {
-      $uid = LDAPMelanie::GetUidFromMail($email);
-      if (is_null($uid)) {
+    } else if (!isset($this->extern)) {
+      if (strpos($email, '.-.') !== false) {
+        $e = explode('.-.', $email, 2);
+        $objPartage = $e[0];
+        $infos = Ldap::GetUserInfosFromEmail($e[1]);
+      }
+      else {
+        $infos = Ldap::GetUserInfosFromEmail($email);
+      }
+      if (is_null($infos)) {
         $this->objectmelanie->organizer_uid = null;
         $this->extern = true;
         $this->event->setAttribute(self::ORGANIZER_EXTERN, $email);
       } else {
-        $this->objectmelanie->organizer_uid = $uid;
+        if (isset($objPartage)) {
+          $this->objectmelanie->organizer_uid = $objPartage . '.-.' . Ldap::GetMapValue($infos, 'user_uid', 'uid');
+        }
+        else {
+          $this->objectmelanie->organizer_uid = Ldap::GetMapValue($infos, 'user_uid', 'uid');
+        }        
         $this->extern = false;
+        $this->setMapName(Ldap::GetMapValue($infos, 'user_cn', 'cn'));
       }
       $this->setOrganizerParam('extern', $this->extern);
     }

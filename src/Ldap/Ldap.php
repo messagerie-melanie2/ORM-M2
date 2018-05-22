@@ -529,7 +529,7 @@ class Ldap {
    * @return NULL|string Nom du champ mappé
    */
   public static function GetMap($name, $defaultValue = null, $server = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetMapping($name, $defaultValue, $server)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetMap($name, $defaultValue, $server)");
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
@@ -537,6 +537,65 @@ class Ldap {
     $ldap = self::GetInstance($server);
     
     return $ldap->getMapping($name, $defaultValue);
+  }
+  
+  /**
+   * Retourne la valeur (1ere si plusieurs) correspondant au nom en fonction des infos
+   *
+   * @param array $infos Données venant du LDAP
+   * @param string $name
+   * @param string $defaultValue
+   *          [Optionnel] valeur par défaut si le mapping n'existe pas
+   * @param string $server
+   *          [Optionnel] Server LDAP utilisé pour la requête
+   * @return NULL|string Nom du champ mappé
+   */
+  public static function GetMapValue($infos, $name, $defaultValue = null, $server = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetMapValue($name, $defaultValue, $server)");
+    if (!isset($server)) {
+      $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+    }
+    // Récupération de l'instance LDAP en fonction du serveur
+    $ldap = self::GetInstance($server);
+    
+    $value = null;
+    if (isset($infos[$ldap->getMapping($name, $defaultValue)])) {
+      if (is_array($infos[$ldap->getMapping($name, $defaultValue)])
+          && isset($infos[$ldap->getMapping($name, $defaultValue)][0])) {
+        $value = $infos[$ldap->getMapping($name, $defaultValue)][0];
+      }
+      else {
+        $value = $infos[$ldap->getMapping($name, $defaultValue)];
+      }
+    }
+    
+    return $value;
+  }
+  /**
+   * Retourne les valeurs (tableau) correspondant au nom en fonction des infos
+   *
+   * @param array $infos Données venant du LDAP
+   * @param string $name
+   * @param string $defaultValue
+   *          [Optionnel] valeur par défaut si le mapping n'existe pas
+   * @param string $server
+   *          [Optionnel] Server LDAP utilisé pour la requête
+   * @return NULL|string Nom du champ mappé
+   */
+  public static function GetMapValues($infos, $name, $defaultValue = null, $server = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetMapValues($name, $defaultValue, $server)");
+    if (!isset($server)) {
+      $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+    }
+    // Récupération de l'instance LDAP en fonction du serveur
+    $ldap = self::GetInstance($server);
+    
+    $values = null;
+    if (isset($infos[$ldap->getMapping($name, $defaultValue)])) {
+      $values = $infos[$ldap->getMapping($name, $defaultValue)];
+    }
+    
+    return $values;
   }
   /**
    * Retourne la derniere requete

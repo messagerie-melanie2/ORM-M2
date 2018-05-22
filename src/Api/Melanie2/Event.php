@@ -406,9 +406,11 @@ class Event extends Melanie2Object {
       $events = $listevents->getList(null, null, null, 'attendees', false);
       // Si l'évènement n'existe pas et que l'organisateur est différent, c'est un organisateur externe
       if (count($events) == 0) {
-        if (strtolower($this->objectmelanie->organizer_uid) == strtolower($this->usermelanie->uid)) {
+        if (strtolower($this->objectmelanie->organizer_uid) == strtolower($this->usermelanie->uid) 
+            || strpos(strtolower($this->objectmelanie->organizer_uid), strtolower($this->usermelanie->uid) . '.-.') !== false) {
           // L'évènement n'existe pas, l'organisateur est celui qui créé l'évènement
           // Donc on est dans le cas d'une création interne
+          $organizer->calendar = $this->calendar;
           return false;
         } else {
           // L'évènement n'existe pas, mais l'organisateur est différent du créateur

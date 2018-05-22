@@ -1,3 +1,9 @@
+ORM M2 - 0.4.0.9
+------
+- 0004973: Modifier le CN de l'organisateur dans le cas assistante/directeur
+- 0004972: Une invitation créé depuis une boite partagée n'est pas reconnu comme interne
+- 0004974: [LDAP] Nouvelles méthodes getMapValue et getMapValues
+
 ORM M2 - 0.4.0.8
 ------
 - 0004945: Positionner le exist à true sur un Faked Master

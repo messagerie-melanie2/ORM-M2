@@ -373,8 +373,9 @@ class ICSToEvent {
           //  continue;
           //}
           // Gestion du CNAME
-          if (isset($attendee[ICS::CN]))
+          if (isset($attendee[ICS::CN])) {
             $_attendee->name = $attendee[ICS::CN]->getValue();
+          }
           // Gestion du PARTSTAT
           // MANTIS 4016: Gestion des COPY/MOVE
           if (isset($attendee[ICS::PARTSTAT]) && !$copy) {
@@ -398,8 +399,9 @@ class ICSToEvent {
                 $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_ACCEPTED;
                 break;
             }
-          } else
+          } else {
             $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_NEED_ACTION;
+          }            
           // Gestion du ROLE
           if (isset($attendee[ICS::ROLE])) {
             switch ($attendee[ICS::ROLE]->getValue()) {
@@ -408,6 +410,7 @@ class ICSToEvent {
                 break;
               case ICS::ROLE_NON_PARTICIPANT :
                 $_attendee->role = \LibMelanie\Api\Melanie2\Attendee::ROLE_NON_PARTICIPANT;
+                $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_ACCEPTED;
                 break;
               case ICS::ROLE_OPT_PARTICIPANT :
                 $_attendee->role = \LibMelanie\Api\Melanie2\Attendee::ROLE_OPT_PARTICIPANT;
@@ -417,8 +420,9 @@ class ICSToEvent {
                 $_attendee->role = \LibMelanie\Api\Melanie2\Attendee::ROLE_REQ_PARTICIPANT;
                 break;
             }
-          } else
+          } else {
             $_attendee->role = \LibMelanie\Api\Melanie2\Attendee::ROLE_REQ_PARTICIPANT;
+          }            
           // Ajout de l'attendee
           $_attendees[] = $_attendee;
         }

@@ -409,22 +409,8 @@ class EventToICS {
 		        $params
         );
 				foreach ($organizer_attendees as $attendee) {
-					// Role
-					switch ($attendee->role) {
-						case Attendee::ROLE_CHAIR:
-							$role = ICS::ROLE_CHAIR;
-							break;
-						default:
-						case Attendee::ROLE_REQ_PARTICIPANT:
-							$role = ICS::ROLE_REQ_PARTICIPANT;
-							break;
-						case Attendee::ROLE_OPT_PARTICIPANT:
-							$role = ICS::ROLE_OPT_PARTICIPANT;
-							break;
-						case Attendee::ROLE_NON_PARTICIPANT:
-							$role = ICS::ROLE_NON_PARTICIPANT;
-							break;
-					}
+				  // RSVP
+				  $rsvp = 'TRUE';
 					// Parstat
 					switch ($attendee->response) {
 						case Attendee::RESPONSE_ACCEPTED:
@@ -444,10 +430,28 @@ class EventToICS {
 							$partstat = ICS::PARTSTAT_TENTATIVE;
 							break;
 					}
+					// Role
+					switch ($attendee->role) {
+					  case Attendee::ROLE_CHAIR:
+					    $role = ICS::ROLE_CHAIR;
+					    break;
+					  default:
+					  case Attendee::ROLE_REQ_PARTICIPANT:
+					    $role = ICS::ROLE_REQ_PARTICIPANT;
+					    break;
+					  case Attendee::ROLE_OPT_PARTICIPANT:
+					    $role = ICS::ROLE_OPT_PARTICIPANT;
+					    break;
+					  case Attendee::ROLE_NON_PARTICIPANT:
+					    $role = ICS::ROLE_NON_PARTICIPANT;
+					    $partstat = ICS::PARTSTAT_ACCEPTED;
+					    $rsvp = 'FALSE';
+					    break;
+					}
 					$params = [
     						ICS::PARTSTAT => $partstat,
     						ICS::ROLE => $role,
-					      ICS::RSVP => 'TRUE',
+					      ICS::RSVP => $rsvp,
 					    ];
 					$attendee_name = $attendee->name;
 					if (!empty($attendee_name)) {

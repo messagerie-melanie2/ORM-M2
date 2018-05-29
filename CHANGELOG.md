@@ -1,3 +1,7 @@
+ORM M2 - 0.4.0.10
+------
+- 0004986: [ICS] un non participant doit être en accepted
+
 ORM M2 - 0.4.0.9
 ------
 - 0004973: Modifier le CN de l'organisateur dans le cas assistante/directeur

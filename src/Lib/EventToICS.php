@@ -386,24 +386,28 @@ class EventToICS {
 		    $params = [];
 		    $org_role = $event->organizer->role;
 		    if (isset($org_role)) {
-		      $params[ICS::ROLE] = $event->organizer->role;
+		      $params[ICS::ROLE] = $org_role;
 		    }
 		    $org_partstat = $event->organizer->partstat;
 		    if (isset($org_partstat)) {
-		      $params[ICS::PARTSTAT] = $event->organizer->partstat;
+		      $params[ICS::PARTSTAT] = $org_partstat;
 		    }
 		    $org_rsvp = $event->organizer->rsvp;
 		    if (isset($org_rsvp)) {
-		      $params[ICS::RSVP] = $event->organizer->rsvp;
+		      $params[ICS::RSVP] = $org_rsvp;
 		    }
 		    $org_name = $event->organizer->name;
 		    if (isset($org_name)) {
-		      $params[ICS::CN] = $event->organizer->name;
+		      $params[ICS::CN] = $org_name;
 		    }
 		    $org_sent_by = $event->organizer->sent_by;
 		    if (isset($org_sent_by)) {
-		      $params[ICS::SENT_BY] = $event->organizer->sent_by;
-		    }	      
+		      $params[ICS::SENT_BY] = $org_sent_by;
+		    }
+		    $org_owner_email = $event->organizer->owner_email;
+		    if (isset($org_owner_email)) {
+		      $params[ICS::X_M2_ORG_MAIL] = 'mailto:'.$org_owner_email;
+		    }
 		    $vevent->add(ICS::ORGANIZER,
 		        'mailto:'.$organizer_email,
 		        $params

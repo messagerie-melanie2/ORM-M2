@@ -1,3 +1,8 @@
+ORM M2 - 0.4.0.11
+------
+- 0005022: Gestion du champ owner email dans la classe organizer
+- 0005023: [ICS] ICS ajout du champ X-M2-ORG-MAIL dans ORGANIZER
+
 ORM M2 - 0.4.0.10
 ------
 - 0004986: [ICS] un non participant doit être en accepted

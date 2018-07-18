@@ -41,6 +41,7 @@ use LibMelanie\Lib\ICS;
  * @property string $role Role de l'organisateur
  * @property string $partstat Statut de participation de l'organisateur
  * @property string $sent_by Sent-By pour l'organisateur
+ * @property string $owner_email Email du owner du calendrier s'il est partagé
  * @property string $rsvp Repondez svp pour l'organisateur
  * @property bool $extern Boolean pour savoir si l'organisateur est externe au ministère
  */
@@ -197,24 +198,18 @@ class Organizer extends Melanie2Object {
       $infos = Ldap::GetUserInfos($this->event->getCalendarMelanie()->owner);
       if (Ldap::GetMapValue($infos, 'user_type_entree', 'mineqtypeentree') == 'BALI') {
         $newName = Ldap::GetMapValue($infos, 'user_cn', 'cn');
-        $oldName = $this->getMapName();
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapCalendar() oldName: $oldName");
-        if (isset($oldName)) {
-          $oldName = explode(' - ', $oldName, 2);
-          $oldName = $oldName[0];          
+        $owner = $this->event->owner;
+        if (strpos($this->event->owner, '.-.')) {
+          $owner = explode('.-.', $owner, 2);
+          $owner = $owner[0];
         }
-        else {
-          $owner = $this->event->owner;
-          if (strpos($this->event->owner, '.-.')) {
-            $owner = explode('.-.', $owner, 2);
-            $owner = $owner[0];
-          }
-          $ownerInfos = Ldap::GetUserInfos($owner, null, Ldap::GetMap('user_display_name', 'displayname'));
-          $oldName = Ldap::GetMapValue($ownerInfos, 'user_display_name', 'displayname');
-        }
+        $ownerInfos = Ldap::GetUserInfos($owner, null, [Ldap::GetMap('user_display_name', 'displayname')]);
+        $oldName = Ldap::GetMapValue($ownerInfos, 'user_display_name', 'displayname');
+        $ownerEmail = Ldap::GetMapValue($infos, 'user_mail', 'mailpr');
         M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapCalendar() oldName: $oldName");
         $newName = str_replace(' - ', " (via $oldName) - ", $newName);
         $this->setMapName($newName);
+        $this->setMapOwner_email($ownerEmail);
       }
     }
   }
@@ -407,6 +402,32 @@ class Organizer extends Melanie2Object {
     }
     else {
       return ICS::ROLE_CHAIR;
+    }
+  }
+  /**
+   * Mapping owner_email field
+   *
+   * @param string $owner_email
+   * @ignore
+   */
+  protected function setMapOwner_email($owner_email) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapOwner_email($role)");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->setOrganizerParam(ICS::X_M2_ORG_MAIL, $owner_email);
+  }
+  /**
+   * Mapping owner_email field
+   *
+   * @ignore
+   */
+  protected function getMapOwner_email() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOwner_email()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if ($this->event->useJsonData()) {
+      return $this->getOrganizerParam(ICS::X_M2_ORG_MAIL);
+    }
+    else {
+      return null;
     }
   }
   /**

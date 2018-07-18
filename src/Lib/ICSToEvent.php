@@ -360,6 +360,9 @@ class ICSToEvent {
           else {
             $object->organizer->email = str_replace('mailto:', '', strtolower($vevent->ORGANIZER->getValue()));
           }
+          if (isset($parameters[ICS::X_M2_ORG_MAIL])) {
+            $object->organizer->owner_email = str_replace('mailto:', '', strtolower($parameters[ICS::X_M2_ORG_MAIL]->getValue()));
+          }
         }
         $_attendees = [];
         foreach ($vevent->ATTENDEE as $prop) {

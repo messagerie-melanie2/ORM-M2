@@ -65,6 +65,7 @@ $user->uid = 'thomas.test1';
 
 if ($user->load()) {
   echo "### USER \r\n";
+  echo $user->dn . "\r\n";
   echo $user->email . "\r\n";
   echo $user->fullname . "\r\n";
   echo $user->server_host . "\r\n";
@@ -81,6 +82,11 @@ if ($user->load()) {
     echo $object->mailbox->server_host . "\r\n";
     echo "### Fin BALP \r\n";
   }
+  
+//   echo "### MODIFICATION USER \r\n";
+//   //$user->fullname = 'TEST1 Thomas - Test-PNE Messagerie/CETE Lyon';
+//   $user->fullname = 'TEST1 Thomas - Test-PNE Messagerie/CETE Lyon/Modification pour voir';
+//   echo "### SAVE = " . $user->save() . " \r\n";
 }
 
 echo "\r\n\r\n";

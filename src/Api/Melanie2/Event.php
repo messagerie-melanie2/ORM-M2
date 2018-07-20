@@ -488,7 +488,8 @@ class Event extends Melanie2Object {
           $organizer_attendees = $organizer_event->getMapAttendees();
           $invite = true;
           foreach ($organizer_attendees as $attendee) {
-            if (strtolower($attendee->uid) == strtolower($this->usermelanie->uid)) {
+            // 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur
+            if (strtolower($attendee->uid) == strtolower($this->calendarmelanie->owner)) {
               if ($attendee->response != $response) {
                 $attendee->response = $response;
                 $organizer_event->setMapAttendees($organizer_attendees);

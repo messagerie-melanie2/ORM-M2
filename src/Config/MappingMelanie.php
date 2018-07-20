@@ -92,6 +92,7 @@ class MappingMelanie {
 	  self::$Data_Mapping = [
 	      // Gestion de l'utilisateur : objet UserMelanie
 	      "UserMelanie" => [
+	          "dn"                     => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_dn', "dn"), self::type => self::stringLdap],
 	          "uid"                    => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_uid', "uid"), self::type => self::stringLdap],
 	          "fullname"               => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_cn', "cn"), self::type => self::stringLdap],
 	          "name"                   => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_displayname', "displayname"), self::type => self::stringLdap],

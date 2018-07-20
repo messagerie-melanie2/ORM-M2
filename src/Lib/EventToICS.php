@@ -332,7 +332,8 @@ class EventToICS {
 				|| $event->class == Event::CLASS_CONFIDENTIAL)
 				&& (($event->owner != $user_uid
 				&& isset($calendar)
-				&& $calendar->owner !=  $user_uid
+				&& $calendar->owner != $user_uid
+		    && strpos($event->owner, $user_uid.'.-.') !== 0
 		    && !$calendar->asRight(\LibMelanie\Config\ConfigMelanie::PRIV)) || !isset($user_uid))) {
 			$vevent->SUMMARY = 'Événement privé';
     } else if ($isfreebusy) {

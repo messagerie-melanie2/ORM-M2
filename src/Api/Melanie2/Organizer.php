@@ -286,7 +286,10 @@ class Organizer extends Melanie2Object {
           $this->objectmelanie->organizer_uid = Ldap::GetMapValue($infos, 'user_uid', 'uid');
         }        
         $this->extern = false;
-        $this->setMapName(Ldap::GetMapValue($infos, 'user_cn', 'cn'));
+        $name = $this->getOrganizerParam(ICS::CN);
+        if (!isset($name)) {
+          $this->setMapName(Ldap::GetMapValue($infos, 'user_cn', 'cn'));
+        }        
       }
       $this->setOrganizerParam('extern', $this->extern);
     }

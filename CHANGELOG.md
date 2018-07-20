@@ -1,3 +1,9 @@
+ORM M2 - 0.4.0.12
+------
+- 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur
+- 0005033: [ICS] Gérer les objets de partage pour les événements privés
+- 0005029: Le nom de l'organisateur n'est pas conservé après acceptation de l'invitation
+
 ORM M2 - 0.4.0.11
 ------
 - 0005022: Gestion du champ owner email dans la classe organizer

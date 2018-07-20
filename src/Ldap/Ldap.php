@@ -206,7 +206,7 @@ class Ldap {
           $filter = "(uid=$username)";
         }
         if ($useUserInfos) {
-          $infos = self::GetUserInfos($username);
+          $infos = self::GetUserInfos($username, null, null, $server);
           if (isset($infos) && $infos['dn']) {
             $dn = $infos['dn'];
           } else {
@@ -529,7 +529,6 @@ class Ldap {
    * @return NULL|string Nom du champ mappé
    */
   public static function GetMap($name, $defaultValue = null, $server = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetMap($name, $defaultValue, $server)");
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
@@ -551,7 +550,6 @@ class Ldap {
    * @return NULL|string Nom du champ mappé
    */
   public static function GetMapValue($infos, $name, $defaultValue = null, $server = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetMapValue($name, $defaultValue, $server)");
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
@@ -583,7 +581,6 @@ class Ldap {
    * @return NULL|string Nom du champ mappé
    */
   public static function GetMapValues($infos, $name, $defaultValue = null, $server = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetMapValues($name, $defaultValue, $server)");
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }

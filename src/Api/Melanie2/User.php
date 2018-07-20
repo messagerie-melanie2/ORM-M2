@@ -28,6 +28,7 @@ use LibMelanie\Log\M2Log;
  * @package Librairie Mélanie2
  * @subpackage API Mélanie2
  *             @api
+ * @property string $dn DN de l'utilisateur dans l'annuaire            
  * @property string $uid Identifiant unique de l'utilisateur
  * @property string $fullname Nom complet de l'utilisateur
  * @property string $name Nom de l'utilisateur
@@ -68,7 +69,7 @@ use LibMelanie\Log\M2Log;
  * @property string $gender Genre de l'utilisateur
  * 
  * @method string getTimezone() [OSOLETE] Chargement du timezone de l'utilisateur
- * @method bool authentification($password) Authentification de l'utilisateur sur l'annuaire Mélanie2
+ * @method bool authentification($password, $master = false) Authentification de l'utilisateur sur l'annuaire Mélanie2
  * @method bool load() Charge les données de l'utilisateur depuis l'annuaire Mélanie2 (en fonction de l'uid ou l'email)
  * @method bool exists() Est-ce que l'utilisateur existe dans l'annuaire Mélanie2 (en fonction de l'uid ou l'email)
  */

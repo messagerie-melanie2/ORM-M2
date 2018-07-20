@@ -40,6 +40,20 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @var string
    */
   public $timezone;
+  /**
+   * Est-ce que la connexion doit se faire sur le serveur maitre
+   * 
+   * @var boolean
+   */
+  private $master;
+  /**
+   * Liste des propriétés qui ne peuvent pas être modifiées
+   * @var array
+   */
+  private static $unchangeableProperties = [
+      'dn',
+      'uid',
+  ];
   
   /**
    * Constructeur de la class
@@ -53,6 +67,9 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Récupération du type d'objet en fonction de la class
     $this->objectType = explode('\\', $this->get_class);
     $this->objectType = $this->objectType[count($this->objectType) - 1];
+    
+    // Init du master
+    $this->master = false;
     
     if (isset(MappingMelanie::$Primary_Keys[$this->objectType])) {
       if (is_array(MappingMelanie::$Primary_Keys[$this->objectType]))
@@ -82,11 +99,16 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (is_bool($this->isExist) && $this->isLoaded) {
       return $this->isExist;
     }
+    // Récupération du serveur
+    $server = null;
+    if ($this->master) {
+      $server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
+    }
     // Récupération des données depuis le LDAP avec l'uid ou l'email
     if (isset($this->uid)) {
-      $data = Ldap::GetUserInfos($this->uid);
+      $data = Ldap::GetUserInfos($this->uid, null, null, $server);
     } else if (isset($this->email)) {
-      $data = Ldap::GetUserInfosFromEmail($this->uid);
+      $data = Ldap::GetUserInfosFromEmail($this->email, null, null, $server);
     }
     
     if (isset($data)) {
@@ -114,11 +136,16 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (is_bool($this->isExist)) {
       return $this->isExist;
     }
+    // Récupération du serveur
+    $server = null;
+    if ($this->master) {
+      $server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
+    }
     // Récupération des données depuis le LDAP avec l'uid ou l'email
     if (isset($this->uid)) {
-      $data = Ldap::GetUserInfos($this->uid);
+      $data = Ldap::GetUserInfos($this->uid, null, null, $server);
     } else if (isset($this->email)) {
-      $data = Ldap::GetUserInfosFromEmail($this->uid);
+      $data = Ldap::GetUserInfosFromEmail($this->email, null, null, $server);
     }
     $this->isExist = isset($data);
     return $this->isExist;
@@ -133,6 +160,12 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   function save() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save()");
     throw new \Exception('Not implemented');
+//     $entry = $this->getEntry();
+//     if (!empty($entry)) {
+//       $ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$MASTER_LDAP);
+//       return $ldap->modify($this->dn, $entry);
+//     }
+//     return false;
   }
   
   /**
@@ -156,14 +189,30 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       if (!is_numeric($key)) {
         if (is_array($value)
             && isset($value['count'])) {
-              unset($value['count']);
-            }
-            $this->data[$key] = $value;
+          unset($value['count']);
+        }
+        $this->data[$key] = $value;
       }
     }
     $this->isExist = true;
     $this->isLoaded = true;
     $this->initializeHasChanged();
+  }
+  /**
+   * Récupère l'entrée générée suite au changement de valeur
+   * 
+   * @return array
+   */
+  private function getEntry() {
+    $entry = [];
+    foreach ($this->haschanged as $key => $changed) {
+      if ($changed) {
+        if (!in_array($key, self::$unchangeableProperties)) {
+          $entry[$key] = $this->data[$key];
+        }
+      }
+    }
+    return $entry;
   }
   
   // -- LDAP
@@ -171,11 +220,18 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * Authentification sur le serveur LDAP
    *
    * @param string $password
+   * @param boolean $master Utiliser le serveur maitre (nécessaire pour faire des modifications)
    * @return boolean
    */
-  function authentification($password) {
+  function authentification($password, $master = false) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->authentification()");
-    return Ldap::Authentification($this->uid, $password, null, true);
+    $this->master = $master;
+    // Récupération du serveur
+    $server = null;
+    if ($this->master) {
+      $server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
+    }
+    return Ldap::Authentification($this->uid, $password, $server, true);
   }
   /**
    * Récupère la liste des BALP accessibles à l'utilisateur
@@ -187,8 +243,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (!isset($this->uid))
       return [];
     
+    // Récupération du serveur
+    $server = null;
+    if ($this->master) {
+      $server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
+    }
     // Récupération des Balp depuis le LDAP
-    $list = Ldap::GetUserBalPartagees($this->uid);
+    $list = Ldap::GetUserBalPartagees($this->uid, null, null, $server);
     $balp = [];
     if (isset($list)) {
       // Parcours la list des balp pour générer les objet UserMelanie
@@ -213,8 +274,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (!isset($this->uid))
       return [];
     
+    // Récupération du serveur
+    $server = null;
+    if ($this->master) {
+      $server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
+    }
     // Récupération des Balp depuis le LDAP
-    $list = Ldap::GetUserBalEmission($this->uid);
+    $list = Ldap::GetUserBalEmission($this->uid, null, null, $server);
     $balp = [];
     if (isset($list)) {
       // Parcours la list des balp pour générer les objet UserMelanie
@@ -239,8 +305,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (!isset($this->uid))
       return false;
     
+    // Récupération du serveur
+    $server = null;
+    if ($this->master) {
+      $server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
+    }
     // Récupération des Balp depuis le LDAP
-    $list = Ldap::GetUserBalGestionnaire($this->uid);
+    $list = Ldap::GetUserBalGestionnaire($this->uid, null, null, $server);
     $balp = [];
     if (isset($list)) {
       // Parcours la list des balp pour générer les objet UserMelanie

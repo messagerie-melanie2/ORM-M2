@@ -1,3 +1,7 @@
+ORM M2 - 0.4.0.13
+------
+- FIX 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur
+
 ORM M2 - 0.4.0.12
 ------
 - 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur

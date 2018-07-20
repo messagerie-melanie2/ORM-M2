@@ -474,7 +474,8 @@ class Event extends Melanie2Object {
         // Recupération de la réponse du participant
         $response = Attendee::RESPONSE_NEED_ACTION;
         foreach ($this->attendees as $attendee) {
-          if (strtolower($attendee->uid) == strtolower($this->usermelanie->uid)) {
+          // 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur
+          if (strtolower($attendee->uid) == strtolower($this->calendarmelanie->owner)) {
             $response = $attendee->response;
             // MANTIS 0004708: Lors d'un "s'inviter" utiliser les informations de l'ICS
             $att_email = $attendee->email;

@@ -1,3 +1,8 @@
+ORM M2 - 0.4.0.14
+------
+- FIX 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur
+- Problème dans le mapping des attributs LDAP
+
 ORM M2 - 0.4.0.13
 ------
 - FIX 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur

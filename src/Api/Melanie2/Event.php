@@ -556,7 +556,8 @@ class Event extends Melanie2Object {
             // Recupération de la réponse du participant
             $response = Attendee::RESPONSE_NEED_ACTION;
             foreach ($exception->attendees as $attendee) {
-              if (strtolower($attendee->uid) == strtolower($this->usermelanie->uid)) {
+              // 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur
+              if (strtolower($attendee->uid) == strtolower($this->calendarmelanie->owner)) {
                 $response = $attendee->response;
                 break;
               }
@@ -566,7 +567,8 @@ class Event extends Melanie2Object {
               $invite = true;
               $organizer_exception_attendees = $organizer_event_exception->attendees;
               foreach ($organizer_exception_attendees as $attendee) {
-                if (strtolower($attendee->uid) == strtolower($this->usermelanie->uid)) {
+                // 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur
+                if (strtolower($attendee->uid) == strtolower($this->calendarmelanie->owner)) {
                   $attendee->response = $response;
                   $organizer_event_exception->attendees = $organizer_exception_attendees;
                   $save = true;

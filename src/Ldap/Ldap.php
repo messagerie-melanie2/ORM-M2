@@ -983,9 +983,12 @@ class Ldap {
       return null;
     $mapAttributes = array();
     foreach ($attributes as $attribute) {
-      if (!isset($this->config['mapping']) || !isset($this->config['mapping'][$attribute]))
+      if (!isset($this->config['mapping']) || !isset($this->config['mapping'][$attribute])) {
         $mapAttributes[] = $attribute;
-      $mapAttributes[] = $this->config['mapping'][$attribute];
+      }
+      else {
+        $mapAttributes[] = $this->config['mapping'][$attribute];
+      }
     }
     return $mapAttributes;
   }

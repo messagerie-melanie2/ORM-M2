@@ -121,7 +121,7 @@ class CalendarSync extends Melanie2Object {
         // MANTIS 0004667: [CalendarSync] Nettoyer les uid en @RECURRENCE-ID
         $uid = $_calendarSync->uid;
         if (strpos($uid, self::RECURRENCE_ID) !== false) {
-          $uid = substr($uid, 0, strlen($uid) - 24);
+          $uid = substr($uid, 0, strlen($uid) - 23);
           $mapAct = self::$actionMapper['mod'];
         }
         // MANTIS 0004696: [SyncToken] Ne retourner qu'un seul uid

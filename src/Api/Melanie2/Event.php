@@ -424,7 +424,8 @@ class Event extends Melanie2Object {
       // XXX on doit arriver ici quand le load ne retourne rien car l'évènement n'existe pas
       // Parcourir les évènements trouvés pour chercher l'évènement de l'organisateur
       foreach ($events as $_event) {
-        if ($_event->hasattendees) {
+        if ($_event->hasattendees ||
+            ($_event->owner == $this->objectmelanie->organizer_uid && count($events) === 1)) {
           $organizer_event = $_event;
           $organizer_calendar_id = $_event->calendar;
           break;
@@ -432,7 +433,8 @@ class Event extends Melanie2Object {
           $exceptions = $_event->getMapExceptions();
           if (isset($exceptions) && is_array($exceptions)) {
             foreach ($exceptions as $_exception) {
-              if ($_exception->hasattendees) {
+              if ($_exception->hasattendees || 
+                  ($_exception->owner == $this->objectmelanie->organizer_uid && count($events) === 1)) {
                 $organizer_event = $_event;
                 $organizer_calendar_id = $_event->calendar;
                 break;

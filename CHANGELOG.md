@@ -1,3 +1,9 @@
+ORM M2 - 0.4.0.15
+------
+- 0005047: [SyncToken] le nettoyage de l'uid des occurrences n'est pas
+- 0005040: La création d'un événement sans participant puis ajout de participants ne fonctionne pas correctement
+- 0005049: La récupération du calendrier de l'organisateur pour les occurrences ne fonctionne pas
+
 ORM M2 - 0.4.0.14
 ------
 - FIX 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur

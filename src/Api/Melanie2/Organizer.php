@@ -222,7 +222,13 @@ class Organizer extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCalendar()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if ($this->event->useJsonData()) {
-      return $this->objectmelanie->organizer_calendar_id;
+      if ($this->event instanceof Exception) {
+        return $this->event->getEventParent()->getObjectMelanie()->organizer_calendar_id;
+      }
+      else {
+        return $this->objectmelanie->organizer_calendar_id;
+      }
+      
     }
     else {
       return $this->objectmelanie->organizer_calendar;

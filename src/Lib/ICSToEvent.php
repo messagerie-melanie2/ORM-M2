@@ -339,30 +339,33 @@ class ICSToEvent {
         $object->status = Event::STATUS_NONE;
       // ATTENDEE
       if (isset($vevent->ATTENDEE)) {
-        if (isset($vevent->ORGANIZER)) {
-          
+        // 0005064: [ICS] si l'organisateur existe, ne pas le modifier depuis l'ICS
+        $organizer = $object->organizer;
+        $organizer_email = isset($organizer) ? $organizer->email : null;
+        if (isset($vevent->ORGANIZER) && !isset($organizer_email)) {
           $parameters = $vevent->ORGANIZER->parameters;
           if (isset($parameters[ICS::CN])) {
-            $object->organizer->name = $parameters[ICS::CN]->getValue();
+            $organizer->name = $parameters[ICS::CN]->getValue();
           }
           if (isset($parameters[ICS::RSVP])) {
-            $object->organizer->rsvp = $parameters[ICS::RSVP]->getValue();
+            $organizer->rsvp = $parameters[ICS::RSVP]->getValue();
           }
           if (isset($parameters[ICS::ROLE])) {
-            $object->organizer->role = $parameters[ICS::ROLE]->getValue();
+            $organizer->role = $parameters[ICS::ROLE]->getValue();
           }
           if (isset($parameters[ICS::PARTSTAT])) {
-            $object->organizer->partstat = $parameters[ICS::PARTSTAT]->getValue();
+            $organizer->partstat = $parameters[ICS::PARTSTAT]->getValue();
           }
           if (isset($parameters[ICS::SENT_BY])) {
-            $object->organizer->email = str_replace('mailto:', '', strtolower($parameters[ICS::SENT_BY]->getValue()));
+            $organizer->email = str_replace('mailto:', '', strtolower($parameters[ICS::SENT_BY]->getValue()));
           }
           else {
-            $object->organizer->email = str_replace('mailto:', '', strtolower($vevent->ORGANIZER->getValue()));
+            $organizer->email = str_replace('mailto:', '', strtolower($vevent->ORGANIZER->getValue()));
           }
           if (isset($parameters[ICS::X_M2_ORG_MAIL])) {
-            $object->organizer->owner_email = str_replace('mailto:', '', strtolower($parameters[ICS::X_M2_ORG_MAIL]->getValue()));
+            $organizer->owner_email = str_replace('mailto:', '', strtolower($parameters[ICS::X_M2_ORG_MAIL]->getValue()));
           }
+          $object->organizer = $organizer;
         }
         $_attendees = [];
         foreach ($vevent->ATTENDEE as $prop) {

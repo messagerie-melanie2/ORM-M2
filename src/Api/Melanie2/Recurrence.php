@@ -433,8 +433,19 @@ class Recurrence extends Melanie2Object {
       $nbdays = $this->objectmelanie->interval;
       
       switch (strtoupper($rdata[ICS::FREQ])) {
-        case ICS::FREQ_DAILY :
-          $recurrence->type = self::RECURTYPE_DAILY;
+        case ICS::FREQ_DAILY:
+          // 0005065: [Recurrence] Gérer les jours en DAILY
+          if (isset($rdata[ICS::BYDAY])) {
+            $recurrence->type = self::RECURTYPE_WEEKLY;
+            if (is_array($rdata[ICS::BYDAY])) {
+              $recurrence->days = $rdata[ICS::BYDAY];
+            } else {
+              $recurrence->days = explode(',', $rdata[ICS::BYDAY]);
+            }
+          }
+          else {
+            $recurrence->type = self::RECURTYPE_DAILY;
+          }
           $nbdays = $nbdays + 7;
           break;
           

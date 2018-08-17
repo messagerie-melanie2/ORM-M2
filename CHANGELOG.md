@@ -1,3 +1,8 @@
+ORM M2 - 0.4.0.16
+------
+- 0005064: [ICS] si l'organisateur existe, ne pas le modifier depuis l'ICS
+- 0005065: [Recurrence] Gérer les jours en DAILY
+
 ORM M2 - 0.4.0.15
 ------
 - 0005047: [SyncToken] le nettoyage de l'uid des occurrences n'est pas

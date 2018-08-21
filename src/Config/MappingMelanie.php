@@ -389,6 +389,7 @@ class MappingMelanie {
 	const like = "LIKE";
 	const eq = "=";
 	const in = "IN";
+	const notin = "NOT IN";
 
 	// DATA MAPPING
 	// Class

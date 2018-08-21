@@ -1,3 +1,14 @@
+ORM M2 - 0.5
+------
+- 0005035: Créer un événement en attente lorsque l'on est invité
+- 0005038: Lorsque le participant accepte, si l'événement est en provisoire dans son agenda le passer en confirmé
+- 0005037: [MagicObject] Rendre le champ haschanged accessible publiquement
+- 0005046: [MagicObject] permettre la récupération des données depuis data
+- 0005040: La création d'un événement sans participant puis ajout de participants ne fonctionne pas correctement
+- 0005049: La récupération du calendrier de l'organisateur pour les occurrences ne fonctionne pas
+- 0005055: [En attente] Mieux gérer les participants qui sont dans une occurrence mais pas dans la récurrence maitre
+- 0005066: Marquage LDAP du mode "En attente"
+
 ORM M2 - 0.4.0.16
 ------
 - 0005064: [ICS] si l'organisateur existe, ne pas le modifier depuis l'ICS

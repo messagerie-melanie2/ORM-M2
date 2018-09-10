@@ -1305,7 +1305,11 @@ class Event extends Melanie2Object {
    */
   protected function getMapDeleted() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDeleted()");
-    return $this->deleted || !isset($this->start) || $this->start == '1970-01-01 00:00:00';
+    $deleted = $this->deleted;
+    if (!isset($this->start) || $this->start == '1970-01-01 00:00:00') {
+      $deleted = $deleted || isset($this->objectmelanie->exceptions) && strlen($this->objectmelanie->exceptions) > 16;
+    }
+    return $deleted;
   }
   
   /**

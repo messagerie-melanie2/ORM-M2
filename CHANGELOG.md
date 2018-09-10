@@ -1,3 +1,8 @@
+ORM M2 - 0.4.0.17
+------
+- 0005080: HOTFIX: Problème de suppression des occurrences
+- 0005074: [ICS] Si l'événement n'a pas de date générer une date standard
+
 ORM M2 - 0.4.0.16
 ------
 - 0005064: [ICS] si l'organisateur existe, ne pas le modifier depuis l'ICS

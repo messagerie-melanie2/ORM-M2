@@ -118,7 +118,6 @@ class EventToICS {
 	    // Type récurrence
 	    if (isset($event->recurrence->type)
 	        && $event->recurrence->type !== Recurrence::RECURTYPE_NORECUR) {
-	      $timeStart = new \DateTime($event->start);
 	      $rrule = $event->recurrence->rrule;
 	      $params = [];
 	      foreach ($rrule as $key => $value) {
@@ -323,6 +322,11 @@ class EventToICS {
 				$vevent->DTSTART = $dateTimeStart;
 				$vevent->DTEND = $dateTimeEnd;
 			}
+		}
+		// MANTIS 0005074: [ICS] Si l'événement n'a pas de date générer une date standard
+		else {
+		  $vevent->DTSTART = new \DateTime('1970-01-02 09:00:00');
+		  $vevent->DTEND = new \DateTime('1970-01-02 10:00:00');
 		}
 
 		// Problème de user uid vide

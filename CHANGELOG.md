@@ -1,3 +1,8 @@
+ORM M2 - 0.5.0.1
+------
+- 0005080: HOTFIX: Problème de suppression des occurrences
+- 0005074: [ICS] Si l'événement n'a pas de date générer une date standard
+
 ORM M2 - 0.5
 ------
 - 0005035: Créer un événement en attente lorsque l'on est invité
@@ -8,6 +13,11 @@ ORM M2 - 0.5
 - 0005049: La récupération du calendrier de l'organisateur pour les occurrences ne fonctionne pas
 - 0005055: [En attente] Mieux gérer les participants qui sont dans une occurrence mais pas dans la récurrence maitre
 - 0005066: Marquage LDAP du mode "En attente"
+
+ORM M2 - 0.4.0.17
+------
+- 0005080: HOTFIX: Problème de suppression des occurrences
+- 0005074: [ICS] Si l'événement n'a pas de date générer une date standard
 
 ORM M2 - 0.4.0.16
 ------

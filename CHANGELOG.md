@@ -1,3 +1,26 @@
+ORM M2 - 0.5.0.2
+------
+- 0005089: Erreur de génération d'un ICS
+- 0005086: Impossible de vider la liste des participants
+- 0005088: Prévoir une requête optimisé de liste des événéments pour SabreDAV
+- 0005095: Mauvaise gestion du timezone pour les exceptions
+
+ORM M2 - 0.5.0.1
+------
+- 0005080: HOTFIX: Problème de suppression des occurrences
+- 0005074: [ICS] Si l'événement n'a pas de date générer une date standard
+
+ORM M2 - 0.5
+------
+- 0005035: Créer un événement en attente lorsque l'on est invité
+- 0005038: Lorsque le participant accepte, si l'événement est en provisoire dans son agenda le passer en confirmé
+- 0005037: [MagicObject] Rendre le champ haschanged accessible publiquement
+- 0005046: [MagicObject] permettre la récupération des données depuis data
+- 0005040: La création d'un événement sans participant puis ajout de participants ne fonctionne pas correctement
+- 0005049: La récupération du calendrier de l'organisateur pour les occurrences ne fonctionne pas
+- 0005055: [En attente] Mieux gérer les participants qui sont dans une occurrence mais pas dans la récurrence maitre
+- 0005066: Marquage LDAP du mode "En attente"
+
 ORM M2 - 0.4.0.17
 ------
 - 0005080: HOTFIX: Problème de suppression des occurrences

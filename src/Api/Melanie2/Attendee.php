@@ -22,6 +22,7 @@ use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Ldap\LDAPMelanie;
+use LibMelanie\Ldap\Ldap;
 
 /**
  * Classe attendee pour les évènements pour Melanie2
@@ -33,6 +34,7 @@ use LibMelanie\Ldap\LDAPMelanie;
  * @property string $email Email du participant
  * @property string $name Nom du participant
  * @property string $uid Uid du participant
+ * @property-read boolean $need_action Est-ce que le mode En attente est activé pour ce participant
  * @property Attendee::RESPONSE_* $response Réponse du participant
  * @property Attendee::ROLE_* $role Role du participant
  */
@@ -62,6 +64,12 @@ class Attendee extends Melanie2Object {
    *
    */
   private $uid;
+  /**
+   * Est-ce que le mode En attente est activé pour ce participant
+   * @var boolean
+   * @ignore
+   */
+  private $need_action;
   /**
    * Réponse du participant
    * 
@@ -267,10 +275,25 @@ class Attendee extends Melanie2Object {
    */
   protected function getMapUid() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUid()");
-    if (!isset($this->uid) && isset($this->email))
-      $this->uid = LDAPMelanie::GetUidFromMail($this->email);
+    if (!isset($this->uid) && isset($this->email)) {
+      $infos = Ldap::GetUserInfosFromEmail($this->email);
+      $this->uid = isset($infos['uid']) ? $infos['uid'][0] : null;
+    }      
     if (!isset($this->uid))
       $this->uid = $this->email;
     return $this->uid;
+  }
+  
+  /**
+   * Mapping attendee need_action field
+   */
+  protected function getMapNeed_action() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapNeed_action()");
+    if (!isset($this->need_action) 
+        && isset($this->email)) {
+      $infos = Ldap::GetUserInfosFromEmail($this->email);
+      $this->need_action = isset($infos) && isset($infos['info']) && in_array('ORM.Agenda.EnAttente: oui', $infos['info']);
+    }   
+    return $this->need_action;
   }
 }

@@ -434,6 +434,10 @@ class ICSToEvent {
         }
         $object->attendees = $_attendees;
       }
+      else {
+        // MANTIS 0005086: Impossible de vider la liste des participants
+        $object->attendees = [];
+      }
       // ATTACH
       if (isset($vevent->ATTACH)) {
         $attachments = $object->attachments;

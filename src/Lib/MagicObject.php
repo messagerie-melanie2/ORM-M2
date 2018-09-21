@@ -72,8 +72,46 @@ abstract class MagicObject {
 	 * Remet à 0 le haschanged
 	 * @ignore
 	 */
-	protected function initializeHasChanged () {
+	protected function initializeHasChanged() {
 		foreach (array_keys($this->haschanged) as $key) $this->haschanged[$key] = false;
+	}
+	
+	/**
+	 * Détermine si le champ a changé
+	 * 
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function fieldHasChanged($name) {
+	  $lname = strtolower($name);
+	  // Récupèration des données de mapping
+	  if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
+        && isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname])) {
+      $lname = MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::name];
+    }
+    if (isset($this->haschanged[$lname])) {
+      return $this->haschanged[$lname];
+    }
+	  return false;
+	}
+	
+	/**
+	 * Récupère la valeur du champ dans data
+	 * Nécessaire pour effectuer des comparaisons bruts
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function getFieldValueFromData($name) {
+	  $lname = strtolower($name);
+	  // Récupèration des données de mapping
+	  if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
+	      && isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname])) {
+      $lname = MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::name];
+    }
+    if (isset($this->data[$lname])) {
+      return $this->data[$lname];
+    }
+    return null;
 	}
 
 	/**

@@ -223,16 +223,14 @@ class Organizer extends Melanie2Object {
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if ($this->event->useJsonData()) {
       if ($this->event instanceof Exception) {
-        return $this->event->getEventParent()->getObjectMelanie()->organizer_calendar_id;
+        $eventParent = $this->event->getEventParent();
+        if (isset($eventParent)) {
+          return $eventParent->getObjectMelanie()->organizer_calendar_id;
+        }       
       }
-      else {
-        return $this->objectmelanie->organizer_calendar_id;
-      }
-      
+      return $this->objectmelanie->organizer_calendar_id;
     }
-    else {
-      return $this->objectmelanie->organizer_calendar;
-    }    
+    return $this->objectmelanie->organizer_calendar;
   }
   
   /**

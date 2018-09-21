@@ -1778,16 +1778,6 @@ class Event extends Melanie2Object {
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     
     $_exceptions = [];
-    // Get the TZ
-    try {
-      if (isset($this->calendarmelanie))
-        $tz = $this->calendarmelanie->getTimezone();
-    } catch ( \Exception $ex ) {
-      /* Impossible de récupérer le timezone */
-      $tz = '';
-    }
-    // Définition Timezone de l'utilisateur
-    $user_timezone = new \DateTimeZone(!empty($tz) ? $tz : date_default_timezone_get());
     // MANTIS 3615: Alimenter le champ recurrence master
     // TODO: Supprimer cet ajout quand CalDAV utilisera l'ORM
     $recurrence_master = [];
@@ -1822,6 +1812,12 @@ class Event extends Melanie2Object {
     $this->exceptions = [];
     foreach ($exceptions as $exception) {
       $date = new \DateTime($exception->recurrenceId, new \DateTimeZone('GMT'));
+      $timezone = $this->getMapTimezone();
+      if (!isset($timezone)) {
+        $timezone = $exception->timezone;
+      }
+      // Définition Timezone de l'utilisateur
+      $user_timezone = new \DateTimeZone(!empty($timezone) ? $timezone : date_default_timezone_get());
       $date->setTimezone($user_timezone);
       $recId = $date->format("Ymd");
       if (!in_array($recId, $_exceptions)) {
@@ -1893,11 +1889,12 @@ class Event extends Melanie2Object {
     if (!isset($this->exceptions) && !is_array($this->exceptions)) {
       $this->exceptions = [];
     }
-    // Get the TZ
-    if (isset($this->calendarmelanie))
-      $tz = $this->calendarmelanie->getTimezone();
+    $timezone = $this->getMapTimezone();
+    if (!isset($timezone)) {
+      $timezone = $exception->timezone;
+    }
     // Définition Timezone de l'utilisateur
-    $user_timezone = new \DateTimeZone(!empty($tz) ? $tz : date_default_timezone_get());
+    $user_timezone = new \DateTimeZone(!empty($timezone) ? $timezone : date_default_timezone_get());
     // Récupère les dates des exceptions
     $exceptions_dates = explode(',', $this->objectmelanie->exceptions);
     // MANTIS 3615: Alimenter le champ recurrence master

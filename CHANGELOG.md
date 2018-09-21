@@ -1,3 +1,10 @@
+ORM M2 - 0.5.0.2
+------
+- 0005089: Erreur de génération d'un ICS
+- 0005086: Impossible de vider la liste des participants
+- 0005088: Prévoir une requête optimisé de liste des événéments pour SabreDAV
+- 0005095: Mauvaise gestion du timezone pour les exceptions
+
 ORM M2 - 0.5.0.1
 ------
 - 0005080: HOTFIX: Problème de suppression des occurrences

@@ -1,3 +1,8 @@
+ORM M2 - 0.5.0.3
+------
+- 0005096: Le champ X-M2-ORG-MAIL n'est pas alimenté pour une modification d'événement
+- 0005097: [En attente] Vérifier que le participant n'est pas aussi l'organisateur
+
 ORM M2 - 0.5.0.2
 ------
 - 0005089: Erreur de génération d'un ICS

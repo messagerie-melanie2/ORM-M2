@@ -725,6 +725,8 @@ class Event extends Melanie2Object {
         $attendee_uid = $attendee->uid;
         // Si c'est un participant Mélanie2
         if (isset($attendee_uid)
+            // 0005097: [En attente] Vérifier que le participant n'est pas aussi l'organisateur
+            && $attendee_uid != $this->calendar
             && $attendee->need_action) {
           // Creation du user melanie
           $attendee_user = new User();

@@ -358,6 +358,8 @@ class ICSToEvent {
           }
           if (isset($parameters[ICS::SENT_BY])) {
             $organizer->email = str_replace('mailto:', '', strtolower($parameters[ICS::SENT_BY]->getValue()));
+            // 0005096: Le champ X-M2-ORG-MAIL n'est pas alimenté pour une modification d'événement
+            $organizer->owner_email = str_replace('mailto:', '', strtolower($vevent->ORGANIZER->getValue()));
           }
           else {
             $organizer->email = str_replace('mailto:', '', strtolower($vevent->ORGANIZER->getValue()));

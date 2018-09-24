@@ -22,7 +22,7 @@ use LibMelanie\Objects\ObjectMelanie;
 use LibMelanie\Log\M2Log;
 
 /**
- * Classe pour la gestion des Sync pour les taskslist
+ * Classe pour la gestion des Sync pour les addressbook
  * Certains champs sont mappés directement ou passe par des classes externes
  * 
  * @author PNE Messagerie/Apitech
@@ -30,13 +30,13 @@ use LibMelanie\Log\M2Log;
  * @subpackage API Mélanie2
  *             @api
  * @property integer $token Numéro de token associé à l'objet Sync
- * @property string $taskslist Identifiant du taskslist associé à l'objet Sync
- * @property string $uid UID de la tâche concernée par le Sync
+ * @property string $addressbook Identifiant de l'addressbook associé à l'objet Sync
+ * @property string $uid UID du contact concerné par le Sync
  * @property string $action Action effectuée sur l'uid (add, mod, del)
- * @method bool load() Chargement du TaskslistSync, en fonction du taskslist et du token
- * @method bool exists() Test si le TaskslistSync existe, en fonction du taskslist et du token
+ * @method bool load() Chargement du AddressbookSync, en fonction de l'addressbook et du token
+ * @method bool exists() Test si le AddressbookSync existe, en fonction de l'addressbook et du token
  */
-class TaskslistSync extends Melanie2Object {
+class AddressbookSync extends Melanie2Object {
   
   /**
    * Mapping des actions entre la base et SabreDAV
@@ -52,19 +52,19 @@ class TaskslistSync extends Melanie2Object {
   /**
    * Constructeur de l'objet
    * 
-   * @param \LibMelanie\Objects\TaskslistMelanie $taskslistmelanie          
+   * @param \LibMelanie\Objects\AddressbookMelanie $addressbookmelanie          
    */
-  function __construct($taskslistmelanie = null) {
+  function __construct($addressbookmelanie = null) {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
     // M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
     // Définition de la propriété de l'objet
-    $this->objectmelanie = new ObjectMelanie('TaskslistSync');
+    $this->objectmelanie = new ObjectMelanie('AddressbookSync');
     
     // Définition des objets associés
-    if (isset($taskslistmelanie)) {
-      $this->objectmelanie->taskslist = $taskslistmelanie->id;
+    if (isset($addressbookmelanie)) {
+      $this->objectmelanie->addressbook = $addressbookmelanie->id;
     }
   }
   
@@ -97,8 +97,8 @@ class TaskslistSync extends Melanie2Object {
    * @param integer $limit
    *          [Optionnel]
    */
-  public function listTaskslistSync($limit = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->listTaskslistSync($limit)");
+  public function listAddressbookSync($limit = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->listAddressbookSync($limit)");
     $result = [
         'added' => [],
         'modified' => [],
@@ -108,10 +108,10 @@ class TaskslistSync extends Melanie2Object {
       $operators = [
           'token' => \LibMelanie\Config\MappingMelanie::sup
       ];
-      foreach ($this->objectmelanie->getList(null, null, $operators, 'token', false, $limit) as $_taskslistSync) {
-        $mapAct = self::$actionMapper[$_taskslistSync->action];
+      foreach ($this->objectmelanie->getList(null, null, $operators, 'token', false, $limit) as $_addressbookSync) {
+        $mapAct = self::$actionMapper[$_addressbookSync->action];
         // MANTIS 0004696: [SyncToken] Ne retourner qu'un seul uid
-        $uid = $this->uidencode($_taskslistSync->uid) . '.ics';
+        $uid = $this->uidencode($_addressbookSync->uid) . '.ics';
         if (!in_array($uid, $result['added'])
             && !in_array($uid, $result['modified'])
             && !in_array($uid, $result['deleted'])) {
@@ -119,12 +119,12 @@ class TaskslistSync extends Melanie2Object {
         }     
       }
     } else {
-      $task = new \LibMelanie\Api\Melanie2\Task();
-      $task->taskslist = $this->objectmelanie->taskslist;
-      foreach ($task->getList([
+      $contact = new \LibMelanie\Api\Melanie2\Contact();
+      $contact->addressbook = $this->objectmelanie->addressbook;
+      foreach ($contact->getList([
           'uid'
-      ]) as $_task) {
-        $result['added'][] = $this->uidencode($_task->uid) . '.ics';
+      ]) as $_contact) {
+        $result['added'][] = $this->uidencode($_contact->uid) . '.ics';
       }
     }
     

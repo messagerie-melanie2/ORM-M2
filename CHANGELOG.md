@@ -1,3 +1,7 @@
+ORM M2 - 0.5.0.4
+------
+- 0005098: Mise en place du sync token pour les carnets d'adresses
+
 ORM M2 - 0.5.0.3
 ------
 - 0005096: Le champ X-M2-ORG-MAIL n'est pas alimenté pour une modification d'événement

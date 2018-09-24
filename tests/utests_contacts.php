@@ -50,6 +50,7 @@ use LibMelanie\Api\Melanie2\Contact;
 use LibMelanie\Api\Melanie2\Addressbook;
 use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Api\Melanie2\AddressbookSync;
 
 $log = function ($message) {
 	echo "[LibM2] $message \r\n";
@@ -60,33 +61,42 @@ M2Log::InitErrorLog($log);
 echo "########################\r\n";
 
 $user = new User();
-$user->uid = 'thomas.test1';
+$user->uid = 'julien.test2';
 
 $addressbook = new Addressbook($user);
-$addressbook->id = 'thomas.test1';
+$addressbook->id = 'julien.test2';
+$addressbook->load();
 
-$contact = new Contact($user, $addressbook);
-//$contact->uid = '20150402100009.8164365ihcjmnzt5@roundcube';
-$contact->uid = "20150402095827.19575mo7ac0phpyb@roundcube";
-// $contact->alias = '%o%';
+echo "SyncToken = " . $addressbook->synctoken . "\r\n\r\n";
 
-// $contacts = $contact->getList(
-// 		['uid', 'name', 'addressbook', 'alias'],
-// 		'(#alias#) AND #addressbook#',
-// 		[
-// 				'uid' => MappingMelanie::like,
-// 				'alias' => MappingMelanie::like]
-// );
+$addressbooksync = new AddressbookSync($addressbook);
+$addressbooksync->token = 0;
 
-// var_dump($contacts);
+echo var_export($addressbooksync->listAddressbookSync(1), true);
 
-if ($contact->load()) {
-  echo $contact->vcard;
-}
 
-$contact2 = new Contact($user, $addressbook);
-$contact2->vcard = $contact->vcard;
-var_dump($contact2);
+// $contact = new Contact($user, $addressbook);
+// //$contact->uid = '20150402100009.8164365ihcjmnzt5@roundcube';
+// $contact->uid = "20150402095827.19575mo7ac0phpyb@roundcube";
+// // $contact->alias = '%o%';
+
+// // $contacts = $contact->getList(
+// // 		['uid', 'name', 'addressbook', 'alias'],
+// // 		'(#alias#) AND #addressbook#',
+// // 		[
+// // 				'uid' => MappingMelanie::like,
+// // 				'alias' => MappingMelanie::like]
+// // );
+
+// // var_dump($contacts);
+
+// if ($contact->load()) {
+//   echo $contact->vcard;
+// }
+
+// $contact2 = new Contact($user, $addressbook);
+// $contact2->vcard = $contact->vcard;
+// var_dump($contact2);
 
 // $addressbooks = $user->getSharedAddressbooks();
 // var_dump($addressbooks);

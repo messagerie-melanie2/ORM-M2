@@ -66,6 +66,7 @@ class MappingMelanie {
 	      "CalendarSync" 				=> "kronolith_sync",
 	      "TaskslistSync" 			=> "nag_sync",
 	      "TaskslistMelanie" 		=> "horde_datatree",
+	      "AddressbookSync" 	  => "turba_sync",
 	      "AddressbookMelanie" 	=> "horde_datatree",
 	      "UserPrefs" 					=> "horde_prefs",
 	      "Share" 							=> "horde_datatree_attributes",
@@ -84,6 +85,7 @@ class MappingMelanie {
 	      "CalendarSync" 				=> ["token", "calendar"],
 	      "TaskslistSync" 			=> ["token", "taskslist"],
 	      "TaskslistMelanie" 		=> ["id", "owner", "group"],
+	      "AddressbookSync" 	  => ["token", "addressbook"],
 	      "AddressbookMelanie" 	=> ["id", "owner", "group"],
 	      "UserPrefs" 					=> ["user", "scope", "name"],
 	      "Share" 							=> ["object_id", "name"],
@@ -271,9 +273,16 @@ class MappingMelanie {
 	      // Gestion des SyncToken pour la liste de tâches : objet TaskslistSync
 	      "TaskslistSync" => [
 	          "token" 		=> [self::name => "token", self::type => self::integer],
-	          "taskslist" 	=> [self::name => "taskslist_id", self::type => self::string, self::size => 255],
+	          "taskslist" => [self::name => "taskslist_id", self::type => self::string, self::size => 255],
 	          "uid" 			=> [self::name => "task_uid", self::type => self::string, self::size => 255],
 	          "action" 		=> [self::name => "action", self::type => self::string, self::size => 3],
+	      ],
+	      // Gestion des SyncToken pour la liste de tâches : objet AddressbookSync
+	      "AddressbookSync" => [
+	          "token" 		   => [self::name => "token", self::type => self::integer],
+            "addressbook"  => [self::name => "addressbook_id", self::type => self::string, self::size => 255],
+	          "uid" 			   => [self::name => "contact_uid", self::type => self::string, self::size => 255],
+	          "action" 		   => [self::name => "action", self::type => self::string, self::size => 3],
 	      ],
 	      // Gestion des tâches : objet TaskMelanie
 	      "TaskMelanie" => [

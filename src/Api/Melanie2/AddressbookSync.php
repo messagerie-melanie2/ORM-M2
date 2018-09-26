@@ -111,7 +111,7 @@ class AddressbookSync extends Melanie2Object {
       foreach ($this->objectmelanie->getList(null, null, $operators, 'token', false, $limit) as $_addressbookSync) {
         $mapAct = self::$actionMapper[$_addressbookSync->action];
         // MANTIS 0004696: [SyncToken] Ne retourner qu'un seul uid
-        $uid = $this->uidencode($_addressbookSync->uid) . '.ics';
+        $uid = $this->uidencode($_addressbookSync->uid) . '.vcf';
         if (!in_array($uid, $result['added'])
             && !in_array($uid, $result['modified'])
             && !in_array($uid, $result['deleted'])) {
@@ -124,7 +124,7 @@ class AddressbookSync extends Melanie2Object {
       foreach ($contact->getList([
           'uid'
       ]) as $_contact) {
-        $result['added'][] = $this->uidencode($_contact->uid) . '.ics';
+        $result['added'][] = $this->uidencode($_contact->uid) . '.vcf';
       }
     }
     

@@ -1,3 +1,7 @@
+ORM M2 - 0.5.0.5
+------
+- 0005101: [En attente] La recherche des participants supprimés est sensible au champ ORM.enattente dans l'annuaire
+
 ORM M2 - 0.5.0.4
 ------
 - 0005098: Mise en place du sync token pour les carnets d'adresses

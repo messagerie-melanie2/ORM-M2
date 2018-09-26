@@ -26,6 +26,8 @@ use LibMelanie\Exceptions;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Lib\EventToICS;
 use LibMelanie\Lib\ICS;
+use LibMelanie\Ldap\Ldap;
+
 
 /**
  * Classe evenement pour Melanie2,
@@ -723,6 +725,10 @@ class Event extends Melanie2Object {
       $first = true;
       foreach ($attendees as $attendee_key => $attendee) {
         $attendee_uid = $attendee->uid;
+        // Récupérer la liste des participants
+        if (isset($attendee_uid)) {
+          $attendees_uid[] = $attendee_uid;
+        }        
         // Si c'est un participant Mélanie2
         if (isset($attendee_uid)
             // 0005097: [En attente] Vérifier que le participant n'est pas aussi l'organisateur
@@ -734,9 +740,7 @@ class Event extends Melanie2Object {
           // Création du calendar melanie
           $attendee_calendar = new Calendar($attendee_user);
           $attendee_calendar->id = $attendee_uid;
-          if ($attendee_calendar->load()) {
-            // Récupérer la liste des participants
-            $attendees_uid[] = $attendee_uid;
+          if ($attendee_calendar->load()) {            
             // Creation de l'evenement melanie
             $attendee_event = new Event($attendee_user, $attendee_calendar);
             $attendee_event->uid = $this->uid;
@@ -892,9 +896,13 @@ class Event extends Melanie2Object {
         ];
         // Lister les événements pour les passer en annulé
         foreach ($event->getList(null, null, $operators) as $_e) {
-          $_e->status = self::STATUS_CANCELLED;
-          $_e->modified = time();
-          $_e->save();
+          // Vérifier que le mode en attente est activé pour cet utilisateur
+          $infos = Ldap::GetUserInfos($_e->calendar);
+          if (isset($infos) && isset($infos['info']) && in_array('ORM.Agenda.EnAttente: oui', $infos['info'])) {
+            $_e->status = self::STATUS_CANCELLED;
+            $_e->modified = time();
+            $_e->save();
+          }          
         }
       }
     }      
@@ -1011,7 +1019,10 @@ class Event extends Melanie2Object {
       foreach ($attendees as $key => $attendee) {
         $attendee_uid = $attendee->uid;
         // Si c'est un participant Mélanie2
-        if (isset($attendee_uid)) {
+        if (isset($attendee_uid)
+            // 0005097: [En attente] Vérifier que le participant n'est pas aussi l'organisateur
+            && $attendee_uid != $this->calendar
+            && $attendee->need_action) {
           // Creation du user melanie
           $attendee_user = new User();
           $attendee_user->uid = $attendee_uid;

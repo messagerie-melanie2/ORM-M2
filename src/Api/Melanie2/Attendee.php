@@ -21,7 +21,6 @@ use LibMelanie\Lib\Melanie2Object;
 use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Log\M2Log;
-use LibMelanie\Ldap\LDAPMelanie;
 use LibMelanie\Ldap\Ldap;
 
 /**

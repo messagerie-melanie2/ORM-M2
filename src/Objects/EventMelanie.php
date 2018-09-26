@@ -512,9 +512,9 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	    $query = Sql\SqlCalendarRequests::getCountEvents;
 		} elseif (count($fieldsmapping) > 0) {
 		  // Chargement de la requête
-		  if (is_array($fields) && !in_array('attendees', $fields) && !in_array('organizer', $fields)) {
-		    $query = Sql\SqlCalendarRequests::getOptiListEvents;
-		  }
+// 		  if (is_array($fields) && !in_array('attendees', $fields) && !in_array('organizer', $fields)) {
+// 		    $query = Sql\SqlCalendarRequests::getOptiListEvents;
+// 		  }
 		  // Champs demandés
 			$query = str_replace("{fields_list}", implode(", ", $fieldsmapping), $query);
 		} else {

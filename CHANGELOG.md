@@ -1,3 +1,7 @@
+ORM M2 - 0.5.0.6
+------
+- 0005102: [En attente] La suppression d'un événement ne supprime pas chez les participants
+
 ORM M2 - 0.5.0.5
 ------
 - 0005101: [En attente] La recherche des participants supprimés est sensible au champ ORM.enattente dans l'annuaire

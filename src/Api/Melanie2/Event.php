@@ -1053,9 +1053,18 @@ class Event extends Melanie2Object {
               }
               else {
                 // L'evement normal est supprimé
-                // Modification en tentative
-                $attendee_event->status = self::STATUS_CANCELLED;
-                $save = false;
+                if ($attendee_event->status == self::STATUS_TENTATIVE
+                    && $attendee->response == Attendee::RESPONSE_NEED_ACTION) {
+                  // Supprimer l'événement qui est en en attente
+                  $attendee_event->delete();
+                  $save = false;
+                }
+                else {
+                  // Modification en annulé
+                  $attendee_event->status = self::STATUS_CANCELLED;
+                  $save = true;
+                }
+                
               }
               if ($save) {
                 $attendee_event->modified = time();

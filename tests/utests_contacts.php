@@ -70,9 +70,9 @@ $addressbook->load();
 echo "SyncToken = " . $addressbook->synctoken . "\r\n\r\n";
 
 $addressbooksync = new AddressbookSync($addressbook);
-$addressbooksync->token = 0;
+$addressbooksync->token = null;
 
-echo var_export($addressbooksync->listAddressbookSync(1), true);
+echo var_export($addressbooksync->listAddressbookSync(), true);
 
 
 // $contact = new Contact($user, $addressbook);

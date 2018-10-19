@@ -1,3 +1,10 @@
+ORM M2 - 0.5.0.7
+------
+- 0005125: Bloquer les répétitions "récursives"
+- 0005111: [ICS] Ne pas écraser la réponse d'un participant confirmée par un "need action"
+- 0005126: Ne pas supprimer l'attribut X_MOZ_SEND_INVITATIONS
+- 0005127: Problème de sync des contacts quand le token est null
+
 ORM M2 - 0.5.0.6
 ------
 - 0005102: [En attente] La suppression d'un événement ne supprime pas chez les participants

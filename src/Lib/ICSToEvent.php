@@ -267,15 +267,17 @@ class ICSToEvent {
       // X Moz Send Invitations
       if (isset($vevent->{ICS::X_MOZ_SEND_INVITATIONS})) {
         $object->setAttribute(ICS::X_MOZ_SEND_INVITATIONS, $vevent->{ICS::X_MOZ_SEND_INVITATIONS}->getValue());
-      } else {
-        $object->deleteAttribute(ICS::X_MOZ_SEND_INVITATIONS);
-      }
+      } 
+//       else {
+//         $object->deleteAttribute(ICS::X_MOZ_SEND_INVITATIONS);
+//       }
       // X Moz Send Invitations Undisclosed
       if (isset($vevent->{ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED})) {
         $object->setAttribute(ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED, $vevent->{ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED}->getValue());
-      } else {
-        $object->deleteAttribute(ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED);
-      }
+      } 
+//       else {
+//         $object->deleteAttribute(ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED);
+//       }
       // X MOZ GENERATION
       if (isset($vevent->{ICS::X_MOZ_GENERATION})) {
         $object->setAttribute(ICS::X_MOZ_GENERATION, $vevent->{ICS::X_MOZ_GENERATION}->getValue());
@@ -375,6 +377,13 @@ class ICSToEvent {
           $_attendee = new \LibMelanie\Api\Melanie2\Attendee($object);
           // Email de l'attendee
           $_attendee->email = str_replace('mailto:', '', strtolower($prop->getValue()));
+          // Rechercher la réponse du participant courant
+          $_old_response = null;
+          foreach ($object->attendees as $_old_attendee) {
+            if (strtolower($_old_attendee->email) == strtolower($_attendee->email)) {
+              $_old_response = $_old_attendee->response;
+            }
+          }
           // Ne pas conserver de participant avec la même adresse mail que l'organisateur
           // Test de non suppression du participant pour voir
           //if ($object->organizer->email == $_attendee->email) {
@@ -395,7 +404,13 @@ class ICSToEvent {
                 $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_IN_PROCESS;
                 break;
               case ICS::PARTSTAT_NEEDS_ACTION :
-                $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_NEED_ACTION;
+                if (isset($_old_response) 
+                    && $_old_response != \LibMelanie\Api\Melanie2\Attendee::RESPONSE_NEED_ACTION) {
+                  $_attendee->response = $_old_response;
+                }
+                else {
+                  $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_NEED_ACTION;
+                }
                 break;
               case ICS::PARTSTAT_TENTATIVE :
                 $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_TENTATIVE;

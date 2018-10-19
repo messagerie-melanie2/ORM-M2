@@ -1226,6 +1226,38 @@ class Event extends Melanie2Object {
   }
   
   /**
+   * MANTIS 0005125: Bloquer les répétitions "récursives"
+   * Vérifier que la durée de l'événement est plus courte que la durée de l'événement
+   * 
+   * @return boolean True si tout est OK, false sinon 
+   */
+  private function checkRecurrence() {
+    // Tableau permettant de recuperer toutes les valeurs de la recurrence
+    if (isset($this->objectmelanie->recurrence_json)) {
+      $recurrence = json_decode($this->objectmelanie->recurrence_json, true);
+      if (isset($recurrence[ICS::FREQ])) {
+        $event_duration = strtotime($this->objectmelanie->end) - strtotime($this->objectmelanie->start);
+        switch ($recurrence[ICS::FREQ]) {
+          case ICS::FREQ_DAILY:
+            $event_max_duration = 60*60*24;
+            break;
+          case ICS::FREQ_WEEKLY:
+            $event_max_duration = 60*60*24*7;
+            break;
+          case ICS::FREQ_MONTHLY:
+            $event_max_duration = 60*60*24*7*31;
+            break;
+          case ICS::FREQ_YEARLY:
+            $event_max_duration = 60*60*24*366;
+            break;
+        }
+        return $event_max_duration >= $event_duration;
+      }
+    }
+    return true;
+  }
+  
+  /**
    * ***************************************************
    * METHOD MAPPING
    */
@@ -1240,6 +1272,10 @@ class Event extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
+    // MANTIS 0005125: Bloquer les répétitions "récursives"
+    if (!$this->checkRecurrence()) {
+      return null;
+    }
     // Sauvegarde des participants
     $this->saveAttendees();
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save() delete " . count($this->deleted_exceptions));

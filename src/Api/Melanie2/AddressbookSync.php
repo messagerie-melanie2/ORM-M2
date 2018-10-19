@@ -121,9 +121,7 @@ class AddressbookSync extends Melanie2Object {
     } else {
       $contact = new \LibMelanie\Api\Melanie2\Contact();
       $contact->addressbook = $this->objectmelanie->addressbook;
-      foreach ($contact->getList([
-          'uid'
-      ]) as $_contact) {
+      foreach ($contact->getList(['id', 'uid']) as $_contact) {
         $result['added'][] = $this->uidencode($_contact->uid) . '.vcf';
       }
     }

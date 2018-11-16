@@ -550,7 +550,10 @@ class Recurrence extends Melanie2Object {
    */
   protected function getMapRrule() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRrule()");
-    if (isset($this->event) && $this->event->useJsonData()) {
+    if (isset($this->event) 
+        && $this->event->useJsonData()
+        && isset($this->objectmelanie->recurrence_json)
+        && !empty($this->objectmelanie->recurrence_json)) {
       // Tableau permettant de recuperer toutes les valeurs de la recurrence
       $recurrence = json_decode($this->objectmelanie->recurrence_json, true);
       if (isset($recurrence[ICS::UNTIL]) && is_array($recurrence[ICS::UNTIL])) {

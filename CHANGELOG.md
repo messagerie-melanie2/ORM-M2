@@ -1,3 +1,8 @@
+ORM M2 - 0.5.0.8
+------
+- 0005142: [Recurrence] Si le format json n'est pas présent forcer l'ancien format
+- 0005143: [ICS] Valider la recurrence avec de la passer au VObject
+
 ORM M2 - 0.5.0.7
 ------
 - 0005125: Bloquer les répétitions "récursives"

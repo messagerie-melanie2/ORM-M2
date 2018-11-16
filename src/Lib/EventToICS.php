@@ -120,23 +120,27 @@ class EventToICS {
 	        && $event->recurrence->type !== Recurrence::RECURTYPE_NORECUR) {
 	      $rrule = $event->recurrence->rrule;
 	      $params = [];
-	      foreach ($rrule as $key => $value) {
-	        if (!is_string($value)) {
-	          if ($value instanceof \DateTime) {
-	            $value = $value->format('Ymd').'T'.$value->format('His').'Z';
-	          }
-	        }
-	        if ($key == ICS::INTERVAL && $value == 1) {
-	          // On n'affiche pas l'interval 1 dans l'ICS
-	          continue;
-	        }
-	        else if (is_array($value)) {
-	          $value = implode(',', $value);
-	        }
-	        $params[] = "$key=$value";
-	      }
-	      // Construction de la récurrence
-	      $vevent->add(ICS::RRULE, implode(';',$params));
+	      if (isset($rrule) 
+	          && is_array($rrule)
+	          && count($rrule) > 0) {
+          foreach ($rrule as $key => $value) {
+            if (!is_string($value)) {
+              if ($value instanceof \DateTime) {
+                $value = $value->format('Ymd').'T'.$value->format('His').'Z';
+              }
+            }
+            if ($key == ICS::INTERVAL && $value == 1) {
+              // On n'affiche pas l'interval 1 dans l'ICS
+              continue;
+            }
+            else if (is_array($value)) {
+              $value = implode(',', $value);
+            }
+            $params[] = "$key=$value";
+          }
+          // Construction de la récurrence
+          $vevent->add(ICS::RRULE, implode(';',$params));
+        }
 	    }
 	  }
 	  // Exceptions

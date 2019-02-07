@@ -24,10 +24,10 @@ namespace LibMelanie\Objects;
 use LibMelanie\Lib\MagicObject;
 use LibMelanie\Interfaces\IObjectMelanie;
 use LibMelanie\Sql;
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Config\ConfigSQL;
 use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Config\DefaultConfig;
 
 /**
  * Traitement des listes de contacts Melanie2
@@ -89,12 +89,12 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping[$this->objectType]['object_id'][MappingMelanie::name], $query);
 		// Params
 		$params = [
-				"group_uid" => ConfigMelanie::ADDRESSBOOK_GROUP_UID,
+				"group_uid" => DefaultConfig::ADDRESSBOOK_GROUP_UID,
 				"user_uid" => $this->user_uid,
 				"datatree_name" => $this->id,
-				"attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
-				"attribute_perm" => ConfigMelanie::ATTRIBUTE_NAME_PERM,
-				"attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP,
+		    "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
+		    "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
+		    "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP,
 		];
 		// Liste les calendriers de l'utilisateur
 		$this->isExist = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
@@ -147,7 +147,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 					'datatree_name' => $datatree_name,
 					'datatree_ctag' => md5($datatree_name),
 					'user_uid' => $this->user_uid,
-					'group_uid' => isset($this->group) ?  $this->group : ConfigMelanie::ADDRESSBOOK_GROUP_UID,
+			    'group_uid' => isset($this->group) ?  $this->group : DefaultConfig::ADDRESSBOOK_GROUP_UID,
 			];
 			if (Sql\DBMelanie::ExecuteQuery($query, $params)) {
 				$this->isExist = true;
@@ -155,7 +155,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
 				$params = [
 						'datatree_id' => $datatree_id,
-						'attribute_name' => ConfigMelanie::ATTRIBUTE_NAME_NAME,
+				    'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_NAME,
 						'attribute_key' => '',
 						'attribute_value' => isset($this->name) ?  $this->name : $datatree_name,
 				];
@@ -167,7 +167,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
 				$params = [
 						'datatree_id' => $datatree_id,
-						'attribute_name' => ConfigMelanie::ATTRIBUTE_OWNER,
+				    'attribute_name' => DefaultConfig::ATTRIBUTE_OWNER,
 						'attribute_key' => '',
 						'attribute_value' => $this->user_uid,
 				];
@@ -179,7 +179,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
 				$params = [
 						'datatree_id' => $datatree_id,
-						'attribute_name' => ConfigMelanie::ATTRIBUTE_NAME_PERM,
+				    'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_PERM,
 						'attribute_key' => $this->user_uid,
 						'attribute_value' => '30',
 				];
@@ -246,7 +246,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 //  			$query = Sql\SqlMelanieRequests::deleteObject4;
 //  			// Params
 //  			$params = [
-//  					"object_uid" => ConfigMelanie::ADDRESSBOOK_PREF_SCOPE.":".$this->id.":%",
+//  					"object_uid" => DefaultConfig::ADDRESSBOOK_PREF_SCOPE.":".$this->id.":%",
 //  			];
 //  			// Supprimer l'objet
 //  			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
@@ -351,7 +351,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	        $params = [
 	            "datatree_id" => $this->object_id,
 	            "attribute_value" => $this->name,
-	            "attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
+	            "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
 	        ];
 	        Sql\DBMelanie::ExecuteQuery($query, $params);
 	    }
@@ -364,6 +364,6 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function asRight($action) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->asRight($action)");
-		return (ConfigMelanie::$PERMS[$action] & $this->perm_addressbook) === ConfigMelanie::$PERMS[$action];
+		return (DefaultConfig::$PERMS[$action] & $this->perm_addressbook) === DefaultConfig::$PERMS[$action];
 	}
 }

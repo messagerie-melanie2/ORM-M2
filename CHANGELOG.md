@@ -1,3 +1,11 @@
+ORM M2 - 0.5.0.9
+------
+- 0005209: Problème de gestion des enregistrements entre le mode en attente et le s'inviter
+- 0005221: [Config] Créer une configuration par défaut
+- 0005220: [Config] nouveau champ SELF_INVITE
+- 0005219: Ajouter une information dans le participant qui s'est inviter
+- 0005218: [En attente] Si le participant s'est invité ne pas passer son événement en annulé
+
 ORM M2 - 0.5.0.8
 ------
 - 0005142: [Recurrence] Si le format json n'est pas présent forcer l'ancien format

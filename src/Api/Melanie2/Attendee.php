@@ -18,10 +18,11 @@
 namespace LibMelanie\Api\Melanie2;
 
 use LibMelanie\Lib\Melanie2Object;
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Ldap\Ldap;
+use LibMelanie\Config\Config;
+use LibMelanie\Config\DefaultConfig;
 
 /**
  * Classe attendee pour les évènements pour Melanie2
@@ -33,6 +34,7 @@ use LibMelanie\Ldap\Ldap;
  * @property string $email Email du participant
  * @property string $name Nom du participant
  * @property string $uid Uid du participant
+ * @property boolean $self_invite Est-ce que ce participant s'est lui même invité
  * @property-read boolean $need_action Est-ce que le mode En attente est activé pour ce participant
  * @property Attendee::RESPONSE_* $response Réponse du participant
  * @property Attendee::ROLE_* $role Role du participant
@@ -85,19 +87,26 @@ class Attendee extends Melanie2Object {
    *
    */
   private $role;
+  /**
+   * Est-ce que le participant s'est invité
+   * 
+   * @var boolean
+   * @ignore
+   */
+  private $self_invite;
   
   // Attendee Response Fields
-  const RESPONSE_NEED_ACTION = ConfigMelanie::NEED_ACTION;
-  const RESPONSE_ACCEPTED = ConfigMelanie::ACCEPTED;
-  const RESPONSE_DECLINED = ConfigMelanie::DECLINED;
-  const RESPONSE_IN_PROCESS = ConfigMelanie::IN_PROCESS;
-  const RESPONSE_TENTATIVE = ConfigMelanie::TENTATIVE;
+  const RESPONSE_NEED_ACTION = DefaultConfig::NEED_ACTION;
+  const RESPONSE_ACCEPTED = DefaultConfig::ACCEPTED;
+  const RESPONSE_DECLINED = DefaultConfig::DECLINED;
+  const RESPONSE_IN_PROCESS = DefaultConfig::IN_PROCESS;
+  const RESPONSE_TENTATIVE = DefaultConfig::TENTATIVE;
   
   // Attendee Role Fields
-  const ROLE_CHAIR = ConfigMelanie::CHAIR;
-  const ROLE_REQ_PARTICIPANT = ConfigMelanie::REQ_PARTICIPANT;
-  const ROLE_OPT_PARTICIPANT = ConfigMelanie::OPT_PARTICIPANT;
-  const ROLE_NON_PARTICIPANT = ConfigMelanie::NON_PARTICIPANT;
+  const ROLE_CHAIR = DefaultConfig::CHAIR;
+  const ROLE_REQ_PARTICIPANT = DefaultConfig::REQ_PARTICIPANT;
+  const ROLE_OPT_PARTICIPANT = DefaultConfig::OPT_PARTICIPANT;
+  const ROLE_NON_PARTICIPANT = DefaultConfig::NON_PARTICIPANT;
   
   /**
    * Constructeur de l'objet
@@ -124,9 +133,12 @@ class Attendee extends Melanie2Object {
   public function render() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->render()");
     $attendee = [];
-    $attendee[ConfigMelanie::NAME] = $this->name;
-    $attendee[ConfigMelanie::ROLE] = $this->role;
-    $attendee[ConfigMelanie::RESPONSE] = $this->response;
+    $attendee[Config::get(Config::NAME)] = $this->name;
+    $attendee[Config::get(Config::ROLE)] = $this->role;
+    $attendee[Config::get(Config::RESPONSE)] = $this->response;
+    if ($this->self_invite) {
+      $attendee[Config::get(Config::SELF_INVITE_ATTENDEE)] = $this->self_invite;
+    }
     return $attendee;
   }
   
@@ -143,9 +155,10 @@ class Attendee extends Melanie2Object {
       M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->define(): attendee not an array");
       return null;
     }
-    $this->name = isset($attendee[ConfigMelanie::NAME]) ? $attendee[ConfigMelanie::NAME] : "";
-    $this->role = isset($attendee[ConfigMelanie::ROLE]) ? $attendee[ConfigMelanie::ROLE] : MappingMelanie::REQ_PARTICIPANT;
-    $this->response = isset($attendee[ConfigMelanie::RESPONSE]) ? $attendee[ConfigMelanie::RESPONSE] : MappingMelanie::ATT_NEED_ACTION;
+    $this->name = isset($attendee[Config::get(Config::NAME)]) ? $attendee[Config::get(Config::NAME)] : "";
+    $this->role = isset($attendee[Config::get(Config::ROLE)]) ? $attendee[Config::get(Config::ROLE)] : MappingMelanie::REQ_PARTICIPANT;
+    $this->response = isset($attendee[Config::get(Config::RESPONSE)]) ? $attendee[Config::get(Config::RESPONSE)] : MappingMelanie::ATT_NEED_ACTION;
+    $this->self_invite = isset($attendee[Config::get(Config::SELF_INVITE_ATTENDEE)]) ? $attendee[Config::get(Config::SELF_INVITE_ATTENDEE)] : false;
   }
   
   /**
@@ -206,6 +219,28 @@ class Attendee extends Melanie2Object {
   protected function getMapName() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapName()");
     return $this->name;
+  }
+  
+  /**
+   * Set self invite property
+   *
+   * @param string $self_invite
+   * @ignore
+   *
+   */
+  protected function setMapSelf_invite($self_invite) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapSelf_invite($self_invite)");
+    $this->self_invite = $self_invite;
+  }
+  /**
+   * Get self invite property
+   *
+   * @ignore
+   *
+   */
+  protected function getMapSelf_invite() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapSelf_invite()");
+    return $this->self_invite;
   }
   
   /**

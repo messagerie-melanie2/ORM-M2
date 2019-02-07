@@ -19,12 +19,12 @@ namespace LibMelanie\Objects;
 
 use LibMelanie\Sql;
 use LibMelanie\Ldap\Ldap;
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Config\ConfigSQL;
 use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Lib\MagicObject;
 use LibMelanie\Interfaces\IObjectMelanie;
+use LibMelanie\Config\DefaultConfig;
 
 /**
  * Gestion de l'utilisateur Melanie2
@@ -353,13 +353,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     // Params
     $params = [
-        "group_uid" => ConfigMelanie::CALENDAR_GROUP_UID,
+        "group_uid" => DefaultConfig::CALENDAR_GROUP_UID,
         "user_uid" => $this->uid,
-        "attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
-        "attribute_perm" => ConfigMelanie::ATTRIBUTE_NAME_PERM,
-        "pref_scope" => ConfigMelanie::CALENDAR_PREF_SCOPE,
-        "pref_name" => ConfigMelanie::CALENDAR_PREF_DEFAULT_NAME,
-        "attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP
+        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
+        "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
+        "pref_scope" => DefaultConfig::CALENDAR_PREF_SCOPE,
+        "pref_name" => DefaultConfig::CALENDAR_PREF_DEFAULT_NAME,
+        "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP
     ];
     
     // Calendrier par défaut de l'utilisateur
@@ -399,9 +399,9 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     // Params
     $params = [
-        "group_uid" => ConfigMelanie::CALENDAR_GROUP_UID,
+        "group_uid" => DefaultConfig::CALENDAR_GROUP_UID,
         "user_uid" => $this->uid,
-        "attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME
+        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME
     ];
     
     // Liste les calendriers de l'utilisateur
@@ -434,11 +434,11 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     // Params
     $params = [
-        "group_uid" => ConfigMelanie::CALENDAR_GROUP_UID,
+        "group_uid" => DefaultConfig::CALENDAR_GROUP_UID,
         "user_uid" => $this->uid,
-        "attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
-        "attribute_perm" => ConfigMelanie::ATTRIBUTE_NAME_PERM,
-        "attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP
+        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
+        "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
+        "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP
     ];
     
     // Liste les calendriers de l'utilisateur
@@ -471,13 +471,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     // Params
     $params = [
-        "group_uid" => ConfigMelanie::TASKSLIST_GROUP_UID,
+        "group_uid" => DefaultConfig::TASKSLIST_GROUP_UID,
         "user_uid" => $this->uid,
-        "attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
-        "attribute_perm" => ConfigMelanie::ATTRIBUTE_NAME_PERM,
-        "pref_scope" => ConfigMelanie::TASKSLIST_PREF_SCOPE,
-        "pref_name" => ConfigMelanie::TASKSLIST_PREF_DEFAULT_NAME,
-        "attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP
+        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
+        "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
+        "pref_scope" => DefaultConfig::TASKSLIST_PREF_SCOPE,
+        "pref_name" => DefaultConfig::TASKSLIST_PREF_DEFAULT_NAME,
+        "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP
     ];
     
     // Liste de tâches par défaut de l'utilisateur
@@ -517,9 +517,9 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     // Params
     $params = [
-        "group_uid" => ConfigMelanie::TASKSLIST_GROUP_UID,
+        "group_uid" => DefaultConfig::TASKSLIST_GROUP_UID,
         "user_uid" => $this->uid,
-        "attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME
+        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME
     ];
     // Liste les listes de tâches de l'utilisateur
     return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
@@ -551,11 +551,11 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     // Params
     $params = [
-        "group_uid" => ConfigMelanie::TASKSLIST_GROUP_UID,
+        "group_uid" => DefaultConfig::TASKSLIST_GROUP_UID,
         "user_uid" => $this->uid,
-        "attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
-        "attribute_perm" => ConfigMelanie::ATTRIBUTE_NAME_PERM,
-        "attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP
+        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
+        "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
+        "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP
     ];
     // Liste les listes de tâches de l'utilisateur
     return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
@@ -587,13 +587,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     // Params
     $params = [
-        "group_uid" => ConfigMelanie::ADDRESSBOOK_GROUP_UID,
+        "group_uid" => DefaultConfig::ADDRESSBOOK_GROUP_UID,
         "user_uid" => $this->uid,
-        "attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
-        "attribute_perm" => ConfigMelanie::ATTRIBUTE_NAME_PERM,
-        "pref_scope" => ConfigMelanie::ADDRESSBOOK_PREF_SCOPE,
-        "pref_name" => ConfigMelanie::ADDRESSBOOK_PREF_DEFAULT_NAME,
-        "attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP
+        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
+        "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
+        "pref_scope" => DefaultConfig::ADDRESSBOOK_PREF_SCOPE,
+        "pref_name" => DefaultConfig::ADDRESSBOOK_PREF_DEFAULT_NAME,
+        "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP
     ];
     
     // Liste de tâches par défaut de l'utilisateur
@@ -633,9 +633,9 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     // Params
     $params = [
-        "group_uid" => ConfigMelanie::ADDRESSBOOK_GROUP_UID,
+        "group_uid" => DefaultConfig::ADDRESSBOOK_GROUP_UID,
         "user_uid" => $this->uid,
-        "attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME
+        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME
     ];
     // Liste les listes de contacts de l'utilisateur
     return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
@@ -667,11 +667,11 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     // Params
     $params = [
-        "group_uid" => ConfigMelanie::ADDRESSBOOK_GROUP_UID,
+        "group_uid" => DefaultConfig::ADDRESSBOOK_GROUP_UID,
         "user_uid" => $this->uid,
-        "attribute_name" => ConfigMelanie::ATTRIBUTE_NAME_NAME,
-        "attribute_perm" => ConfigMelanie::ATTRIBUTE_NAME_PERM,
-        "attribute_permfg" => ConfigMelanie::ATTRIBUTE_NAME_PERMGROUP
+        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
+        "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
+        "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP
     ];
     // Liste les listes de contacts de l'utilisateur
     return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
@@ -686,7 +686,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   function getTimezone() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getTimezone()");
     if (!isset($this->uid))
-      return ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
+      return DefaultConfig::CALENDAR_DEFAULT_TIMEZONE;
     
     if (!isset($this->timezone)) {
       // Replace name
@@ -695,8 +695,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       // Params
       $params = [
           "user_uid" => $this->uid,
-          "pref_scope" => ConfigMelanie::PREF_SCOPE,
-          "pref_name" => ConfigMelanie::TZ_PREF_NAME
+          "pref_scope" => DefaultConfig::PREF_SCOPE,
+          "pref_name" => DefaultConfig::TZ_PREF_NAME
       ];
       
       // Récupération du timezone
@@ -705,7 +705,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       try {
         $tz = new \DateTimeZone($this->timezone);
       } catch ( \Exception $ex ) {
-        $this->timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
+        $this->timezone = DefaultConfig::CALENDAR_DEFAULT_TIMEZONE;
       }
       M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getTimezone() this->timezone: " . $this->timezone);
     }

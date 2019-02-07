@@ -19,8 +19,9 @@ namespace LibMelanie\Api\Melanie2;
 
 use LibMelanie\Lib\Melanie2Object;
 use LibMelanie\Objects\TaskslistMelanie;
+use LibMelanie\Objects\UserMelanie;
 use LibMelanie\Log\M2Log;
-use LibMelanie\Config\ConfigMelanie;
+use LibMelanie\Config\Config;
 
 /**
  * Classe liste de tâches pour Melanie2
@@ -126,8 +127,8 @@ class Taskslist extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCaldavurl()");
     if (!isset($this->objectmelanie)) throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     $url = null;
-    if (defined('\LibMelanie\Config\ConfigMelanie::TASKSLIST_CALDAV_URL')) {
-      $url = str_replace(['%u', '%o', '%i'], [$this->usermelanie->uid, $this->objectmelanie->owner, $this->objectmelanie->id], ConfigMelanie::TASKSLIST_CALDAV_URL);
+    if (Config::is_set(Config::TASKSLIST_CALDAV_URL)) {
+      $url = str_replace(['%u', '%o', '%i'], [$this->usermelanie->uid, $this->objectmelanie->owner, $this->objectmelanie->id], Config::get(Config::TASKSLIST_CALDAV_URL));
     }
     return $url;
   }

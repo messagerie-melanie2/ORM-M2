@@ -49,7 +49,7 @@ include_once 'includes/libm2.php';
 use LibMelanie\Api\Melanie2\Exception;
 use LibMelanie\Api\Melanie2\Attendee;
 use LibMelanie\Api\Melanie2\Share;
-use LibMelanie\Config\ConfigMelanie;
+use LibMelanie\Config\DefaultConfig;
 use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Api\Melanie2\Recurrence;
 use LibMelanie\Api\Melanie2\User;
@@ -114,7 +114,7 @@ var_export($results);
 
 // // Est-ce que l'utilisateur a les droits d'écriture ?
 // if ($calendar->load()
-//     && $calendar->asRight(ConfigMelanie::WRITE)) {
+//     && $calendar->asRight(DefaultConfig::WRITE)) {
 //   // Définition de l'événement à créer
 //   $event = new Event($user, $calendar);
 //   $event->title = "La réunion MCE";

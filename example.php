@@ -54,12 +54,11 @@ use LibMelanie\Api\Melanie2\Contact;
 use LibMelanie\Api\Melanie2\Addressbook;
 use LibMelanie\Api\Melanie2\Calendar;
 use LibMelanie\Api\Melanie2\Taskslist;
-use LibMelanie\Api\Melanie2\Attendee;
 use LibMelanie\Api\Melanie2\Recurrence;
 // Log
 use LibMelanie\Log\M2Log;
 // Config
-use LibMelanie\Config\ConfigMelanie;
+use LibMelanie\Config\DefaultConfig;
 
 // Configurer les LOG
 $log = function ($message) {
@@ -89,9 +88,9 @@ $calendar->load();
 $taskslist->load();
 
 // Vérifier les droits
-echo $addressbook->asRight(ConfigMelanie::READ) ? "addressbook->read OK" : "addressbook->read NOK";
-echo $calendar->asRight(ConfigMelanie::READ) ? "calendar->read OK" : "calendar->read NOK";
-echo $taskslist->asRight(ConfigMelanie::READ) ? "taskslist->read OK" : "taskslist->read NOK";
+echo $addressbook->asRight(DefaultConfig::READ) ? "addressbook->read OK" : "addressbook->read NOK";
+echo $calendar->asRight(DefaultConfig::READ) ? "calendar->read OK" : "calendar->read NOK";
+echo $taskslist->asRight(DefaultConfig::READ) ? "taskslist->read OK" : "taskslist->read NOK";
 
 // Récupération d'un objet
 $event = new Event($user, $calendar);
@@ -121,7 +120,7 @@ $contact->save();
 
 // Gestion d'un evenement
 $attendees = $event->attendees;
-if ($attendees[0]->response == ConfigMelanie::ACCEPTED) echo "Attendee accepted";
+if ($attendees[0]->response == DefaultConfig::ACCEPTED) echo "Attendee accepted";
 $event->recurrence->days = [Recurrence::RECURDAYS_MONDAY, Recurrence::RECURDAYS_SUNDAY];
 
 

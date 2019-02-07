@@ -26,7 +26,7 @@ use LibMelanie\Objects\UserMelanie;
 use LibMelanie\Objects\CalendarMelanie;
 use LibMelanie\Objects\EventMelanie;
 use LibMelanie\Objects\HistoryMelanie;
-use LibMelanie\Config\ConfigMelanie;
+use LibMelanie\Config\DefaultConfig;
 
 /**
  * Prompt pour password
@@ -160,15 +160,15 @@ do {
     echo "\r\n";
     
     $history = new HistoryMelanie();
-    $history->history_action = ConfigMelanie::HISTORY_ADD;
-    $history->object_uid = ConfigMelanie::CALENDAR_PREF_SCOPE . ":" . $event->calendar_id . ":" . $event->event_uid;
+    $history->history_action = DefaultConfig::HISTORY_ADD;
+    $history->object_uid = DefaultConfig::CALENDAR_PREF_SCOPE . ":" . $event->calendar_id . ":" . $event->event_uid;
     $history->load();
     echo var_export($history, true);
     echo "\r\n";
     
     $history = new HistoryMelanie();
-    $history->history_action = ConfigMelanie::HISTORY_MODIFY;
-    $history->object_uid = ConfigMelanie::CALENDAR_PREF_SCOPE . ":" . $event->calendar_id . ":" . $event->event_uid;
+    $history->history_action = DefaultConfig::HISTORY_MODIFY;
+    $history->object_uid = DefaultConfig::CALENDAR_PREF_SCOPE . ":" . $event->calendar_id . ":" . $event->event_uid;
     $history->load();
     echo var_export($history, true);
     echo "\r\n";

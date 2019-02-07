@@ -155,7 +155,7 @@ class MappingMelanie {
 	          "synctoken" => [self::name => "calendar_synctoken"],
 	          "perm" 			=> [self::name => "perm_calendar"],
 	          "object_id" => [self::name => "datatree_id"],
-	          "group" 		=> [self::name => "group_uid", self::defaut => ConfigMelanie::CALENDAR_GROUP_UID],
+	          "group" 		=> [self::name => "group_uid", self::defaut => DefaultConfig::CALENDAR_GROUP_UID],
 	      ],
 	      // Gestion de la liste de tâches : objet TaskslistMelanie
 	      "TaskslistMelanie" => [
@@ -166,7 +166,7 @@ class MappingMelanie {
 	          "synctoken" => [self::name => "taskslist_synctoken"],
 	          "perm" 			=> [self::name => "perm_taskslist"],
 	          "object_id" => [self::name => "datatree_id"],
-	          "group" 		=> [self::name => "group_uid", self::defaut => ConfigMelanie::TASKSLIST_GROUP_UID],
+	          "group" 		=> [self::name => "group_uid", self::defaut => DefaultConfig::TASKSLIST_GROUP_UID],
 	      ],
 	      // Gestion de la liste de contacts : objet AddressbookMelanie
 	      "AddressbookMelanie" => [
@@ -177,7 +177,7 @@ class MappingMelanie {
 	          "synctoken" => [self::name => "addressbook_synctoken"],
 	          "perm" 			=> [self::name => "perm_addressbook"],
 	          "object_id" => [self::name => "datatree_id"],
-	          "group" 		=> [self::name => "group_uid", self::defaut => ConfigMelanie::ADDRESSBOOK_GROUP_UID],
+	          "group" 		=> [self::name => "group_uid", self::defaut => DefaultConfig::ADDRESSBOOK_GROUP_UID],
 	      ],
 	      // Gestion de l'historique : objet HistoryMelanie
 	      "HistoryMelanie" => [
@@ -408,11 +408,11 @@ class MappingMelanie {
 	 * Class mapping
 	 */
 	public static $MapClassObjectMelanie = [
-		ConfigMelanie::PRIV => self::PRIV,
-		ConfigMelanie::PUB => self::PUB,
-		ConfigMelanie::CONFIDENTIAL => self::PRIV,
-		self::PRIV => ConfigMelanie::PRIV,
-		self::PUB => ConfigMelanie::PUB
+	    DefaultConfig::PRIV => self::PRIV,
+	    DefaultConfig::PUB => self::PUB,
+	    DefaultConfig::CONFIDENTIAL => self::PRIV,
+	    self::PRIV => DefaultConfig::PRIV,
+	    self::PUB => DefaultConfig::PUB
 	];
 
 	// Status
@@ -424,14 +424,14 @@ class MappingMelanie {
 	 * Status mapping
 	 */
 	public static $MapStatusObjectMelanie = [
-			ConfigMelanie::TENTATIVE => self::TENTATIVE,
-			ConfigMelanie::NONE => self::NONE,
-			ConfigMelanie::CONFIRMED => self::CONFIRMED,
-			ConfigMelanie::CANCELLED => self::CANCELLED,
-			self::TENTATIVE => ConfigMelanie::TENTATIVE,
-			self::CONFIRMED => ConfigMelanie::CONFIRMED,
-			self::NONE => ConfigMelanie::NONE,
-			self::CANCELLED => ConfigMelanie::CANCELLED
+	    DefaultConfig::TENTATIVE => self::TENTATIVE,
+	    DefaultConfig::NONE => self::NONE,
+	    DefaultConfig::CONFIRMED => self::CONFIRMED,
+	    DefaultConfig::CANCELLED => self::CANCELLED,
+	    self::TENTATIVE => DefaultConfig::TENTATIVE,
+	    self::CONFIRMED => DefaultConfig::CONFIRMED,
+	    self::NONE => DefaultConfig::NONE,
+	    self::CANCELLED => DefaultConfig::CANCELLED
 	];
 
 	// Recurrence days
@@ -447,22 +447,22 @@ class MappingMelanie {
 	 * Recurdays mapping
 	 */
 	public static $MapRecurdaysObjectMelanie = [
-			ConfigMelanie::NODAY => self::NODAY,
-			ConfigMelanie::SUNDAY => self::SUNDAY,
-			ConfigMelanie::MONDAY => self::MONDAY,
-			ConfigMelanie::TUESDAY => self::TUESDAY,
-			ConfigMelanie::WEDNESDAY => self::WEDNESDAY,
-			ConfigMelanie::THURSDAY => self::THURSDAY,
-			ConfigMelanie::FRIDAY => self::FRIDAY,
-			ConfigMelanie::SATURDAY => self::SATURDAY,
-			self::NODAY => ConfigMelanie::NODAY,
-			self::SUNDAY => ConfigMelanie::SUNDAY,
-			self::MONDAY => ConfigMelanie::MONDAY,
-			self::TUESDAY => ConfigMelanie::TUESDAY,
-			self::WEDNESDAY => ConfigMelanie::WEDNESDAY,
-			self::THURSDAY => ConfigMelanie::THURSDAY,
-			self::FRIDAY => ConfigMelanie::FRIDAY,
-			self::SATURDAY => ConfigMelanie::SATURDAY
+	    DefaultConfig::NODAY => self::NODAY,
+	    DefaultConfig::SUNDAY => self::SUNDAY,
+	    DefaultConfig::MONDAY => self::MONDAY,
+	    DefaultConfig::TUESDAY => self::TUESDAY,
+	    DefaultConfig::WEDNESDAY => self::WEDNESDAY,
+	    DefaultConfig::THURSDAY => self::THURSDAY,
+	    DefaultConfig::FRIDAY => self::FRIDAY,
+	    DefaultConfig::SATURDAY => self::SATURDAY,
+	    self::NODAY => DefaultConfig::NODAY,
+	    self::SUNDAY => DefaultConfig::SUNDAY,
+	    self::MONDAY => DefaultConfig::MONDAY,
+	    self::TUESDAY => DefaultConfig::TUESDAY,
+	    self::WEDNESDAY => DefaultConfig::WEDNESDAY,
+	    self::THURSDAY => DefaultConfig::THURSDAY,
+	    self::FRIDAY => DefaultConfig::FRIDAY,
+	    self::SATURDAY => DefaultConfig::SATURDAY
 	];
 
 	// Recurrence type
@@ -477,20 +477,20 @@ class MappingMelanie {
 	 * Recurtype mapping
 	 */
 	public static $MapRecurtypeObjectMelanie = [
-			ConfigMelanie::NORECUR => self::NORECUR,
-			ConfigMelanie::DAILY => self::DAILY,
-			ConfigMelanie::WEEKLY => self::WEEKLY,
-			ConfigMelanie::MONTHLY => self::MONTHLY,
-			ConfigMelanie::MONTHLY_BYDAY => self::MONTHLY_BYDAY,
-			ConfigMelanie::YEARLY => self::YEARLY,
-			ConfigMelanie::YEARLY_BYDAY => self::YEARLY_BYDAY,
-			self::NORECUR => ConfigMelanie::NORECUR,
-			self::DAILY => ConfigMelanie::DAILY,
-			self::WEEKLY => ConfigMelanie::WEEKLY,
-			self::MONTHLY => ConfigMelanie::MONTHLY,
-			self::MONTHLY_BYDAY => ConfigMelanie::MONTHLY_BYDAY,
-			self::YEARLY => ConfigMelanie::YEARLY,
-			self::YEARLY_BYDAY => ConfigMelanie::YEARLY_BYDAY
+	    DefaultConfig::NORECUR => self::NORECUR,
+	    DefaultConfig::DAILY => self::DAILY,
+	    DefaultConfig::WEEKLY => self::WEEKLY,
+	    DefaultConfig::MONTHLY => self::MONTHLY,
+	    DefaultConfig::MONTHLY_BYDAY => self::MONTHLY_BYDAY,
+	    DefaultConfig::YEARLY => self::YEARLY,
+	    DefaultConfig::YEARLY_BYDAY => self::YEARLY_BYDAY,
+	    self::NORECUR => DefaultConfig::NORECUR,
+	    self::DAILY => DefaultConfig::DAILY,
+	    self::WEEKLY => DefaultConfig::WEEKLY,
+	    self::MONTHLY => DefaultConfig::MONTHLY,
+	    self::MONTHLY_BYDAY => DefaultConfig::MONTHLY_BYDAY,
+	    self::YEARLY => DefaultConfig::YEARLY,
+	    self::YEARLY_BYDAY => DefaultConfig::YEARLY_BYDAY
 	];
 
 	// Attendee status
@@ -502,15 +502,15 @@ class MappingMelanie {
 	 * Attendee response mapping
 	 */
 	public static $MapAttendeeResponseObjectMelanie = [
-			ConfigMelanie::NEED_ACTION => self::ATT_NEED_ACTION,
-			ConfigMelanie::ACCEPTED => self::ATT_ACCEPTED,
-			ConfigMelanie::DECLINED => self::ATT_DECLINED,
-			ConfigMelanie::IN_PROCESS => self::ATT_NEED_ACTION,
-			ConfigMelanie::TENTATIVE => self::ATT_TENTATIVE,
-			self::ATT_NEED_ACTION => ConfigMelanie::NEED_ACTION,
-			self::ATT_ACCEPTED => ConfigMelanie::ACCEPTED,
-			self::ATT_DECLINED => ConfigMelanie::DECLINED,
-			self::ATT_TENTATIVE => ConfigMelanie::TENTATIVE
+	    DefaultConfig::NEED_ACTION => self::ATT_NEED_ACTION,
+	    DefaultConfig::ACCEPTED => self::ATT_ACCEPTED,
+	    DefaultConfig::DECLINED => self::ATT_DECLINED,
+	    DefaultConfig::IN_PROCESS => self::ATT_NEED_ACTION,
+	    DefaultConfig::TENTATIVE => self::ATT_TENTATIVE,
+	    self::ATT_NEED_ACTION => DefaultConfig::NEED_ACTION,
+	    self::ATT_ACCEPTED => DefaultConfig::ACCEPTED,
+	    self::ATT_DECLINED => DefaultConfig::DECLINED,
+	    self::ATT_TENTATIVE => DefaultConfig::TENTATIVE
 	];
 
 	// Attendee role	
@@ -522,14 +522,14 @@ class MappingMelanie {
 	 * Attendee role mapping
 	 */
 	public static $MapAttendeeRoleObjectMelanie = [
-			ConfigMelanie::CHAIR => self::CHAIR,
-			ConfigMelanie::REQ_PARTICIPANT => self::REQ_PARTICIPANT,
-			ConfigMelanie::OPT_PARTICIPANT => self::OPT_PARTICIPANT,
-			ConfigMelanie::NON_PARTICIPANT => self::NON_PARTICIPANT,
-			self::CHAIR => ConfigMelanie::CHAIR,
-			self::REQ_PARTICIPANT => ConfigMelanie::REQ_PARTICIPANT,
-			self::OPT_PARTICIPANT => ConfigMelanie::OPT_PARTICIPANT,
-			self::NON_PARTICIPANT => ConfigMelanie::NON_PARTICIPANT
+	    DefaultConfig::CHAIR => self::CHAIR,
+	    DefaultConfig::REQ_PARTICIPANT => self::REQ_PARTICIPANT,
+	    DefaultConfig::OPT_PARTICIPANT => self::OPT_PARTICIPANT,
+	    DefaultConfig::NON_PARTICIPANT => self::NON_PARTICIPANT,
+	    self::CHAIR => DefaultConfig::CHAIR,
+	    self::REQ_PARTICIPANT => DefaultConfig::REQ_PARTICIPANT,
+	    self::OPT_PARTICIPANT => DefaultConfig::OPT_PARTICIPANT,
+	    self::NON_PARTICIPANT => DefaultConfig::NON_PARTICIPANT
 	];
 
 	// Task priority
@@ -543,18 +543,18 @@ class MappingMelanie {
 	 * Priority Mapping
 	 */
 	public static $MapPriorityObjectMelanie = [
-	    ConfigMelanie::NO_PRIORITY => self::NO_PRIORITY,
-			ConfigMelanie::VERY_HIGH => self::VERY_HIGH,
-			ConfigMelanie::HIGH => self::HIGH,
-			ConfigMelanie::NORMAL => self::NORMAL,
-			ConfigMelanie::LOW => self::LOW,
-			ConfigMelanie::VERY_LOW => self::VERY_LOW,
-	    self::NO_PRIORITY => ConfigMelanie::NO_PRIORITY,
-			self::VERY_HIGH => ConfigMelanie::VERY_HIGH,
-			self::HIGH => ConfigMelanie::HIGH,
-			self::NORMAL => ConfigMelanie::NORMAL,
-			self::LOW => ConfigMelanie::LOW,
-			self::VERY_LOW => ConfigMelanie::VERY_LOW
+	    DefaultConfig::NO_PRIORITY => self::NO_PRIORITY,
+	    DefaultConfig::VERY_HIGH => self::VERY_HIGH,
+	    DefaultConfig::HIGH => self::HIGH,
+	    DefaultConfig::NORMAL => self::NORMAL,
+	    DefaultConfig::LOW => self::LOW,
+	    DefaultConfig::VERY_LOW => self::VERY_LOW,
+	    self::NO_PRIORITY => DefaultConfig::NO_PRIORITY,
+	    self::VERY_HIGH => DefaultConfig::VERY_HIGH,
+	    self::HIGH => DefaultConfig::HIGH,
+	    self::NORMAL => DefaultConfig::NORMAL,
+	    self::LOW => DefaultConfig::LOW,
+	    self::VERY_LOW => DefaultConfig::VERY_LOW
 	];
 
 	// Task completed
@@ -564,10 +564,10 @@ class MappingMelanie {
 	 * Completed mapping
 	 */
 	public static $MapCompletedObjectMelanie = [
-			ConfigMelanie::COMPLETED => self::COMPLETED,
-			ConfigMelanie::NOTCOMPLETED => self::NOTCOMPLETED,
-			self::COMPLETED => ConfigMelanie::COMPLETED,
-			self::NOTCOMPLETED => ConfigMelanie::NOTCOMPLETED
+	    DefaultConfig::COMPLETED => self::COMPLETED,
+	    DefaultConfig::NOTCOMPLETED => self::NOTCOMPLETED,
+	    self::COMPLETED => DefaultConfig::COMPLETED,
+	    self::NOTCOMPLETED => DefaultConfig::NOTCOMPLETED
 	];
 }
 

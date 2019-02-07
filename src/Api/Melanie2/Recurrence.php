@@ -17,13 +17,12 @@
  */
 namespace LibMelanie\Api\Melanie2;
 
-use LibMelanie\Api\Melanie2\Event;
 use LibMelanie\Lib\Melanie2Object;
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Exceptions;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Lib\ICS;
+use LibMelanie\Config\DefaultConfig;
 
 /**
  * Classe recurrence pour Melanie2
@@ -57,23 +56,23 @@ class Recurrence extends Melanie2Object {
   private $recurrence_json_decoded = null;
   
   // RECURDAYS Fields
-  const RECURDAYS_NODAY = ConfigMelanie::NODAY;
-  const RECURDAYS_SUNDAY = ConfigMelanie::SUNDAY;
-  const RECURDAYS_MONDAY = ConfigMelanie::MONDAY;
-  const RECURDAYS_TUESDAY = ConfigMelanie::TUESDAY;
-  const RECURDAYS_WEDNESDAY = ConfigMelanie::WEDNESDAY;
-  const RECURDAYS_THURSDAY = ConfigMelanie::THURSDAY;
-  const RECURDAYS_FRIDAY = ConfigMelanie::FRIDAY;
-  const RECURDAYS_SATURDAY = ConfigMelanie::SATURDAY;
+  const RECURDAYS_NODAY = DefaultConfig::NODAY;
+  const RECURDAYS_SUNDAY = DefaultConfig::SUNDAY;
+  const RECURDAYS_MONDAY = DefaultConfig::MONDAY;
+  const RECURDAYS_TUESDAY = DefaultConfig::TUESDAY;
+  const RECURDAYS_WEDNESDAY = DefaultConfig::WEDNESDAY;
+  const RECURDAYS_THURSDAY = DefaultConfig::THURSDAY;
+  const RECURDAYS_FRIDAY = DefaultConfig::FRIDAY;
+  const RECURDAYS_SATURDAY = DefaultConfig::SATURDAY;
   
   // RECURTYPE Fields
-  const RECURTYPE_NORECUR = ConfigMelanie::NORECUR;
-  const RECURTYPE_DAILY = ConfigMelanie::DAILY;
-  const RECURTYPE_WEEKLY = ConfigMelanie::WEEKLY;
-  const RECURTYPE_MONTHLY = ConfigMelanie::MONTHLY;
-  const RECURTYPE_MONTHLY_BYDAY = ConfigMelanie::MONTHLY_BYDAY;
-  const RECURTYPE_YEARLY = ConfigMelanie::YEARLY;
-  const RECURTYPE_YEARLY_BYDAY = ConfigMelanie::YEARLY_BYDAY;
+  const RECURTYPE_NORECUR = DefaultConfig::NORECUR;
+  const RECURTYPE_DAILY = DefaultConfig::DAILY;
+  const RECURTYPE_WEEKLY = DefaultConfig::WEEKLY;
+  const RECURTYPE_MONTHLY = DefaultConfig::MONTHLY;
+  const RECURTYPE_MONTHLY_BYDAY = DefaultConfig::MONTHLY_BYDAY;
+  const RECURTYPE_YEARLY = DefaultConfig::YEARLY;
+  const RECURTYPE_YEARLY_BYDAY = DefaultConfig::YEARLY_BYDAY;
   
   /**
    * Constructeur de l'objet

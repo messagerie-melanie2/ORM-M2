@@ -25,8 +25,8 @@ namespace LibMelanie\Sql;
 use LibMelanie\Cache\Cache;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Lib\Selaforme;
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Exceptions;
+use LibMelanie\Config\Config;
 
 /**
  * Gestion de la connexion Sql
@@ -171,10 +171,10 @@ class Sql {
   private function connect() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->connect()");
     // Utilisation des selaformes
-    if (ConfigMelanie::SEL_ENABLED) {
-      $this->ret_sel = Selaforme::selaforme_acquire(ConfigMelanie::SEL_MAX_ACQUIRE, ConfigMelanie::SEL_FILE_NAME);
+    if (Config::get(Config::SEL_ENABLED)) {
+      $this->ret_sel = Selaforme::selaforme_acquire(Config::get(Config::SEL_MAX_ACQUIRE), Config::get(Config::SEL_FILE_NAME));
       if ($this->ret_sel === false) {
-        throw new Exceptions\Melanie2DatabaseException("Erreur de base de données Mélanie2 : Selaforme maximum atteint : " . ConfigMelanie::SEL_MAX_ACQUIRE, 11);
+        throw new Exceptions\Melanie2DatabaseException("Erreur de base de données Mélanie2 : Selaforme maximum atteint : " . Config::get(Config::SEL_MAX_ACQUIRE), 11);
       }
     }
     // Connexion persistante ?
@@ -223,7 +223,7 @@ class Sql {
       M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->disconnect() Close connection read");
     }
     // Utilisation des selaformes
-    if (ConfigMelanie::SEL_ENABLED && $this->ret_sel !== false) {
+    if (Config::get(Config::SEL_ENABLED) && $this->ret_sel !== false) {
       Selaforme::selaforme_release($this->ret_sel);
     }
   }
@@ -269,7 +269,7 @@ class Sql {
       throw new Exceptions\Melanie2DatabaseException("Erreur de base de données Mélanie2 : Erreur de connexion", 21);
     }
     // Configuration de la réutilisation des prepares statements
-    $cached_statement = $cached_statement & ConfigMelanie::REUSE_PREPARE_STATEMENT;
+    $cached_statement = $cached_statement & Config::get(Config::REUSE_PREPARE_STATEMENT);
     // Si la requête demarre par SELECT on retourne les resultats
     // Sinon on retourne true (UPDATE/DELETE pas de resultat)
     // Récupération des données du cache
@@ -372,7 +372,7 @@ class Sql {
       throw new Exceptions\Melanie2DatabaseException("Erreur de base de données Mélanie2 : Erreur de connexion", 21);
     }
     // Configuration de la réutilisation des prepares statements
-    $cached_statement = $cached_statement & ConfigMelanie::REUSE_PREPARE_STATEMENT;
+    $cached_statement = $cached_statement & Config::get(Config::REUSE_PREPARE_STATEMENT);
     // Si la requête demarre par SELECT on retourne les resultats
     // Sinon on retourne null (UPDATE/DELETE pas de resultat)
     // Récupération des données du cache

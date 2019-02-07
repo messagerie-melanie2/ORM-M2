@@ -21,7 +21,7 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Config\ConfigMelanie;
+use LibMelanie\Config\Config;
 use LibMelanie\Log\M2Log;
 
 /**
@@ -43,14 +43,14 @@ class Selaforme {
     public static function selaforme_acquire($max = 50, $base = "/tmp/_SeLaFoRmE_")
     {
         M2Log::Log(M2Log::LEVEL_DEBUG, "Selaforme->selaforme_acquire($max, $base)");
-        for ($j = ConfigMelanie::SEL_NB_ESSAI; $j > 0; $j--) {
+        for ($j = Config::get(Config::SEL_NB_ESSAI); $j > 0; $j--) {
             for ($i = 1; $i <= $max; $i++) {
                 $fp = fopen($base.$i, "w+");
                 if(flock($fp, LOCK_EX | LOCK_NB)) return $fp;
                 fclose($fp);
             }
-            M2Log::Log(M2Log::LEVEL_INFO, "Selaforme->selaforme_acquire() wait " . ConfigMelanie::SEL_TEMPS_ATTENTE);
-            usleep(ConfigMelanie::SEL_TEMPS_ATTENTE);
+            M2Log::Log(M2Log::LEVEL_INFO, "Selaforme->selaforme_acquire() wait " . Config::get(Config::SEL_TEMPS_ATTENTE));
+            usleep(Config::get(Config::SEL_TEMPS_ATTENTE));
         }
         M2Log::Log(M2Log::LEVEL_ERROR, "Selaforme->selaforme_acquire() pas de selaforme libre");
         return false;

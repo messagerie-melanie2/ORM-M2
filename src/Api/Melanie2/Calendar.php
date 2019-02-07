@@ -19,8 +19,9 @@ namespace LibMelanie\Api\Melanie2;
 
 use LibMelanie\Lib\Melanie2Object;
 use LibMelanie\Objects\CalendarMelanie;
+use LibMelanie\Objects\UserMelanie;
 use LibMelanie\Log\M2Log;
-use LibMelanie\Config\ConfigMelanie;
+use LibMelanie\Config\Config;
 
 /**
  * Classe calendrier pour Melanie2
@@ -261,8 +262,8 @@ class Calendar extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCaldavurl()");
     if (!isset($this->objectmelanie)) throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     $url = null;
-    if (defined('\LibMelanie\Config\ConfigMelanie::CALENDAR_CALDAV_URL')) {
-      $url = str_replace(['%u', '%o', '%i'], [$this->usermelanie->uid, $this->objectmelanie->owner, $this->objectmelanie->id], ConfigMelanie::CALENDAR_CALDAV_URL);
+    if (Config::is_set(Config::CALENDAR_CALDAV_URL)) {
+      $url = str_replace(['%u', '%o', '%i'], [$this->usermelanie->uid, $this->objectmelanie->owner, $this->objectmelanie->id], Config::get(Config::CALENDAR_CALDAV_URL));
     }
     return $url;
   }

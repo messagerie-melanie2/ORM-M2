@@ -19,9 +19,9 @@ namespace LibMelanie\Api\Melanie2;
 
 use LibMelanie\Objects\EventMelanie;
 use LibMelanie\Objects\HistoryMelanie;
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Exceptions;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Config\Config;
 
 /**
  * Classe exception pour Melanie2,
@@ -205,10 +205,10 @@ class Exception extends Event {
       $this->saveAttributes();
       // Gestion de l'historique
       $history = new HistoryMelanie();
-      $history->uid = ConfigMelanie::CALENDAR_PREF_SCOPE . ":" . $this->calendar . ":" . $this->realuid;
-      $history->action = $insert ? ConfigMelanie::HISTORY_ADD : ConfigMelanie::HISTORY_MODIFY;
+      $history->uid = Config::get(Config::CALENDAR_PREF_SCOPE) . ":" . $this->calendar . ":" . $this->realuid;
+      $history->action = $insert ? Config::get(Config::HISTORY_ADD) : Config::get(Config::HISTORY_MODIFY);
       $history->timestamp = time();
-      $history->description = "LibM2/" . ConfigMelanie::APP_NAME;
+      $history->description = "LibM2/" . Config::get(Config::APP_NAME);
       $history->who = isset($this->usermelanie) ? $this->usermelanie->uid : $this->calendar;
       // Enregistrement dans la base
       if (is_null($insert))

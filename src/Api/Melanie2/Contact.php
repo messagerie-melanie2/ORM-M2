@@ -20,10 +20,11 @@ namespace LibMelanie\Api\Melanie2;
 use LibMelanie\Lib\Melanie2Object;
 use LibMelanie\Objects\ObjectMelanie;
 use LibMelanie\Objects\HistoryMelanie;
-use LibMelanie\Config\ConfigMelanie;
-use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Exceptions;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Objects\UserMelanie;
+use LibMelanie\Objects\AddressbookMelanie;
+use LibMelanie\Config\Config;
 
 /**
  * Classe contact pour Melanie2,
@@ -182,10 +183,10 @@ class Contact extends Melanie2Object {
     if (!is_null($insert)) {
       // Gestion de l'historique
       $history = new HistoryMelanie();
-      $history->uid = ConfigMelanie::ADDRESSBOOK_PREF_SCOPE . ":" . $this->objectmelanie->addressbook . ":" . $this->objectmelanie->uid;
-      $history->action = $insert ? ConfigMelanie::HISTORY_ADD : ConfigMelanie::HISTORY_MODIFY;
+      $history->uid = Config::get(Config::ADDRESSBOOK_PREF_SCOPE) . ":" . $this->objectmelanie->addressbook . ":" . $this->objectmelanie->uid;
+      $history->action = $insert ? Config::get(Config::HISTORY_ADD) : Config::get(Config::HISTORY_MODIFY);
       $history->timestamp = time();
-      $history->description = "LibM2/" . ConfigMelanie::APP_NAME;
+      $history->description = "LibM2/" . Config::get(Config::APP_NAME);
       $history->who = isset($this->usermelanie) ? $this->usermelanie->getUid() : $this->objectmelanie->addressbook;
       // Enregistrement dans la base
       return $history->save();
@@ -211,10 +212,10 @@ class Contact extends Melanie2Object {
     if ($this->objectmelanie->delete()) {
       // Gestion de l'historique
       $history = new HistoryMelanie();
-      $history->uid = ConfigMelanie::ADDRESSBOOK_PREF_SCOPE . ":" . $this->objectmelanie->addressbook . ":" . $this->objectmelanie->uid;
-      $history->action = ConfigMelanie::HISTORY_DELETE;
+      $history->uid = Config::get(Config::ADDRESSBOOK_PREF_SCOPE) . ":" . $this->objectmelanie->addressbook . ":" . $this->objectmelanie->uid;
+      $history->action = Config::get(Config::HISTORY_DELETE);
       $history->timestamp = time();
-      $history->description = "LibM2/" . ConfigMelanie::APP_NAME;
+      $history->description = "LibM2/" . Config::get(Config::APP_NAME);
       $history->who = isset($this->usermelanie) ? $this->usermelanie->getUid() : $this->objectmelanie->addressbook;
       // Enregistrement dans la base
       return $history->save();

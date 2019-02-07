@@ -19,14 +19,16 @@ namespace LibMelanie\Api\Melanie2;
 
 use LibMelanie\Lib\Melanie2Object;
 use LibMelanie\Objects\EventMelanie;
+use LibMelanie\Objects\CalendarMelanie;
 use LibMelanie\Objects\HistoryMelanie;
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Exceptions;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Lib\EventToICS;
 use LibMelanie\Lib\ICS;
 use LibMelanie\Ldap\Ldap;
+use LibMelanie\Config\Config;
+use LibMelanie\Config\DefaultConfig;
 
 
 /**
@@ -180,14 +182,14 @@ class Event extends Melanie2Object {
    * CONSTANTES
    */
   // CLASS Fields
-  const CLASS_PRIVATE = ConfigMelanie::PRIV;
-  const CLASS_PUBLIC = ConfigMelanie::PUB;
-  const CLASS_CONFIDENTIAL = ConfigMelanie::CONFIDENTIAL;
+  const CLASS_PRIVATE = DefaultConfig::PRIV;
+  const CLASS_PUBLIC = DefaultConfig::PUB;
+  const CLASS_CONFIDENTIAL = DefaultConfig::CONFIDENTIAL;
   // STATUS Fields
-  const STATUS_TENTATIVE = ConfigMelanie::TENTATIVE;
-  const STATUS_CONFIRMED = ConfigMelanie::CONFIRMED;
-  const STATUS_CANCELLED = ConfigMelanie::CANCELLED;
-  const STATUS_NONE = ConfigMelanie::NONE;
+  const STATUS_TENTATIVE = DefaultConfig::TENTATIVE;
+  const STATUS_CONFIRMED = DefaultConfig::CONFIRMED;
+  const STATUS_CANCELLED = DefaultConfig::CANCELLED;
+  const STATUS_NONE = DefaultConfig::NONE;
   // TRANS Fields
   const TRANS_TRANSPARENT = ICS::TRANSP_TRANSPARENT;
   const TRANS_OPAQUE = ICS::TRANSP_OPAQUE;
@@ -529,13 +531,14 @@ class Event extends Melanie2Object {
             }
           }
           // S'inviter dans la réunion
-          if ($invite && ConfigMelanie::SELF_INVITE) {
+          if ($invite && Config::get(Config::SELF_INVITE)) {
             $attendee = new Attendee($organizer_event);
             // MANTIS 0004708: Lors d'un "s'inviter" utiliser les informations de l'ICS
             $attendee->email = isset($att_email) ? $att_email : $this->usermelanie->email;
             $attendee->name = isset($att_name) ? $att_name : '';
             $attendee->response = $response;
             $attendee->role = Attendee::ROLE_REQ_PARTICIPANT;
+            $attendee->self_invite = true;
             $organizer_attendees[] = $attendee;
             $organizer_event->attendees = $organizer_attendees;
             $save = true;
@@ -608,12 +611,13 @@ class Event extends Melanie2Object {
                 }
               }
               // S'inviter dans la réunion
-              if ($invite && ConfigMelanie::SELF_INVITE) {
+              if ($invite && Config::get(Config::SELF_INVITE)) {
                 $attendee = new Attendee($organizer_event_exception);
                 $attendee->email = $this->usermelanie->email;
                 $attendee->name = '';
                 $attendee->response = $response;
                 $attendee->role = Attendee::ROLE_REQ_PARTICIPANT;
+                $attendee->self_invite = true;
                 $organizer_exception_attendees[] = $attendee;
                 $organizer_event_exception->attendees = $organizer_exception_attendees;
                 $save = true;
@@ -627,12 +631,45 @@ class Event extends Melanie2Object {
       // Sauvegarde de l'evenement si besoin
       if ($save) {
         $organizer_event->modified = time();
-        $organizer_event->save();
+        // Ne pas appeler le saveAttendees pour éviter les doubles sauvegardes (mode en attente)
+        $organizer_event->save(false);
         // Mise à jour de l'etag pour tout le monde
         $this->objectmelanie->updateMeetingEtag();
       }
     }
     else {
+      // Récupérer l'événement organisateur pour comparer les participants
+      if (!isset($organizer_event)) {
+        // Recuperation de l'évènement de l'organisateur
+        $organizer_event = new Event($this->usermelanie, $this->calendarmelanie);
+        $organizer_event->uid = $this->uid;
+        if (!$organizer_event->load()) {
+          // L'événement n'existe pas donc on passe la variable a null
+          $organizer_event = null;
+        }
+      }
+      // Si l'événement existe et qu'il a changé il y a moins de 10 minutes, on va comparer les participants
+      if (isset($organizer_event)
+          && (time() - $organizer_event->modified) < 60*10) {
+        foreach ($organizer_event->attendees as $organizer_attendee) {
+          if ($organizer_attendee->self_invite) {
+            // Si ce participant s'est lui même invité on vérifie qu'il n'a pas été supprimé entre temps
+            $found = false;
+            // Parcours les participants de l'événement courant pour trouver le participant
+            foreach ($this->attendees as $attendee) {
+              if (strtolower($attendee->email) == strtolower($organizer_attendee->email)) {
+                $found = true;
+                break;
+              }
+            }
+            if (!$found) {
+              $attendees = $this->attendees;
+              $attendees[] = $organizer_attendee;
+              $this->attendees = $attendees;
+            }
+          }
+        }
+      }
       // Positionne les événements en attente
       $this->saveNeedAction();
     }
@@ -1268,7 +1305,7 @@ class Event extends Melanie2Object {
    * @ignore
    *
    */
-  function save() {
+  function save($saveAttendees = true) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
@@ -1277,7 +1314,9 @@ class Event extends Melanie2Object {
       return null;
     }
     // Sauvegarde des participants
-    $this->saveAttendees();
+    if ($saveAttendees) {
+      $this->saveAttendees();
+    }
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save() delete " . count($this->deleted_exceptions));
     // Supprimer les exceptions
     if (isset($this->deleted_exceptions) && count($this->deleted_exceptions) > 0) {
@@ -1314,10 +1353,10 @@ class Event extends Melanie2Object {
       $this->saveAttributes();
       // Gestion de l'historique
       $history = new HistoryMelanie();
-      $history->uid = ConfigMelanie::CALENDAR_PREF_SCOPE . ":" . $this->calendar . ":" . $this->realuid;
-      $history->action = $insert ? ConfigMelanie::HISTORY_ADD : ConfigMelanie::HISTORY_MODIFY;
+      $history->uid = Config::get(Config::CALENDAR_PREF_SCOPE) . ":" . $this->calendar . ":" . $this->realuid;
+      $history->action = $insert ? Config::get(Config::HISTORY_ADD) : Config::get(Config::HISTORY_MODIFY);
       $history->timestamp = time();
-      $history->description = "LibM2/" . ConfigMelanie::APP_NAME;
+      $history->description = "LibM2/" . Config::get(Config::APP_NAME);
       $history->who = isset($this->usermelanie) ? $this->usermelanie->uid : $this->calendar;
       // Enregistrement dans la base
       if (!is_null($history->save()))
@@ -1361,10 +1400,10 @@ class Event extends Melanie2Object {
       $this->deleteAttachments();
       // Gestion de l'historique
       $history = new HistoryMelanie();
-      $history->uid = ConfigMelanie::CALENDAR_PREF_SCOPE . ":" . $this->objectmelanie->calendar . ":" . $this->objectmelanie->uid;
-      $history->action = ConfigMelanie::HISTORY_DELETE;
+      $history->uid = Config::get(Config::CALENDAR_PREF_SCOPE) . ":" . $this->objectmelanie->calendar . ":" . $this->objectmelanie->uid;
+      $history->action = Config::get(Config::HISTORY_DELETE);
       $history->timestamp = time();
-      $history->description = "LibM2/" . ConfigMelanie::APP_NAME;
+      $history->description = "LibM2/" . Config::get(Config::APP_NAME);
       $history->who = isset($this->usermelanie) ? $this->usermelanie->getUid() : $this->objectmelanie->calendar;
       // Enregistrement dans la base
       if (!is_null($history->save()))
@@ -1532,7 +1571,7 @@ class Event extends Melanie2Object {
    * @return boolean
    */
   private function useNewMode() {
-    return defined('\LibMelanie\Config\ConfigMelanie::USE_NEW_MODE') && ConfigMelanie::USE_NEW_MODE;
+    return Config::is_set(Config::USE_NEW_MODE) && Config::get(Config::USE_NEW_MODE);
   }
   /**
    * Mapping uid field
@@ -1574,7 +1613,7 @@ class Event extends Melanie2Object {
       }
     }
     if (!isset($timezone)) {
-      $timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
+      $timezone = Config::get(Config::CALENDAR_DEFAULT_TIMEZONE);
     }
     
     return $timezone;
@@ -2006,7 +2045,7 @@ class Event extends Melanie2Object {
       $this->attachments = [];
       // Récupération des pièces jointes binaires
       $attachment = new Attachment();
-      $path = ConfigMelanie::ATTACHMENTS_PATH;
+      $path = Config::get(Config::ATTACHMENTS_PATH);
       $calendar = $this->getMapOrganizer()->calendar;
       if (!isset($calendar))
         $calendar = $this->objectmelanie->calendar;

@@ -21,11 +21,11 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Api\Melanie2\User;
 use LibMelanie\Api\Melanie2\Task;
 use LibMelanie\Api\Melanie2\Taskslist;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Config\Config;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
 @include_once 'vendor/autoload.php';
@@ -89,7 +89,7 @@ class TaskToICS {
 			$timezone = $taskslist->getTimezone();
 		}
 		if (empty($timezone)) {
-		  $timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
+		  $timezone = Config::get(Config::CALENDAR_DEFAULT_TIMEZONE);
 		}
 		// UID
 		$vtodo->UID = $task->uid;
@@ -117,7 +117,7 @@ class TaskToICS {
 			$timezone = $taskslist->getTimezone();
 		}
 		if (empty($timezone)) {
-		  $timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
+		  $timezone = Config::get(Config::CALENDAR_DEFAULT_TIMEZONE);
 		}
 		M2Log::Log(M2Log::LEVEL_DEBUG, "TaskToICS->getVtodoFromTask() timezone : " . $timezone);
 		// Class
@@ -186,7 +186,7 @@ class TaskToICS {
 				&& $task->owner != $user->uid
 				&& isset($taskslist)
 				&& $taskslist->owner !=  $user->uid
-		    && !$taskslist->asRight(\LibMelanie\Config\ConfigMelanie::PRIV)) {
+		    && !$taskslist->asRight(Config::get(Config::PRIV))) {
 			$vtodo->SUMMARY = 'Événement privé';
 		} else {
 			// Titre
@@ -304,7 +304,7 @@ class TaskToICS {
 	 * @param string $timezone
 	 */
 	private static function generationTimezone(VObject\Component $vcalendar, $timezone) {
-		if (!ConfigMelanie::ICS_ADD_TIMEZONE) return;
+	  if (!Config::get(Config::ICS_ADD_TIMEZONE)) return;
 
 		if ($timezone === 'Europe/Paris') {
 			$vtimezone = $vcalendar->add('VTIMEZONE');

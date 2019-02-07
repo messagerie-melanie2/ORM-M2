@@ -21,7 +21,6 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Api\Melanie2\Attachment;
 use LibMelanie\Api\Melanie2\Recurrence;
 use LibMelanie\Api\Melanie2\User;
@@ -29,6 +28,7 @@ use LibMelanie\Api\Melanie2\Event;
 use LibMelanie\Api\Melanie2\Attendee;
 use LibMelanie\Api\Melanie2\Calendar;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Config\Config;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
 @include_once 'vendor/autoload.php';
@@ -342,7 +342,7 @@ class EventToICS {
 				&& isset($calendar)
 				&& $calendar->owner != $user_uid
 		    && strpos($event->owner, $user_uid.'.-.') !== 0
-		    && !$calendar->asRight(\LibMelanie\Config\ConfigMelanie::PRIV)) || !isset($user_uid))) {
+		    && !$calendar->asRight(Config::get(Config::PRIV))) || !isset($user_uid))) {
 			$vevent->SUMMARY = 'Événement privé';
     } else if ($isfreebusy) {
       $vevent->SUMMARY = '[' . self::convertStatusToFR($event->status) . '] Événement';
@@ -549,7 +549,7 @@ class EventToICS {
 	 * @param string $timezone
 	 */
 	private static function generationTimezone(VObject\Component $vcalendar, $timezone) {
-		if (!ConfigMelanie::ICS_ADD_TIMEZONE) return;
+		if (!Config::get(Config::ICS_ADD_TIMEZONE)) return;
 
 		if ($timezone === 'Europe/Paris') {
 			$vtimezone = $vcalendar->add('VTIMEZONE');

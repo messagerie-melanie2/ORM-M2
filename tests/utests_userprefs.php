@@ -68,7 +68,7 @@ $user->uid = 'thomas.payen';
 
 // Gestion des prefs utilisateur
 $prefs = new LibMelanie\Api\Melanie2\UserPrefs();
-$prefs->scope = LibMelanie\Config\ConfigMelanie::GENERAL_PREF_SCOPE;
+$prefs->scope = LibMelanie\Config\DefaultConfig::GENERAL_PREF_SCOPE;
 $prefs->name = ["categories", "category_colors"];
 $prefs->user = ["thomas.payen", "thomas.test1"];
 

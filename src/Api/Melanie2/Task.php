@@ -20,10 +20,13 @@ namespace LibMelanie\Api\Melanie2;
 use LibMelanie\Lib\Melanie2Object;
 use LibMelanie\Objects\ObjectMelanie;
 use LibMelanie\Objects\HistoryMelanie;
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Config\MappingMelanie;
 use LibMelanie\Exceptions;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Objects\UserMelanie;
+use LibMelanie\Objects\TaskslistMelanie;
+use LibMelanie\Config\Config;
+use LibMelanie\Config\DefaultConfig;
 
 /**
  * Classe tâche pour Melanie2,
@@ -89,21 +92,21 @@ class Task extends Melanie2Object {
   private $attributes_loaded = false;
   
   // CLASS Fields
-  const CLASS_PRIVATE = ConfigMelanie::PRIV;
-  const CLASS_PUBLIC = ConfigMelanie::PUB;
-  const CLASS_CONFIDENTIAL = ConfigMelanie::CONFIDENTIAL;
+  const CLASS_PRIVATE = DefaultConfig::PRIV;
+  const CLASS_PUBLIC = DefaultConfig::PUB;
+  const CLASS_CONFIDENTIAL = DefaultConfig::CONFIDENTIAL;
   
   // PRIORITY Fields
-  const PRIORITY_NO = ConfigMelanie::NO_PRIORITY;
-  const PRIORITY_VERY_HIGH = ConfigMelanie::VERY_HIGH;
-  const PRIORITY_HIGH = ConfigMelanie::HIGH;
-  const PRIORITY_NORMAL = ConfigMelanie::NORMAL;
-  const PRIORITY_LOW = ConfigMelanie::LOW;
-  const PRIORITY_VERY_LOW = ConfigMelanie::VERY_LOW;
+  const PRIORITY_NO = DefaultConfig::NO_PRIORITY;
+  const PRIORITY_VERY_HIGH = DefaultConfig::VERY_HIGH;
+  const PRIORITY_HIGH = DefaultConfig::HIGH;
+  const PRIORITY_NORMAL = DefaultConfig::NORMAL;
+  const PRIORITY_LOW = DefaultConfig::LOW;
+  const PRIORITY_VERY_LOW = DefaultConfig::VERY_LOW;
   
   // COMPLETED Fields
-  const COMPLETED_TRUE = ConfigMelanie::COMPLETED;
-  const COMPLETED_FALSE = ConfigMelanie::NOTCOMPLETED;
+  const COMPLETED_TRUE = DefaultConfig::COMPLETED;
+  const COMPLETED_FALSE = DefaultConfig::NOTCOMPLETED;
   
   // STATUS Fields
   const STATUS_IN_PROCESS = 'IN-PROCESS';
@@ -246,10 +249,10 @@ class Task extends Melanie2Object {
       $this->saveAttributes();
       // Gestion de l'historique
       $history = new HistoryMelanie();
-      $history->uid = ConfigMelanie::TASKSLIST_PREF_SCOPE . ":" . $this->objectmelanie->taskslist . ":" . $this->objectmelanie->uid;
-      $history->action = $insert ? ConfigMelanie::HISTORY_ADD : ConfigMelanie::HISTORY_MODIFY;
+      $history->uid = Config::get(Config::TASKSLIST_PREF_SCOPE) . ":" . $this->objectmelanie->taskslist . ":" . $this->objectmelanie->uid;
+      $history->action = $insert ? Config::get(Config::HISTORY_ADD) : Config::get(Config::HISTORY_MODIFY);
       $history->timestamp = time();
-      $history->description = "LibM2/" . ConfigMelanie::APP_NAME;
+      $history->description = "LibM2/" . Config::get(Config::APP_NAME);
       $history->who = isset($this->usermelanie) ? $this->usermelanie->getUid() : $this->objectmelanie->taskslist;
       // Enregistrement dans la base
       return $history->save();
@@ -277,10 +280,10 @@ class Task extends Melanie2Object {
       $this->deleteAttributes();
       // Gestion de l'historique
       $history = new HistoryMelanie();
-      $history->uid = ConfigMelanie::TASKSLIST_PREF_SCOPE . ":" . $this->objectmelanie->taskslist . ":" . $this->objectmelanie->uid;
-      $history->action = ConfigMelanie::HISTORY_DELETE;
+      $history->uid = Config::get(Config::TASKSLIST_PREF_SCOPE) . ":" . $this->objectmelanie->taskslist . ":" . $this->objectmelanie->uid;
+      $history->action = Config::get(Config::HISTORY_DELETE);
       $history->timestamp = time();
-      $history->description = "LibM2/" . ConfigMelanie::APP_NAME;
+      $history->description = "LibM2/" . Config::get(Config::APP_NAME);
       $history->who = isset($this->usermelanie) ? $this->usermelanie->getUid() : $this->objectmelanie->taskslist;
       // Enregistrement dans la base
       return $history->save();

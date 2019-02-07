@@ -19,8 +19,9 @@ namespace LibMelanie\Api\Melanie2;
 
 use LibMelanie\Lib\Melanie2Object;
 use LibMelanie\Objects\AddressbookMelanie;
+use LibMelanie\Objects\UserMelanie;
 use LibMelanie\Log\M2Log;
-use LibMelanie\Config\ConfigMelanie;
+use LibMelanie\Config\Config;
 
 /**
  * Classe de carnet d'adresses pour Melanie2
@@ -125,8 +126,8 @@ class Addressbook extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCarddavurl()");
     if (!isset($this->objectmelanie)) throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     $url = null;
-    if (defined('\LibMelanie\Config\ConfigMelanie::ADDRESSBOOK_CARDDAV_URL')) {
-      $url = str_replace(['%u', '%o', '%i'], [$this->usermelanie->uid, $this->objectmelanie->owner, $this->objectmelanie->id], ConfigMelanie::ADDRESSBOOK_CARDDAV_URL);
+    if (Config::is_set(Config::ADDRESSBOOK_CARDDAV_URL)) {
+      $url = str_replace(['%u', '%o', '%i'], [$this->usermelanie->uid, $this->objectmelanie->owner, $this->objectmelanie->id], Config::get(Config::ADDRESSBOOK_CARDDAV_URL));
     }
     return $url;
   }

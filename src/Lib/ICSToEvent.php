@@ -18,12 +18,10 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Api\Melanie2\Exception;
 use LibMelanie\Api\Melanie2\Event;
 use LibMelanie\Api\Melanie2\User;
 use LibMelanie\Api\Melanie2\Calendar;
-use LibMelanie\Api\Melanie2\UserPrefs;
 use LibMelanie\Log\M2Log;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS

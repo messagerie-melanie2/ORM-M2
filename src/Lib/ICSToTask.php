@@ -21,11 +21,10 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Config\ConfigMelanie;
 use LibMelanie\Api\Melanie2\Task;
-use LibMelanie\Log\M2Log;
 use LibMelanie\Api\Melanie2\User;
 use LibMelanie\Api\Melanie2\Taskslist;
+use LibMelanie\Config\Config;
 use Sabre\VObject;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
@@ -76,7 +75,7 @@ class ICSToTask {
 		  $timezone = $calendar->getTimezone();
 		}
 		if (empty($timezone)) {
-		  $timezone = ConfigMelanie::CALENDAR_DEFAULT_TIMEZONE;
+		  $timezone = Config::get(Config::CALENDAR_DEFAULT_TIMEZONE);
 		}
 		foreach($vcalendar->VTODO as $vtodo) {
 			// UID

@@ -1,3 +1,8 @@
+ORM M2 - 0.5.0.10
+------
+- 0005238: [ICS] Enregistrer les attributs X-MOZ-SNOOZE-TIME-*
+- 0005234: Supprimer les attributs non nécessaire
+
 ORM M2 - 0.5.0.9
 ------
 - 0005209: Problème de gestion des enregistrements entre le mode en attente et le s'inviter

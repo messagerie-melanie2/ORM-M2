@@ -267,9 +267,7 @@ class Organizer extends Melanie2Object {
       $this->extern = $this->getOrganizerParam('extern');
     }
     // Si l'organisateur est externe au ministère
-    if (isset($this->extern) && $this->extern) {
-      $this->event->setAttribute(self::ORGANIZER_EXTERN, $email);
-    } else if (!isset($this->extern)) {
+    if (!isset($this->extern)) {
       if (strpos($email, '.-.') !== false) {
         $e = explode('.-.', $email, 2);
         $objPartage = $e[0];
@@ -281,7 +279,6 @@ class Organizer extends Melanie2Object {
       if (is_null($infos)) {
         $this->objectmelanie->organizer_uid = null;
         $this->extern = true;
-        $this->event->setAttribute(self::ORGANIZER_EXTERN, $email);
       } else {
         if (isset($objPartage)) {
           $this->objectmelanie->organizer_uid = $objPartage . '.-.' . Ldap::GetMapValue($infos, 'user_uid', 'uid');
@@ -346,9 +343,6 @@ class Organizer extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapName($name)");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     // Si l'organisateur est externe au ministère
-    if ($this->organizer_name != $name && $this->extern) {
-      $this->event->setAttribute(self::ORGANIZER_EXTERN_NAME, $name);
-    }
     $this->organizer_name = $name;
     // Position du name dans organizer_json
     $this->setOrganizerParam(ICS::CN, $name);

@@ -1693,10 +1693,6 @@ class Event extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapTransparency($transparency)");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->objectmelanie->transparency = $transparency;
-    // Si on est dans l'ancien mode, il faut enregistré en paramètres
-    if (!$this->useNewMode()) {
-      $this->setAttribute(ICS::TRANSP, $transparency);
-    }
   }
   /**
    * Mapping transparency field

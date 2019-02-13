@@ -226,23 +226,40 @@ class ICSToEvent {
             $object->alarm = 1;
           }
         }
-        if (!isset($recurrence_id)) {
-          // X MOZ LASTACK
-          if (isset($vevent->{ICS::X_MOZ_LASTACK})) {
-            $object->setAttribute(ICS::X_MOZ_LASTACK, $vevent->{ICS::X_MOZ_LASTACK}->getValue());
-          } else {
-            $object->deleteAttribute(ICS::X_MOZ_LASTACK);
-          }
-          // X MOZ SNOOZE TIME
-          if (isset($vevent->{ICS::X_MOZ_SNOOZE_TIME})) {
-            $object->setAttribute(ICS::X_MOZ_SNOOZE_TIME, $vevent->{ICS::X_MOZ_SNOOZE_TIME}->getValue());
-          } else {
-            $object->deleteAttribute(ICS::X_MOZ_SNOOZE_TIME);
-          }
-        }        
       } else {
         $object->alarm = 0;
-      }        
+      }
+      // Gestion des alarmes même pour les occurrences
+      if (!isset($recurrence_id)) {
+        // X MOZ LASTACK
+        if (isset($vevent->{ICS::X_MOZ_LASTACK})) {
+          $object->setAttribute(ICS::X_MOZ_LASTACK, $vevent->{ICS::X_MOZ_LASTACK}->getValue());
+        } else {
+          $object->deleteAttribute(ICS::X_MOZ_LASTACK);
+        }
+        // X MOZ SNOOZE TIME
+        if (isset($vevent->{ICS::X_MOZ_SNOOZE_TIME})) {
+          $object->setAttribute(ICS::X_MOZ_SNOOZE_TIME, $vevent->{ICS::X_MOZ_SNOOZE_TIME}->getValue());
+        } else {
+          $object->deleteAttribute(ICS::X_MOZ_SNOOZE_TIME);
+        }
+        // 0005238: [ICS] Enregistrer les attributs X-MOZ-SNOOZE-TIME-*
+        $children = $vevent->children;
+        $attributes = [];
+        // Parcours tous les children pour trouver les X-MOZ-SNOOZE-TIME-
+        foreach($children as $key => $child) {
+          if (substr(strtoupper($child->name), 0, strlen("X-MOZ-SNOOZE-TIME-")) === "X-MOZ-SNOOZE-TIME-") {
+            $attributes[$child->name] = $child->getValue();
+          }
+        }
+        // Si des attributs ont été trouvé on les stock
+        if (!empty($attributes)) {
+          $object->setAttribute("X-MOZ-SNOOZE-TIME-CHILDREN", json_encode($attributes));
+        }
+        else {
+          $object->deleteAttribute("X-MOZ-SNOOZE-TIME-CHILDREN");
+        }
+      }
       // SEQUENCE
       if (isset($vevent->SEQUENCE)) {
         $object->setAttribute(ICS::SEQUENCE, $vevent->SEQUENCE->getValue());

@@ -187,6 +187,14 @@ class EventToICS {
 	          // X Moz Generation
 	          $moz_generation = $event->getAttribute(ICS::X_MOZ_GENERATION);
 	          if (isset($moz_generation)) $vevent->add(ICS::X_MOZ_GENERATION, $moz_generation);
+	          // 0005238: [ICS] Enregistrer les attributs X-MOZ-SNOOZE-TIME-*
+	          $attributes = $event->getAttribute("X-MOZ-SNOOZE-TIME-CHILDREN");
+	          if (isset($attributes)) {
+	            $attributes = json_decode($attributes, true);
+	            foreach ($attributes as $name => $value) {
+	              $vevent->add($name, $value);
+	            }
+	          }
 	          // DTSTAMP
 	          $dtstamp = $event->getAttribute(ICS::DTSTAMP);
 	          if (isset($dtstamp)) $vevent->add(ICS::DTSTAMP, $dtstamp);
@@ -376,11 +384,19 @@ class EventToICS {
 				$valarm->TRIGGER = self::formatAlarm($event->alarm);
 				$valarm->TRIGGER[ICS::VALUE] = ICS::VALUE_DURATION;
 				$valarm->ACTION = ICS::ACTION_DISPLAY;
-        // Attributs sur l'alarme
-				$x_moz_lastack = $event->getAttribute(ICS::X_MOZ_LASTACK);
-				if (isset($x_moz_lastack)) $vevent->{ICS::X_MOZ_LASTACK} = $x_moz_lastack;
-				$x_moz_snooze_time = $event->getAttribute(ICS::X_MOZ_SNOOZE_TIME);
-				if (isset($x_moz_snooze_time)) $vevent->{ICS::X_MOZ_SNOOZE_TIME} = $x_moz_snooze_time;
+			}
+			// Attributs sur l'alarme
+			$x_moz_lastack = $event->getAttribute(ICS::X_MOZ_LASTACK);
+			if (isset($x_moz_lastack)) $vevent->{ICS::X_MOZ_LASTACK} = $x_moz_lastack;
+			$x_moz_snooze_time = $event->getAttribute(ICS::X_MOZ_SNOOZE_TIME);
+			if (isset($x_moz_snooze_time)) $vevent->{ICS::X_MOZ_SNOOZE_TIME} = $x_moz_snooze_time;
+			// 0005238: [ICS] Enregistrer les attributs X-MOZ-SNOOZE-TIME-*
+			$attributes = $event->getAttribute("X-MOZ-SNOOZE-TIME-CHILDREN");
+			if (isset($attributes)) {
+			  $attributes = json_decode($attributes, true);
+			  foreach ($attributes as $name => $value) {
+			    $vevent->add($name, $value);
+			  }
 			}
 			// Récupérer l'organisateur
 			$organizer_email = trim($event->organizer->email);

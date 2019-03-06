@@ -1923,9 +1923,6 @@ class Event extends Melanie2Object {
         $recurrence_master[] = $recId;
       }
     }
-    // MANTIS 3615: Alimenter le champ recurrence master
-    // TODO: Supprimer cet ajout quand CalDAV utilisera l'ORM
-    $this->setAttribute('RECURRENCE-MASTER', implode(',', array_unique($recurrence_master)));
     
     if (count($_exceptions) > 0)
       $this->objectmelanie->exceptions = implode(',', $_exceptions);
@@ -2007,11 +2004,6 @@ class Event extends Melanie2Object {
     if (!in_array($recId, $exceptions_dates)) {
       $exceptions_dates[] = $recId;
       $this->objectmelanie->exceptions = implode(',', $exceptions_dates);
-    }
-    // MANTIS 3615: Alimenter le champ recurrence master
-    // TODO: Supprimer cet ajout quand CalDAV utilisera l'ORM
-    if (count($recurrence_master) > 0) {
-      $this->setAttribute('RECURRENCE-MASTER', implode(',', array_unique($recurrence_master)));
     }
   }
   

@@ -375,12 +375,13 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 					}
 					if (isset($opmapping[$mapKey])) {
 						if (is_array($this->$mapKey)) {
-						    if ($opmapping[$mapKey] == MappingMelanie::in) {
+						  if ($opmapping[$mapKey] == MappingMelanie::in 
+						          || $opmapping[$mapKey] == MappingMelanie::notin) {
 						        // Filtre personnalisé, valeur multiple, pas de like, on utilise IN
 						        if ($is_case_unsensitive)
-						            $clause = "LOWER($mapKey) IN (";
+						            $clause = "LOWER($mapKey) " . $opmapping[$mapKey] . " (";
 						        else
-						            $clause = "$mapKey IN (";
+						            $clause = "$mapKey " . $opmapping[$mapKey] . " (";
 						        $i = 1;
 						        foreach ($this->$mapKey as $val) {
 						            if ($i > 1) $clause .= ", ";
@@ -393,6 +394,21 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 						        }
 						        $clause .= ")";
 						        $filter = str_replace("#$key#", $clause, $filter);
+						    } else if ($opmapping[$mapKey] == MappingMelanie::between
+						        || $opmapping[$mapKey] == MappingMelanie::notbetween) {
+				          $value = $this->$mapKey;
+  				        // Filtre personnalisé, avec between
+				          if ($is_case_unsensitive) {
+				            $clause = "(LOWER($mapKey) " . $opmapping[$mapKey] . " :" . $mapKey . "0 AND :" . $mapKey . "1)";
+				            $params[$mapKey."0"] = strtolower($value[0]);
+				            $params[$mapKey."1"] = strtolower($value[1]);
+				          }
+				          else {
+				            $clause = "($mapKey " . $opmapping[$mapKey] . " :" . $mapKey . "0 AND :" . $mapKey . "1)";
+				            $params[$mapKey."0"] = $value[0];
+				            $params[$mapKey."1"] = $value[1];
+				          }
+			            $filter = str_replace("#$key#", $clause, $filter);
 						    } else {
     							// Filtre personnalisé, valeur multiple, avec like
     							$clause = "(";

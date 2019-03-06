@@ -186,7 +186,7 @@ class Exception extends Event {
    * @ignore
    *
    */
-  function save() {
+  function save($saveAttendees = true) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();

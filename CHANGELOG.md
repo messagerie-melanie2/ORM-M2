@@ -1,3 +1,7 @@
+ORM M2 - 0.5.0.11
+------
+- 0005261: Ajouter l'operateur BETWEEN/NOT BETWEEN
+
 ORM M2 - 0.5.0.10
 ------
 - 0005238: [ICS] Enregistrer les attributs X-MOZ-SNOOZE-TIME-*

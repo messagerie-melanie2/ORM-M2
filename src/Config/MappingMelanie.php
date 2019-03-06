@@ -399,6 +399,8 @@ class MappingMelanie {
 	const eq = "=";
 	const in = "IN";
 	const notin = "NOT IN";
+	const between = "BETWEEN";
+	const notbetween = "NOT BETWEEN";
 
 	// DATA MAPPING
 	// Class

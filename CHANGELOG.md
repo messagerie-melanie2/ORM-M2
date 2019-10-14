@@ -1,3 +1,9 @@
+ORM M2 - 0.5.0.12
+------
+- 0005282: Problème de format du RDATE
+- 0005401: Nouveaux champs pour la classe Event : dtstart, dtend, dtstart_utc, dtend_utc
+- 0005400: Passer les EXDATE en GMT
+
 ORM M2 - 0.5.0.11
 ------
 - 0005261: Ajouter l'operateur BETWEEN/NOT BETWEEN

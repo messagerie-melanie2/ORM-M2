@@ -539,6 +539,39 @@ class Recurrence extends Melanie2Object {
   }
   
   /**
+   * Convert an array onto a DateTime
+   * @param array $date
+   * @return \DateTime
+   */
+  private function arrayToDateTime($date) {
+    try {
+      if (isset($date["timezone_type"]) && isset($date['timezone'])) {
+        switch ($date["timezone_type"]) {
+          case 1:
+            $date = \DateTime::createFromFormat("Y-m-d H:i:s.u O", $date['date'] . " " . $date['timezone']);
+          case 2:
+            $date = \DateTime::createFromFormat("Y-m-d H:i:s.u T", $date['date'] . " " . $date['timezone']);
+            break;
+          case 3:
+          default:
+            $date = \DateTime::createFromFormat("Y-m-d H:i:s.u", $date['date'], new \DateTimeZone($date['timezone']));
+            break;
+        }
+      }
+      else if (isset($date["timezone"])) {
+        $date = new \DateTime($date['date'], new \DateTimeZone($date['timezone']));
+      }
+      else {
+        $date = new \DateTime($date['date']);
+      }
+    }
+    catch (\Exception $ex) {
+      $date = new \DateTime($date['date']);
+    }
+    return $date;
+  }
+  
+  /**
    * Creates an iCalendar 2.0 recurrence rule.
    * based on Horde_Date_Recurrence class
    *
@@ -555,30 +588,16 @@ class Recurrence extends Melanie2Object {
         && !empty($this->objectmelanie->recurrence_json)) {
       // Tableau permettant de recuperer toutes les valeurs de la recurrence
       $recurrence = json_decode($this->objectmelanie->recurrence_json, true);
+      // Convert UNTIL to DateTime if necessary
       if (isset($recurrence[ICS::UNTIL]) && is_array($recurrence[ICS::UNTIL])) {
-        try {
-          if (isset($recurrence[ICS::UNTIL]["timezone_type"]) && isset($recurrence[ICS::UNTIL]['timezone'])) {
-            switch ($recurrence[ICS::UNTIL]["timezone_type"]) {
-              case 1:
-                $recurrence[ICS::UNTIL] = \DateTime::createFromFormat("Y-m-d H:i:s.u O", $recurrence[ICS::UNTIL]['date'] . " " . $recurrence[ICS::UNTIL]['timezone']);
-              case 2:
-                $recurrence[ICS::UNTIL] = \DateTime::createFromFormat("Y-m-d H:i:s.u T", $recurrence[ICS::UNTIL]['date'] . " " . $recurrence[ICS::UNTIL]['timezone']);
-                break;
-              case 3:
-              default:
-                $recurrence[ICS::UNTIL] = \DateTime::createFromFormat("Y-m-d H:i:s.u", $recurrence[ICS::UNTIL]['date'], new \DateTimeZone($recurrence[ICS::UNTIL]['timezone']));
-                break;
-            }
+        $recurrence[ICS::UNTIL] = $this->arrayToDateTime($recurrence[ICS::UNTIL]);
+      }
+      // Convert each RDATE to DateTime if necessary
+      if (isset($recurrence[ICS::RDATE]) && is_array($recurrence[ICS::RDATE])) {
+        foreach ($recurrence[ICS::RDATE] as $key => $rdate) {
+          if (is_array($rdate)) {
+            $recurrence[ICS::RDATE][$key] = $this->arrayToDateTime($rdate);
           }
-          else if (isset($recurrence[ICS::UNTIL]["timezone"])) {
-            $recurrence[ICS::UNTIL] = new \DateTime($recurrence[ICS::UNTIL]['date'], new \DateTimeZone($recurrence[ICS::UNTIL]['timezone']));
-          }
-          else {
-            $recurrence[ICS::UNTIL] = new \DateTime($recurrence[ICS::UNTIL]['date']);
-          }
-        }
-        catch (\Exception $ex) {
-          $recurrence[ICS::UNTIL] = new \DateTime($recurrence[ICS::UNTIL]['date']);
         }
       }
       if (isset($recurrence[ICS::BYDAY]) && is_array($recurrence[ICS::BYDAY])) {

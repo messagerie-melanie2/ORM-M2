@@ -59,6 +59,10 @@ use LibMelanie\Config\DefaultConfig;
  * @property boolean $hasattendees Est-ce que cette instance de l'événement a des participants
  * @property string $start String au format compatible DateTime, date de début
  * @property string $end String au format compatible DateTime, date de fin
+ * @property \DateTime $dtstart DateTime basée sur le champ $start
+ * @property \DateTime $dtend DateTime basée sur le champ $end
+ * @property-read \DateTime $dtstart_utc DateTime basée sur le champ $start au timezone UTC
+ * @property-read \DateTime $dtend_utc DateTime basée sur le champ $end au timezone UTC
  * @property string $timezone Timezone de l'événement
  * @property boolean $all_day Est-ce que c'est un événement journée entière
  * @property int $created Timestamp de création de l'évènement
@@ -78,6 +82,13 @@ use LibMelanie\Config\DefaultConfig;
  * @method bool delete() Supprime l'évènement et met à jour l'historique dans la base de données
  */
 class Event extends Melanie2Object {
+  /**
+   * Format de datetime pour la base de données
+   *
+   * @var string
+   */
+  const DB_DATE_FORMAT = 'Y-m-d H:i:s';
+  
   // Accès aux objets associés
   /**
    * Utilisateur associé à l'objet
@@ -147,6 +158,30 @@ class Event extends Melanie2Object {
    * @var Attachment[]
    */
   protected $attachments;
+  /**
+   * DateTime basée sur le champ $start
+   * 
+   * @var \DateTime
+   */
+  protected $dtstart;
+  /**
+   * DateTime basée sur le champ $start au timezone UTC
+   *
+   * @var \DateTime
+   */
+  protected $dtstart_utc;
+  /**
+   * DateTime basée sur le champ $end
+   *
+   * @var \DateTime
+   */
+  protected $dtend;
+  /**
+   * DateTime basée sur le champ $end au timezone UTC
+   *
+   * @var \DateTime
+   */
+  protected $dtend_utc;
   
   /**
    * Object VCalendar disponible via le VObject
@@ -1639,6 +1674,106 @@ class Event extends Melanie2Object {
   }
   
   /**
+   * Mapping start field
+   *
+   * @param string $start
+   */
+  protected function setMapStart($start) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapStart()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->objectmelanie->start = $start;
+    $this->dtstart = null;
+    $this->dtstart_utc = null;
+  }
+  
+  /**
+   * Mapping dtstart field
+   *
+   * @param \DateTime $dtstart
+   */
+  protected function setMapDtstart($dtstart) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapDtstart()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->dtstart = $dtstart;
+    $this->objectmelanie->start = $dtstart->format(self::DB_DATE_FORMAT);
+    $this->objectmelanie->timezone = $dtstart->getTimezone()->getName();
+  }
+  /**
+   * Mapping dtstart field
+   */
+  protected function getMapDtstart() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDtstart()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->dtstart)) {
+      $this->dtstart = new \DateTime($this->objectmelanie->start, new \DateTimeZone($this->getMapTimezone()));
+    }
+    return $this->dtstart;
+  }
+  
+  /**
+   * Mapping dtstart_utc field
+   */
+  protected function getMapDtstart_utc() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDtstart_utc()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->dtstart_utc)) {
+      $this->dtstart_utc = new \DateTime($this->objectmelanie->start, new \DateTimeZone($this->getMapTimezone()));
+      $this->dtstart_utc->setTimezone(new \DateTimeZone('UTC'));
+    }
+    return $this->dtstart_utc;
+  }
+  
+  /**
+   * Mapping end field
+   *
+   * @param string $end
+   */
+  protected function setMapEnd($end) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapEnd()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->objectmelanie->end = $end;
+    $this->dtend = null;
+    $this->dtend_utc = null;
+  }
+  
+  /**
+   * Mapping dtend field
+   *
+   * @param \DateTime $dtend
+   */
+  protected function setMapDtend($dtend) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapDtend()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    $this->dtend = $dtend;
+    $this->objectmelanie->end = $dtend->format(self::DB_DATE_FORMAT);
+    // Pas de timezone ici, il est récupéré dans le dtstart
+  }
+  /**
+   * Mapping dtend field
+   */
+  protected function getMapDtend() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDtend()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->dtend)) {
+      $this->dtend = new \DateTime($this->objectmelanie->end, new \DateTimeZone($this->getMapTimezone()));
+    }
+    return $this->dtend;
+  }
+  
+  /**
+   * Mapping dtend_utc field
+   */
+  protected function getMapDtend_utc() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDtend_utc()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->dtend_utc)) {
+      $this->dtend_utc = new \DateTime($this->objectmelanie->end, new \DateTimeZone($this->getMapTimezone()));
+      $this->dtend_utc->setTimezone(new \DateTimeZone('UTC'));
+    }
+    return $this->dtend_utc;
+  }
+  
+  /**
    * Mapping class field
    * 
    * @param Event::CLASS_* $class          
@@ -1871,9 +2006,6 @@ class Event extends Melanie2Object {
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     
     $_exceptions = [];
-    // MANTIS 3615: Alimenter le champ recurrence master
-    // TODO: Supprimer cet ajout quand CalDAV utilisera l'ORM
-    $recurrence_master = [];
     if (!is_array($exceptions)) {
       $exceptions = [
           $exceptions
@@ -1905,23 +2037,11 @@ class Event extends Melanie2Object {
     $this->exceptions = [];
     foreach ($exceptions as $exception) {
       $date = new \DateTime($exception->recurrenceId, new \DateTimeZone('GMT'));
-      $timezone = $this->getMapTimezone();
-      if (!isset($timezone)) {
-        $timezone = $exception->timezone;
-      }
-      // Définition Timezone de l'utilisateur
-      $user_timezone = new \DateTimeZone(!empty($timezone) ? $timezone : date_default_timezone_get());
-      $date->setTimezone($user_timezone);
       $recId = $date->format("Ymd");
       if (!in_array($recId, $_exceptions)) {
         $_exceptions[] = $recId;
       }
       $this->exceptions[$recId] = $exception;
-      // MANTIS 3615: Alimenter le champ recurrence master
-      // TODO: Supprimer cet ajout quand CalDAV utilisera l'ORM
-      if (!$exception->deleted) {
-        $recurrence_master[] = $recId;
-      }
     }
     
     if (count($_exceptions) > 0)
@@ -1987,19 +2107,11 @@ class Event extends Melanie2Object {
     $user_timezone = new \DateTimeZone(!empty($timezone) ? $timezone : date_default_timezone_get());
     // Récupère les dates des exceptions
     $exceptions_dates = explode(',', $this->objectmelanie->exceptions);
-    // MANTIS 3615: Alimenter le champ recurrence master
-    // TODO: Supprimer cet ajout quand CalDAV utilisera l'ORM
-    $recurrence_master = explode(',', $this->getAttribute('RECURRENCE-MASTER'));
     // Gestion de l'exception
     $date = new \DateTime($exception->recurrenceId, new \DateTimeZone('GMT'));
     $date->setTimezone($user_timezone);
     $recId = $date->format("Ymd");
     $this->exceptions[$recId] = $exception;
-    // MANTIS 3615: Alimenter le champ recurrence master
-    // TODO: Supprimer cet ajout quand CalDAV utilisera l'ORM
-    if (!$exception->deleted && !in_array($recId, $recurrence_master)) {
-      $recurrence_master[] = $recId;
-    }
     // Ajoute l'exception à la liste des dates si elle n'est pas présente
     if (!in_array($recId, $exceptions_dates)) {
       $exceptions_dates[] = $recId;

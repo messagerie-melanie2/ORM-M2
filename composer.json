@@ -1,31 +1,34 @@
 {
-	"name": "messagerie-melanie2/ORM-M2",
-	"version": "0.5.0.11",
-    "version_normalized": "0.5.0.11",
-	"description": "ORM pour l'accès aux données Mélanie2",
-	"keywords": [ "ORM", "Calendar", "Addressbook", "Tasks" ],
-	"homepage": "https://github.com/messagerie-melanie2/ORM-M2",
-	"license": "GPLv3",
-	"type": "library",
+	"name" : "messagerie-melanie2/ORM-M2",
+	"version" : "0.5.0.12",
+	"version_normalized" : "0.5.0.12",
+	"description" : "ORM pour l'accès aux données Mélanie2",
+	"keywords" : [
+		"ORM",
+		"Calendar",
+		"Addressbook",
+		"Tasks"
+	],
+	"homepage" : "https://github.com/messagerie-melanie2/ORM-M2",
+	"license" : "GPLv3",
+	"type" : "library",
 	"require" : {
-		"php"		: ">=5.3.1",
-		"ext-ldap"	: "*",
-		"ext-pgsql"	: "*"
+		"php" : ">=5.3.1",
+		"ext-ldap" : "*",
+		"ext-pgsql" : "*"
 	},
-	"require-dev": {
-        "composer/composer": "*"
-    },
+	"require-dev" : {
+		"composer/composer" : "*"
+	},
 	"autoload" : {
-		"files": [
-        	"includes/includes_conf.php"
+		"files" : [
+			"includes/includes_conf.php"
 		],
 		"psr-4" : {
 			"LibMelanie\\" : "src/"
 		}
-
 	},
-	"authors" : [
-		{
+	"authors" : [{
 			"name" : "Thomas Payen",
 			"email" : "thomas.payen@i-carre.net",
 			"homepage" : "https://github.com/tpayen",

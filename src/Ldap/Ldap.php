@@ -547,9 +547,11 @@ class Ldap {
    *          [Optionnel] valeur par défaut si le mapping n'existe pas
    * @param string $server
    *          [Optionnel] Server LDAP utilisé pour la requête
+   * @param number $valueNumber
+   *          [Optionnel] numéro de l'élément du tableau, 0 par défaut
    * @return NULL|string Nom du champ mappé
    */
-  public static function GetMapValue($infos, $name, $defaultValue = null, $server = null) {
+  public static function GetMapValue($infos, $name, $defaultValue = null, $server = null, $valueNumber = 0) {
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
@@ -559,8 +561,8 @@ class Ldap {
     $value = null;
     if (isset($infos[$ldap->getMapping($name, $defaultValue)])) {
       if (is_array($infos[$ldap->getMapping($name, $defaultValue)])
-          && isset($infos[$ldap->getMapping($name, $defaultValue)][0])) {
-        $value = $infos[$ldap->getMapping($name, $defaultValue)][0];
+          && isset($infos[$ldap->getMapping($name, $defaultValue)][$valueNumber])) {
+        $value = $infos[$ldap->getMapping($name, $defaultValue)][$valueNumber];
       }
       else {
         $value = $infos[$ldap->getMapping($name, $defaultValue)];
@@ -593,6 +595,48 @@ class Ldap {
     }
     
     return $values;
+  }
+  /**
+   * Retourne si les valeurs existent dans le tableau pour le nom mappé
+   * 
+   * @param array $infos
+   * @param string $name
+   * @param string $defaultValue
+   *          [Optionnel] valeur par défaut si le mapping n'existe pas
+   * @param string $server
+   *          [Optionnel] Server LDAP utilisé pour la requête
+   * @return boolean
+   */
+  public static function issetMap($infos, $name, $defaultValue = null, $server = null) {
+      if (!isset($server)) {
+          $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+      }
+      // Récupération de l'instance LDAP en fonction du serveur
+      $ldap = self::GetInstance($server);
+      
+      return isset($infos[$ldap->getMapping($name, $defaultValue)]);
+  }
+  /**
+   * Retourne si la valeur existe dans le tableau du nom mappé
+   * 
+   * @param array $infos
+   * @param string $name
+   * @param string $defaultValue
+   *          [Optionnel] valeur par défaut si le mapping n'existe pas
+   * @param number $valueNumber
+   *          [Optionnel] numéro de l'élément du tableau, 0 par défaut
+   * @param string $server
+   *          [Optionnel] Server LDAP utilisé pour la requête
+   * @return boolean
+   */
+  public static function issetMapValue($infos, $name, $defaultValue = null, $valueNumber = 0, $server = null) {
+      if (!isset($server)) {
+          $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+      }
+      // Récupération de l'instance LDAP en fonction du serveur
+      $ldap = self::GetInstance($server);
+      
+      return isset($infos[$ldap->getMapping($name, $defaultValue)][$valueNumber]);
   }
   /**
    * Retourne la derniere requete

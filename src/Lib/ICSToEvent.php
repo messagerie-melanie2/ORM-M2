@@ -123,9 +123,8 @@ class ICSToEvent {
       }
       if (isset($startDate)) {
         $object->all_day = isset($vevent->DTSTART->parameters[ICS::VALUE]) && $vevent->DTSTART->parameters[ICS::VALUE] == ICS::VALUE_DATE;
-        $object->start = $startDate->format(self::DB_DATE_FORMAT);
-        $object->end = $endDate->format(self::DB_DATE_FORMAT);
-        $object->timezone = $startDate->getTimezone()->getName();
+        $object->dtstart = $startDate;
+        $object->dtend = $endDate;
       }      
       
       // Recurrence ID
@@ -574,7 +573,8 @@ class ICSToEvent {
           foreach ($vevent->EXDATE as $exdate) {
             $exception = new Exception($event, $user, $calendar);
             $date = $exdate->getDateTime();
-            $date->setTimezone(new \DateTimeZone($object->timezone));
+            // Enregistrer les exceptions en GMT dans la base
+            $date->setTimezone(new \DateTimeZone('GMT'));
             $exception->recurrenceId = $date->format(self::SHORT_DB_DATE_FORMAT);
             $exception->deleted = true;
             $exception->uid = $event->uid;

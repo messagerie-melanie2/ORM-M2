@@ -1,3 +1,8 @@
+ORM M2 - 0.5.0.13
+------
+- 0005407: Le save ne met pas correctement à jour le champ modified
+- 0005418: HOTFIX: Ne pas utiliser le dtstart_utc pour les allday event
+
 ORM M2 - 0.5.0.12
 ------
 - 0005282: Problème de format du RDATE

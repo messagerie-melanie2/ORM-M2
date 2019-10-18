@@ -871,6 +871,7 @@ class Event extends Melanie2Object {
                         }
                       }
                       if (!$eventAttendeeFound) {
+                        $_ex_save = false;
                         // Le participant n'était pas dans l'événément maitre mais dans l'occurrence, il faut créer l'événement
                         $_ex_attendee_uid = $exception_attendee->uid;
                         if (isset($_ex_attendee_uid) 
@@ -1374,8 +1375,9 @@ class Event extends Melanie2Object {
       return false;
     }
       
-    if ($exMod)
-      $this->modified = time();
+    if ($exMod) {
+      $this->setMapModified(time());
+    }
     if (!isset($this->owner)) {
       $this->owner = $this->usermelanie->uid;
     }

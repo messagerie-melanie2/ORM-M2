@@ -352,10 +352,10 @@ class EventToICS {
     if (isset($event->start) && isset($event->end)) {
       if ($event->all_day) {
         // All day event
-        $vevent->add(ICS::DTSTART, $event->dtstart_utc->format('Ymd'), [
+        $vevent->add(ICS::DTSTART, $event->dtstart->format('Ymd'), [
             ICS::VALUE => ICS::VALUE_DATE
         ]);
-        $vevent->add(ICS::DTEND, $event->dtend_utc->format('Ymd'), [
+        $vevent->add(ICS::DTEND, $event->dtend->format('Ymd'), [
             ICS::VALUE => ICS::VALUE_DATE
         ]);
       } else {

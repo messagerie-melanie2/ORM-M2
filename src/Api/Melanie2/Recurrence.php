@@ -345,7 +345,12 @@ class Recurrence extends Melanie2Object {
     $this->objectmelanie->days = MappingMelanie::NODAY;
     if (is_array($days)) {
       foreach ($days as $day) {
-        $this->objectmelanie->days += intval(MappingMelanie::$MapRecurdaysObjectMelanie[$day]);
+        if (!isset(MappingMelanie::$MapRecurdaysObjectMelanie[$day])) {
+          $day = substr($day, 1);
+        }
+        if (isset(MappingMelanie::$MapRecurdaysObjectMelanie[$day])) {
+          $this->objectmelanie->days += intval(MappingMelanie::$MapRecurdaysObjectMelanie[$day]);
+        }
       }
       if (empty($days)) {
         $this->unsetRecurrenceParam(ICS::BYDAY);

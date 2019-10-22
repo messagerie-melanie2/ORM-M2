@@ -1,3 +1,7 @@
+ORM M2 - 0.5.0.14
+------
+- HOTFIX pour les EXDATE de récurrences journée entière
+
 ORM M2 - 0.5.0.13
 ------
 - 0005407: Le save ne met pas correctement à jour le champ modified

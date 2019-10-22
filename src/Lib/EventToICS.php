@@ -155,14 +155,34 @@ class EventToICS {
       $first = true;
       foreach ($event->exceptions as $exception) {
         $exRecId = isset($exception->recurrence_id) ? $exception->recurrence_id : $exception->getAttribute(ICS::RECURRENCE_ID);
+        $allDay = $exception->all_day;
         if (!isset($exRecId)) {
-          if ($event->deleted) {
-            $exRecId = date('Y-m-d', strtotime($exception->recurrenceId)) . ' ' . $exception->dtstart->format('H:i:s');
+          if ($event->deleted || !$exception->deleted) {
+            if ($exception->all_day) {
+              $exRecId = date('Y-m-d', strtotime($exception->recurrenceId));
+              $allDay = true;
+            }
+            else {
+              $exRecId = date('Y-m-d', strtotime($exception->recurrenceId)) . ' ' . $exception->dtstart->format('H:i:s');
+              $allDay = false;
+            }
           } else {
-            $exRecId = date('Y-m-d', strtotime($exception->recurrenceId)) . ' ' . $event->dtstart->format('H:i:s');
+            if ($event->all_day) {
+              $exRecId = date('Y-m-d', strtotime($exception->recurrenceId));
+              $allDay = true;
+            }
+            else {
+              $exRecId = date('Y-m-d', strtotime($exception->recurrenceId)) . ' ' . $event->dtstart->format('H:i:s');
+              $allDay = false;
+            }
           }
         }
-        $exdatetime = new \DateTime($exRecId, new \DateTimeZone($exception->timezone));
+        if ($allDay) {
+          $exdatetime = new \DateTime($exRecId, new \DateTimeZone('UTC'));
+        }
+        else {
+          $exdatetime = new \DateTime($exRecId, new \DateTimeZone($exception->timezone));
+        }
 
         if ($event->deleted) {
           if ($first) {
@@ -230,13 +250,11 @@ class EventToICS {
             continue;
           }
           if ($vevent->DTSTART[ICS::VALUE] == ICS::VALUE_DATE) {
-            $exdatetime->setTimezone(new \DateTimeZone('UTC'));
             $date = $exdatetime->format('Ymd');
           } else {
             $date = $exdatetime->format('Ymd') . 'T' . $exdatetime->format('His');
           }
         } elseif ($vevent->DTSTART[ICS::VALUE] == ICS::VALUE_DATE) {
-          $exdatetime->setTimezone(new \DateTimeZone('UTC'));
           $date = $exdatetime->format('Ymd');
         } else {
           if (!isset($vevent->DTSTART)) {

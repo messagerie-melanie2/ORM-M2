@@ -412,7 +412,7 @@ class Organizer extends Melanie2Object {
    * @ignore
    */
   protected function setMapOwner_email($owner_email) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapOwner_email($role)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapOwner_email()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->setOrganizerParam(ICS::X_M2_ORG_MAIL, $owner_email);
   }

@@ -1,3 +1,7 @@
+ORM M2 - 0.5.0.15
+------
+- Support du champ de mapping user_uid pour les Attendees
+
 ORM M2 - 0.5.0.14
 ------
 - HOTFIX pour les EXDATE de récurrences journée entière

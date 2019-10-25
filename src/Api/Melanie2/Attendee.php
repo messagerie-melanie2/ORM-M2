@@ -311,7 +311,7 @@ class Attendee extends Melanie2Object {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUid()");
     if (!isset($this->uid) && isset($this->email)) {
       $infos = Ldap::GetUserInfosFromEmail($this->email);
-      $this->uid = isset($infos['uid']) ? $infos['uid'][0] : null;
+      $this->uid = Ldap::GetMapValue($infos, 'user_uid', 'uid');
     }      
     if (!isset($this->uid))
       $this->uid = $this->email;

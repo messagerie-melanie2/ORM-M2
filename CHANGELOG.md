@@ -1,3 +1,7 @@
+ORM M2 - 0.5.0.16
+------
+- 0005437: Gérer des les différents format de date pour le recurrence UNTIL
+
 ORM M2 - 0.5.0.15
 ------
 - Support du champ de mapping user_uid pour les Attendees

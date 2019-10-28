@@ -426,9 +426,6 @@ class Recurrence extends Melanie2Object {
     if (isset($rdata[ICS::EXDATE])) unset($rdata[ICS::EXDATE]);
     if (isset($rdata['EXCEPTIONS'])) unset($rdata['EXCEPTIONS']);
     
-    // Ajout des nouveaux paramètres
-    $this->objectmelanie->recurrence_json = json_encode($rdata);
-    
     if (isset($rdata[ICS::FREQ])) {
       // Always default the recurInterval to 1.
       $this->objectmelanie->interval = isset($rdata[ICS::INTERVAL]) ? $rdata[ICS::INTERVAL] : 1;
@@ -499,25 +496,47 @@ class Recurrence extends Melanie2Object {
         // Récupération du timezone
         $timezone = $this->event->timezone;
         // Génération de la date de fin de récurrence
-        if (is_object($rdata[ICS::UNTIL])) {
+        if (is_object($rdata[ICS::UNTIL]) && $rdata[ICS::UNTIL] instanceof \DateTime) {
           $recurenddate = $rdata[ICS::UNTIL];
         }
-        else {
-          $recurenddate = new \DateTime($rdata[ICS::UNTIL], new \DateTimeZone($timezone));
+        else if (is_string($rdata[ICS::UNTIL])) {
+          M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRrule() UNTIL : " . $rdata[ICS::UNTIL]);
+          $until = strtotime($rdata[ICS::UNTIL]);
+          if ($until !== false) {
+            M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRrule() UNTIL strtotime : " . $until);
+            $recurenddate = new \DateTime('@'.$until, new \DateTimeZone($timezone));
+            $rdata[ICS::UNTIL] = $recurenddate;
+          }
+          else if (strpos($rdata[ICS::UNTIL], 'T') !== false) {
+            $time = explode('T', $rdata[ICS::UNTIL], 2);
+            if (strpos($time[1], 'Z') !== false) {
+              $tz = 'UTC';
+              $time[1] = str_replace('Z', '', $time[1]);
+            }
+            else {
+              $tz = $timezone;
+            }
+            M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRrule() UNTIL strtodatetime : " . $time[0] . ' '. $time[1]);
+            $recurenddate = new \DateTime($time[0] . ' '. $time[1], new \DateTimeZone($tz));
+            $rdata[ICS::UNTIL] = $recurenddate;
+          }
         }
-        $startdate = new \DateTime($this->event->start, new \DateTimeZone($timezone));
-        $enddate = new \DateTime($this->event->end, new \DateTimeZone($timezone));
-        // Est-ce que l'on est en journée entière ?
-        if ($startdate->format('H:i:s') == '00:00:00' && $enddate->format('H:i:s') == '00:00:00') {
-          // On position la date de fin de récurrence de la même façon
-          $this->objectmelanie->enddate = $recurenddate->format('Y-m-d') . ' 00:00:00';
-        } else {
-          // On position la date de fin basé sur la date de début en UTC
-          // Voir MANTIS 3584: Les récurrences avec une date de fin se terminent à J+1 sur mobile
-          //$startdate->setTimezone(new \DateTimeZone('UTC'));
-          //$recurrence->enddate = $recurenddate->format('Y-m-d') . ' ' . $startdate->format('H:i:s');
-          $recurenddate->setTimezone(new \DateTimeZone('UTC'));
-          $this->objectmelanie->enddate = $recurenddate->format('Y-m-d H:i:s');
+        if (isset($recurenddate)) {
+          // Est-ce que l'on est en journée entière ?
+          if ($this->event->all_day) {
+            // On position la date de fin de récurrence de la même façon
+            $this->objectmelanie->enddate = $recurenddate->format('Y-m-d') . ' 00:00:00';
+          } else {
+            // On position la date de fin basé sur la date de début en UTC
+            // Voir MANTIS 3584: Les récurrences avec une date de fin se terminent à J+1 sur mobile
+            //$startdate->setTimezone(new \DateTimeZone('UTC'));
+            //$recurrence->enddate = $recurenddate->format('Y-m-d') . ' ' . $startdate->format('H:i:s');
+            $recurenddate->setTimezone(new \DateTimeZone('UTC'));
+            $this->objectmelanie->enddate = $recurenddate->format('Y-m-d H:i:s');
+          }
+        }
+        else {
+          $this->objectmelanie->enddate = "9999-12-31 00:00:00";
         }
         // MANTIS 3610: Impossible de modifier la date de fin d'un evt récurrent si celui-ci était paramétré avec un nombre d'occurrences
         // Forcer le count a 0
@@ -541,6 +560,9 @@ class Recurrence extends Melanie2Object {
       $recurrence->days = '';
       $this->objectmelanie->interval = '';
     }
+    
+    // Ajout des nouveaux paramètres
+    $this->objectmelanie->recurrence_json = json_encode($rdata);
   }
   
   /**

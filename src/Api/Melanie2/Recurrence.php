@@ -132,31 +132,9 @@ class Recurrence extends Melanie2Object {
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset($this->event) && $this->event->useJsonData()) {
       $enddate = $this->getRecurrenceParam(ICS::UNTIL);
+      // Convert $enddate to DateTime if necessary
       if (isset($enddate) && is_array($enddate)) {
-        try {
-          if (isset($enddate["timezone_type"]) && isset($enddate['timezone'])) {
-            switch ($enddate["timezone_type"]) {
-              case 1:
-                $enddate = \DateTime::createFromFormat("Y-m-d H:i:s.u O", $enddate['date'] . " " . $enddate['timezone']);
-              case 2:
-                $enddate = \DateTime::createFromFormat("Y-m-d H:i:s.u T", $enddate['date'] . " " . $enddate['timezone']);
-                break;
-              case 3:
-              default:
-                $enddate = \DateTime::createFromFormat("Y-m-d H:i:s.u", $enddate['date'], new \DateTimeZone($enddate['timezone']));
-                break;
-            }
-          }
-          else if (isset($enddate["timezone"])) {
-            $enddate = new \DateTime($enddate['date'], new \DateTimeZone($enddate['timezone']));
-          }
-          else {
-            $enddate = new \DateTime($enddate);
-          }
-        }
-        catch (\Exception $ex) {
-          $enddate = new \DateTime($enddate['date']);
-        }
+        $enddate = $this->arrayToDateTime($enddate);
         return $enddate->format('Y-m-d H:i:s');
       }
       else {
@@ -500,11 +478,8 @@ class Recurrence extends Melanie2Object {
           $recurenddate = $rdata[ICS::UNTIL];
         }
         else if (is_string($rdata[ICS::UNTIL])) {
-          M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRrule() UNTIL : " . $rdata[ICS::UNTIL]);
-          $until = strtotime($rdata[ICS::UNTIL]);
-          if ($until !== false) {
-            M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRrule() UNTIL strtotime : " . $until);
-            $recurenddate = new \DateTime('@'.$until, new \DateTimeZone($timezone));
+          $recurenddate = new \DateTime($rdata[ICS::UNTIL], new \DateTimeZone('UTC'));
+          if (isset($recurenddate)) {
             $rdata[ICS::UNTIL] = $recurenddate;
           }
           else if (strpos($rdata[ICS::UNTIL], 'T') !== false) {
@@ -516,7 +491,6 @@ class Recurrence extends Melanie2Object {
             else {
               $tz = $timezone;
             }
-            M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRrule() UNTIL strtodatetime : " . $time[0] . ' '. $time[1]);
             $recurenddate = new \DateTime($time[0] . ' '. $time[1], new \DateTimeZone($tz));
             $rdata[ICS::UNTIL] = $recurenddate;
           }
@@ -576,6 +550,7 @@ class Recurrence extends Melanie2Object {
         switch ($date["timezone_type"]) {
           case 1:
             $date = \DateTime::createFromFormat("Y-m-d H:i:s.u O", $date['date'] . " " . $date['timezone']);
+            break;
           case 2:
             $date = \DateTime::createFromFormat("Y-m-d H:i:s.u T", $date['date'] . " " . $date['timezone']);
             break;

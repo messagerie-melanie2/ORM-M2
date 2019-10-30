@@ -1,3 +1,8 @@
+ORM M2 - 0.5.0.17
+------
+- 0005439: HOTFIX: un timezone type 1 pose problème dans les dates
+- 0005442: Problème de date dans les fin de récurrence journée entière
+
 ORM M2 - 0.5.0.16
 ------
 - 0005437: Gérer des les différents format de date pour le recurrence UNTIL

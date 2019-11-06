@@ -1,3 +1,7 @@
+ORM M2 - 0.5.0.18
+------
+- 0005444: [LDAP] Ajouter la gestion du dref dans les ldap_search
+
 ORM M2 - 0.5.0.17
 ------
 - 0005439: HOTFIX: un timezone type 1 pose problème dans les dates

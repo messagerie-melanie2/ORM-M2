@@ -126,7 +126,7 @@ class EventToICS {
     if (!$event->deleted) {
       $vevent = self::getVeventFromEvent($vevent, $event, $calendar, $user, $useattachments, $isfreebusy);
       // Type récurrence
-      if (isset($event->recurrence->type) && $event->recurrence->type !== Recurrence::RECURTYPE_NORECUR) {
+      if ($event->recurrence->type && $event->recurrence->type !== Recurrence::RECURTYPE_NORECUR) {
         $rrule = $event->recurrence->rrule;
         $params = [];
         if (isset($rrule) && is_array($rrule) && count($rrule) > 0) {

@@ -1,3 +1,7 @@
+ORM M2 - 0.5.0.19
+------
+- 0005454: Problème de lecture des recurrences en PHP 7
+
 ORM M2 - 0.5.0.18
 ------
 - 0005444: [LDAP] Ajouter la gestion du dref dans les ldap_search

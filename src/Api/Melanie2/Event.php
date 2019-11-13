@@ -1922,7 +1922,10 @@ class Event extends Melanie2Object {
     $_attendees = [];
     if (!empty($attendees)) {
       foreach ($attendees as $attendee) {
-        $_attendees[$attendee->email] = $attendee->render();
+        if (is_object($attendee) 
+            && $attendee instanceof Attendee) {
+          $_attendees[$attendee->email] = $attendee->render();
+        }
       }
     }
     $this->objectmelanie->attendees = serialize($_attendees);

@@ -89,7 +89,6 @@ class Ldap {
    * @return Ldap
    */
   public static function GetInstance($server) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetInstance($server)");
     if (!isset(self::$instances[$server])) {
       if (!isset(LibMelanie\Config\Ldap::$SERVERS[$server])) {
         M2Log::Log(M2Log::LEVEL_ERROR, "Ldap->GetInstance() Erreur la configuration du serveur '$server' n'existe pas");
@@ -134,7 +133,7 @@ class Ldap {
    * @return boolean
    */
   public function authenticate($dn, $password) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->authentification($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->authentification($dn)");
     if (is_null($this->connection))
       $this->connect();
     
@@ -154,7 +153,7 @@ class Ldap {
    * @return boolean
    */
   public function anonymous($force = false) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->anonymous()");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->anonymous()");
     if (is_null($this->connection))
       $this->connect();
     if (!$force && $this->isAuthenticate)
@@ -643,7 +642,7 @@ class Ldap {
    * @return string
    */
   public static function getLastRequest() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getLastRequest()");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap::getLastRequest()");
     return self::$last_request;
   }
   
@@ -693,7 +692,7 @@ class Ldap {
    * Connection au serveur LDAP
    */
   public function connect() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->connect()");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->connect()");
     $this->connection = @ldap_connect($this->config['hostname'], isset($this->config['port']) ? $this->config['port'] : '389');
     if (defined('LDAP_OPT_REFERRALS')) ldap_set_option($this->connection, LDAP_OPT_REFERRALS, 0);
     if (defined('LDAP_OPT_TIMELIMIT')) ldap_set_option($this->connection, LDAP_OPT_TIMELIMIT, 20);
@@ -709,7 +708,7 @@ class Ldap {
    * @return boolean
    */
   public function disconnect() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->disconnect()");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->disconnect()");
     $ret = @ldap_unbind($this->connection);
     $this->connection = null;
     $this->isAnonymous = false;
@@ -734,8 +733,9 @@ class Ldap {
    * @return resource a search result identifier or false on error.
    */
   public function search($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->search($base_dn, $filter)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->search($base_dn, $filter)");
     self::$last_request = "ldap_search($base_dn, $filter, attributes, $attrsonly, $sizelimit)";
+    @ldap_set_option($this->connection, LDAP_OPT_DEREF, LDAP_DEREF_NEVER);
     return @ldap_search($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
   }
   /**
@@ -754,12 +754,20 @@ class Ldap {
    *          Doit être défini à 1 si seuls les types des attributs sont demandés. S'il est défini à 0, les types et les valeurs des attributs sont récupérés, ce qui correspond au comportement par défaut.
    * @param int $sizelimit
    *          Vous permet de limiter le nombre d'entrées à récupérer. Le fait de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.
+   * @param int $deref
+   *          Spécifie le nombre d'alias qui doivent être gérés pendant la recherche. Il peut être un parmi les suivants :    
+   *             - LDAP_DEREF_NEVER - les alias ne sont jamais déréférencés.
+   *             - LDAP_DEREF_SEARCHING - les alias doivent être déréférencés pendant la recherche mais pas lors de la localisation de l'objet de base de la recherche.
+   *             - LDAP_DEREF_FINDING - les alias doivent être déréférencés lors de la localisation de l'objet de base mais pas durant la recherche.
+   *             - LDAP_DEREF_ALWAYS - (défaut) les alias doivent toujours être déréférencés.
+   *               
    * @return resource a search result identifier or false on error.
    */
-  public function search_alias($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->search($base_dn, $filter)");
-    self::$last_request = "ldap_search($base_dn, $filter, attributes, $attrsonly, $sizelimit)";
-    return @ldap_search($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit, LDAP_DEREF_ALWAYS);
+  public function search_alias($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0, $deref = LDAP_DEREF_ALWAYS) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->search_alias($base_dn, $filter)");
+    self::$last_request = "ldap_search($base_dn, $filter, attributes, $attrsonly, $sizelimit, $deref)";
+    @ldap_set_option($this->connection, LDAP_OPT_DEREF, $deref);
+    return @ldap_search($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
   }
   /**
    * Recherche dans le LDAP
@@ -780,8 +788,9 @@ class Ldap {
    * @return resource a search result identifier or false on error.
    */
   public function read($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->read($base_dn, $filter)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->read($base_dn, $filter)");
     self::$last_request = "ldap_read($base_dn, $filter, attributes, $attrsonly, $sizelimit)";
+    @ldap_set_option($this->connection, LDAP_OPT_DEREF, LDAP_DEREF_NEVER);
     return @ldap_read($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
   }
   /**
@@ -800,12 +809,20 @@ class Ldap {
    *          Doit être défini à 1 si seuls les types des attributs sont demandés. S'il est défini à 0, les types et les valeurs des attributs sont récupérés, ce qui correspond au comportement par défaut.
    * @param int $sizelimit
    *          Vous permet de limiter le nombre d'entrées à récupérer. Le fait de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.
+   * @param int $deref
+   *          Spécifie le nombre d'alias qui doivent être gérés pendant la recherche. Il peut être un parmi les suivants :    
+   *             - LDAP_DEREF_NEVER - les alias ne sont jamais déréférencés.
+   *             - LDAP_DEREF_SEARCHING - les alias doivent être déréférencés pendant la recherche mais pas lors de la localisation de l'objet de base de la recherche.
+   *             - LDAP_DEREF_FINDING - les alias doivent être déréférencés lors de la localisation de l'objet de base mais pas durant la recherche.
+   *             - LDAP_DEREF_ALWAYS - (défaut) les alias doivent toujours être déréférencés.
+   *
    * @return resource a search result identifier or false on error.
    */
-  public function read_alias($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->read($base_dn, $filter)");
-    self::$last_request = "ldap_read($base_dn, $filter, attributes, $attrsonly, $sizelimit)";
-    return @ldap_read($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit, LDAP_DEREF_ALWAYS);
+  public function read_alias($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0, $deref = LDAP_DEREF_ALWAYS) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->read_alias($base_dn, $filter)");
+    self::$last_request = "ldap_read($base_dn, $filter, attributes, $attrsonly, $sizelimit, $deref)";
+    @ldap_set_option($this->connection, LDAP_OPT_DEREF, $deref);
+    return @ldap_read($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
   }
   /**
    * Recherche dans le LDAP
@@ -826,8 +843,9 @@ class Ldap {
    * @return resource a search result identifier or false on error.
    */
   public function ldap_list($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->ldap_list($base_dn, $filter)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->ldap_list($base_dn, $filter)");
     self::$last_request = "ldap_list($base_dn, $filter, attributes, $attrsonly, $sizelimit)";
+    @ldap_set_option($this->connection, LDAP_OPT_DEREF, LDAP_DEREF_NEVER);
     return @ldap_list($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
   }
   /**
@@ -847,12 +865,20 @@ class Ldap {
    *          Doit être défini à 1 si seuls les types des attributs sont demandés. S'il est défini à 0, les types et les valeurs des attributs sont récupérés, ce qui correspond au comportement par défaut.
    * @param int $sizelimit
    *          Vous permet de limiter le nombre d'entrées à récupérer. Le fait de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.
+   * @param int $deref
+   *          Spécifie le nombre d'alias qui doivent être gérés pendant la recherche. Il peut être un parmi les suivants :    
+   *             - LDAP_DEREF_NEVER - les alias ne sont jamais déréférencés.
+   *             - LDAP_DEREF_SEARCHING - les alias doivent être déréférencés pendant la recherche mais pas lors de la localisation de l'objet de base de la recherche.
+   *             - LDAP_DEREF_FINDING - les alias doivent être déréférencés lors de la localisation de l'objet de base mais pas durant la recherche.
+   *             - LDAP_DEREF_ALWAYS - (défaut) les alias doivent toujours être déréférencés.
+   * 
    * @return resource a search result identifier or false on error.
    */
-  public function list_alias($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->ldap_list($base_dn, $filter)");
-    self::$last_request = "ldap_list($base_dn, $filter, attributes, $attrsonly, $sizelimit)";
-    return @ldap_list($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit, LDAP_DEREF_ALWAYS);
+  public function list_alias($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0, $deref = LDAP_DEREF_ALWAYS) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->list_alias($base_dn, $filter)");
+    self::$last_request = "ldap_list($base_dn, $filter, attributes, $attrsonly, $sizelimit, $deref)";
+    @ldap_set_option($this->connection, LDAP_OPT_DEREF, $deref);
+    return @ldap_list($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
   }
   /**
    * Retourne les entrées trouvées via le Ldap search
@@ -922,7 +948,7 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function mod_add($dn, $entry) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->mod_add($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->mod_add($dn)");
     self::$last_request = "ldap_mod_add($dn)";
     return @ldap_mod_add($this->connection, $dn, $entry);
   }
@@ -938,7 +964,7 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function mod_replace($dn, $entry) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->mod_replace($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->mod_replace($dn)");
     self::$last_request = "ldap_mod_replace($dn)";
     return @ldap_mod_replace($this->connection, $dn, $entry);
   }
@@ -954,7 +980,7 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function mod_del($dn, $entry) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->mod_del($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->mod_del($dn)");
     self::$last_request = "ldap_mod_del($dn)";
     return @ldap_mod_del($this->connection, $dn, $entry);
   }
@@ -968,7 +994,7 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function add($dn, $entry) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->add($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->add($dn)");
     self::$last_request = "ldap_add($dn)";
     return @ldap_add($this->connection, $dn, $entry);
   }
@@ -983,7 +1009,7 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function modify($dn, $entry) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->modify($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->modify($dn)");
     self::$last_request = "ldap_modify($dn)";
     return @ldap_modify($this->connection, $dn, $entry);
   }
@@ -995,7 +1021,7 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function delete($dn) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->delete($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->delete($dn)");
     self::$last_request = "ldap_delete($dn)";
     return @ldap_delete($this->connection, $dn);
   }
@@ -1013,7 +1039,7 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function rename($dn, $newrdn, $newparent, $deleteoldrdn) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap->rename($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->rename($dn)");
     self::$last_request = "ldap_rename($dn, $newrdn)";
     return @ldap_rename($this->connection, $dn, $newrdn, $newparent, $deleteoldrdn);
   }

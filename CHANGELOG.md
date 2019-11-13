@@ -1,3 +1,9 @@
+ORM M2 - 0.5.0.20
+------
+- 0005462: Problème sur l'objet Attendee
+- 0005461: Améliorer les logs ldap
+- Fix deref sur 0005444: [LDAP] Ajouter la gestion du dref dans les ldap_search
+
 ORM M2 - 0.5.0.19
 ------
 - 0005454: Problème de lecture des recurrences en PHP 7

@@ -98,14 +98,15 @@ class MappingMelanie {
 	          "uid"                    => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_uid', "uid"), self::type => self::stringLdap],
 	          "fullname"               => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_cn', "cn"), self::type => self::stringLdap],
 	          "name"                   => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_displayname', "displayname"), self::type => self::stringLdap],
-	          "email"                  => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mel_principal', "mailpr"), self::type => self::stringLdap],
-	          "email_list"             => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mels_list', "mail"), self::type => self::arrayLdap],
-	          "email_send"             => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mel_emission', "mineqmelmailemissionpr"), self::type => self::stringLdap],
-	          "email_send_list"        => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mels_emission_list', "mineqmelmailemission"), self::type => self::arrayLdap],
+	          "email"                  => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mel_reception_principal', "mailpr"), self::type => self::stringLdap],
+	          "email_list"             => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mel_reception', "mail"), self::type => self::arrayLdap],
+	          "email_send"             => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mel_emission_principal', "mineqmelmailemissionpr"), self::type => self::stringLdap],
+	          "email_send_list"        => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mel_emission', "mineqmelmailemission"), self::type => self::arrayLdap],
 	          "service"                => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mel_service', "departmentnumber"), self::type => self::stringLdap],
 	          "password_need_change"   => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_pwd_change', "mineqpassworddoitchanger"), self::type => self::stringLdap],
 	          "shares"                 => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mel_partages', "mineqmelpartages"), self::type => self::arrayLdap],
-	          "away_response"          => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mel_response', "mineqmelreponse"), self::type => self::stringLdap],
+			  "away_response"          => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mel_response', "mineqmelreponse"), self::type => self::stringLdap],
+			  "type"          		   => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_type_entree', "mineqtypeentree"), self::type => self::stringLdap],
 	          "internet_access_admin"  => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mel_accesinterneta', "mineqmelaccesinterneta"), self::type => self::stringLdap],
 	          "internet_access_user"   => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_mel_accesinternetu', "mineqmelaccesinternetu"), self::type => self::stringLdap],
 	          "use_photo_ader"         => [self::name => \LibMelanie\Ldap\Ldap::GetMap('user_photo_publiader', "mineqPublicationPhotoAder"), self::type => self::stringLdap],
@@ -149,8 +150,8 @@ class MappingMelanie {
 	      // Gestion du calendrier : objet CalendarMelanie
 	      "CalendarMelanie" => [
 	          "id" 				=> [self::name => "calendar_id"],
-	          "owner" 		=> [self::name => "calendar_owner", self::defaut => ''],
-	          "name" 			=> [self::name => "calendar_name", self::defaut => ''],
+	          "owner" 		=> [self::name => "calendar_owner"],
+	          "name" 			=> [self::name => "calendar_name"],
 	          "ctag" 			=> [self::name => "calendar_ctag"],
 	          "synctoken" => [self::name => "calendar_synctoken"],
 	          "perm" 			=> [self::name => "perm_calendar"],
@@ -160,8 +161,8 @@ class MappingMelanie {
 	      // Gestion de la liste de tâches : objet TaskslistMelanie
 	      "TaskslistMelanie" => [
 	          "id" 				=> [self::name => "task_owner"],
-	          "owner" 		=> [self::name => "taskslist_owner", self::defaut => ''],
-	          "name" 			=> [self::name => "taskslist_name", self::defaut => ''],
+	          "owner" 		=> [self::name => "taskslist_owner"],
+	          "name" 			=> [self::name => "taskslist_name"],
 	          "ctag" 			=> [self::name => "taskslist_ctag"],
 	          "synctoken" => [self::name => "taskslist_synctoken"],
 	          "perm" 			=> [self::name => "perm_taskslist"],
@@ -171,8 +172,8 @@ class MappingMelanie {
 	      // Gestion de la liste de contacts : objet AddressbookMelanie
 	      "AddressbookMelanie" => [
 	          "id" 				=> [self::name => "owner_id"],
-	          "owner" 		=> [self::name => "addressbook_owner", self::defaut => ''],
-	          "name" 			=> [self::name => "addressbook_name", self::defaut => ''],
+	          "owner" 		=> [self::name => "addressbook_owner"],
+	          "name" 			=> [self::name => "addressbook_name"],
 	          "ctag" 			=> [self::name => "addressbook_ctag"],
 	          "synctoken" => [self::name => "addressbook_synctoken"],
 	          "perm" 			=> [self::name => "perm_addressbook"],

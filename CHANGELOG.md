@@ -1,3 +1,10 @@
+ORM M2 - 0.5.0.21
+------
+- 0005589: Problème de gestion des recurrences sur des champs vides
+- 0005591: Le chargement des attributs ne renseigne pas toujours correctement le owner
+- 0005590: La valeur par défaut ne devrait pas impacter le isset
+- 0005598: Nettoyage UTF8 des noms de participants et organisateurs
+
 ORM M2 - 0.5.0.20
 ------
 - 0005462: Problème sur l'objet Attendee

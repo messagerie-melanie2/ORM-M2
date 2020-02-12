@@ -459,7 +459,7 @@ class EventToICS {
         }
         $org_name = $event->organizer->name;
         if (isset($org_name)) {
-          $params[ICS::CN] = $org_name;
+          $params[ICS::CN] = self::cleanUTF8String($org_name);
         }
         $org_sent_by = $event->organizer->sent_by;
         if (isset($org_sent_by)) {
@@ -517,7 +517,7 @@ class EventToICS {
           ];
           $attendee_name = $attendee->name;
           if (!empty($attendee_name)) {
-            $params[ICS::CN] = $attendee_name;
+            $params[ICS::CN] = self::cleanUTF8String($attendee_name);
           }
           // Add attendee
           $vevent->add(ICS::ATTENDEE, 'mailto:' . $attendee->email, $params);

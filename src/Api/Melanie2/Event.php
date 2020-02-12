@@ -1232,7 +1232,7 @@ class Event extends Melanie2Object {
       $eventproperty->calendar = $this->calendar;
     }
     // Problème de User avec DAViCal
-    if (isset($this->calendarmelanie)) {
+    if (isset($this->calendarmelanie) && isset($this->calendarmelanie->owner)) {
       $eventproperty->user = $this->calendarmelanie->owner;
     } else if (isset($this->owner)) {
       $eventproperty->user = $this->owner;
@@ -1347,6 +1347,7 @@ class Event extends Melanie2Object {
       throw new Exceptions\ObjectMelanieUndefinedException();
     // MANTIS 0005125: Bloquer les répétitions "récursives"
     if (!$this->checkRecurrence()) {
+      M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() La recurrence ne respecte pas les regles d'usage (duree de l'evenement plus longue que la repetition)");
       return null;
     }
     // Sauvegarde des participants

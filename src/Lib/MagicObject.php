@@ -300,13 +300,7 @@ abstract class MagicObject {
 			$lname = MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::name];
 		}
 		$isset = isset($this->data[$lname]);
-		// Récupération de la valeur par défaut pour déterminer si une valeur existe
-		if (!$isset) {
-			$lname = strtolower($name);
-			$isset = isset(MappingMelanie::$Data_Mapping[$this->objectType])
-						&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname])
-						&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::defaut]);
-		}
+
 		return $isset;
 	}
 

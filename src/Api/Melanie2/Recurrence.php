@@ -584,38 +584,39 @@ class Recurrence extends Melanie2Object {
    */
   protected function getMapRrule() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRrule()");
+    // Tableau permettant de recuperer toutes les valeurs de la recurrence
+    $recurrence = [];
     if (isset($this->event) 
-        && $this->event->useJsonData()
-        && isset($this->objectmelanie->recurrence_json)
-        && !empty($this->objectmelanie->recurrence_json)) {
-      // Tableau permettant de recuperer toutes les valeurs de la recurrence
-      $recurrence = json_decode($this->objectmelanie->recurrence_json, true);
-      // Convert UNTIL to DateTime if necessary
-      if (isset($recurrence[ICS::UNTIL]) && is_array($recurrence[ICS::UNTIL])) {
-        $recurrence[ICS::UNTIL] = $this->arrayToDateTime($recurrence[ICS::UNTIL]);
-      }
-      // Convert each RDATE to DateTime if necessary
-      if (isset($recurrence[ICS::RDATE]) && is_array($recurrence[ICS::RDATE])) {
-        foreach ($recurrence[ICS::RDATE] as $key => $rdate) {
-          if (is_array($rdate)) {
-            $recurrence[ICS::RDATE][$key] = $this->arrayToDateTime($rdate);
+        && $this->event->useJsonData()) {
+      if (isset($this->objectmelanie->recurrence_json)
+          && !empty($this->objectmelanie->recurrence_json)) {
+        // Tableau permettant de recuperer toutes les valeurs de la recurrence
+        $recurrence = json_decode($this->objectmelanie->recurrence_json, true);
+        // Convert UNTIL to DateTime if necessary
+        if (isset($recurrence[ICS::UNTIL]) && is_array($recurrence[ICS::UNTIL])) {
+          $recurrence[ICS::UNTIL] = $this->arrayToDateTime($recurrence[ICS::UNTIL]);
+        }
+        // Convert each RDATE to DateTime if necessary
+        if (isset($recurrence[ICS::RDATE]) && is_array($recurrence[ICS::RDATE])) {
+          foreach ($recurrence[ICS::RDATE] as $key => $rdate) {
+            if (is_array($rdate)) {
+              $recurrence[ICS::RDATE][$key] = $this->arrayToDateTime($rdate);
+            }
           }
         }
+        if (isset($recurrence[ICS::BYDAY]) && is_array($recurrence[ICS::BYDAY])) {
+          $recurrence[ICS::BYDAY] = implode(',', $recurrence[ICS::BYDAY]);
+        }
+        // Nettoyer la recurrence
+        if (isset($recurrence[ICS::EXDATE])) unset($recurrence[ICS::EXDATE]);
+        if (isset($recurrence['EXCEPTIONS'])) unset($recurrence['EXCEPTIONS']);
       }
-      if (isset($recurrence[ICS::BYDAY]) && is_array($recurrence[ICS::BYDAY])) {
-        $recurrence[ICS::BYDAY] = implode(',', $recurrence[ICS::BYDAY]);
-      }
-      // Nettoyer la recurrence
-      if (isset($recurrence[ICS::EXDATE])) unset($recurrence[ICS::EXDATE]);
-      if (isset($recurrence['EXCEPTIONS'])) unset($recurrence['EXCEPTIONS']);
     }
     else {
-      // Tableau permettant de recuperer toutes les valeurs de la recurrence
-      $recurrence = [];
       // Récupération des informations de récurrence de l'évènement
       $_recurrence = $this;
       // Si une recurrence est bien definie dans l'evenement
-      if ($_recurrence->type !== self::RECURTYPE_NORECUR) {
+      if (isset($_recurrence->type) && $_recurrence->type !== self::RECURTYPE_NORECUR) {
         switch ($_recurrence->type) {
           case self::RECURTYPE_DAILY :
             $recurrence[ICS::FREQ] = ICS::FREQ_DAILY;

@@ -82,6 +82,8 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->load()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		if (!isset($this->tableName)) return false;
@@ -131,6 +133,8 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->save()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		$insert = false;
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return null;
@@ -231,6 +235,8 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function delete() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->delete()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires et la table ne sont pas définies, impossible de supprimer l'objet
 		if (!isset($this->primaryKeys)) return false;
 		if (!isset($this->tableName)) return false;
@@ -273,6 +279,8 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->exists()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		if (!isset($this->tableName)) return false;
@@ -327,6 +335,8 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->getList()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->tableName)) return false;
 		// Mapping pour les operateurs
 		$opmapping = [];

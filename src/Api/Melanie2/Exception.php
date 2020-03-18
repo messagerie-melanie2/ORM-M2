@@ -196,8 +196,6 @@ class Exception extends Event {
     if (!isset($this->owner)) {
       $this->owner = $this->usermelanie->uid;
     }
-    // Positionnement du realuid
-    $this->objectmelanie->realuid = $this->tmpuid;
     // Sauvegarde l'objet
     $insert = $this->objectmelanie->save();
     if (!is_null($insert)) {
@@ -297,6 +295,7 @@ class Exception extends Event {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRecurrenceid($recurrenceId)");
     $this->recurrenceId = $recurrenceId;
     $recId = date(self::FORMAT_ID, strtotime($this->recurrenceId));
+    $this->objectmelanie->realuid = $this->getMapUid();
     $this->objectmelanie->uid = $this->getMapUid() . '-' . $recId . self::RECURRENCE_ID;
   }
   /**
@@ -318,7 +317,7 @@ class Exception extends Event {
       throw new Exceptions\ObjectMelanieUndefinedException();
     $recId = new \DateTime($this->recurrenceId);
     $this->objectmelanie->uid = $uid . '-' . $recId->format(self::FORMAT_ID) . self::RECURRENCE_ID;
-    $this->tmpuid = $uid;
+    $this->objectmelanie->realuid = $uid;
   }
   /**
    * Mapping uid field

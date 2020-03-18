@@ -335,6 +335,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   function getDefaultCalendar() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultCalendar()");
+    // Initialisation du backend SQL
+    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
     
@@ -381,6 +383,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   function getUserCalendars() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserCalendars()");
+    // Initialisation du backend SQL
+    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
     
@@ -416,6 +420,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   function getSharedCalendars() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedCalendars()");
+    // Initialisation du backend SQL
+    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
     
@@ -453,6 +459,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   function getDefaultTaskslist() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultTaskslist()");
+    // Initialisation du backend SQL
+    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
     
@@ -499,6 +507,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   function getUserTaskslists() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserTaskslists()");
+    // Initialisation du backend SQL
+    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
     
@@ -533,6 +543,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   function getSharedTaskslists() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedTaskslists()");
+    // Initialisation du backend SQL
+    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
     
@@ -569,6 +581,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   function getDefaultAddressbook() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultAddressbook()");
+    // Initialisation du backend SQL
+    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
     
@@ -615,6 +629,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   function getUserAddressbooks() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserAddressbooks()");
+    // Initialisation du backend SQL
+    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
     
@@ -649,6 +665,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   function getSharedAddressbooks() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedAddressbooks()");
+    // Initialisation du backend SQL
+    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
     
@@ -685,6 +703,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   function getTimezone() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getTimezone()");
+    // Initialisation du backend SQL
+    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return DefaultConfig::CALENDAR_DEFAULT_TIMEZONE;
     

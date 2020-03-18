@@ -62,6 +62,8 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -98,6 +100,8 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return null;
@@ -199,6 +203,8 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Test si l'objet existe, pas besoin de load

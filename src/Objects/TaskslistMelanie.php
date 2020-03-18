@@ -72,6 +72,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->id)) return false;
 		if (!isset($this->user_uid)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -115,6 +117,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return null;
@@ -206,6 +210,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function delete() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->tableName)) return false;
 
 		// Si l'objet existe on fait un UPDATE
@@ -258,6 +264,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->tableName)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -302,6 +310,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function getAllTasks() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getAllTasks()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->id)) return false;
 
 		// Params
@@ -318,6 +328,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function getCTag() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getCTag()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->id)) return false;
 		if (!isset($this->ctag)) {
 		  // Params
@@ -340,6 +352,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function getTimezone() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getTimezone()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->user_uid)) return DefaultConfig::CALENDAR_DEFAULT_TIMEZONE;
 
 		if (!isset($this->timezone)) {

@@ -82,6 +82,8 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -118,6 +120,8 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return null;
@@ -216,6 +220,8 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function delete() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->delete()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 
@@ -256,6 +262,8 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -300,6 +308,8 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList()");
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Mapping pour les operateurs
 		$opmapping = [];
 		if (is_array($operators)) {
@@ -553,6 +563,8 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	function updateMeetingEtag() {
 		// Si l'uid de l'évènement n'est pas défini, on ne peut pas faire l'update
 		if (!isset($this->uid)) return false;
+		// Initialisation du backend SQL
+	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 
 		// Paramètres de la requête
 		$params = [];

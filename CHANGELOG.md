@@ -1,3 +1,8 @@
+ORM M2 - 0.5.0.22
+------
+- Problème de realuid écrasé pour les exceptions
+- Ajout l'initialisation de la base dans les méthodes des objets 
+
 ORM M2 - 0.5.0.21
 ------
 - 0005589: Problème de gestion des recurrences sur des champs vides

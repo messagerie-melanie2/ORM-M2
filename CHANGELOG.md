@@ -1,3 +1,7 @@
+ORM M2 - 0.5.0.23
+------
+- Suppression des ORDER BY dans les requêtes listUserObjects et listSharedObjects pour améliorer les performances de la base de données
+
 ORM M2 - 0.5.0.22
 ------
 - Problème de realuid écrasé pour les exceptions

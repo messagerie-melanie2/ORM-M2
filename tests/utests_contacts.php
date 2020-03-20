@@ -48,7 +48,7 @@ include_once 'includes/libm2.php';
 use LibMelanie\Api\Melanie2\User;
 use LibMelanie\Api\Melanie2\Contact;
 use LibMelanie\Api\Melanie2\Addressbook;
-use LibMelanie\Config\MappingMelanie;
+use LibMelanie\Config\MappingMce;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Api\Melanie2\AddressbookSync;
 
@@ -84,8 +84,8 @@ echo var_export($addressbooksync->listAddressbookSync(), true);
 // // 		['uid', 'name', 'addressbook', 'alias'],
 // // 		'(#alias#) AND #addressbook#',
 // // 		[
-// // 				'uid' => MappingMelanie::like,
-// // 				'alias' => MappingMelanie::like]
+// // 				'uid' => MappingMce::like,
+// // 				'alias' => MappingMce::like]
 // // );
 
 // // var_dump($contacts);

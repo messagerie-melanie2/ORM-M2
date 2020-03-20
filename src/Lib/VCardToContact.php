@@ -21,9 +21,9 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Api\Melanie2\User;
-use LibMelanie\Api\Melanie2\Contact;
-use LibMelanie\Api\Melanie2\Addressbook;
+use LibMelanie\Api\Mce\User;
+use LibMelanie\Api\Mce\Contact;
+use LibMelanie\Api\Mce\Addressbook;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
 @include_once 'vendor/autoload.php';
@@ -33,9 +33,9 @@ use Sabre\VObject;
  * Class de génération de VCard en fonction de l'objet contact
  * Méthodes Statiques
  *
- * @author PNE Messagerie/Apitech
- * @package Librairie Mélanie2
- * @subpackage Lib Mélanie2
+ * @author Groupe Messagerie/MTES - Apitech
+ * @package Librairie MCE
+ * @subpackage Lib
  *
  */
 class VCardToContact {
@@ -43,7 +43,7 @@ class VCardToContact {
 	 * Identifiant de l'outil utilisant le VCard (pour la génération)
 	 * @var string
 	 */
-	const PRODID = '-//ORM LibMelanie2 PHP/PNE Messagerie/MEDDE';
+	const PRODID = '-//Groupe Messagerie MTES/ORM LibMCE';
 	/**
 	 * Version ICalendar utilisé pour la génération du VCard
 	 * @var string
@@ -61,14 +61,14 @@ class VCardToContact {
 	 *
 	 * @param string $vcard
 	 * @param Contact $contact
+   * @param Addressbook $addressbook
+   * @param User $user
+   * 
 	 * @return Contact
 	 */
 	public static function Convert($vcard, Contact $contact, Addressbook $addressbook = null, User $user = null) {
 	  $vcontact = VObject\Reader::read($vcard);
-
 	  $contact->uid = (string)$vcontact->UID;
-
-
 
 	  if (isset($vcontact->KIND)
 	      && strtolower($vcontact->KIND) == 'group') {

@@ -46,24 +46,9 @@ if (!defined('CONFIGURATION_APP_LIBM2')) {
 set_include_path(__DIR__.'/..');
 include_once 'includes/libm2.php';
 
-use LibMelanie\Api\Melanie2\Exception;
-use LibMelanie\Api\Melanie2\Attendee;
-use LibMelanie\Api\Melanie2\Share;
-use LibMelanie\Config\DefaultConfig;
-use LibMelanie\Config\MappingMelanie;
-use LibMelanie\Api\Melanie2\Recurrence;
 use LibMelanie\Api\Melanie2\User;
-use LibMelanie\Api\Melanie2\Event;
 use LibMelanie\Api\Melanie2\Calendar;
 use LibMelanie\Log\M2Log;
-use LibMelanie\Config\MappingZpush;
-use LibMelanie\Api\Melanie2\Organizer;
-use LibMelanie\Lib\EventToICS;
-use LibMelanie\Lib\ICSToEvent;
-use LibMelanie\Config\ConfigSQL;
-use LibMelanie\Api\Melanie2\Attachment;
-use LibMelanie\Api\Melanie2\CalendarSync;
-
 
 $log = function ($message) {
 	echo "[LibM2] $message \r\n";

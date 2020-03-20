@@ -3,7 +3,7 @@
  * Ce fichier est développé pour la gestion de la librairie Mélanie2
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * ORM M2 Copyright © 2017 PNE Annuaire et Messagerie/MEDDE
+ * ORM Mél Copyright © 2020 Groupe Messagerie/MTES
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -19,8 +19,9 @@ namespace LibMelanie\Objects;
 
 use LibMelanie\Sql;
 use LibMelanie\Ldap\Ldap;
+use LibMelanie\Config;
 use LibMelanie\Config\ConfigSQL;
-use LibMelanie\Config\MappingMelanie;
+use LibMelanie\Config\MappingMce;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Lib\MagicObject;
 use LibMelanie\Interfaces\IObjectMelanie;
@@ -41,24 +42,42 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public $timezone;
   /**
-   * Est-ce que la connexion doit se faire sur le serveur maitre
+   * Quel serveur LDAP utiliser pour la lecture des données
    * 
    * @var boolean
    */
-  private $master;
+  private $server;
   /**
    * Liste des propriétés qui ne peuvent pas être modifiées
-   * @var array
+   * 
+   * @var array Valeur static
    */
   private static $unchangeableProperties = [
       'dn',
       'uid',
   ];
+  /**
+   * Liste des propriétés qui ne peuvent pas être modifiées
+   * 
+   * @var array Valeur non static
+   */
+  private $_unchangeableProperties;
+
+   /**
+   * Est-ce que l'objet a déjà été initialisé
+   * 
+   * @var boolean
+   */
+  private static $isInit = false;
   
   /**
    * Constructeur de la class
+   * 
+   * @param string $server Serveur d'annuaire a utiliser en fonction de la configuration
+   * @param array $unchangeableProperties Liste des propriétés qui ne peut pas être modifiées
+   * @param array $mapping Données de mapping
    */
-  function __construct() {
+  public function __construct($server = null, $unchangeableProperties = null, $mapping = null) {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
@@ -67,18 +86,60 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Récupération du type d'objet en fonction de la class
     $this->objectType = explode('\\', $this->get_class);
     $this->objectType = $this->objectType[count($this->objectType) - 1];
+
+    // Init du serveur
+    $this->server = $server;
+
+    // Gestion des proprietes non modifiables
+    if (isset($unchangeableProperties)) {
+      $this->_unchangeableProperties = $unchangeableProperties;
+    }
+    else {
+      $this->_unchangeableProperties = self::$unchangeableProperties;
+    }
+
+    // Gestion du mapping global
+    self::Init($mapping, $server);
     
-    // Init du master
-    $this->master = false;
-    
-    if (isset(MappingMelanie::$Primary_Keys[$this->objectType])) {
-      if (is_array(MappingMelanie::$Primary_Keys[$this->objectType]))
-        $this->primaryKeys = MappingMelanie::$Primary_Keys[$this->objectType];
+    // Gestion du mapping des clés primaires
+    if (isset(MappingMce::$Primary_Keys[$this->objectType])) {
+      if (is_array(MappingMce::$Primary_Keys[$this->objectType]))
+        $this->primaryKeys = MappingMce::$Primary_Keys[$this->objectType];
       else
         $this->primaryKeys = [
-            MappingMelanie::$Primary_Keys[$this->objectType]
+            MappingMce::$Primary_Keys[$this->objectType]
         ];
     }
+  }
+
+  /**
+   * Appel l'initialisation du mapping
+   * 
+   * @param array $mapping Données de mapping
+   * @return boolean
+   */
+  private static function Init($mapping, $server) {
+    if (!self::$isInit) {
+      if (isset($server) && isset(Config\Ldap::$SERVERS[$server]['mapping'])) {
+        $mapping = array_merge($mapping, Config\Ldap::$SERVERS[$server]['mapping']);
+      }
+      else if (isset(Config\Ldap::$SERVERS[Config\Ldap::$SEARCH_LDAP]['mapping'])) {
+        $mapping = array_merge($mapping, Config\Ldap::$SERVERS[Config\Ldap::$SEARCH_LDAP]['mapping']);
+      }
+      // Traitement du mapping
+      foreach ($mapping as $key => $map) {
+        if (is_array($map)) {
+          if (!isset($map[MappingMce::type])) {
+            $mapping[$key][MappingMce::type] = MappingMce::stringLdap;
+          }
+        }
+        else {
+          $mapping[$key] = [MappingMce::name => $map, MappingMce::type => MappingMce::stringLdap];
+        }
+      }
+      self::$isInit = MappingMce::UpdateDataMapping('UserMelanie', $mapping);
+    }
+    return self::$isInit;
   }
   
   /**
@@ -86,29 +147,42 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * need: $this->uid
    * need: $this->email
    * 
+   * @param array $attributes [Optionnal] List of attributes to load
+   * @param string $filter [Optionnal] Filter to load data
+   * @param string $filterFromEmail [Optionnal] Filter to load data
+   * 
    * @see IObjectMelanie::load()
    *
    * @return boolean isExist
    */
-  function load() {
+  public function load($attributes = null, $filter = null, $filterFromEmail = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->load()");
     // Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
-    if (!isset($this->uid) && !isset($this->email))
+    if (!isset($this->uid) && !isset($this->email)) {
       return false;
+    }
     // Test si l'objet existe, pas besoin de load
     if (is_bool($this->isExist) && $this->isLoaded) {
       return $this->isExist;
     }
-    // Récupération du serveur
-    $server = null;
-    if ($this->master) {
-      $server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
-    }
+    // Mapping pour les champs
+		$attributesmapping = [];
+		if (is_array($attributes)) {
+    		// Recherche l'attribut dans la conf de mapping
+    		foreach ($attributes as $key) {
+    			// Récupèration des données de mapping
+    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
+    			}
+    			$attributesmapping[] = $key;
+    		}
+		}
     // Récupération des données depuis le LDAP avec l'uid ou l'email
     if (isset($this->uid)) {
-      $data = Ldap::GetUserInfos($this->uid, null, null, $server);
+      $data = Ldap::GetUserInfos($this->uid, $filter, $attributesmapping, $this->server);
     } else if (isset($this->email)) {
-      $data = Ldap::GetUserInfosFromEmail($this->email, null, null, $server);
+      $data = Ldap::GetUserInfosFromEmail($this->email, $filterFromEmail, $attributesmapping, $this->server);
     }
     
     if (isset($data)) {
@@ -125,9 +199,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * need: $this->uid
    * need: $this->email
    * 
+   * @param array $attributes [Optionnal] List of attributes to load
+   * @param string $filter [Optionnal] Filter to load data
+   * @param string $filterFromEmail [Optionnal] Filter to load data
+   * 
    * @see IObjectMelanie::exists()
    */
-  function exists() {
+  public function exists($attributes = null, $filter = null, $filterFromEmail = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->exists()");
     // Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
     if (!isset($this->uid) && !isset($this->email))
@@ -136,36 +214,43 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (is_bool($this->isExist)) {
       return $this->isExist;
     }
-    // Récupération du serveur
-    $server = null;
-    if ($this->master) {
-      $server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
-    }
+    // Mapping pour les champs
+		$attributesmapping = [];
+		if (is_array($attributes)) {
+    		// Recherche l'attribut dans la conf de mapping
+    		foreach ($attributes as $key) {
+    			// Récupèration des données de mapping
+    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
+    			}
+    			$attributesmapping[] = $key;
+    		}
+		}
     // Récupération des données depuis le LDAP avec l'uid ou l'email
     if (isset($this->uid)) {
-      $data = Ldap::GetUserInfos($this->uid, null, null, $server);
+      $data = Ldap::GetUserInfos($this->uid, $filter, $attributesmapping, $this->server);
     } else if (isset($this->email)) {
-      $data = Ldap::GetUserInfosFromEmail($this->email, null, null, $server);
+      $data = Ldap::GetUserInfosFromEmail($this->email, $filterFromEmail, $attributesmapping, $this->server);
     }
     $this->isExist = isset($data);
     return $this->isExist;
   }
   
   /**
-   * Not implemented
+   * Enregistrement de l'utilisateur modifié dans l'annuaire
    * 
    * @see IObjectMelanie::save()
    * @ignore
    */
-  function save() {
+  public function save() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save()");
-    throw new \Exception('Not implemented');
-//     $entry = $this->getEntry();
-//     if (!empty($entry)) {
-//       $ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$MASTER_LDAP);
-//       return $ldap->modify($this->dn, $entry);
-//     }
-//     return false;
+    $entry = $this->getEntry();
+    if (!empty($entry) && isset($this->dn)) {
+      $ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$MASTER_LDAP);
+      return $ldap->modify($this->dn, $entry);
+    }
+    return false;
   }
   
   /**
@@ -174,7 +259,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @see IObjectMelanie::delete()
    * @ignore
    */
-  function delete() {
+  public function delete() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->delete()");
     throw new \Exception('Not implemented');
   }
@@ -184,7 +269,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * 
    * @param array $data
    */
-  function setData($data) {
+  public function setData($data) {
     foreach ($data as $key => $value) {
       if (!is_numeric($key)) {
         if (is_array($value)
@@ -198,6 +283,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     $this->isLoaded = true;
     $this->initializeHasChanged();
   }
+
   /**
    * Récupère l'entrée générée suite au changement de valeur
    * 
@@ -207,7 +293,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     $entry = [];
     foreach ($this->haschanged as $key => $changed) {
       if ($changed) {
-        if (!in_array($key, self::$unchangeableProperties)) {
+        if (!in_array($key, $this->unchangeableProperties)) {
           $entry[$key] = $this->data[$key];
         }
       }
@@ -223,33 +309,47 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @param boolean $master Utiliser le serveur maitre (nécessaire pour faire des modifications)
    * @return boolean
    */
-  function authentification($password, $master = false) {
+  public function authentification($password, $master = false) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->authentification()");
-    $this->master = $master;
-    // Récupération du serveur
-    $server = null;
-    if ($this->master) {
-      $server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
+    if ($master) {
+      $this->server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
     }
-    return Ldap::Authentification($this->uid, $password, $server, true);
+    if (isset($this->dn)) {
+      return Ldap::AuthentificationDirect($this->dn, $password, $this->server);
+    }
+    else {
+      return Ldap::Authentification($this->uid, $password, $this->server, true);
+    }
   }
+
   /**
    * Récupère la liste des BALP accessibles à l'utilisateur
    * 
+   * @param array $attributes [Optionnal] List of attributes to load
+   * @param string $filter [Optionnal] Filter to load data
+   * 
    * @return UserMelanie[] Liste d'objet UserMelanie
    */
-  function getBalp() {
+  public function getBalp($attributes = null, $filter = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getBalpList()");
-    if (!isset($this->uid))
+    if (!isset($this->uid)) {
       return [];
-    
-    // Récupération du serveur
-    $server = null;
-    if ($this->master) {
-      $server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
     }
+    // Mapping pour les champs
+		$attributesmapping = [];
+		if (is_array($attributes)) {
+    		// Recherche l'attribut dans la conf de mapping
+    		foreach ($attributes as $key) {
+    			// Récupèration des données de mapping
+    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
+    			}
+    			$attributesmapping[] = $key;
+    		}
+		}
     // Récupération des Balp depuis le LDAP
-    $list = Ldap::GetUserBalPartagees($this->uid, null, null, $server);
+    $list = Ldap::GetUserBalPartagees($this->uid, $filter, $attributesmapping, $this->server);
     $balp = [];
     if (isset($list)) {
       // Parcours la list des balp pour générer les objet UserMelanie
@@ -261,26 +361,37 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
         }        
       }
     }
-   
     return $balp;
   }
+
   /**
    * Récupère la liste des BALP accessibles au moins en émission à l'utilisateur
+   * 
+   * @param array $attributes [Optionnal] List of attributes to load
+   * @param string $filter [Optionnal] Filter to load data
    *
    * @return UserMelanie[] Liste d'objet UserMelanie
    */
-  function getBalpEmission() {
+  public function getBalpEmission($attributes = null, $filter = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getBalpListEmission()");
-    if (!isset($this->uid))
+    if (!isset($this->uid)) {
       return [];
-    
-    // Récupération du serveur
-    $server = null;
-    if ($this->master) {
-      $server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
     }
+    // Mapping pour les champs
+		$attributesmapping = [];
+		if (is_array($attributes)) {
+    		// Recherche l'attribut dans la conf de mapping
+    		foreach ($attributes as $key) {
+    			// Récupèration des données de mapping
+    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
+    			}
+    			$attributesmapping[] = $key;
+    		}
+		}
     // Récupération des Balp depuis le LDAP
-    $list = Ldap::GetUserBalEmission($this->uid, null, null, $server);
+    $list = Ldap::GetUserBalEmission($this->uid, $filter, $attributesmapping, $this->server);
     $balp = [];
     if (isset($list)) {
       // Parcours la list des balp pour générer les objet UserMelanie
@@ -292,26 +403,37 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
         }
       }
     }
-    
     return $balp;
   }
+
   /**
    * Récupère la liste des BALP accessibles en gestionnaire à l'utilisateur
+   * 
+   * @param array $attributes [Optionnal] List of attributes to load
+   * @param string $filter [Optionnal] Filter to load data
    *
    * @return UserMelanie[] Liste d'objet UserMelanie
    */
-  function getBalpGestionnaire() {
+  public function getBalpGestionnaire($attributes = null, $filter = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getBalpListGestionnaire()");
-    if (!isset($this->uid))
+    if (!isset($this->uid)) {
       return false;
-    
-    // Récupération du serveur
-    $server = null;
-    if ($this->master) {
-      $server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
     }
+    // Mapping pour les champs
+		$attributesmapping = [];
+		if (is_array($attributes)) {
+    		// Recherche l'attribut dans la conf de mapping
+    		foreach ($attributes as $key) {
+    			// Récupèration des données de mapping
+    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
+    			}
+    			$attributesmapping[] = $key;
+    		}
+		}
     // Récupération des Balp depuis le LDAP
-    $list = Ldap::GetUserBalGestionnaire($this->uid, null, null, $server);
+    $list = Ldap::GetUserBalGestionnaire($this->uid, $filter, $attributesmapping, $this->server);
     $balp = [];
     if (isset($list)) {
       // Parcours la list des balp pour générer les objet UserMelanie
@@ -333,7 +455,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * 
    * @return CalendarMelanie
    */
-  function getDefaultCalendar() {
+  public function getDefaultCalendar() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultCalendar()");
     // Initialisation du backend SQL
     Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
@@ -345,35 +467,31 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     $query = Sql\SqlMelanieRequests::getDefaultObject;
     // Replace name
-    $query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['CalendarMelanie']['owner'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['CalendarMelanie']['id'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['CalendarMelanie']['ctag'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['CalendarMelanie']['synctoken'][MappingMelanie::name], $query);
-    $query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['CalendarMelanie']['name'][MappingMelanie::name], $query);
-    $query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['CalendarMelanie']['perm'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
+    $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['CalendarMelanie']['owner'][MappingMce::name], $query);
+    $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['CalendarMelanie']['id'][MappingMce::name], $query);
+    $query = str_replace('{datatree_ctag}', MappingMce::$Data_Mapping['CalendarMelanie']['ctag'][MappingMce::name], $query);
+    $query = str_replace('{datatree_synctoken}', MappingMce::$Data_Mapping['CalendarMelanie']['synctoken'][MappingMce::name], $query);
+    $query = str_replace('{attribute_value}', MappingMce::$Data_Mapping['CalendarMelanie']['name'][MappingMce::name], $query);
+    $query = str_replace('{perm_object}', MappingMce::$Data_Mapping['CalendarMelanie']['perm'][MappingMce::name], $query);
+    $query = str_replace('{datatree_id}', MappingMce::$Data_Mapping['CalendarMelanie']['object_id'][MappingMce::name], $query);
     
     // Params
     $params = [
-        "group_uid" => DefaultConfig::CALENDAR_GROUP_UID,
         "user_uid" => $this->uid,
-        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
+        "datatree_name" => $this->uid,
+        "group_uid" => DefaultConfig::CALENDAR_GROUP_UID,
         "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
-        "pref_scope" => DefaultConfig::CALENDAR_PREF_SCOPE,
-        "pref_name" => DefaultConfig::CALENDAR_PREF_DEFAULT_NAME,
+        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
         "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP
     ];
     
     // Calendrier par défaut de l'utilisateur
-    $calendar = Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
-    if (isset($calendar) && is_array($calendar) && count($calendar)) {
-      $calendar[0]->pdoConstruct(true);
-      return $calendar[0];
-    } else {
-      $calendar = $this->getUserCalendars();
-      return isset($calendar[0]) ? $calendar[0] : null;
+    $calendars = Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
+    if (isset($calendars) && is_array($calendars) && count($calendars)) {
+      $calendars[0]->pdoConstruct(true);
+      return $calendars[0];
     }
-    return false;
+    return null;
   }
   
   /**
@@ -381,7 +499,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * 
    * @return CalendarMelanie[]
    */
-  function getUserCalendars() {
+  public function getUserCalendars() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserCalendars()");
     // Initialisation du backend SQL
     Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
@@ -393,13 +511,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     $query = Sql\SqlMelanieRequests::listUserObjects;
     // Replace name
-    $query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['CalendarMelanie']['owner'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['CalendarMelanie']['id'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['CalendarMelanie']['ctag'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['CalendarMelanie']['synctoken'][MappingMelanie::name], $query);
-    $query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['CalendarMelanie']['name'][MappingMelanie::name], $query);
-    $query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['CalendarMelanie']['perm'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
+    $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['CalendarMelanie']['owner'][MappingMce::name], $query);
+    $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['CalendarMelanie']['id'][MappingMce::name], $query);
+    $query = str_replace('{datatree_ctag}', MappingMce::$Data_Mapping['CalendarMelanie']['ctag'][MappingMce::name], $query);
+    $query = str_replace('{datatree_synctoken}', MappingMce::$Data_Mapping['CalendarMelanie']['synctoken'][MappingMce::name], $query);
+    $query = str_replace('{attribute_value}', MappingMce::$Data_Mapping['CalendarMelanie']['name'][MappingMce::name], $query);
+    $query = str_replace('{perm_object}', MappingMce::$Data_Mapping['CalendarMelanie']['perm'][MappingMce::name], $query);
+    $query = str_replace('{datatree_id}', MappingMce::$Data_Mapping['CalendarMelanie']['object_id'][MappingMce::name], $query);
     
     // Params
     $params = [
@@ -418,7 +536,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * 
    * @return CalendarMelanie[]
    */
-  function getSharedCalendars() {
+  public function getSharedCalendars() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedCalendars()");
     // Initialisation du backend SQL
     Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
@@ -430,13 +548,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     $query = Sql\SqlMelanieRequests::listSharedObjects;
     // Replace name
-    $query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['CalendarMelanie']['owner'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['CalendarMelanie']['id'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['CalendarMelanie']['ctag'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['CalendarMelanie']['synctoken'][MappingMelanie::name], $query);
-    $query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['CalendarMelanie']['name'][MappingMelanie::name], $query);
-    $query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['CalendarMelanie']['perm'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
+    $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['CalendarMelanie']['owner'][MappingMce::name], $query);
+    $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['CalendarMelanie']['id'][MappingMce::name], $query);
+    $query = str_replace('{datatree_ctag}', MappingMce::$Data_Mapping['CalendarMelanie']['ctag'][MappingMce::name], $query);
+    $query = str_replace('{datatree_synctoken}', MappingMce::$Data_Mapping['CalendarMelanie']['synctoken'][MappingMce::name], $query);
+    $query = str_replace('{attribute_value}', MappingMce::$Data_Mapping['CalendarMelanie']['name'][MappingMce::name], $query);
+    $query = str_replace('{perm_object}', MappingMce::$Data_Mapping['CalendarMelanie']['perm'][MappingMce::name], $query);
+    $query = str_replace('{datatree_id}', MappingMce::$Data_Mapping['CalendarMelanie']['object_id'][MappingMce::name], $query);
     
     // Params
     $params = [
@@ -457,7 +575,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * 
    * @return TaskslistMelanie
    */
-  function getDefaultTaskslist() {
+  public function getDefaultTaskslist() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultTaskslist()");
     // Initialisation du backend SQL
     Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
@@ -469,35 +587,31 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     $query = Sql\SqlMelanieRequests::getDefaultObject;
     // Replace name
-    $query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['owner'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['id'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['ctag'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['synctoken'][MappingMelanie::name], $query);
-    $query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['name'][MappingMelanie::name], $query);
-    $query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['perm'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
+    $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['TaskslistMelanie']['owner'][MappingMce::name], $query);
+    $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['TaskslistMelanie']['id'][MappingMce::name], $query);
+    $query = str_replace('{datatree_ctag}', MappingMce::$Data_Mapping['TaskslistMelanie']['ctag'][MappingMce::name], $query);
+    $query = str_replace('{datatree_synctoken}', MappingMce::$Data_Mapping['TaskslistMelanie']['synctoken'][MappingMce::name], $query);
+    $query = str_replace('{attribute_value}', MappingMce::$Data_Mapping['TaskslistMelanie']['name'][MappingMce::name], $query);
+    $query = str_replace('{perm_object}', MappingMce::$Data_Mapping['TaskslistMelanie']['perm'][MappingMce::name], $query);
+    $query = str_replace('{datatree_id}', MappingMce::$Data_Mapping['CalendarMelanie']['object_id'][MappingMce::name], $query);
     
     // Params
     $params = [
-        "group_uid" => DefaultConfig::TASKSLIST_GROUP_UID,
         "user_uid" => $this->uid,
-        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
+        "datatree_name" => $this->uid,
+        "group_uid" => DefaultConfig::TASKSLIST_GROUP_UID,
         "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
-        "pref_scope" => DefaultConfig::TASKSLIST_PREF_SCOPE,
-        "pref_name" => DefaultConfig::TASKSLIST_PREF_DEFAULT_NAME,
+        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
         "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP
     ];
     
     // Liste de tâches par défaut de l'utilisateur
-    $tasklist = Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
-    if (isset($tasklist) && is_array($tasklist) && count($tasklist)) {
-      $tasklist[0]->pdoConstruct(true);
-      return $tasklist[0];
-    } else {
-      $tasklist = $this->getUserTaskslists();
-      return isset($tasklist[0]) ? $tasklist[0] : null;
+    $taskslists = Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
+    if (isset($taskslists) && is_array($taskslists) && count($taskslists)) {
+      $taskslists[0]->pdoConstruct(true);
+      return $taskslists[0];
     }
-    return false;
+    return null;
   }
   
   /**
@@ -505,7 +619,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * 
    * @return TaskslistMelanie[]
    */
-  function getUserTaskslists() {
+  public function getUserTaskslists() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserTaskslists()");
     // Initialisation du backend SQL
     Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
@@ -517,13 +631,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     $query = Sql\SqlMelanieRequests::listUserObjects;
     // Replace name
-    $query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['owner'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['id'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['ctag'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['synctoken'][MappingMelanie::name], $query);
-    $query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['name'][MappingMelanie::name], $query);
-    $query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['perm'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
+    $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['TaskslistMelanie']['owner'][MappingMce::name], $query);
+    $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['TaskslistMelanie']['id'][MappingMce::name], $query);
+    $query = str_replace('{datatree_ctag}', MappingMce::$Data_Mapping['TaskslistMelanie']['ctag'][MappingMce::name], $query);
+    $query = str_replace('{datatree_synctoken}', MappingMce::$Data_Mapping['TaskslistMelanie']['synctoken'][MappingMce::name], $query);
+    $query = str_replace('{attribute_value}', MappingMce::$Data_Mapping['TaskslistMelanie']['name'][MappingMce::name], $query);
+    $query = str_replace('{perm_object}', MappingMce::$Data_Mapping['TaskslistMelanie']['perm'][MappingMce::name], $query);
+    $query = str_replace('{datatree_id}', MappingMce::$Data_Mapping['CalendarMelanie']['object_id'][MappingMce::name], $query);
     
     // Params
     $params = [
@@ -541,7 +655,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * 
    * @return TaskslistMelanie[]
    */
-  function getSharedTaskslists() {
+  public function getSharedTaskslists() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedTaskslists()");
     // Initialisation du backend SQL
     Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
@@ -553,13 +667,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     $query = Sql\SqlMelanieRequests::listSharedObjects;
     // Replace name
-    $query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['owner'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['id'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['ctag'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['synctoken'][MappingMelanie::name], $query);
-    $query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['name'][MappingMelanie::name], $query);
-    $query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['TaskslistMelanie']['perm'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
+    $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['TaskslistMelanie']['owner'][MappingMce::name], $query);
+    $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['TaskslistMelanie']['id'][MappingMce::name], $query);
+    $query = str_replace('{datatree_ctag}', MappingMce::$Data_Mapping['TaskslistMelanie']['ctag'][MappingMce::name], $query);
+    $query = str_replace('{datatree_synctoken}', MappingMce::$Data_Mapping['TaskslistMelanie']['synctoken'][MappingMce::name], $query);
+    $query = str_replace('{attribute_value}', MappingMce::$Data_Mapping['TaskslistMelanie']['name'][MappingMce::name], $query);
+    $query = str_replace('{perm_object}', MappingMce::$Data_Mapping['TaskslistMelanie']['perm'][MappingMce::name], $query);
+    $query = str_replace('{datatree_id}', MappingMce::$Data_Mapping['CalendarMelanie']['object_id'][MappingMce::name], $query);
     
     // Params
     $params = [
@@ -579,7 +693,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * 
    * @return AddressbookMelanie
    */
-  function getDefaultAddressbook() {
+  public function getDefaultAddressbook() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultAddressbook()");
     // Initialisation du backend SQL
     Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
@@ -591,35 +705,31 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     $query = Sql\SqlMelanieRequests::getDefaultObject;
     // Replace name
-    $query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['owner'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['id'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['ctag'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['synctoken'][MappingMelanie::name], $query);
-    $query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['name'][MappingMelanie::name], $query);
-    $query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['perm'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
+    $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['AddressbookMelanie']['owner'][MappingMce::name], $query);
+    $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['AddressbookMelanie']['id'][MappingMce::name], $query);
+    $query = str_replace('{datatree_ctag}', MappingMce::$Data_Mapping['AddressbookMelanie']['ctag'][MappingMce::name], $query);
+    $query = str_replace('{datatree_synctoken}', MappingMce::$Data_Mapping['AddressbookMelanie']['synctoken'][MappingMce::name], $query);
+    $query = str_replace('{attribute_value}', MappingMce::$Data_Mapping['AddressbookMelanie']['name'][MappingMce::name], $query);
+    $query = str_replace('{perm_object}', MappingMce::$Data_Mapping['AddressbookMelanie']['perm'][MappingMce::name], $query);
+    $query = str_replace('{datatree_id}', MappingMce::$Data_Mapping['CalendarMelanie']['object_id'][MappingMce::name], $query);
     
     // Params
     $params = [
-        "group_uid" => DefaultConfig::ADDRESSBOOK_GROUP_UID,
         "user_uid" => $this->uid,
-        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
+        "datatree_name" => $this->uid,
+        "group_uid" => DefaultConfig::ADDRESSBOOK_GROUP_UID,
         "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
-        "pref_scope" => DefaultConfig::ADDRESSBOOK_PREF_SCOPE,
-        "pref_name" => DefaultConfig::ADDRESSBOOK_PREF_DEFAULT_NAME,
+        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
         "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP
     ];
     
     // Liste de tâches par défaut de l'utilisateur
-    $addressbook = Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
-    if (isset($addressbook) && is_array($addressbook) && count($addressbook)) {
-      $addressbook[0]->pdoConstruct(true);
-      return $addressbook[0];
-    } else {
-      $addressbook = $this->getUserAddressbooks();
-      return isset($addressbook[0]) ? $addressbook[0] : null;
+    $addressbooks = Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
+    if (isset($addressbooks) && is_array($addressbooks) && count($addressbooks)) {
+      $addressbooks[0]->pdoConstruct(true);
+      return $addressbooks[0];
     }
-    return false;
+    return null;
   }
   
   /**
@@ -627,7 +737,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * 
    * @return AddressbookMelanie[]
    */
-  function getUserAddressbooks() {
+  public function getUserAddressbooks() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserAddressbooks()");
     // Initialisation du backend SQL
     Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
@@ -639,13 +749,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     $query = Sql\SqlMelanieRequests::listUserObjects;
     // Replace name
-    $query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['owner'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['id'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['ctag'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['synctoken'][MappingMelanie::name], $query);
-    $query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['name'][MappingMelanie::name], $query);
-    $query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['perm'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
+    $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['AddressbookMelanie']['owner'][MappingMce::name], $query);
+    $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['AddressbookMelanie']['id'][MappingMce::name], $query);
+    $query = str_replace('{datatree_ctag}', MappingMce::$Data_Mapping['AddressbookMelanie']['ctag'][MappingMce::name], $query);
+    $query = str_replace('{datatree_synctoken}', MappingMce::$Data_Mapping['AddressbookMelanie']['synctoken'][MappingMce::name], $query);
+    $query = str_replace('{attribute_value}', MappingMce::$Data_Mapping['AddressbookMelanie']['name'][MappingMce::name], $query);
+    $query = str_replace('{perm_object}', MappingMce::$Data_Mapping['AddressbookMelanie']['perm'][MappingMce::name], $query);
+    $query = str_replace('{datatree_id}', MappingMce::$Data_Mapping['CalendarMelanie']['object_id'][MappingMce::name], $query);
     
     // Params
     $params = [
@@ -663,7 +773,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * 
    * @return AddressbookMelanie[]
    */
-  function getSharedAddressbooks() {
+  public function getSharedAddressbooks() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedAddressbooks()");
     // Initialisation du backend SQL
     Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
@@ -675,13 +785,13 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     
     $query = Sql\SqlMelanieRequests::listSharedObjects;
     // Replace name
-    $query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['owner'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['id'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['ctag'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['synctoken'][MappingMelanie::name], $query);
-    $query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['name'][MappingMelanie::name], $query);
-    $query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping['AddressbookMelanie']['perm'][MappingMelanie::name], $query);
-    $query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping['CalendarMelanie']['object_id'][MappingMelanie::name], $query);
+    $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['AddressbookMelanie']['owner'][MappingMce::name], $query);
+    $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['AddressbookMelanie']['id'][MappingMce::name], $query);
+    $query = str_replace('{datatree_ctag}', MappingMce::$Data_Mapping['AddressbookMelanie']['ctag'][MappingMce::name], $query);
+    $query = str_replace('{datatree_synctoken}', MappingMce::$Data_Mapping['AddressbookMelanie']['synctoken'][MappingMce::name], $query);
+    $query = str_replace('{attribute_value}', MappingMce::$Data_Mapping['AddressbookMelanie']['name'][MappingMce::name], $query);
+    $query = str_replace('{perm_object}', MappingMce::$Data_Mapping['AddressbookMelanie']['perm'][MappingMce::name], $query);
+    $query = str_replace('{datatree_id}', MappingMce::$Data_Mapping['CalendarMelanie']['object_id'][MappingMce::name], $query);
     
     // Params
     $params = [
@@ -701,7 +811,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * 
    * @deprecated
    */
-  function getTimezone() {
+  public function getTimezone() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getTimezone()");
     // Initialisation du backend SQL
     Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);

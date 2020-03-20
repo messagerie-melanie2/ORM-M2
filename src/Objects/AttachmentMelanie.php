@@ -25,7 +25,7 @@ use LibMelanie\Lib\MagicObject;
 use LibMelanie\Interfaces\IObjectMelanie;
 use LibMelanie\Sql;
 use LibMelanie\Config\ConfigSQL;
-use LibMelanie\Config\MappingMelanie;
+use LibMelanie\Config\MappingMce;
 use LibMelanie\Log\M2Log;
 
 /**
@@ -51,9 +51,9 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		$this->objectType = explode('\\',$this->get_class);
 		$this->objectType = $this->objectType[count($this->objectType)-1];
 
-		if (isset(MappingMelanie::$Primary_Keys[$this->objectType])) {
-			if (is_array(MappingMelanie::$Primary_Keys[$this->objectType])) $this->primaryKeys = MappingMelanie::$Primary_Keys[$this->objectType];
-			else $this->primaryKeys = [MappingMelanie::$Primary_Keys[$this->objectType]];
+		if (isset(MappingMce::$Primary_Keys[$this->objectType])) {
+			if (is_array(MappingMce::$Primary_Keys[$this->objectType])) $this->primaryKeys = MappingMce::$Primary_Keys[$this->objectType];
+			else $this->primaryKeys = [MappingMce::$Primary_Keys[$this->objectType]];
 		}
 	}
 
@@ -77,9 +77,9 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		foreach ($this->primaryKeys as $key) {
 			if (!isset($this->$key)) return false;
 			// Récupèration des données de mapping
-			if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-					&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
-				$mapKey = MappingMelanie::$Data_Mapping[$this->objectType][$key][MappingMelanie::name];
+			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+				$mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
 			} else {
 				$mapKey = $key;
 			}
@@ -134,9 +134,9 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 			foreach ($this->primaryKeys as $key) {
 				if (!isset($this->$key)) return null;
 				// Récupèration des données de mapping
-				if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-						&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
-					$mapKey = MappingMelanie::$Data_Mapping[$this->objectType][$key][MappingMelanie::name];
+				if (isset(MappingMce::$Data_Mapping[$this->objectType])
+						&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+					$mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
 				} else {
 					$mapKey = $key;
 				}
@@ -220,9 +220,9 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		foreach ($this->primaryKeys as $key) {
 			if (!isset($key)) return false;
 			// Récupèration des données de mapping
-			if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-					&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
-				$mapKey = MappingMelanie::$Data_Mapping[$this->objectType][$key][MappingMelanie::name];
+			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+				$mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
 			} else {
 				$mapKey = $key;
 			}
@@ -264,9 +264,9 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		foreach ($this->primaryKeys as $key) {
 			if (!isset($this->$key)) return false;
 			// Récupèration des données de mapping
-			if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-					&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
-				$mapKey = MappingMelanie::$Data_Mapping[$this->objectType][$key][MappingMelanie::name];
+			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+				$mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
 			} else {
 				$mapKey = $key;
 			}
@@ -293,7 +293,7 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 	 * pour réinitialiser les données modifiées (propriété haschanged)
 	 * @param String[] $fields Liste les champs à récupérer depuis les données
 	 * @param String $filter Filtre pour la lecture des données en fonction des valeurs déjà passé, exemple de filtre : "((#description# OR #title#) AND #start#)"
-	 * @param String[] $operators Liste les propriétés par operateur (MappingMelanie::like, MappingMelanie::supp, MappingMelanie::inf, MappingMelanie::diff)
+	 * @param String[] $operators Liste les propriétés par operateur (MappingMce::like, MappingMce::supp, MappingMce::inf, MappingMce::diff)
 	 * @param String $orderby Tri par le champ
 	 * @param bool $asc Tri ascendant ou non
 	 * @param int $limit Limite le nombre de résultat (utile pour la pagination)
@@ -310,9 +310,9 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
 		foreach ($operators as $key => $operator) {
 			// Récupèration des données de mapping
-			if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-					&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
-				$key = MappingMelanie::$Data_Mapping[$this->objectType][$key][MappingMelanie::name];
+			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
 			}
 			$opmapping[$key] = $operator;
 		}
@@ -322,9 +322,9 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
     		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
     		foreach ($fields as $key) {
     			// Récupèration des données de mapping
-    			if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-    					&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
-    				$key = MappingMelanie::$Data_Mapping[$this->objectType][$key][MappingMelanie::name];
+    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
     			}
     			$fieldsmapping[] = $key;
     		}
@@ -344,16 +344,16 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 				    // Est-ce que le champ courant est non case sensitive
 				    $is_case_unsensitive = in_array($key, $case_unsensitive_fields);
 					// Récupèration des données de mapping
-					if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-							&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
-						$mapKey = MappingMelanie::$Data_Mapping[$this->objectType][$key][MappingMelanie::name];
+					if (isset(MappingMce::$Data_Mapping[$this->objectType])
+							&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+						$mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
 					} else {
 						$mapKey = $key;
 					}
 					if (isset($opmapping[$mapKey])) {
 						if (is_array($this->$mapKey)) {
-						    if ($opmapping[$mapKey] == MappingMelanie::in 
-						          || $opmapping[$mapKey] == MappingMelanie::notin) {
+						    if ($opmapping[$mapKey] == MappingMce::in 
+						          || $opmapping[$mapKey] == MappingMce::notin) {
 						        // Filtre personnalisé, valeur multiple, pas de like, on utilise IN
 						        if ($is_case_unsensitive)
 						            $clause = "LOWER($mapKey) " . $opmapping[$mapKey] . " (";
@@ -371,8 +371,8 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 						        }
 						        $clause .= ")";
 						        $filter = str_replace("#$key#", $clause, $filter);
-						    } else if ($opmapping[$mapKey] == MappingMelanie::between
-						        || $opmapping[$mapKey] == MappingMelanie::notbetween) {
+						    } else if ($opmapping[$mapKey] == MappingMce::between
+						        || $opmapping[$mapKey] == MappingMce::notbetween) {
 				          $value = $this->$mapKey;
 				          // Filtre personnalisé, avec between
 				          if ($is_case_unsensitive) {
@@ -392,7 +392,7 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
     							$i = 1;
     							foreach ($this->$mapKey as $val) {
     								if ($i > 1) {
-    									if ($opmapping[$mapKey] == MappingMelanie::diff) $clause .= " AND ";
+    									if ($opmapping[$mapKey] == MappingMce::diff) $clause .= " AND ";
     									else $clause .= " OR ";
     								}
     								if ($is_case_unsensitive) {
@@ -445,7 +445,7 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 							$i = 1;
 							foreach ($this->$key as $val) {
 								if ($i > 1) {
-									if ($opmapping[$key] == MappingMelanie::diff) $whereClause .= " AND ";
+									if ($opmapping[$key] == MappingMce::diff) $whereClause .= " AND ";
 									else $whereClause .= " OR ";
 								} else $whereClause .= "(";
 								if ($is_case_unsensitive) {
@@ -508,9 +508,9 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		// Tri
 		if (!empty($orderby)) {
 		    // Récupèration des données de mapping
-		    if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-		            && isset(MappingMelanie::$Data_Mapping[$this->objectType][$orderby])) {
-		        $orderby = MappingMelanie::$Data_Mapping[$this->objectType][$orderby][MappingMelanie::name];
+		    if (isset(MappingMce::$Data_Mapping[$this->objectType])
+		            && isset(MappingMce::$Data_Mapping[$this->objectType][$orderby])) {
+		        $orderby = MappingMce::$Data_Mapping[$this->objectType][$orderby][MappingMce::name];
 		    }
 		    $whereClause .= " ORDER BY $orderby" . ($asc ? " ASC" : " DESC");
 		}

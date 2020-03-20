@@ -22,9 +22,9 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Api\Melanie2\User;
-use LibMelanie\Api\Melanie2\Contact;
-use LibMelanie\Api\Melanie2\Addressbook;
+use LibMelanie\Api\Mce\User;
+use LibMelanie\Api\Mce\Contact;
+use LibMelanie\Api\Mce\Addressbook;
 use LibMelanie\Log\M2Log;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
@@ -35,9 +35,9 @@ use Sabre\VObject;
  * Class de génération de VCard en fonction de l'objet contact
  * Méthodes Statiques
  *
- * @author PNE Messagerie/Apitech
- * @package Librairie Mélanie2
- * @subpackage Lib Mélanie2
+ * @author Groupe Messagerie/MTES - Apitech
+ * @package Librairie MCE
+ * @subpackage Lib
  */
 class ContactToVCard {
   /**

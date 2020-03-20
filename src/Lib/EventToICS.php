@@ -22,12 +22,12 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Api\Melanie2\Attachment;
-use LibMelanie\Api\Melanie2\Recurrence;
-use LibMelanie\Api\Melanie2\User;
-use LibMelanie\Api\Melanie2\Event;
-use LibMelanie\Api\Melanie2\Attendee;
-use LibMelanie\Api\Melanie2\Calendar;
+use LibMelanie\Api\Mce\Attachment;
+use LibMelanie\Api\Mce\Recurrence;
+use LibMelanie\Api\Mce\User;
+use LibMelanie\Api\Mce\Event;
+use LibMelanie\Api\Mce\Attendee;
+use LibMelanie\Api\Mce\Calendar;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\Config;
 
@@ -39,9 +39,9 @@ use Sabre\VObject;
  * Class de génération de l'ICS en fonction de l'objet évènement
  * Méthodes Statiques
  *
- * @author PNE Messagerie/Apitech
- * @package Librairie Mélanie2
- * @subpackage Lib Mélanie2
+ * @author Groupe Messagerie/MTES - Apitech
+ * @package Librairie MCE
+ * @subpackage Lib
  *            
  */
 class EventToICS {
@@ -50,7 +50,7 @@ class EventToICS {
    *
    * @var string
    */
-  const PRODID = '-//ORM LibMelanie2 PHP/PNE Messagerie/MTES';
+  const PRODID = '-//Groupe Messagerie MTES/ORM LibMCE';
   /**
    * Version ICalendar utilisé pour la génération de l'ICS
    *
@@ -86,6 +86,7 @@ class EventToICS {
    *          Si l'ics doit inclure les pièces jointes
    * @param boolean $isfreebusy
    *          Si on ne retourne que les freebusy (pas de pièce jointe ou de participants)
+   * 
    * @return string $ics
    */
   public static function Convert(Event $event, Calendar $calendar = null, User $user = null, VObject\Component\VCalendar $vcalendar = null, $useattachments = true, $isfreebusy = false) {
@@ -107,6 +108,7 @@ class EventToICS {
    *          Si l'ics doit inclure les pièces jointes
    * @param boolean $isfreebusy
    *          Si on ne retourne que les freebusy (pas de pièce jointe ou de participants)
+   * 
    * @return VObject\Component\VCalendar $vcalendar
    */
   public static function getVCalendar(Event $event, Calendar $calendar = null, User $user = null, $useattachments = true, $isfreebusy = false, $vcalendar = null) {

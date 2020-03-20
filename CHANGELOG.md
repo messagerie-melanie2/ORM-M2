@@ -1,3 +1,15 @@
+ORM M2 - 0.6
+------
+- 0005647: [Utilisateur] Méthodes pour créer les objets par défaut (principals)
+- 0005646: [Utilisateur] Modifier les requêtes pour sélectionner les objets par défaut
+- 0005639: [Agenda] Problème avec le recurrence_id
+- 0005642: [Général] Gestion de multiple d'entrées et de serveurs d'annuaire pour un seul objet
+- 0005641: [Général] Intégrer la configuration LDAP directement dans l'objet User
+- 0005614: [Général] Modifier les objets Mélanie2 en objet MCE
+- 0005615: [Général] Créer une branche spécifique Api/Mel
+- 0005616: [Général] Garder la compatibilité avec Api/Melanie2
+- 0005601: [Général] Mettre en place un driver LDAP
+
 ORM M2 - 0.5.0.23
 ------
 - Suppression des ORDER BY dans les requêtes listUserObjects et listSharedObjects pour améliorer les performances de la base de données

@@ -1,15 +1,17 @@
 {
-	"name" : "messagerie-melanie2/ORM-M2",
-	"version" : "0.5.0.23",
-	"version_normalized" : "0.5.0.23",
+	"name" : "messagerie-melanie2/orm-m2",
+	"version" : "0.6",
+	"version_normalized" : "0.6.0.0",
 	"description" : "ORM pour l'accès aux données Mél",
 	"keywords" : [
 		"ORM",
 		"Calendar",
 		"Addressbook",
-		"Tasks"
+		"Tasks",
+		"SQL",
+		"LDAP"
 	],
-	"homepage" : "https://github.com/messagerie-melanie2/ORM-M2",
+	"homepage" : "https://github.com/messagerie-melanie2/orm-m2",
 	"license" : "GPLv3",
 	"type" : "library",
 	"require" : {

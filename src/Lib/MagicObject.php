@@ -21,7 +21,7 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Config\MappingMelanie;
+use LibMelanie\Config\MappingMce;
 use LibMelanie\Log\M2Log;
 
 /**
@@ -85,9 +85,9 @@ abstract class MagicObject {
 	public function fieldHasChanged($name) {
 	  $lname = strtolower($name);
 	  // Récupèration des données de mapping
-	  if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-        && isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname])) {
-      $lname = MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::name];
+	  if (isset(MappingMce::$Data_Mapping[$this->objectType])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
+      $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
     }
     if (isset($this->haschanged[$lname])) {
       return $this->haschanged[$lname];
@@ -104,9 +104,9 @@ abstract class MagicObject {
 	public function getFieldValueFromData($name) {
 	  $lname = strtolower($name);
 	  // Récupèration des données de mapping
-	  if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-	      && isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname])) {
-      $lname = MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::name];
+	  if (isset(MappingMce::$Data_Mapping[$this->objectType])
+	      && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
+      $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
     }
     if (isset($this->data[$lname])) {
       return $this->data[$lname];
@@ -145,26 +145,26 @@ abstract class MagicObject {
 	public function __set($name, $value) {
         $lname = strtolower($name);
         // Récupèration des données de mapping
-        if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-                && isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname])) {
+        if (isset(MappingMce::$Data_Mapping[$this->objectType])
+                && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
             // Typage
             if (!is_null($value) /* MANTIS 3642: Impossible de remettre à zéro le champ "event_recurenddate" */
-                    && isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::type])) {
-                switch (MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::type]) {
+                    && isset(MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::type])) {
+                switch (MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::type]) {
                     // INTEGER
-                    case MappingMelanie::integer:
+                    case MappingMce::integer:
                         if (!is_array($value)) { 
                           $value = intval($value);
                         }
                         break;
                     // DOUBLE
-                    case MappingMelanie::double:
+                    case MappingMce::double:
                         if (!is_array($value)) { 
                           $value = doubleval($value);
                         }
                         break;
                     // STRING LDAP
-                    case MappingMelanie::stringLdap:
+                    case MappingMce::stringLdap:
                         if (is_array($value)) {
                           $value = [$value[0]];
                         }
@@ -173,7 +173,7 @@ abstract class MagicObject {
                         }
                         break;
                     // ARRAY LDAP
-                    case MappingMelanie::arrayLdap:
+                    case MappingMce::arrayLdap:
                       if (is_array($value)) {
                         unset($value['count']);
                       }
@@ -182,23 +182,23 @@ abstract class MagicObject {
                       }
                       break;
                     // STRING
-                    case MappingMelanie::string:
+                    case MappingMce::string:
                         // Gérer la taille des strings dans la BDD
-                        if (!is_array($value) && isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::size])) {
-                            $value = mb_substr($value, 0, MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::size]);
+                        if (!is_array($value) && isset(MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::size])) {
+                            $value = mb_substr($value, 0, MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::size]);
                         }
                         break;
                     // DATE
-                    case MappingMelanie::date:
+                    case MappingMce::date:
                         try {
                             if ($value instanceof \DateTime) {
-                                if (isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::format]))
-                                    $value = $value->format(MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::format]);
+                                if (isset(MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::format]))
+                                    $value = $value->format(MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::format]);
                                 else
                                     $value = $value->format('Y-m-d H:i:s');
                             } else if (!is_array($value)) {
-                                if (isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::format]))
-                                    $value = date(MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::format], strtotime($value));
+                                if (isset(MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::format]))
+                                    $value = date(MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::format], strtotime($value));
                                 else
                                     $value = date('Y-m-d H:i:s', strtotime($value));
                             }
@@ -211,7 +211,7 @@ abstract class MagicObject {
 
                         break;
                     // TIMESTAMP
-                    case MappingMelanie::timestamp:
+                    case MappingMce::timestamp:
                         if ($value instanceof \DateTime) {
                             $value = $value->getTimestamp();
                         } else if (!is_array($value))  {
@@ -220,7 +220,7 @@ abstract class MagicObject {
                         break;
                 }
             }
-            $lname = MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::name];
+            $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
         }
         if (isset($this->data[$lname]) && is_scalar($value) && !is_array($value) && $this->data[$lname] === $value)
             return false;
@@ -243,18 +243,18 @@ abstract class MagicObject {
 	  $name = strtolower($name);
 	  $lname = $name;
 		// Récupèration des données de mapping
-		if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-		    && isset(MappingMelanie::$Data_Mapping[$this->objectType][$name])) {
-      $lname = MappingMelanie::$Data_Mapping[$this->objectType][$name][MappingMelanie::name];
+		if (isset(MappingMce::$Data_Mapping[$this->objectType])
+		    && isset(MappingMce::$Data_Mapping[$this->objectType][$name])) {
+      $lname = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::name];
 		}
 		if (isset($this->data[$lname])) {
 		  $value = $this->data[$lname];
-		  if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-		      && isset(MappingMelanie::$Data_Mapping[$this->objectType][$name])
-		      && isset(MappingMelanie::$Data_Mapping[$this->objectType][$name][MappingMelanie::type])) {
-        switch (MappingMelanie::$Data_Mapping[$this->objectType][$name][MappingMelanie::type]) {
+		  if (isset(MappingMce::$Data_Mapping[$this->objectType])
+		      && isset(MappingMce::$Data_Mapping[$this->objectType][$name])
+		      && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type])) {
+        switch (MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type]) {
 		      // STRING LDAP
-		      case MappingMelanie::stringLdap:
+		      case MappingMce::stringLdap:
 		        if (is_array($value)) {
 		          if (isset($value[0])) {
 		            $value = $value[0];
@@ -265,7 +265,7 @@ abstract class MagicObject {
 		        }
 		        break;
 	        // ARRAY LDAP
-		      case MappingMelanie::arrayLdap:
+		      case MappingMce::arrayLdap:
 		        if (is_array($value)) {
 		          unset($value['count']);
 		        }
@@ -278,10 +278,10 @@ abstract class MagicObject {
 		  return $value;
 		}
 		// Récupération de la valeur par défaut
-		if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-		    && isset(MappingMelanie::$Data_Mapping[$this->objectType][$name])
-		    && isset(MappingMelanie::$Data_Mapping[$this->objectType][$name][MappingMelanie::defaut]))
-		  return MappingMelanie::$Data_Mapping[$this->objectType][$name][MappingMelanie::defaut];
+		if (isset(MappingMce::$Data_Mapping[$this->objectType])
+		    && isset(MappingMce::$Data_Mapping[$this->objectType][$name])
+		    && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut]))
+		  return MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut];
 		return null;
 	}
 
@@ -295,9 +295,9 @@ abstract class MagicObject {
 	public function __isset($name) {
 		$lname = strtolower($name);
 		// Récupèration des données de mapping
-		if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-				&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname])) {
-			$lname = MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::name];
+		if (isset(MappingMce::$Data_Mapping[$this->objectType])
+				&& isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
+			$lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
 		}
 		$isset = isset($this->data[$lname]);
 
@@ -314,9 +314,9 @@ abstract class MagicObject {
 	public function __unset($name) {
 		$lname = strtolower($name);
 		// Récupèration des données de mapping
-		if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-				&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$lname])) {
-			$lname = MappingMelanie::$Data_Mapping[$this->objectType][$lname][MappingMelanie::name];
+		if (isset(MappingMce::$Data_Mapping[$this->objectType])
+				&& isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
+			$lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
 		}
 
 		if (isset($this->data[$lname])) {
@@ -340,9 +340,9 @@ abstract class MagicObject {
 		$var = substr($name,3);
 
 		// Récupèration des données de mapping
-		if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-				&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$var])) {
-			$var = MappingMelanie::$Data_Mapping[$this->objectType][$var][MappingMelanie::name];
+		if (isset(MappingMce::$Data_Mapping[$this->objectType])
+				&& isset(MappingMce::$Data_Mapping[$this->objectType][$var])) {
+			$var = MappingMce::$Data_Mapping[$this->objectType][$var][MappingMce::name];
 		}
 
 		if ($operator == "set" && count($arguments) == 1){

@@ -25,7 +25,7 @@ use LibMelanie\Lib\MagicObject;
 use LibMelanie\Interfaces\IObjectMelanie;
 use LibMelanie\Sql;
 use LibMelanie\Config\ConfigSQL;
-use LibMelanie\Config\MappingMelanie;
+use LibMelanie\Config\MappingMce;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\DefaultConfig;
 
@@ -56,11 +56,11 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 		// Récupération du type d'objet en fonction de la class
 		$this->objectType = explode('\\',$this->get_class);
 		$this->objectType = $this->objectType[count($this->objectType)-1];
-		$this->tableName = MappingMelanie::$Table_Name[$this->objectType];
+		$this->tableName = MappingMce::$Table_Name[$this->objectType];
 
-		if (isset(MappingMelanie::$Primary_Keys[$this->objectType])) {
-			if (is_array(MappingMelanie::$Primary_Keys[$this->objectType])) $this->primaryKeys = MappingMelanie::$Primary_Keys[$this->objectType];
-			else $this->primaryKeys = [MappingMelanie::$Primary_Keys[$this->objectType]];
+		if (isset(MappingMce::$Primary_Keys[$this->objectType])) {
+			if (is_array(MappingMce::$Primary_Keys[$this->objectType])) $this->primaryKeys = MappingMce::$Primary_Keys[$this->objectType];
+			else $this->primaryKeys = [MappingMce::$Primary_Keys[$this->objectType]];
 		}
 	}
 
@@ -82,13 +82,13 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 		}
 		$query = Sql\SqlMelanieRequests::listObjectsByUid;
 		// Replace name
-		$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping[$this->objectType]['owner'][MappingMelanie::name], $query);
-		$query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name], $query);
-		$query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping[$this->objectType]['ctag'][MappingMelanie::name], $query);
-		$query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping[$this->objectType]['synctoken'][MappingMelanie::name], $query);
-		$query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping[$this->objectType]['name'][MappingMelanie::name], $query);
-		$query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping[$this->objectType]['perm'][MappingMelanie::name], $query);
-		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping[$this->objectType]['object_id'][MappingMelanie::name], $query);
+		$query = str_replace('{user_uid}', MappingMce::$Data_Mapping[$this->objectType]['owner'][MappingMce::name], $query);
+		$query = str_replace('{datatree_name}', MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name], $query);
+		$query = str_replace('{datatree_ctag}', MappingMce::$Data_Mapping[$this->objectType]['ctag'][MappingMce::name], $query);
+		$query = str_replace('{datatree_synctoken}', MappingMce::$Data_Mapping[$this->objectType]['synctoken'][MappingMce::name], $query);
+		$query = str_replace('{attribute_value}', MappingMce::$Data_Mapping[$this->objectType]['name'][MappingMce::name], $query);
+		$query = str_replace('{perm_object}', MappingMce::$Data_Mapping[$this->objectType]['perm'][MappingMce::name], $query);
+		$query = str_replace('{datatree_id}', MappingMce::$Data_Mapping[$this->objectType]['object_id'][MappingMce::name], $query);
 		// Params
 		$params = [
 				"group_uid" => DefaultConfig::ADDRESSBOOK_GROUP_UID,
@@ -133,8 +133,8 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 		}
 		// Si l'objet existe on fait un UPDATE
 		if ($this->isExist) {
-			if (isset($this->haschanged[MappingMelanie::$Data_Mapping[$this->objectType]['name'][MappingMelanie::name]])
-					&& $this->haschanged[MappingMelanie::$Data_Mapping[$this->objectType]['name'][MappingMelanie::name]]) {
+			if (isset($this->haschanged[MappingMce::$Data_Mapping[$this->objectType]['name'][MappingMce::name]])
+					&& $this->haschanged[MappingMce::$Data_Mapping[$this->objectType]['name'][MappingMce::name]]) {
 				$this->saveName();
 			}
 		} else {
@@ -240,7 +240,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
 			$query = Sql\SqlMelanieRequests::deleteObject3;
 			$query = str_replace("{objects_table}", "turba_objects", $query);
-			$query = str_replace("{datatree_name}", MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name], $query);
+			$query = str_replace("{datatree_name}", MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name], $query);
 			// Params
 			$params = [
 			    "datatree_name" => $this->id,
@@ -287,7 +287,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 
 		$query = Sql\SqlObjectRequests::getObject;
 		// Liste des champs
-		$query = str_replace("{fields_list}", MappingMelanie::$Data_Mapping[$this->objectType]['object_id'][MappingMelanie::name], $query);
+		$query = str_replace("{fields_list}", MappingMce::$Data_Mapping[$this->objectType]['object_id'][MappingMce::name], $query);
 		// Nom de la table
 		$query = str_replace("{table_name}", $this->tableName, $query);
 		// Clause where
@@ -324,7 +324,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 		if (!isset($this->id)) return false;
 
 		// Params
-		$params = [MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name] => $this->id];
+		$params = [MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name] => $this->id];
 
 		// Liste les contacts de la liste
 		return Sql\DBMelanie::ExecuteQuery(Sql\SqlContactRequests::listAllContacts, $params, 'LibMelanie\Objects\ObjectMelanie', 'ContactMelanie');
@@ -342,7 +342,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 		if (!isset($this->id)) return false;
 
 		// Params
-		$params = [MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name] => $this->id];
+		$params = [MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name] => $this->id];
 
 		// Récupération du tag
 		Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlContactRequests::getCTag, $params, $this);

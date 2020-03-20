@@ -25,7 +25,7 @@ use LibMelanie\Lib\MagicObject;
 use LibMelanie\Interfaces\IObjectMelanie;
 use LibMelanie\Sql;
 use LibMelanie\Config\ConfigSQL;
-use LibMelanie\Config\MappingMelanie;
+use LibMelanie\Config\MappingMce;
 use LibMelanie\Log\M2Log;
 
 /**
@@ -51,9 +51,9 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 		$this->objectType = explode('\\',$this->get_class);
 		$this->objectType = $this->objectType[count($this->objectType)-1];
 
-		if (isset(MappingMelanie::$Primary_Keys[$this->objectType])) {
-			if (is_array(MappingMelanie::$Primary_Keys[$this->objectType])) $this->primaryKeys = MappingMelanie::$Primary_Keys[$this->objectType];
-			else $this->primaryKeys = [MappingMelanie::$Primary_Keys[$this->objectType]];
+		if (isset(MappingMce::$Primary_Keys[$this->objectType])) {
+			if (is_array(MappingMce::$Primary_Keys[$this->objectType])) $this->primaryKeys = MappingMce::$Primary_Keys[$this->objectType];
+			else $this->primaryKeys = [MappingMce::$Primary_Keys[$this->objectType]];
 		}
 	}
 
@@ -76,9 +76,9 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 		foreach ($this->primaryKeys as $key) {
 			if (!isset($this->$key)) return false;
 			// Récupèration des données de mapping
-			if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-						&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
-				$mapKey = MappingMelanie::$Data_Mapping[$this->objectType][$key][MappingMelanie::name];
+			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+						&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+				$mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
 			} else {
 				$mapKey = $key;
 			}
@@ -125,9 +125,9 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 			foreach ($this->primaryKeys as $key) {
 				if (!isset($this->$key)) return null;
 				// Récupèration des données de mapping
-				if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-							&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
-					$mapKey = MappingMelanie::$Data_Mapping[$this->objectType][$key][MappingMelanie::name];
+				if (isset(MappingMce::$Data_Mapping[$this->objectType])
+							&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+					$mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
 				} else {
 					$mapKey = $key;
 				}
@@ -217,9 +217,9 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 		foreach ($this->primaryKeys as $key) {
 			if (!isset($this->$key)) return false;
 			// Récupèration des données de mapping
-			if (isset(MappingMelanie::$Data_Mapping[$this->objectType])
-						&& isset(MappingMelanie::$Data_Mapping[$this->objectType][$key])) {
-				$mapKey = MappingMelanie::$Data_Mapping[$this->objectType][$key][MappingMelanie::name];
+			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+						&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+				$mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
 			} else {
 				$mapKey = $key;
 			}

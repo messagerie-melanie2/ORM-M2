@@ -457,13 +457,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getDefaultCalendar() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultCalendar()");
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
-    
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     
     $query = Sql\SqlMelanieRequests::getDefaultObject;
     // Replace name
@@ -486,7 +481,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     ];
     
     // Calendrier par défaut de l'utilisateur
-    $calendars = Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
+    $calendars = Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
     if (isset($calendars) && is_array($calendars) && count($calendars)) {
       $calendars[0]->pdoConstruct(true);
       return $calendars[0];
@@ -501,13 +496,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getUserCalendars() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserCalendars()");
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
-    
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     
     $query = Sql\SqlMelanieRequests::listUserObjects;
     // Replace name
@@ -527,7 +517,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     ];
     
     // Liste les calendriers de l'utilisateur
-    return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
+    return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
   }
   
   /**
@@ -538,13 +528,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getSharedCalendars() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedCalendars()");
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
-    
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     
     $query = Sql\SqlMelanieRequests::listSharedObjects;
     // Replace name
@@ -566,7 +551,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     ];
     
     // Liste les calendriers de l'utilisateur
-    return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
+    return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
   }
   
   // -- TASKSLIST
@@ -577,13 +562,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getDefaultTaskslist() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultTaskslist()");
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
-    
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     
     $query = Sql\SqlMelanieRequests::getDefaultObject;
     // Replace name
@@ -606,7 +586,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     ];
     
     // Liste de tâches par défaut de l'utilisateur
-    $taskslists = Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
+    $taskslists = Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
     if (isset($taskslists) && is_array($taskslists) && count($taskslists)) {
       $taskslists[0]->pdoConstruct(true);
       return $taskslists[0];
@@ -621,13 +601,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getUserTaskslists() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserTaskslists()");
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
-    
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     
     $query = Sql\SqlMelanieRequests::listUserObjects;
     // Replace name
@@ -646,7 +621,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
         "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME
     ];
     // Liste les listes de tâches de l'utilisateur
-    return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
+    return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
   }
   
   /**
@@ -657,13 +632,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getSharedTaskslists() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedTaskslists()");
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
-    
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     
     $query = Sql\SqlMelanieRequests::listSharedObjects;
     // Replace name
@@ -684,7 +654,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
         "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP
     ];
     // Liste les listes de tâches de l'utilisateur
-    return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
+    return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
   }
   
   // -- ADDRESSBOOK
@@ -695,13 +665,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getDefaultAddressbook() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultAddressbook()");
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
-    
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     
     $query = Sql\SqlMelanieRequests::getDefaultObject;
     // Replace name
@@ -724,7 +689,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     ];
     
     // Liste de tâches par défaut de l'utilisateur
-    $addressbooks = Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
+    $addressbooks = Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
     if (isset($addressbooks) && is_array($addressbooks) && count($addressbooks)) {
       $addressbooks[0]->pdoConstruct(true);
       return $addressbooks[0];
@@ -739,13 +704,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getUserAddressbooks() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserAddressbooks()");
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
-    
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     
     $query = Sql\SqlMelanieRequests::listUserObjects;
     // Replace name
@@ -764,7 +724,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
         "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME
     ];
     // Liste les listes de contacts de l'utilisateur
-    return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
+    return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
   }
   
   /**
@@ -775,13 +735,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getSharedAddressbooks() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedAddressbooks()");
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid))
       return false;
-    
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     
     $query = Sql\SqlMelanieRequests::listSharedObjects;
     // Replace name
@@ -802,7 +757,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
         "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP
     ];
     // Liste les listes de contacts de l'utilisateur
-    return Sql\DBMelanie::ExecuteQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
+    return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
   }
   
   /**
@@ -830,7 +785,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       ];
       
       // Récupération du timezone
-      $res = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
+      $res = Sql\Sql::GetInstance()->executeQueryToObject($query, $params, $this);
       // Test si le timezone est valide en PHP
       try {
         $tz = new \DateTimeZone($this->timezone);

@@ -73,8 +73,6 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 			if (is_array(MappingMce::$Primary_Keys[$this->objectType])) $this->primaryKeys = MappingMce::$Primary_Keys[$this->objectType];
 			else $this->primaryKeys = [MappingMce::$Primary_Keys[$this->objectType]];
 		}
-	    // Initialisation du backend SQL
-		Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 	}
 
 	/**
@@ -82,8 +80,6 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->load()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		if (!isset($this->tableName)) return false;
@@ -118,7 +114,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace("{where_clause}", $whereClause, $query);
 
 		// Récupération
-		$this->isExist = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
+		$this->isExist = Sql\Sql::GetInstance()->executeQueryToObject($query, $params, $this);
 		if ($this->isExist) {
 		  $this->initializeHasChanged();
 		}
@@ -133,8 +129,6 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->save()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		$insert = false;
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return null;
@@ -190,7 +184,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 			$query = str_replace("{where_clause}", $whereClause, $query);
 
 			// Execute
-			$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
+			$this->isExist = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		} else {
 			// C'est une Insertion
 			$insert = true;
@@ -223,7 +217,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 			$query = str_replace("{data_values}", $data_values, $query);
 
 			// Execute
-			$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
+			$this->isExist = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		}
 		if ($this->isExist) $this->initializeHasChanged();
 		return $insert;
@@ -235,8 +229,6 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function delete() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->delete()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires et la table ne sont pas définies, impossible de supprimer l'objet
 		if (!isset($this->primaryKeys)) return false;
 		if (!isset($this->tableName)) return false;
@@ -265,7 +257,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace("{where_clause}", $whereClause, $query);
 
 		// Supprimer l'évènement
-		$ret = Sql\DBMelanie::ExecuteQuery($query, $params);
+		$ret = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		if ($ret) {
 		  $this->initializeHasChanged();
 		  $this->isExist = false;
@@ -279,8 +271,6 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->exists()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		if (!isset($this->tableName)) return false;
@@ -313,7 +303,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		// Clause where
 		$query = str_replace("{where_clause}", $whereClause, $query);
 		// Liste les objets
-		$res = Sql\DBMelanie::ExecuteQuery($query, $params);
+		$res = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		$this->isExist = (count($res) >= 1);
 		return $this->isExist;
 	}
@@ -335,8 +325,6 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->getList()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->tableName)) return false;
 		// Mapping pour les operateurs
 		$opmapping = [];
@@ -571,7 +559,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		// Clause where
 		$query = str_replace("{where_clause}", $whereClause, $query);
 		// Récupération
-		return Sql\DBMelanie::ExecuteQuery($query, $params, $this->get_class, $this->objectType);
+		return Sql\Sql::GetInstance()->executeQuery($query, $params, $this->get_class, $this->objectType);
 	}
 
 	/**

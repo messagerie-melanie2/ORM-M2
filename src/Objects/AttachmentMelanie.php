@@ -44,8 +44,6 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 	    $this->get_class = get_class($this);
 
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
-    	// Initialisation du backend SQL
-		Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 
 		// Récupération du type d'objet en fonction de la class
 		$this->objectType = explode('\\',$this->get_class);
@@ -62,8 +60,6 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -93,7 +89,7 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace("{where_clause}", $whereClause, $query);
 
 		// Liste les attachments
-		$this->isExist = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
+		$this->isExist = Sql\Sql::GetInstance()->executeQueryToObject($query, $params, $this);
 		if ($this->isExist) {
 		  $this->initializeHasChanged();
 		}
@@ -108,8 +104,6 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return null;
@@ -163,7 +157,7 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 			$query = str_replace("{where_clause}", $whereClause, $query);
 
 			// Execute
-			$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
+			$this->isExist = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		} else {
 			// C'est une Insertion
 			$insert = true;
@@ -173,7 +167,7 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 			}
 
 			// Gestion de history_id
-			if (!isset($this->id)) Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlAttachmentRequests::getNextAttachment, null, $this);
+			if (!isset($this->id)) Sql\Sql::GetInstance()->executeQueryToObject(Sql\SqlAttachmentRequests::getNextAttachment, null, $this);
 
 			// Si l'objet n'existe pas, on fait un INSERT
 			// Liste les insertion à faire
@@ -197,7 +191,7 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 			$query = str_replace("{data_values}", $data_values, $query);
 
 			// Execute
-			$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
+			$this->isExist = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		}
 		if ($this->isExist) $this->initializeHasChanged();
 		return $insert;
@@ -209,8 +203,6 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function delete() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->delete()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définies, impossible de supprimer l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Paramètres de la requête
@@ -236,7 +228,7 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace("{where_clause}", $whereClause, $query);
 
 		// Supprimer l'évènement
-		$ret = Sql\DBMelanie::ExecuteQuery($query, $params);
+		$ret = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		if ($ret) {
 		  $this->initializeHasChanged();
 		  $this->isExist = false;
@@ -249,8 +241,6 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -281,7 +271,7 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace("{fields_list}", "vfs_name", $query);
 
 		// Liste les objets
-		$res = Sql\DBMelanie::ExecuteQuery($query, $params);
+		$res = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		$this->isExist = (count($res) >= 1);
 		return $this->isExist;
 	}
@@ -303,8 +293,6 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Mapping pour les operateurs
 		$opmapping = [];
 		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
@@ -537,7 +525,7 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace("{where_clause}", $whereClause, $query);
 
 		// Récupération
-		return  Sql\DBMelanie::ExecuteQuery($query, $params, $this->get_class);
+		return  Sql\Sql::GetInstance()->executeQuery($query, $params, $this->get_class);
 	}
 
 	/**

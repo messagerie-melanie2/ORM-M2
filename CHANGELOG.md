@@ -1,3 +1,8 @@
+ORM M2 - 0.6.0.1
+------
+- Correctifs mineurs
+- Améliorer le support pour le multi-instance de base de données
+
 ORM M2 - 0.6
 ------
 - 0005647: [Utilisateur] Méthodes pour créer les objets par défaut (principals)
@@ -9,6 +14,16 @@ ORM M2 - 0.6
 - 0005615: [Général] Créer une branche spécifique Api/Mel
 - 0005616: [Général] Garder la compatibilité avec Api/Melanie2
 - 0005601: [Général] Mettre en place un driver LDAP
+
+ORM M2 - 0.5.0.24
+------
+- Gérer la désactivation des pièces jointes lors de la lecture d'un ICS
+
+
+ORM M2 - 0.5.0.24
+------
+- Gérer la désactivation des pièces jointes lors de la lecture d'un ICS
+
 
 ORM M2 - 0.5.0.23
 ------

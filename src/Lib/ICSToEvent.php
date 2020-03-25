@@ -81,10 +81,14 @@ class ICSToEvent {
    * Gère également les exceptions dans l'évènement en fonction des RECURRENCE-ID
    * 
    * @param string $ics          
-   * @param Event $event          
+   * @param Event $event
+   * @param Calendar $calendar
+   * @param User $user
+   * @param boolean $useattachments
+   *       
    * @return Event
    */
-  public static function Convert($ics, Event $event, Calendar $calendar = null, User $user = null) {
+  public static function Convert($ics, Event $event, Calendar $calendar = null, User $user = null, $useattachments = true) {
     $vcalendar = VObject\Reader::read($ics);
     $exceptions = [];
     foreach ($vcalendar->VEVENT as $vevent) {
@@ -470,7 +474,7 @@ class ICSToEvent {
         $object->attendees = [];
       }
       // ATTACH
-      if (isset($vevent->ATTACH)) {
+      if ($useattachments && isset($vevent->ATTACH)) {
         $attachments = $object->attachments;
         $_attachments = [];
         foreach ($vevent->ATTACH as $prop) {
@@ -544,7 +548,7 @@ class ICSToEvent {
           $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
           $object->setAttribute('ATTACH-URI', $attach_uri);
         }
-      } else {
+      } else if ($useattachments) {
         $attach_uri = $object->getAttribute('ATTACH-URI');
         $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
         $save_attach_uri = false;

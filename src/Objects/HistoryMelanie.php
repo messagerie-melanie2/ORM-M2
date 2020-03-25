@@ -44,8 +44,6 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 	    $this->get_class = get_class($this);
 
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
-	    // Initialisation du backend SQL
-		Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 
 		// Récupération du type d'objet en fonction de la class
 		$this->objectType = explode('\\',$this->get_class);
@@ -62,8 +60,6 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -86,7 +82,7 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 		}
 
 		// Liste les history
-		$this->isExist = Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlHistoryRequests::getHistory, $params, $this);
+		$this->isExist = Sql\Sql::GetInstance()->executeQueryToObject(Sql\SqlHistoryRequests::getHistory, $params, $this);
 		if ($this->isExist) {
 		  $this->initializeHasChanged();
 		}
@@ -100,8 +96,6 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return null;
@@ -150,7 +144,7 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 			$query = str_replace("{history_set}", $update, Sql\SqlHistoryRequests::updateHistory);
 
 			// Execute
-			$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
+			$this->isExist = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		} else {
 			// C'est une Insertion
 			$insert = true;
@@ -160,7 +154,7 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 			}
 
 			// Gestion de history_id
-			if (!isset($this->id)) Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlHistoryRequests::getNextHistory, null, $this);
+			if (!isset($this->id)) Sql\Sql::GetInstance()->executeQueryToObject(Sql\SqlHistoryRequests::getNextHistory, null, $this);
 
 			// Si l'objet n'existe pas, on fait un INSERT
 			// Liste les insertion à faire
@@ -184,7 +178,7 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 			$query = str_replace("{data_values}", $data_values, $query);
 
 			// Execute
-			$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
+			$this->isExist = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		}
 		if ($this->isExist) $this->initializeHasChanged();
 		return $insert;
@@ -203,8 +197,6 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -227,7 +219,7 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 		}
 
 		// Liste les history
-		$res = Sql\DBMelanie::ExecuteQuery(Sql\SqlHistoryRequests::getHistory, $params);
+		$res = Sql\Sql::GetInstance()->executeQuery(Sql\SqlHistoryRequests::getHistory, $params);
 		$this->isExist = (count($res) >= 1);
 		return $this->isExist;
 	}

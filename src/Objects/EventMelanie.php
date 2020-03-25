@@ -63,8 +63,6 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	    $this->get_class = get_class($this);
 
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
-	    // Initialisation du backend SQL
-		Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 
 		// Récupération du type d'objet en fonction de la class
 		$this->objectType = explode('\\',$this->get_class);
@@ -82,8 +80,6 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -105,7 +101,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 			$params[$mapKey] = $this->$key;
 		}
 		// Liste les calendriers de l'utilisateur
-		$this->isExist = Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlCalendarRequests::getEvent, $params, $this);
+		$this->isExist = Sql\Sql::GetInstance()->executeQueryToObject(Sql\SqlCalendarRequests::getEvent, $params, $this);
 		if ($this->isExist) {
 		  $this->initializeHasChanged();
 		}
@@ -120,8 +116,6 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return null;
@@ -174,7 +168,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 			$query = str_replace("{event_set}", $update, Sql\SqlCalendarRequests::updateEvent);
 
 			// Execute
-			$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
+			$this->isExist = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		} else {
 			// C'est une Insertion
 			$insert = true;
@@ -208,7 +202,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 			$query = str_replace("{data_values}", $data_values, $query);
 
 			// Execute
-			$this->isExist = Sql\DBMelanie::ExecuteQuery($query, $params);
+			$this->isExist = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		}
 		if ($this->isExist) $this->initializeHasChanged();
 		return $insert;
@@ -220,8 +214,6 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function delete() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->delete()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 
@@ -241,7 +233,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		}
 
 		// Supprimer l'évènement
-		$ret = (Sql\DBMelanie::ExecuteQuery(Sql\SqlCalendarRequests::deleteEvent, $params) !== false);
+		$ret = (Sql\Sql::GetInstance()->executeQuery(Sql\SqlCalendarRequests::deleteEvent, $params) !== false);
 		if ($ret) {
 		  $this->initializeHasChanged();
 		  $this->isExist = false;
@@ -262,8 +254,6 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -286,7 +276,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 			$params[$mapKey] = $this->$key;
 		}
 		// Liste les évènements
-		$res = Sql\DBMelanie::ExecuteQuery(Sql\SqlCalendarRequests::getEvent, $params);
+		$res = Sql\Sql::GetInstance()->executeQuery(Sql\SqlCalendarRequests::getEvent, $params);
 		$this->isExist = (count($res) >= 1);
 		return $this->isExist;
 	}
@@ -308,8 +298,6 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Mapping pour les operateurs
 		$opmapping = [];
 		if (is_array($operators)) {
@@ -551,7 +539,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace("{where_clause}", $whereClause, $query);
 
 		// Récupération
-		return Sql\DBMelanie::ExecuteQuery($query, $params, $this->get_class);
+		return Sql\Sql::GetInstance()->executeQuery($query, $params, $this->get_class);
 	}
 
 	/**
@@ -563,8 +551,6 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	function updateMeetingEtag() {
 		// Si l'uid de l'évènement n'est pas défini, on ne peut pas faire l'update
 		if (!isset($this->uid)) return false;
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 
 		// Paramètres de la requête
 		$params = [];
@@ -579,7 +565,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		$params[$mapKey] = $this->uid;
 
 		// Execute
-		return Sql\DBMelanie::ExecuteQuery(Sql\SqlCalendarRequests::updateMeetingEtag, $params);
+		return Sql\Sql::GetInstance()->executeQuery(Sql\SqlCalendarRequests::updateMeetingEtag, $params);
 	}
 
 	/**

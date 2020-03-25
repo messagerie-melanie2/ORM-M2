@@ -50,8 +50,6 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	    $this->get_class = get_class($this);
 
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 
 		// Récupération du type d'objet en fonction de la class
 		$this->objectType = explode('\\',$this->get_class);
@@ -72,8 +70,6 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->id)) return false;
 		if (!isset($this->user_uid)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -91,15 +87,15 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace('{datatree_id}', MappingMce::$Data_Mapping[$this->objectType]['object_id'][MappingMce::name], $query);
 		// Params
 		$params = [
-				"group_uid" => DefaultConfig::ADDRESSBOOK_GROUP_UID,
-				"user_uid" => $this->user_uid,
-				"datatree_name" => $this->id,
+			"group_uid" => DefaultConfig::ADDRESSBOOK_GROUP_UID,
+			"user_uid" => $this->user_uid,
+			"datatree_name" => $this->id,
 		    "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
 		    "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
 		    "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP,
 		];
 		// Liste les calendriers de l'utilisateur
-		$this->isExist = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
+		$this->isExist = Sql\Sql::GetInstance()->executeQueryToObject($query, $params, $this);
 		if ($this->isExist) {
 			//$this->getCTag();
 			$this->initializeHasChanged();
@@ -115,8 +111,6 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return null;
@@ -141,9 +135,9 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 			if (!isset($this->user_uid)) return false;
 			// C'est une Insertion
 			$insert = true;
-			Sql\DBMelanie::BeginTransaction();
+			Sql\Sql::GetInstance()->beginTransaction();
 			$query = Sql\SqlMelanieRequests::insertObject;
-			$res = Sql\DBMelanie::ExecuteQuery(Sql\SqlMelanieRequests::getNextObject);
+			$res = Sql\Sql::GetInstance()->executeQuery(Sql\SqlMelanieRequests::getNextObject);
 			$datatree_id = $res[0][0];
 			$datatree_name = isset($this->id) ? $this->id : md5(time() . $datatree_id);
 			$params = [
@@ -151,44 +145,44 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 					'datatree_name' => $datatree_name,
 					'datatree_ctag' => md5($datatree_name),
 					'user_uid' => $this->user_uid,
-			    'group_uid' => isset($this->group) ?  $this->group : DefaultConfig::ADDRESSBOOK_GROUP_UID,
+			    	'group_uid' => isset($this->group) ?  $this->group : DefaultConfig::ADDRESSBOOK_GROUP_UID,
 			];
-			if (Sql\DBMelanie::ExecuteQuery($query, $params)) {
+			if (Sql\Sql::GetInstance()->executeQuery($query, $params)) {
 				$this->isExist = true;
 				// Name
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
 				$params = [
 						'datatree_id' => $datatree_id,
-				    'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_NAME,
+				    	'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_NAME,
 						'attribute_key' => '',
 						'attribute_value' => isset($this->name) ?  $this->name : $datatree_name,
 				];
-				if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
-			        Sql\DBMelanie::Rollback();
+				if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
+					Sql\Sql::GetInstance()->rollBack();
 			        return null;
 				}
 				// owner
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
 				$params = [
 						'datatree_id' => $datatree_id,
-				    'attribute_name' => DefaultConfig::ATTRIBUTE_OWNER,
+				    	'attribute_name' => DefaultConfig::ATTRIBUTE_OWNER,
 						'attribute_key' => '',
 						'attribute_value' => $this->user_uid,
 				];
-			    if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
-			        Sql\DBMelanie::Rollback();
+			    if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
+			        Sql\Sql::GetInstance()->rollBack();
 			        return null;
 				}
 				// perm
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
 				$params = [
 						'datatree_id' => $datatree_id,
-				    'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_PERM,
+				    	'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_PERM,
 						'attribute_key' => $this->user_uid,
 						'attribute_value' => '30',
 				];
-			    if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
-			        Sql\DBMelanie::Rollback();
+			    if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
+			        Sql\Sql::GetInstance()->rollBack();
 			        return null;
 				}
 				// params
@@ -199,13 +193,13 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 				    'attribute_key' => $this->user_uid,
 				    'attribute_value' => 'a:3:{s:6:"source";s:8:"localsql";s:4:"name";s:32:"'.$datatree_name.'";s:7:"default";b:0;}',
 				];
-				if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
-				    Sql\DBMelanie::Rollback();
-				    return null;
+				if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
+			        Sql\Sql::GetInstance()->rollBack();
+			        return null;
 				}
-				Sql\DBMelanie::Commit();
+				Sql\Sql::GetInstance()->commit();
 			} else {
-			    Sql\DBMelanie::Rollback();
+				Sql\Sql::GetInstance()->rollBack();
 			    return null;
 			}
 		}
@@ -219,8 +213,6 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function delete() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->tableName)) return false;
 
 		// Si l'objet existe on fait un UPDATE
@@ -231,13 +223,13 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 					"datatree_id" => $this->object_id,
 			];
 			$ok = true;
-			Sql\DBMelanie::BeginTransaction();
+			Sql\Sql::GetInstance()->beginTransaction();
 			$query = Sql\SqlMelanieRequests::deleteObject1;
 			// Supprimer l'objet
-			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
+			$ok &= Sql\Sql::GetInstance()->executeQuery($query, $params);
 			$query = Sql\SqlMelanieRequests::deleteObject2;
 			// Supprimer l'objet
-			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
+			$ok &= Sql\Sql::GetInstance()->executeQuery($query, $params);
 			$query = Sql\SqlMelanieRequests::deleteObject3;
 			$query = str_replace("{objects_table}", "turba_objects", $query);
 			$query = str_replace("{datatree_name}", MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name], $query);
@@ -246,7 +238,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 			    "datatree_name" => $this->id,
 			];
 			// Supprimer l'objet
-			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
+			$ok &= Sql\Sql::GetInstance()->executeQuery($query, $params);
 			// Ne pas supprimer du horde_histories qui part en timeout sur la prod
 			// TODO: Trouver une solution
 //  			$query = Sql\SqlMelanieRequests::deleteObject4;
@@ -255,13 +247,15 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 //  					"object_uid" => DefaultConfig::ADDRESSBOOK_PREF_SCOPE.":".$this->id.":%",
 //  			];
 //  			// Supprimer l'objet
-//  			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
-      if ($ok) {
-        Sql\DBMelanie::Commit();
-        $this->initializeHasChanged();
-        $this->isExist = false;
-      }
-      else Sql\DBMelanie::Rollback();
+//  			$ok &= Sql\Sql::GetInstance()->executeQuery($query, $params);
+			if ($ok) {
+				Sql\Sql::GetInstance()->commit();
+				$this->initializeHasChanged();
+				$this->isExist = false;
+			}
+			else  {
+				Sql\Sql::GetInstance()->rollBack();
+			}
 			return $ok;
 		}
 		return false;
@@ -273,8 +267,6 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->tableName)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -294,7 +286,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace("{where_clause}", $whereClause, $query);
 
 		// Liste les objets
-		$res = Sql\DBMelanie::ExecuteQuery($query, $params);
+		$res = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		$this->isExist = (count($res) >= 1);
 		return $this->isExist;
 	}
@@ -319,15 +311,12 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function getAllContacts() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getAllContacts()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->id)) return false;
 
 		// Params
 		$params = [MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name] => $this->id];
-
 		// Liste les contacts de la liste
-		return Sql\DBMelanie::ExecuteQuery(Sql\SqlContactRequests::listAllContacts, $params, 'LibMelanie\Objects\ObjectMelanie', 'ContactMelanie');
+		return Sql\Sql::GetInstance()->executeQuery(Sql\SqlContactRequests::listAllContacts, $params, 'LibMelanie\Objects\ObjectMelanie', 'ContactMelanie');
 	}
 
 	/**
@@ -337,15 +326,12 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	 */
 	function getCTag() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getCTag()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->id)) return false;
 
 		// Params
 		$params = [MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name] => $this->id];
-
 		// Récupération du tag
-		Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlContactRequests::getCTag, $params, $this);
+		Sql\Sql::GetInstance()->executeQueryToObject(Sql\SqlContactRequests::getCTag, $params, $this);
 		if (!isset($this->ctag)) $this->ctag = md5($this->id);
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getCTag() this->ctag: " . $this->ctag);
 		return $this->ctag;
@@ -365,7 +351,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	            "attribute_value" => $this->name,
 	            "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
 	        ];
-	        Sql\DBMelanie::ExecuteQuery($query, $params);
+	        Sql\Sql::GetInstance()->executeQuery($query, $params);
 	    }
 	}
 

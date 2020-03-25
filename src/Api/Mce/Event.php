@@ -2190,7 +2190,7 @@ class Event extends MceObject {
    */
   protected function setMapIcs($ics) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapsIcs()");
-    \LibMelanie\Lib\ICSToEvent::Convert($ics, $this, $this->calendarmce, $this->user);
+    \LibMelanie\Lib\ICSToEvent::Convert($ics, $this, $this->calendarmce, $this->user, $this->ics_attachments);
   }
   /**
    * Map current event to ics

@@ -171,7 +171,7 @@ class User extends Defaut\User {
     "service"                 => 'departmentnumber',              // Department Number
     "password_need_change"    => 'mineqpassworddoitchanger',      // Message pour indiquer que le mot de passe de l'utilisateur doit changer
     "shares"                  => [MappingMce::name => 'mineqmelpartages', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
-    "server_routage"          => [MappingMce::name => 'mineqmelroutage', MappingMce::type => MappingMce::stringLdap], // Champ utilisé pour le routage des messages
+    "server_routage"          => [MappingMce::name => 'mineqmelroutage', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
     "away_response"           => [MappingMce::name => 'mineqmelreponse', MappingMce::type => MappingMce::arrayLdap], // Affichage du message d'absence de l'utilisateur
     "type"                    => 'mineqtypeentree',               // Type d'entrée (boite individuelle, partagée, ressource, ...)
     "internet_access_admin"   => 'mineqmelaccesinterneta',        // Droit d'accès depuis internet donné par l'administrateur

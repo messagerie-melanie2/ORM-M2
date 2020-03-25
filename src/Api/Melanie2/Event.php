@@ -2187,7 +2187,7 @@ class Event extends Melanie2Object {
    */
   protected function setMapIcs($ics) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapsIcs()");
-    \LibMelanie\Lib\ICSToEvent::Convert($ics, $this, $this->calendarmelanie, $this->usermelanie);
+    \LibMelanie\Lib\ICSToEvent::Convert($ics, $this, $this->calendarmelanie, $this->usermelanie, $this->ics_attachments);
   }
   /**
    * Map current event to ics

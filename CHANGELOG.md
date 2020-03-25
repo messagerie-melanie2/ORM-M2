@@ -1,3 +1,7 @@
+ORM M2 - 0.5.0.24
+------
+- Gérer la désactivation des pièces jointes lors de la lecture d'un ICS
+
 ORM M2 - 0.5.0.23
 ------
 - Suppression des ORDER BY dans les requêtes listUserObjects et listSharedObjects pour améliorer les performances de la base de données

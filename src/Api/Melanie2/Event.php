@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -20,7 +20,7 @@
  */
 namespace LibMelanie\Api\Melanie2;
 
-use LibMelanie\Api\Mce;
+use LibMelanie\Api\Mel;
 
 /**
  * Classe evenement pour Melanie2,
@@ -28,8 +28,8 @@ use LibMelanie\Api\Mce;
  * Certains champs sont mappés directement ou passe par des classes externes
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/Melanie2
  * @api
  * 
  * @property string $id Identifiant unique de l'évènement
@@ -74,4 +74,4 @@ use LibMelanie\Api\Mce;
  * @method bool save() Sauvegarde l'évènement et l'historique dans la base de données
  * @method bool delete() Supprime l'évènement et met à jour l'historique dans la base de données
  */
-class Event extends Mce\Event {}
+class Event extends Mel\Event {}

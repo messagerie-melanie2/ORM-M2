@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -20,12 +20,7 @@
  */
 namespace LibMelanie\Api\Mce;
 
-use LibMelanie\Lib\MceObject;
-use LibMelanie\Objects\ObjectMelanie;
-use LibMelanie\Objects\HistoryMelanie;
-use LibMelanie\Exceptions;
-use LibMelanie\Log\M2Log;
-use LibMelanie\Config\Config;
+use LibMelanie\Api\Defaut;
 
 /**
  * Classe contact pour MCE,
@@ -33,8 +28,8 @@ use LibMelanie\Config\Config;
  * Certains champs sont mappés directement ou passe par des classes externes
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/MCE
  * @api
  * 
  * @property string $id Identifiant unique du contact
@@ -94,216 +89,4 @@ use LibMelanie\Config\Config;
  * @method bool save() Sauvegarde le contact et l'historique dans la base de données
  * @method bool delete() Supprime le contact et met à jour l'historique dans la base de données
  */
-class Contact extends MceObject {
-  // Accès aux objets associés
-  /**
-   * Utilisateur associé à l'objet
-   * 
-   * @var User
-   */
-  protected $user;
-  /**
-   * Liste de contacts associée à l'objet
-   * 
-   * @var Addressbook
-   */
-  protected $addressbookmce;
-  
-  /**
-   * **
-   * CONSTANTES
-   */
-  // Type Fields
-  const TYPE_CONTACT = 'Object';
-  const TYPE_LIST = 'Group';
-  
-  /**
-   * Constructeur de l'objet
-   * 
-   * @param User $user          
-   * @param Addressbook $addressbook          
-   */
-  function __construct($user = null, $addressbook = null) {
-    // Défini la classe courante
-    $this->get_class = get_class($this);
-    
-    // M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
-    // Définition du contact melanie2
-    $this->objectmelanie = new ObjectMelanie('ContactMelanie');
-    
-    // Définition des objets associés
-    if (isset($user))
-      $this->user = $user;
-    if (isset($addressbook)) {
-      $this->addressbookmce = $addressbook;
-      $this->objectmelanie->addressbook = $this->addressbookmce->id;
-    }
-  }
-  
-  /**
-   * Défini l'utilisateur MCE
-   * 
-   * @param User $user          
-   * @ignore
-   *
-   */
-  function setUserMelanie($user) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
-    $this->user = $user;
-  }
-  
-  /**
-   * Défini la liste de contacts Melanie
-   * 
-   * @param Addressbook $addressbook          
-   * @ignore
-   *
-   */
-  function setAddressbookMelanie($addressbook) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setAddressbookMelanie()");
-    $this->addressbookmce = $addressbook;
-    $this->objectmelanie->addressbook = $this->addressbookmce->id;
-  }
-  
-  /**
-   * ***************************************************
-   * METHOD MAPPING
-   */
-  /**
-   * Mapping de la sauvegarde de l'objet
-   * Appel la sauvegarde de l'historique en même temps
-   * 
-   * @ignore
-   *
-   */
-  function save() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
-    // Sauvegarde l'objet
-    $insert = $this->objectmelanie->save();
-    if (!is_null($insert)) {
-      // Gestion de l'historique
-      $history = new HistoryMelanie();
-      $history->uid = Config::get(Config::ADDRESSBOOK_PREF_SCOPE) . ":" . $this->objectmelanie->addressbook . ":" . $this->objectmelanie->uid;
-      $history->action = $insert ? Config::get(Config::HISTORY_ADD) : Config::get(Config::HISTORY_MODIFY);
-      $history->timestamp = time();
-      $history->description = "LibM2/" . Config::get(Config::APP_NAME);
-      $history->who = isset($this->user) ? $this->user->uid : $this->objectmelanie->addressbook;
-      // Enregistrement dans la base
-      return $history->save();
-    }
-    // TODO: Test - Nettoyage mémoire
-    //gc_collect_cycles();
-    M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() Error: return false");
-    return false;
-  }
-  
-  /**
-   * Mapping de la suppression de l'objet
-   * Appel la sauvegarde de l'historique en même temps
-   * 
-   * @ignore
-   *
-   */
-  function delete() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->delete()");
-    if (!isset($this->objectmelanie))
-      throw new Exceptions\ObjectMelanieUndefinedException();
-    // Suppression de l'objet
-    if ($this->objectmelanie->delete()) {
-      // Gestion de l'historique
-      $history = new HistoryMelanie();
-      $history->uid = Config::get(Config::ADDRESSBOOK_PREF_SCOPE) . ":" . $this->objectmelanie->addressbook . ":" . $this->objectmelanie->uid;
-      $history->action = Config::get(Config::HISTORY_DELETE);
-      $history->timestamp = time();
-      $history->description = "LibM2/" . Config::get(Config::APP_NAME);
-      $history->who = isset($this->user) ? $this->user->uid : $this->objectmelanie->addressbook;
-      // Enregistrement dans la base
-      return $history->save();
-    }
-    // TODO: Test - Nettoyage mémoire
-    //gc_collect_cycles();
-    M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->delete() Error: return false");
-    return false;
-  }
-  
-  /**
-   * Appel le load maitre
-   * 
-   * @ignore
-   *
-   */
-  function load() {
-    $ret = $this->objectmelanie->load();
-    // TODO: Test - Nettoyage mémoire
-    //gc_collect_cycles();
-    return $ret;
-  }
-  
-  /**
-   * Permet de récupérer la liste d'objet en utilisant les données passées
-   * (la clause where s'adapte aux données)
-   * Il faut donc peut être sauvegarder l'objet avant d'appeler cette méthode
-   * pour réinitialiser les données modifiées (propriété haschanged)
-   * 
-   * @param String[] $fields
-   *          Liste les champs à récupérer depuis les données
-   * @param String $filter
-   *          Filtre pour la lecture des données en fonction des valeurs déjà passé, exemple de filtre : "((#description# OR #title#) AND #start#)"
-   * @param String[] $operators
-   *          Liste les propriétés par operateur (MappingMce::like, MappingMce::supp, MappingMce::inf, MappingMce::diff)
-   * @param String $orderby
-   *          Tri par le champ
-   * @param bool $asc
-   *          Tri ascendant ou non
-   * @param int $limit
-   *          Limite le nombre de résultat (utile pour la pagination)
-   * @param int $offset
-   *          Offset de début pour les résultats (utile pour la pagination)
-   * @param String[] $case_unsensitive_fields
-   *          Liste des champs pour lesquels on ne sera pas sensible à la casse
-   * @return Contact[] Array
-   */
-  function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getList()");
-    $_contacts = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields);
-    if (!isset($_contacts))
-      return null;
-    $contacts = [];
-    foreach ($_contacts as $_contact) {
-      $contact = new Contact($this->user, $this->addressbookmce);
-      $contact->setObjectMelanie($_contact);
-      $contacts[$_contact->id] = $contact;
-    }
-    // TODO: Test - Nettoyage mémoire
-    //gc_collect_cycles();
-    return $contacts;
-  }
-  
-  /**
-   * ***************************************************
-   * DATA MAPPING
-   */
-  /**
-   * Map vcard to current contact
-   * 
-   * @ignore
-   *
-   */
-  protected function setMapVcard($vcard) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapVcard()");
-    \LibMelanie\Lib\VCardToContact::Convert($vcard, $this, $this->addressbookmce, $this->user);
-  }
-  /**
-   * Map current contact to vcard
-   * 
-   * @return string $vcard
-   * @ignore
-   *
-   */
-  protected function getMapVcard() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapVcard()");
-    return \LibMelanie\Lib\ContactToVCard::Convert($this, $this->addressbookmce, $this->user);
-  }
-}
+class Contact extends Defaut\Contact {}

@@ -18,10 +18,9 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Api\Melanie2\Exception;
-use LibMelanie\Api\Melanie2\Event;
-use LibMelanie\Api\Melanie2\User;
-use LibMelanie\Api\Melanie2\Calendar;
+use LibMelanie\Api\Defaut\Event;
+use LibMelanie\Api\Defaut\User;
+use LibMelanie\Api\Defaut\Calendar;
 use LibMelanie\Log\M2Log;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
@@ -88,13 +87,14 @@ class ICSToEvent {
    *       
    * @return Event
    */
-  public static function Convert($ics, Event $event, Calendar $calendar = null, User $user = null, $useattachments = true) {
+  public static function Convert($ics, $event, $calendar = null, $user = null, $useattachments = true) {
     $vcalendar = VObject\Reader::read($ics);
     $exceptions = [];
     foreach ($vcalendar->VEVENT as $vevent) {
       $recurrence_id = $vevent->{ICS::RECURRENCE_ID};
       if (isset($recurrence_id)) {
-        $object = new Exception($event, $user, $calendar);
+        $Exception = $event->__getNamespace() . '\\Exception';
+        $object = new $Exception($event, $user, $calendar);
         $object->recurrence_id = $recurrence_id;
       } else {
         $object = $event;
@@ -390,9 +390,10 @@ class ICSToEvent {
           $object->organizer = $organizer;
         }
         $_attendees = [];
+        $Attendee = $event->__getNamespace() . '\\Attendee';
         foreach ($vevent->ATTENDEE as $prop) {
           $attendee = $prop->parameters;
-          $_attendee = new \LibMelanie\Api\Melanie2\Attendee($object);
+          $_attendee = new $Attendee($object);
           // Email de l'attendee
           $_attendee->email = str_replace('mailto:', '', strtolower($prop->getValue()));
           // Rechercher la réponse du participant courant
@@ -416,53 +417,53 @@ class ICSToEvent {
           if (isset($attendee[ICS::PARTSTAT]) && !$copy) {
             switch ($attendee[ICS::PARTSTAT]->getValue()) {
               case ICS::PARTSTAT_DECLINED :
-                $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_DECLINED;
+                $_attendee->response = $Attendee::RESPONSE_DECLINED;
                 break;
               case ICS::PARTSTAT_IN_PROCESS :
-                $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_IN_PROCESS;
+                $_attendee->response = $Attendee::RESPONSE_IN_PROCESS;
                 break;
               case ICS::PARTSTAT_NEEDS_ACTION :
                 if (isset($_old_response) 
-                    && $_old_response != \LibMelanie\Api\Melanie2\Attendee::RESPONSE_NEED_ACTION) {
+                    && $_old_response != $Attendee::RESPONSE_NEED_ACTION) {
                   $_attendee->response = $_old_response;
                 }
                 else {
-                  $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_NEED_ACTION;
+                  $_attendee->response = $Attendee::RESPONSE_NEED_ACTION;
                 }
                 break;
               case ICS::PARTSTAT_TENTATIVE :
-                $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_TENTATIVE;
+                $_attendee->response = $Attendee::RESPONSE_TENTATIVE;
                 break;
               case ICS::PARTSTAT_ACCEPTED :
               case ICS::PARTSTAT_DELEGATED :
               case ICS::PARTSTAT_COMPLETED :
               default :
-                $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_ACCEPTED;
+                $_attendee->response = $Attendee::RESPONSE_ACCEPTED;
                 break;
             }
           } else {
-            $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_NEED_ACTION;
+            $_attendee->response = $Attendee::RESPONSE_NEED_ACTION;
           }            
           // Gestion du ROLE
           if (isset($attendee[ICS::ROLE])) {
             switch ($attendee[ICS::ROLE]->getValue()) {
               case ICS::ROLE_CHAIR :
-                $_attendee->role = \LibMelanie\Api\Melanie2\Attendee::ROLE_CHAIR;
+                $_attendee->role = $Attendee::ROLE_CHAIR;
                 break;
               case ICS::ROLE_NON_PARTICIPANT :
-                $_attendee->role = \LibMelanie\Api\Melanie2\Attendee::ROLE_NON_PARTICIPANT;
-                $_attendee->response = \LibMelanie\Api\Melanie2\Attendee::RESPONSE_ACCEPTED;
+                $_attendee->role = $Attendee::ROLE_NON_PARTICIPANT;
+                $_attendee->response = $Attendee::RESPONSE_ACCEPTED;
                 break;
               case ICS::ROLE_OPT_PARTICIPANT :
-                $_attendee->role = \LibMelanie\Api\Melanie2\Attendee::ROLE_OPT_PARTICIPANT;
+                $_attendee->role = $Attendee::ROLE_OPT_PARTICIPANT;
                 break;
               case ICS::ROLE_REQ_PARTICIPANT :
               default :
-                $_attendee->role = \LibMelanie\Api\Melanie2\Attendee::ROLE_REQ_PARTICIPANT;
+                $_attendee->role = $Attendee::ROLE_REQ_PARTICIPANT;
                 break;
             }
           } else {
-            $_attendee->role = \LibMelanie\Api\Melanie2\Attendee::ROLE_REQ_PARTICIPANT;
+            $_attendee->role = $Attendee::ROLE_REQ_PARTICIPANT;
           }            
           // Ajout de l'attendee
           $_attendees[] = $_attendee;
@@ -477,11 +478,12 @@ class ICSToEvent {
       if ($useattachments && isset($vevent->ATTACH)) {
         $attachments = $object->attachments;
         $_attachments = [];
+        $Attachment = $event->__getNamespace() . '\\Attachment';
         foreach ($vevent->ATTACH as $prop) {
           $attach = $prop->parameters;
-          $_attach = new \LibMelanie\Api\Melanie2\Attachment();
+          $_attach = new $Attachment();
           if (isset($attach[ICS::VALUE]) && $attach[ICS::VALUE]->getValue() == ICS::VALUE_BINARY) {
-            $_attach->type = \LibMelanie\Api\Melanie2\Attachment::TYPE_BINARY;
+            $_attach->type = $Attachment::TYPE_BINARY;
             $_attach->data = $prop->getValue();
             if (isset($attach[ICS::X_MOZILLA_CALDAV_ATTACHMENT_NAME])) {
               $_attach->name = $attach[ICS::X_MOZILLA_CALDAV_ATTACHMENT_NAME]->getValue();
@@ -523,7 +525,7 @@ class ICSToEvent {
                 $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
                 $object->setAttribute('ATTACH-URI', $attach_uri);
               }
-              $_attach->type = \LibMelanie\Api\Melanie2\Attachment::TYPE_URL;
+              $_attach->type = $Attachment::TYPE_URL;
               $_attach->url = $data;
               $_attachments[] = $_attach;
             }
@@ -535,7 +537,7 @@ class ICSToEvent {
         $save_attach_uri = false;
         // Supprimer les pièces jointes qui ne sont plus nécessaire
         foreach ($attachments as $attachment) {
-          if ($attachment->type == \LibMelanie\Api\Melanie2\Attachment::TYPE_URL) {
+          if ($attachment->type == $Attachment::TYPE_URL) {
             if ($key = array_search($attachment->url, $attach_uri_array)) {
               unset($attach_uri_array[$key]);
               $save_attach_uri = true;
@@ -555,7 +557,7 @@ class ICSToEvent {
         // Supprimer toutes les pièces jointes
         $attachments = $object->attachments;
         foreach ($attachments as $attachment) {
-          if ($attachment->type == \LibMelanie\Api\Melanie2\Attachment::TYPE_URL) {
+          if ($attachment->type == $Attachment::TYPE_URL) {
             if ($key = array_search($attachment->url, $attach_uri_array)) {
               unset($attach_uri_array[$key]);
               $save_attach_uri = true;
@@ -571,11 +573,13 @@ class ICSToEvent {
       }
       // Gestion de la récurrence
       if (isset($vevent->RRULE) && !isset($recurrence_id)) {
-        $object->recurrence = new \LibMelanie\Api\Melanie2\Recurrence($object);
+        $Recurrence = $event->__getNamespace() . '\\Recurrence';
+        $object->recurrence = new $Recurrence($object);
         $object->recurrence->rrule = $vevent->RRULE->getParts();
         if (isset($vevent->EXDATE)) {
+          $Exception = $event->__getNamespace() . '\\Exception';
           foreach ($vevent->EXDATE as $exdate) {
-            $exception = new Exception($event, $user, $calendar);
+            $exception = new $Exception($event, $user, $calendar);
             $date = $exdate->getDateTime();
             // Enregistrer les exceptions en GMT dans la base
             $date->setTimezone(new \DateTimeZone('GMT'));

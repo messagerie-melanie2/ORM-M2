@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -21,7 +21,7 @@
 namespace LibMelanie\Api\Mce;
 
 use LibMelanie\Log\M2Log;
-use LibMelanie\Api\Melanie2\Users\Outofoffice;
+use LibMelanie\Api\Mce\Users\Outofoffice;
 use LibMelanie\Api\Mce\Users\Share;
 use LibMelanie\Api\Defaut;
 
@@ -29,8 +29,8 @@ use LibMelanie\Api\Defaut;
  * Classe utilisateur pour MCE
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/MCE
  * @api
  * 
  * @property string $dn DN de l'utilisateur dans l'annuaire            
@@ -67,31 +67,19 @@ class User extends Defaut\User {
    * 
    * @ignore
    */
-  const LOAD_FILTER = "(uid=%%username%%)";
+  const LOAD_FILTER = "(uid=%%uid%%)";
   /**
    * Filtre pour la méthode load() avec un email
    * 
    * @ignore
    */
-  const LOAD_FROM_EMAIL_FILTER = "(mailalternateaddress=%%email%%)";
-  /**
-   * Attributs par défauts pour la méthode load()
-   * 
-   * @ignore
-   */
-  const LOAD_ATTRIBUTES = ['mail','mailalternateaddress','uid','mailhost','mcedelegation','mcetypecompte'];
+  const LOAD_FROM_EMAIL_FILTER = "(mail=%%email%%)";
   /**
    * Filtre pour la méthode getBalp()
    * 
    * @ignore
    */
-  const GET_BALP_FILTER = "(mcedelegation=%%username%%:*)";
-  /**
-   * Attributs par défauts pour la méthode getBalp()
-   * 
-   * @ignore
-   */
-  const GET_BALP_ATTRIBUTES = ['mail','mailalternateaddress','uid','mailhost','mcetypecompte'];
+  const GET_BALP_FILTER = "(mcedelegation=%%uid%%:*)";
   /**
    * Filtre pour la méthode getBalpEmission()
    * 
@@ -99,23 +87,29 @@ class User extends Defaut\User {
    */
   const GET_BALP_EMISSION_FILTER = self::GET_BALP_FILTER;
   /**
-   * Attributs par défauts pour la méthode getBalpEmission()
-   * 
-   * @ignore
-   */
-  const GET_BALP_EMISSION_ATTRIBUTES = self::GET_BALP_ATTRIBUTES;
-  /**
    * Filtre pour la méthode getBalpGestionnaire()
    * 
    * @ignore
    */
   const GET_BALP_GESTIONNAIRE_FILTER = self::GET_BALP_FILTER;
   /**
-   * Attributs par défauts pour la méthode getBalpGestionnaire()
+   * Filtre pour la méthode getGroups()
    * 
    * @ignore
    */
-  const GET_BALP_GESTIONNAIRE_ATTRIBUTES = self::GET_BALP_ATTRIBUTES;
+  const GET_GROUPS_FILTER = null;
+  /**
+   * Filtre pour la méthode getGroupsIsMember()
+   * 
+   * @ignore
+   */
+  const GET_GROUPS_IS_MEMBER_FILTER = null;
+  /**
+   * Filtre pour la méthode getListsIsMember()
+   * 
+   * @ignore
+   */
+  const GET_LISTS_IS_MEMBER_FILTER = null;
 
   /**
    * Configuration du mapping qui surcharge la conf

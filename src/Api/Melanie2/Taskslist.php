@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -20,14 +20,14 @@
  */
 namespace LibMelanie\Api\Melanie2;
 
-use LibMelanie\Api\Mce;
+use LibMelanie\Api\Mel;
 
 /**
  * Classe liste de tâches pour Melanie2
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/Melanie2
  * @api
  * 
  * @property string $id Identifiant unique de la liste de tâche
@@ -46,4 +46,4 @@ use LibMelanie\Api\Mce;
  * @method void getTimezone() Charge la propriété timezone avec le timezone de la liste de tâche
  * @method bool asRight($action) Retourne un boolean pour savoir si les droits sont présents
  */
-class Taskslist extends Mce\Taskslist {}
+class Taskslist extends Mel\Taskslist {}

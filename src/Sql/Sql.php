@@ -132,7 +132,7 @@ class Sql {
    *
    * @var resource
    */
-  private $ret_sel;
+  private $ret_sel = false;
   /**
    * Derniere requete utilisee, sert pour les logs shutdown
    * 
@@ -301,6 +301,7 @@ class Sql {
     // Utilisation des selaformes
     if (Config::get(Config::SEL_ENABLED) && $this->ret_sel !== false) {
       Selaforme::selaforme_release($this->ret_sel);
+      $this->ret_sel = false;
     }
   }
 

@@ -45,7 +45,7 @@ if (!defined('CONFIGURATION_APP_LIBM2')) {
 set_include_path(__DIR__.'/..');
 include_once 'includes/libm2.php';
 
-use LibMelanie\Api\Melanie2\User;
+use LibMelanie\Api\Mce\User;
 use LibMelanie\Log\M2Log;
 
 $log = function ($message) {
@@ -68,7 +68,7 @@ $result = [
 		'deleted' => [],
 ];
 
-$task = new \LibMelanie\Api\Melanie2\Task();
+$task = new \LibMelanie\Api\Mce\Task();
 $task->taskslist = 'thomas.payen';
 foreach ($task->getList(['uid']) as $_task) {
 	$result['added'][] = $_task->uid.'.ics';

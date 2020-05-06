@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -20,7 +20,7 @@
  */
 namespace LibMelanie\Api\Melanie2;
 
-use LibMelanie\Api\Mce;
+use LibMelanie\Api\Mel;
 
 /**
  * Classe recurrence pour Melanie2
@@ -28,8 +28,8 @@ use LibMelanie\Api\Mce;
  * Certains champs sont mappés directement
  *
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/Melanie2
  * @api
  * 
  * @property string $enddate Date de fin de récurrence au format compatible DateTime
@@ -39,4 +39,4 @@ use LibMelanie\Api\Mce;
  * @property Recurrence::RECURDAYS_* $days Jours de récurrence
  * @property array $rrule Parses an iCalendar 2.0 recurrence rule
  */
-class Recurrence extends Mce\Recurrence {}
+class Recurrence extends Mel\Recurrence {}

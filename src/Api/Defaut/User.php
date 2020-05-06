@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -23,18 +23,18 @@ namespace LibMelanie\Api\Defaut;
 use LibMelanie\Lib\MceObject;
 use LibMelanie\Objects\UserMelanie;
 use LibMelanie\Log\M2Log;
-use LibMelanie\Api\Mce\UserPrefs;
-use LibMelanie\Api\Mce\Addressbook;
-use LibMelanie\Api\Mce\Calendar;
-use LibMelanie\Api\Mce\Taskslist;
-use LibMelanie\Api\Mce\Users\Share;
+use LibMelanie\Api\Defaut\UserPrefs;
+use LibMelanie\Api\Defaut\Addressbook;
+use LibMelanie\Api\Defaut\Calendar;
+use LibMelanie\Api\Defaut\Taskslist;
+use LibMelanie\Api\Defaut\Users\Share;
 
 /**
  * Classe utilisateur par defaut
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API Defaut
+ * @package LibMCE
+ * @subpackage API/Defaut
  * @api
  * 
  * @property string $dn DN de l'utilisateur dans l'annuaire            
@@ -48,6 +48,8 @@ use LibMelanie\Api\Mce\Users\Share;
  * @property array $email_send_list Liste de toutes les adresses email d'émission de l'utilisateur
  * @property Share[] $shares Liste des partages de la boite
  * @property-read array $supported_shares Liste des droits supportés par cette boite
+ * 
+ * @method bool save() Enregistrement de l'utilisateur dans l'annuaire
  */
 abstract class User extends MceObject {
   /**
@@ -145,6 +147,12 @@ abstract class User extends MceObject {
    * @var Share[]
    */
   protected $_shares;
+  /**
+   * Liste des groupes pour l'objet courant
+   * 
+   * @var Group[]
+   */
+  protected $_lists;
 
   /**
    * Nom de la conf serveur utilisé pour le LDAP
@@ -167,61 +175,122 @@ abstract class User extends MceObject {
    */
   protected $_isExist;
 
+  /**
+   * Liste des preferences de l'utilisateur
+   * 
+   * @var UserPrefs[]
+   */
+  protected $_preferences;
+
+  // **** Constantes pour les preferences
+  /**
+   * Scope de preference par defaut pour l'utilisateur
+   */
+  const PREF_SCOPE_DEFAULT = \LibMelanie\Config\ConfigMelanie::GENERAL_PREF_SCOPE;
+  /**
+   * Scope de preference pour les calendriers de l'utilisateur
+   */
+  const PREF_SCOPE_CALENDAR = \LibMelanie\Config\ConfigMelanie::CALENDAR_PREF_SCOPE;
+  /**
+   * Scope de preference pour les carnets d'adresses de l'utilisateur
+   */
+  const PREF_SCOPE_ADDRESSBOOK = \LibMelanie\Config\ConfigMelanie::ADDRESSBOOK_PREF_SCOPE;
+  /**
+   * Scope de preference pour les listes de taches de l'utilisateur
+   */
+  const PREF_SCOPE_TASKSLIST = \LibMelanie\Config\ConfigMelanie::TASKSLIST_PREF_SCOPE;
+
   // **** Configuration des filtres et des attributs par défaut
   /**
    * Filtre pour la méthode load()
    * 
    * @ignore
    */
-  const LOAD_FILTER = "";
+  const LOAD_FILTER = null;
   /**
    * Filtre pour la méthode load() avec un email
    * 
    * @ignore
    */
-  const LOAD_FROM_EMAIL_FILTER = "";
+  const LOAD_FROM_EMAIL_FILTER = null;
   /**
    * Attributs par défauts pour la méthode load()
    * 
    * @ignore
    */
-  const LOAD_ATTRIBUTES = [];
+  const LOAD_ATTRIBUTES = ['dn','uid','fullname','type','email'];
   /**
    * Filtre pour la méthode getBalp()
    * 
    * @ignore
    */
-  const GET_BALP_FILTER = "";
+  const GET_BALP_FILTER = null;
   /**
    * Attributs par défauts pour la méthode getBalp()
    * 
    * @ignore
    */
-  const GET_BALP_ATTRIBUTES = [];
+  const GET_BALP_ATTRIBUTES = ['dn','uid','fullname','type','email'];
   /**
    * Filtre pour la méthode getBalpEmission()
    * 
    * @ignore
    */
-  const GET_BALP_EMISSION_FILTER = "";
+  const GET_BALP_EMISSION_FILTER = null;
   /**
    * Attributs par défauts pour la méthode getBalpEmission()
    * 
    * @ignore
    */
-  const GET_BALP_EMISSION_ATTRIBUTES = [];
+  const GET_BALP_EMISSION_ATTRIBUTES = ['dn','uid','fullname','type','email'];
   /**
    * Filtre pour la méthode getBalpGestionnaire()
    * 
    * @ignore
    */
-  const GET_BALP_GESTIONNAIRE_FILTER = "";
+  const GET_BALP_GESTIONNAIRE_FILTER = null;
   /**
    * Attributs par défauts pour la méthode getBalpGestionnaire()
    * 
    * @ignore
    */
-  const GET_BALP_GESTIONNAIRE_ATTRIBUTES = [];
+  const GET_BALP_GESTIONNAIRE_ATTRIBUTES = ['dn','uid','fullname','type','email'];
+  /**
+   * Filtre pour la méthode getGroups()
+   * 
+   * @ignore
+   */
+  const GET_GROUPS_FILTER = null;
+  /**
+   * Attributs par défauts pour la méthode getGroups()
+   * 
+   * @ignore
+   */
+  const GET_GROUPS_ATTRIBUTES = ['dn','fullname','type','email','members'];
+  /**
+   * Filtre pour la méthode getGroupsIsMember()
+   * 
+   * @ignore
+   */
+  const GET_GROUPS_IS_MEMBER_FILTER = null;
+  /**
+   * Attributs par défauts pour la méthode getGroupsIsMember()
+   * 
+   * @ignore
+   */
+  const GET_GROUPS_IS_MEMBER_ATTRIBUTES = self::GET_GROUPS_ATTRIBUTES;
+  /**
+   * Filtre pour la méthode getListsIsMember()
+   * 
+   * @ignore
+   */
+  const GET_LISTS_IS_MEMBER_FILTER = null;
+  /**
+   * Attributs par défauts pour la méthode getListsIsMember()
+   * 
+   * @ignore
+   */
+  const GET_LISTS_IS_MEMBER_ATTRIBUTES = self::GET_GROUPS_ATTRIBUTES;
 
   /**
    * Configuration du mapping qui surcharge la conf
@@ -267,13 +336,14 @@ abstract class User extends MceObject {
    *
    * @param string $password
    * @param boolean $master Utiliser le serveur maitre (nécessaire pour faire des modifications)
+   * @param string $user_dn DN de l'utilisateur si ce n'est pas le courant a utiliser
    * @return boolean
    */
-  public function authentification($password, $master = false) {
+  public function authentification($password, $master = false, $user_dn = null) {
     if ($master) {
       $this->_server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
     }
-    return $this->objectmelanie->authentification($password, $master);
+    return $this->objectmelanie->authentification($password, $master, $user_dn);
   }
 
   /**
@@ -285,6 +355,9 @@ abstract class User extends MceObject {
    */
   public function load($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->load() [" . $this->_server . "]");
+    if (isset($attributes) && is_string($attributes)) {
+      $attributes = [$attributes];
+    }
     if (isset($this->_isLoaded) && !isset($attributes)) {
       return $this->_isLoaded;
     }
@@ -347,6 +420,9 @@ abstract class User extends MceObject {
   public function getObjectsShared($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getObjectsShared() [" . $this->_server . "]");
     if (!isset($this->_objectsShared)) {
+      if (isset($attributes) && is_string($attributes)) {
+        $attributes = [$attributes];
+      }
       if (!isset($attributes)) {
         $attributes = static::GET_BALP_ATTRIBUTES;
       }
@@ -357,8 +433,8 @@ abstract class User extends MceObject {
       }
       $list = $this->objectmelanie->getBalp($attributes, $filter);
       $this->_objectsShared = [];
+      $class = $this->__getNamespace() . '\\ObjectShare';
       foreach ($list as $key => $object) {
-        $class = $this->__getNamespace() . '\\ObjectShare';
         $this->_objectsShared[$key] = new $class($this->_server);
         $this->_objectsShared[$key]->setObjectMelanie($object);
       }
@@ -376,6 +452,9 @@ abstract class User extends MceObject {
   public function getShared($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getShared() [" . $this->_server . "]");
     if (!isset($this->_objectsShared)) {
+      if (isset($attributes) && is_string($attributes)) {
+        $attributes = [$attributes];
+      }
       if (!isset($attributes)) {
         $attributes = static::GET_BALP_ATTRIBUTES;
       }
@@ -404,6 +483,9 @@ abstract class User extends MceObject {
   public function getObjectsSharedEmission($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getObjectsSharedEmission() [" . $this->_server . "]");
     if (!isset($this->_objectsSharedEmission)) {
+      if (isset($attributes) && is_string($attributes)) {
+        $attributes = [$attributes];
+      }
       if (!isset($attributes)) {
         $attributes = static::GET_BALP_EMISSION_ATTRIBUTES;
       }
@@ -414,8 +496,8 @@ abstract class User extends MceObject {
       }
       $list = $this->objectmelanie->getBalpEmission($attributes, $filter);
       $this->_objectsSharedEmission = [];
+      $class = $this->__getNamespace() . '\\ObjectShare';
       foreach ($list as $key => $object) {
-        $class = $this->__getNamespace() . '\\ObjectShare';
         $this->_objectsSharedEmission[$key] = new $class($this->_server);
         $this->_objectsSharedEmission[$key]->setObjectMelanie($object);
       }
@@ -433,6 +515,9 @@ abstract class User extends MceObject {
   public function getSharedEmission($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedEmission() [" . $this->_server . "]");
     if (!isset($this->_objectsSharedEmission)) {
+      if (isset($attributes) && is_string($attributes)) {
+        $attributes = [$attributes];
+      }
       if (!isset($attributes)) {
         $attributes = static::GET_BALP_EMISSION_ATTRIBUTES;
       }
@@ -461,6 +546,9 @@ abstract class User extends MceObject {
   public function getObjectsSharedGestionnaire($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getObjectsSharedGestionnaire() [" . $this->_server . "]");
     if (!isset($this->_objectsSharedGestionnaire)) {
+      if (isset($attributes) && is_string($attributes)) {
+        $attributes = [$attributes];
+      }
       if (!isset($attributes)) {
         $attributes = static::GET_BALP_GESTIONNAIRE_ATTRIBUTES;
       }
@@ -471,8 +559,8 @@ abstract class User extends MceObject {
       }
       $list = $this->objectmelanie->getBalpGestionnaire($attributes, $filter);
       $this->_objectsSharedGestionnaire = [];
+      $class = $this->__getNamespace() . '\\ObjectShare';
       foreach ($list as $key => $object) {
-        $class = $this->__getNamespace() . '\\ObjectShare';
         $this->_objectsSharedGestionnaire[$key] = new $class($this->_server);
         $this->_objectsSharedGestionnaire[$key]->setObjectMelanie($object);
       }
@@ -485,11 +573,14 @@ abstract class User extends MceObject {
    * 
    * @param array $attributes [Optionnal] List of attributes to load
    *
-   * @return ObjectShare[] Liste d'objets
+   * @return User[] Liste d'objets
    */
   public function getSharedGestionnaire($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedGestionnaire() [" . $this->_server . "]");
     if (!isset($this->_objectsSharedGestionnaire)) {
+      if (isset($attributes) && is_string($attributes)) {
+        $attributes = [$attributes];
+      }
       if (!isset($attributes)) {
         $attributes = static::GET_BALP_GESTIONNAIRE_ATTRIBUTES;
       }
@@ -506,6 +597,271 @@ abstract class User extends MceObject {
       }
     }
     return $this->_objectsSharedGestionnaire;
+  }
+
+  /**
+   * Récupère la liste des groupes dont l'utilisateur est propriétaire
+   * 
+   * @param array $attributes [Optionnal] List of attributes to load
+   *
+   * @return Group[] Liste d'objets
+   */
+  public function getGroups($attributes = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getGroups() [" . $this->_server . "]");
+    if (!isset($this->_lists)) {
+      if (isset($attributes) && is_string($attributes)) {
+        $attributes = [$attributes];
+      }
+      if (!isset($attributes)) {
+        $attributes = static::GET_GROUPS_ATTRIBUTES;
+      }
+      $filter = static::GET_GROUPS_FILTER;
+      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+          && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_groups_filter'])) {
+        $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_groups_filter'];
+      }
+      $list = $this->objectmelanie->getGroups($attributes, $filter);
+      $this->_lists = [];
+      $class = $this->__getNamespace() . '\\Group';
+      foreach ($list as $key => $object) {
+        $this->_lists[$key] = new $class($this->_server);
+        $this->_lists[$key]->setObjectMelanie($object);
+      }
+    }
+    return $this->_lists;
+  }
+
+  /**
+   * Récupère la liste des groupes dont l'utilisateur est membre
+   * 
+   * @param array $attributes [Optionnal] List of attributes to load
+   *
+   * @return Group[] Liste d'objets
+   */
+  public function getGroupsIsMember($attributes = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getGroupsIsMember() [" . $this->_server . "]");
+    if (!isset($this->_lists)) {
+      if (isset($attributes) && is_string($attributes)) {
+        $attributes = [$attributes];
+      }
+      if (!isset($attributes)) {
+        $attributes = static::GET_GROUPS_IS_MEMBER_ATTRIBUTES;
+      }
+      $filter = static::GET_GROUPS_IS_MEMBER_ATTRIBUTES;
+      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+          && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_groups_user_member_filter'])) {
+        $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_groups_user_member_filter'];
+      }
+      $list = $this->objectmelanie->getGroupsIsMember($attributes, $filter);
+      $this->_lists = [];
+      $class = $this->__getNamespace() . '\\Group';
+      foreach ($list as $key => $object) {
+        $this->_lists[$key] = new $class($this->_server);
+        $this->_lists[$key]->setObjectMelanie($object);
+      }
+    }
+    return $this->_lists;
+  }
+
+  /**
+   * Récupère la liste des listes de diffusion dont l'utilisateur est membre
+   * 
+   * @param array $attributes [Optionnal] List of attributes to load
+   *
+   * @return Group[] Liste d'objets
+   */
+  public function getListsIsMember($attributes = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getListsIsMember() [" . $this->_server . "]");
+    if (!isset($this->_lists)) {
+      if (isset($attributes) && is_string($attributes)) {
+        $attributes = [$attributes];
+      }
+      if (!isset($attributes)) {
+        $attributes = static::GET_LISTS_IS_MEMBER_ATTRIBUTES;
+      }
+      $filter = static::GET_LISTS_IS_MEMBER_ATTRIBUTES;
+      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+          && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_lists_user_member_filter'])) {
+        $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_lists_user_member_filter'];
+      }
+      $list = $this->objectmelanie->getListsIsMember($attributes, $filter);
+      $this->_lists = [];
+      $class = $this->__getNamespace() . '\\Group';
+      foreach ($list as $key => $object) {
+        $this->_lists[$key] = new $class($this->_server);
+        $this->_lists[$key]->setObjectMelanie($object);
+      }
+    }
+    return $this->_lists;
+  }
+
+  /**
+   * Récupère la préférence de l'utilisateur
+   * 
+   * @param string $scope Scope de la préférence, voir User::PREF_SCOPE*
+   * @param string $name Nom de la préférence
+   * 
+   * @return string La valeur de la préférence si elle existe, null sinon
+   */
+  public function getPreference($scope, $name) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getPreference($scope, $name)");
+    if (!isset($this->_preferences)) {
+      $this->_get_preferences();
+    }
+    if (isset($this->_preferences["$scope:$name"])) {
+      return $this->_preferences["$scope:$name"]->value;
+    }
+    return null;
+  }
+  /**
+   * Récupération de la préférence avec un scope Default
+   * 
+   * @param string $name Nom de la préférence
+   * 
+   * @return string La valeur de la préférence si elle existe, null sinon
+   */
+  public function getDefaultPreference($name) {
+    return $this->getPreference(self::PREF_SCOPE_DEFAULT, $name);
+  }
+  /**
+   * Récupération de la préférence avec un scope Calendar
+   * 
+   * @param string $name Nom de la préférence
+   * 
+   * @return string La valeur de la préférence si elle existe, null sinon
+   */
+  public function getCalendarPreference($name) {
+    return $this->getPreference(self::PREF_SCOPE_CALENDAR, $name);
+  }
+  /**
+   * Récupération de la préférence avec un scope Taskslist
+   * 
+   * @param string $name Nom de la préférence
+   * 
+   * @return string La valeur de la préférence si elle existe, null sinon
+   */
+  public function getTaskslistPreference($name) {
+    return $this->getPreference(self::PREF_SCOPE_TASKSLIST, $name);
+  }
+  /**
+   * Récupération de la préférence avec un scope Addressbook
+   * 
+   * @param string $name Nom de la préférence
+   * 
+   * @return string La valeur de la préférence si elle existe, null sinon
+   */
+  public function getAddressbookPreference($name) {
+    return $this->getPreference(self::PREF_SCOPE_ADDRESSBOOK, $name);
+  }
+
+  /**
+   * Liste les préférences de l'utilisateur et les conserves en mémoire
+   */
+  protected function _get_preferences() {
+    if (isset($this->_preferences)) {
+      return;
+    }
+    $this->_preferences = [];
+    $UserPrefs = $this->__getNamespace() . '\\UserPrefs';
+    $preferences = (new $UserPrefs($this))->getList();
+    if (is_array($preferences)) {
+      foreach ($preferences as $pref) {
+        $this->_preferences[$pref->scope.":".$pref->name] = $pref;
+      }
+    }
+  }
+
+  /**
+   * Enregistre la préférence de l'utilisateur
+   * 
+   * @param string $scope Scope de la préférence, voir User::PREF_SCOPE*
+   * @param string $name Nom de la préférence
+   * @param string $value Valeur de la préférence a enregistrer
+   * 
+   * @return boolean
+   */
+  public function savePreference($scope, $name, $value) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->savePreference($scope, $name)");
+    if (!isset($this->_preferences)) {
+      $this->_get_preferences();
+    }
+    if (!isset($this->_preferences["$scope:$name"])) {
+      $UserPrefs = $this->__getNamespace() . '\\UserPrefs';
+      $this->_preferences["$scope:$name"] = new $UserPrefs($this);
+      $this->_preferences["$scope:$name"]->scope = $scope;
+      $this->_preferences["$scope:$name"]->name = $name;
+    }
+    $this->_preferences["$scope:$name"]->value = $value;
+    $ret = $this->_preferences["$scope:$name"]->save();
+    return !is_null($ret);  
+  }
+  /**
+   * Enregistre la préférence de l'utilisateur avec le scope Default
+   * 
+   * @param string $name Nom de la préférence
+   * @param string $value Valeur de la préférence a enregistrer
+   * 
+   * @return boolean
+   */
+  public function saveDefaultPreference($name, $value) {
+    return $this->savePreference(self::PREF_SCOPE_DEFAULT, $name, $value);
+  }
+  /**
+   * Enregistre la préférence de l'utilisateur avec le scope Calendar
+   * 
+   * @param string $name Nom de la préférence
+   * @param string $value Valeur de la préférence a enregistrer
+   * 
+   * @return boolean
+   */
+  public function saveCalendarPreference($name, $value) {
+    return $this->savePreference(self::PREF_SCOPE_CALENDAR, $name, $value);
+  }
+  /**
+   * Enregistre la préférence de l'utilisateur avec le scope Taskslist
+   * 
+   * @param string $name Nom de la préférence
+   * @param string $value Valeur de la préférence a enregistrer
+   * 
+   * @return boolean
+   */
+  public function saveTaskslistPreference($name, $value) {
+    return $this->savePreference(self::PREF_SCOPE_TASKSLIST, $name, $value);
+  }
+  /**
+   * Enregistre la préférence de l'utilisateur avec le scope Addressbook
+   * 
+   * @param string $name Nom de la préférence
+   * @param string $value Valeur de la préférence a enregistrer
+   * 
+   * @return boolean
+   */
+  public function saveAddressbookPreference($name, $value) {
+    return $this->savePreference(self::PREF_SCOPE_ADDRESSBOOK, $name, $value);
+  }
+
+  /**
+   * Supprime la préférence de l'utilisateur
+   * 
+   * @param string $scope Scope de la préférence, voir User::PREF_SCOPE*
+   * @param string $name Nom de la préférence
+   * 
+   * @return boolean
+   */
+  public function deletePreference($scope, $name) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->savePreference($scope, $name)");
+    if (!isset($this->_preferences)) {
+      $this->_get_preferences();
+    }
+    if (!isset($this->_preferences["$scope:$name"])) {
+      $UserPrefs = $this->__getNamespace() . '\\UserPrefs';
+      $this->_preferences["$scope:$name"] = new $UserPrefs($this);
+      $this->_preferences["$scope:$name"]->scope = $scope;
+      $this->_preferences["$scope:$name"]->name = $name;
+    }
+    $ret = $this->_preferences["$scope:$name"]->delete();
+    unset($this->_preferences["$scope:$name"]);
+    return !is_null($ret);  
   }
 
   /**
@@ -530,11 +886,42 @@ abstract class User extends MceObject {
         if (!$_calendar || !isset($_calendar)) {
           return null;
         }
-        $this->_defaultCalendar = new Calendar($this);
+        $Calendar = $this->__getNamespace() . '\\Calendar';
+        $this->_defaultCalendar = new $Calendar($this);
         $this->_defaultCalendar->setObjectMelanie($_calendar);
       }
     }
     return $this->_defaultCalendar;
+  }
+
+  /**
+   * Modifie le calendrier par défaut de l'utilisateur
+   * 
+   * @param string|Calendar $calendar Calendrier à mettre par défaut pour l'utilisateur
+   * 
+   * @return boolean
+   */
+  public function setDefaultCalendar($calendar) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setDefaultCalendar()");
+    if (is_object($calendar)) {
+      $calendar_id = $calendar->id;
+    }
+    else if (is_string($calendar)) {
+      $calendar_id = $calendar;
+    }
+    else {
+      return false;
+    }
+    if ($this->savePreference(self::PREF_SCOPE_CALENDAR, \LibMelanie\Config\ConfigMelanie::CALENDAR_PREF_DEFAULT_NAME, $calendar_id)) {
+      if (is_object($calendar)) {
+        $this->_defaultCalendar = $calendar;
+      }
+      else {
+        $this->_defaultCalendar = null;
+      }
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -551,25 +938,16 @@ abstract class User extends MceObject {
     $calendarName = str_replace('%%email%%', $this->email, $calendarName);
     $calendarName = str_replace('%%uid%%', $this->uid, $calendarName);
     // Création du calendrier
-    $calendar = new Calendar($this);
+    $Calendar = $this->__getNamespace() . '\\Calendar';
+    $calendar = new $Calendar($this);
     $calendar->name = $calendarName ?: $this->fullname;
     $calendar->id = $this->uid;
     $calendar->owner = $this->uid;
     if ($calendar->save()) {
-      // Création du default calendar (TODO: a supprimer quand tous les outils seront à jour)
-      $pref = new UserPrefs($this);
-      $pref->scope = \LibMelanie\Config\ConfigMelanie::CALENDAR_PREF_SCOPE;
-      $pref->name = \LibMelanie\Config\ConfigMelanie::CALENDAR_PREF_DEFAULT_NAME;
-      $pref->value = $this->uid;
-      $pref->save();
-      unset($pref);
-      // Création du display_cals (utile pour que pacome fonctionne ?)
-      $pref = new UserPrefs($this);
-      $pref->scope = \LibMelanie\Config\ConfigMelanie::CALENDAR_PREF_SCOPE;
-      $pref->name = 'display_cals';
-      $pref->value = 'a:0:{}';
-      $pref->save();
-      unset($pref);
+      // Création du default calendar
+      $this->setDefaultCalendar($calendar->id);
+      // Création du display_cals (utile pour que pacome fonctionne)
+      $this->savePreference(self::PREF_SCOPE_CALENDAR, 'display_cals', 'a:0:{}');
       return true;
     }
     return false;
@@ -599,8 +977,9 @@ abstract class User extends MceObject {
         if (!isset($_calendars)) {
           return null;
         }
+        $Calendar = $this->__getNamespace() . '\\Calendar';
         foreach ($_calendars as $_calendar) {
-          $calendar = new Calendar($this);
+          $calendar = new $Calendar($this);
           $calendar->setObjectMelanie($_calendar);
           $this->_userCalendars[$_calendar->id] = $calendar;
         }
@@ -624,8 +1003,9 @@ abstract class User extends MceObject {
         return null;
       }
       $this->_sharedCalendars = [];
+      $Calendar = $this->__getNamespace() . '\\Calendar';
       foreach ($_calendars as $_calendar) {
-        $calendar = new Calendar($this);
+        $calendar = new $Calendar($this);
         $calendar->setObjectMelanie($_calendar);
         $this->_sharedCalendars[$_calendar->id] = $calendar;
       }
@@ -655,12 +1035,43 @@ abstract class User extends MceObject {
         if (!$_taskslist || !isset($_taskslist)) {
           return null;
         }
-        $this->_defaultTaskslist = new Taskslist($this);
+        $Taskslist = $this->__getNamespace() . '\\Taskslist';
+        $this->_defaultTaskslist = new $Taskslist($this);
         $this->_defaultTaskslist->setObjectMelanie($_taskslist);
       }
       
     }
     return $this->_defaultTaskslist;
+  }
+
+  /**
+   * Modifie la liste de tâches par défaut de l'utilisateur
+   * 
+   * @param string|Taskslist $taskslist Liste de tâches à mettre par défaut pour l'utilisateur
+   * 
+   * @return boolean
+   */
+  public function setDefaultTaskslist($taskslist) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setDefaultTaskslist()");
+    if (is_object($taskslist)) {
+      $taskslist_id = $taskslist->id;
+    }
+    else if (is_string($taskslist)) {
+      $taskslist_id = $taskslist;
+    }
+    else {
+      return false;
+    }
+    if ($this->savePreference(self::PREF_SCOPE_TASKSLIST, \LibMelanie\Config\ConfigMelanie::TASKSLIST_PREF_DEFAULT_NAME, $taskslist_id)) {
+      if (is_object($taskslist)) {
+        $this->_defaultTaskslist = $taskslist;
+      }
+      else {
+        $this->_defaultTaskslist = null;
+      }
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -677,18 +1088,14 @@ abstract class User extends MceObject {
     $taskslistName = str_replace('%%email%%', $this->email, $taskslistName);
     $taskslistName = str_replace('%%uid%%', $this->uid, $taskslistName);
     // Création de la liste de taches
-    $taskslist = new Taskslist($this);
+    $Taskslist = $this->__getNamespace() . '\\Taskslist';
+    $taskslist = new $Taskslist($this);
     $taskslist->name = $taskslistName ?: $this->fullname;
     $taskslist->id = $this->uid;
     // Création de la liste de tâches
     if ($taskslist->save()) {
-      // Création du default taskslist (TODO: a supprimer quand tous les outils seront à jour)
-      $pref = new UserPrefs($this);
-      $pref->scope = \LibMelanie\Config\ConfigMelanie::TASKSLIST_PREF_SCOPE;
-      $pref->name = \LibMelanie\Config\ConfigMelanie::TASKSLIST_PREF_DEFAULT_NAME;
-      $pref->value = $this->uid;
-      $pref->save();
-      unset($pref);
+      // Création du default taskslist
+      $this->setDefaultTaskslist($taskslist->id);
       return true;
     }
     return false;
@@ -717,8 +1124,9 @@ abstract class User extends MceObject {
         if (!isset($_taskslists)) {
           return null;
         }
+        $Taskslist = $this->__getNamespace() . '\\Taskslist';
         foreach ($_taskslists as $_taskslist) {
-          $taskslist = new Taskslist($this);
+          $taskslist = new $Taskslist($this);
           $taskslist->setObjectMelanie($_taskslist);
           $this->_userTaskslists[$_taskslist->id] = $taskslist;
         }
@@ -742,8 +1150,9 @@ abstract class User extends MceObject {
         return null;
       }
       $this->_sharedTaskslists = [];
+      $Taskslist = $this->__getNamespace() . '\\Taskslist';
       foreach ($_taskslists as $_taskslist) {
-        $taskslist = new Taskslist($this);
+        $taskslist = new $Taskslist($this);
         $taskslist->setObjectMelanie($_taskslist);
         $this->_sharedTaskslists[$_taskslist->id] = $taskslist;
       }
@@ -773,12 +1182,42 @@ abstract class User extends MceObject {
         if (!$_addressbook) {
           return null;
         }
-        $this->_defaultAddressbook = new Addressbook($this);
+        $Addressbook = $this->__getNamespace() . '\\Addressbook';
+        $this->_defaultAddressbook = new $Addressbook($this);
         $this->_defaultAddressbook->setObjectMelanie($_addressbook);
       }
-      
     }
     return $this->_defaultAddressbook;
+  }
+
+  /**
+   * Modifie le carnet d'adresses par défaut de l'utilisateur
+   * 
+   * @param string|Addressbook $addressbook Carnet d'adresses à mettre par défaut pour l'utilisateur
+   * 
+   * @return boolean
+   */
+  public function setDefaultAddressbook($addressbook) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setDefaultAddressbook()");
+    if (is_object($addressbook)) {
+      $addressbook_id = $addressbook->id;
+    }
+    else if (is_string($addressbook)) {
+      $addressbook_id = $addressbook;
+    }
+    else {
+      return false;
+    }
+    if ($this->savePreference(self::PREF_SCOPE_ADDRESSBOOK, \LibMelanie\Config\ConfigMelanie::ADDRESSBOOK_PREF_DEFAULT_NAME, $addressbook_id)) {
+      if (is_object($addressbook)) {
+        $this->_defaultAddressbook = $addressbook;
+      }
+      else {
+        $this->_defaultAddressbook = null;
+      }
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -795,18 +1234,14 @@ abstract class User extends MceObject {
     $addressbookName = str_replace('%%email%%', $this->email, $addressbookName);
     $addressbookName = str_replace('%%uid%%', $this->uid, $addressbookName);
     // Création du carnet d'adresses
-    $addressbook = new Addressbook($this);
+    $Addressbook = $this->__getNamespace() . '\\Addressbook';
+    $addressbook = new $Addressbook($this);
     $addressbook->name = $addressbookName ?: $this->fullname;
     $addressbook->id = $this->uid;
     // Création du carnet d'adresses
     if ($addressbook->save()) {
-      // Création du default addressbook (TODO: a supprimer quand tous les outils seront à jour)
-      $pref = new UserPrefs($this);
-      $pref->scope = \LibMelanie\Config\ConfigMelanie::ADDRESSBOOK_PREF_SCOPE;
-      $pref->name = \LibMelanie\Config\ConfigMelanie::ADDRESSBOOK_PREF_DEFAULT_NAME;
-      $pref->value = $this->uid;
-      $pref->save();
-      unset($pref);
+      // Création du default addressbook
+      $this->setDefaultAddressbook($addressbook->id);
       return true;
     }
     return false;
@@ -835,8 +1270,9 @@ abstract class User extends MceObject {
         if (!isset($_addressbooks)) {
           return null;
         }
+        $Addressbook = $this->__getNamespace() . '\\Addressbook';
         foreach ($_addressbooks as $_addressbook) {
-          $addressbook = new Addressbook($this);
+          $addressbook = new $Addressbook($this);
           $addressbook->setObjectMelanie($_addressbook);
           $this->_userAddressbooks[$_addressbook->id] = $addressbook;
         }
@@ -858,8 +1294,9 @@ abstract class User extends MceObject {
         return null;
       }
       $this->_sharedAddressbooks = [];
+      $Addressbook = $this->__getNamespace() . '\\Addressbook';
       foreach ($_addressbooks as $_addressbook) {
-        $addressbook = new Addressbook($this);
+        $addressbook = new $Addressbook($this);
         $addressbook->setObjectMelanie($_addressbook);
         $this->_sharedAddressbooks[$_addressbook->id] = $addressbook;
       }

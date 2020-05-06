@@ -37,24 +37,24 @@ include_once 'includes/libm2.php';
 // Utilisation des namespaces
 /*
  * Possibilité de faire
- * use LibMelanie\Api\Melanie2;
+ * use LibMelanie\Api\Mce;
  * au lieu de
- * use LibMelanie\Api\Melanie2\User;
+ * use LibMelanie\Api\Mce\User;
  *
  * Puis d'utiliser
- * $user = new Melanie2\User();
+ * $user = new Mce\User();
  * pour ne pas mélanger les classes
  *
  */
 // API
-use LibMelanie\Api\Melanie2\User;
-use LibMelanie\Api\Melanie2\Event;
-use LibMelanie\Api\Melanie2\Task;
-use LibMelanie\Api\Melanie2\Contact;
-use LibMelanie\Api\Melanie2\Addressbook;
-use LibMelanie\Api\Melanie2\Calendar;
-use LibMelanie\Api\Melanie2\Taskslist;
-use LibMelanie\Api\Melanie2\Recurrence;
+use LibMelanie\Api\Mce\User;
+use LibMelanie\Api\Mce\Event;
+use LibMelanie\Api\Mce\Task;
+use LibMelanie\Api\Mce\Contact;
+use LibMelanie\Api\Mce\Addressbook;
+use LibMelanie\Api\Mce\Calendar;
+use LibMelanie\Api\Mce\Taskslist;
+use LibMelanie\Api\Mce\Recurrence;
 // Log
 use LibMelanie\Log\M2Log;
 // Config

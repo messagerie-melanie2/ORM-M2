@@ -46,9 +46,9 @@ if (!defined('CONFIGURATION_APP_LIBM2')) {
 set_include_path(__DIR__.'/..');
 include_once 'includes/libm2.php';
 
-use LibMelanie\Api\Melanie2\User;
+use LibMelanie\Api\Mce\User;
 use LibMelanie\Log\M2Log;
-use LibMelanie\Api\Melanie2\UserPrefs;
+use LibMelanie\Api\Mce\UserPrefs;
 use LibMelanie;
 
 
@@ -63,11 +63,11 @@ echo "########################\r\n";
 //ConfigSQL::setCurrentBackend(ConfigSQL::$HORDE_1);
 
 // Définition de l'utilisateur
-$user = new LibMelanie\Api\Melanie2\User();
+$user = new LibMelanie\Api\Mce\User();
 $user->uid = 'thomas.payen';
 
 // Gestion des prefs utilisateur
-$prefs = new LibMelanie\Api\Melanie2\UserPrefs();
+$prefs = new LibMelanie\Api\Mce\UserPrefs();
 $prefs->scope = LibMelanie\Config\DefaultConfig::GENERAL_PREF_SCOPE;
 $prefs->name = ["categories", "category_colors"];
 $prefs->user = ["thomas.payen", "thomas.test1"];

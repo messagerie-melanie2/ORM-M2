@@ -1,9 +1,12 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie Mélanie2
+ * Ce fichier est développé pour la gestion de la lib MCE
+ * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
+ * 
  * ORM Mél Copyright © 2020 Groupe Messagerie/MTES
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,26 +20,22 @@
  */
 namespace LibMelanie\Api\Mce\Users;
 
-use LibMelanie\Lib\MceObject;
+use LibMelanie\Api\Defaut;
 
 /**
  * Classe utilisateur pour MCE
  * pour la gestion du gestionnaire d'absence
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/MCE
  * @api
  * 
  * @property \Datetime $start Date de début de l'absence
  * @property \Datetime $end Date de fin de l'absence
- * @property \boolean $enable Est-ce que l'absence est active
- * @property \string $message Message d'absence a afficher
- * @property \int $order Ordre de tri du message d'absence
+ * @property boolean $enable Est-ce que l'absence est active
+ * @property string $message Message d'absence a afficher
+ * @property int $order Ordre de tri du message d'absence
  * @property Outofoffice::TYPE_* $type Type d'absence (Interne, Externe)
  */
-class Outofoffice extends MceObject {
-  // TYPE d'absence Internal ou External
-  const TYPE_EXTERNAL = 'ext';
-  const TYPE_INTERNAL = 'int';
-}
+class Outofoffice extends Defaut\Users\Outofoffice {}

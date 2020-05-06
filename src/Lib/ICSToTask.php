@@ -21,9 +21,9 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Api\Mce\Task;
-use LibMelanie\Api\Mce\User;
-use LibMelanie\Api\Mce\Taskslist;
+use LibMelanie\Api\Defaut\Task;
+use LibMelanie\Api\Defaut\User;
+use LibMelanie\Api\Defaut\Taskslist;
 use LibMelanie\Config\Config;
 use Sabre\VObject;
 
@@ -35,7 +35,7 @@ use Sabre\VObject;
  * Méthodes Statiques
  *
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
+ * @package LibMCE
  * @subpackage Lib
  *
  */
@@ -65,14 +65,14 @@ class ICSToTask {
 	 * @param User $user
 	 * @return Task
 	 */
-	public static function Convert($ics, Task $task, Taskslist $taskslist = null, User $user = null) {
+	public static function Convert($ics, $task, $taskslist = null, $user = null) {
 		$vcalendar = VObject\Reader::read($ics);
 		// Gestion du timezone
 		if (isset($user)) {
 		  $timezone = $user->getTimezone();
 		}
 		elseif (isset($calendar)) {
-		  $timezone = $calendar->getTimezone();
+		  $timezone = $taskslist->getTimezone();
 		}
 		if (empty($timezone)) {
 		  $timezone = Config::get(Config::CALENDAR_DEFAULT_TIMEZONE);

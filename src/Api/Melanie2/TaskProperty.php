@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -20,7 +20,7 @@
  */
 namespace LibMelanie\Api\Melanie2;
 
-use LibMelanie\Api\Mce;
+use LibMelanie\Api\Mel;
 
 /**
  * Classe pour la gestion des propriétés des évènements
@@ -29,8 +29,8 @@ use LibMelanie\Api\Mce;
  * Certains champs sont mappés directement ou passe par des classes externes
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/Melanie2
  * @api
  * 
  * @property string $task Identifiant de la tâche associée
@@ -44,4 +44,4 @@ use LibMelanie\Api\Mce;
  * @method bool save() Sauvegarde la priopriété dans la base de données
  * @method bool delete() Supprime la priopriété, en fonction de la tâche, du carnet d'adresse associé, de l'utilisateur et de la clé
  */
-class TaskProperty extends Mce\TaskProperty {}
+class TaskProperty extends Mel\TaskProperty {}

@@ -96,15 +96,25 @@ class MappingMce {
 	  self::$Data_Mapping = [
 	      // Gestion de l'utilisateur : objet UserMelanie
 	      "UserMelanie" => [
-	          "dn"                     => [self::name => Ldap::GetMap('user_dn', 						"dn"), self::type => self::stringLdap],
-	          "uid"                    => [self::name => Ldap::GetMap('user_uid', 						"uid"), self::type => self::stringLdap],
-	          "fullname"               => [self::name => Ldap::GetMap('user_cn', 						"cn"), self::type => self::stringLdap],
-	          "name"                   => [self::name => Ldap::GetMap('user_displayname', 				"displayname"), self::type => self::stringLdap],
-	          "email"                  => [self::name => Ldap::GetMap('user_mel_reception_principal', 	"mailpr"), self::type => self::stringLdap],
-	          "email_list"             => [self::name => Ldap::GetMap('user_mel_reception', 			"mail"), self::type => self::arrayLdap],
-	          "email_send"             => [self::name => Ldap::GetMap('user_mel_emission_principal', 	"mailemissionpr"), self::type => self::stringLdap],
-	          "email_send_list"        => [self::name => Ldap::GetMap('user_mel_emission', 				"mailemission"), self::type => self::arrayLdap],
-	      ],
+	          "dn"                     => [self::name => "dn", 			self::type => self::stringLdap],
+	          "uid"                    => [self::name => "uid", 		self::type => self::stringLdap],
+	          "fullname"               => [self::name => "cn", 			self::type => self::stringLdap],
+	          "name"                   => [self::name => "displayname", self::type => self::stringLdap],
+	          "email"                  => [self::name => "mail", 		self::type => self::stringLdap],
+	          "email_list"             => [self::name => "mail", 		self::type => self::arrayLdap],
+	          "email_send"             => [self::name => "mail", 		self::type => self::stringLdap],
+	          "email_send_list"        => [self::name => "mail", 		self::type => self::arrayLdap],
+		  ],
+		  // Gestion des groupes : objet GroupMelanie
+	      "GroupMelanie" => [
+			"dn"                     => [self::name => "dn", self::type => self::stringLdap],
+			"fullname"               => [self::name => "cn", self::type => self::stringLdap],
+			"name"                   => [self::name => "displayname", self::type => self::stringLdap],
+			"email"                  => [self::name => "mail", 		self::type => self::stringLdap],
+			"email_list"             => [self::name => "mail", 		self::type => self::arrayLdap],
+			"email_send"             => [self::name => "mail", 		self::type => self::stringLdap],
+			"email_send_list"        => [self::name => "mail", 		self::type => self::arrayLdap],
+		  ],
 	      // Gestion des préférences de l'utilisateur : objet UserPrefs
 	      "UserPrefs" => [
 	          "user" 	=> [self::name => "pref_uid", self::type => self::string, self::size => 255],
@@ -376,8 +386,12 @@ class MappingMce {
 	const integer = "integer";
 	const double = "double";
 	const date = "date";
+	const prefixLdap = "prefixLdap";
 	const arrayLdap = "arrayLdap";
 	const stringLdap = "stringLdap";
+	const booleanLdap = "booleanLdap";
+	const trueLdapValue = "trueLdapValue";
+	const falseLdapValue = "falseLdapValue";
 	const timestamp = "timestamp";
 	const defaut = "defaut";
 	const sup = ">";

@@ -60,7 +60,7 @@ echo "########################\r\n";
 //ConfigSQL::setCurrentBackend(ConfigSQL::$HORDE_1);
 
 // Définition de l'utilisateur
-$user = new LibMelanie\Api\Melanie2\User();
+$user = new LibMelanie\Api\Mce\User();
 $user->uid = 'thomas.test1';
 
 if ($user->load()) {

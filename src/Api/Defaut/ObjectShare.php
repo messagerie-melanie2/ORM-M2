@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -28,8 +28,8 @@ use LibMelanie\Log\M2Log;
  * Classe objet partagé LDAP par defaut
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/Defaut
  * @api
  * 
  * @property string $uid Identifiant unique de l'utilisateur
@@ -80,7 +80,7 @@ abstract class ObjectShare extends MceObject {
   /**
    * Constructeur de l'objet
    */
-  function __construct($server = null) {
+  public function __construct($server = null) {
     // Défini la classe courante
     $this->get_class = get_class($this);
     

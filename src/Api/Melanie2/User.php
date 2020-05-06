@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -20,15 +20,16 @@
  */
 namespace LibMelanie\Api\Melanie2;
 
-use LibMelanie\Api\Mce;
-use LibMelanie\Api\Mce\Users\Outofoffice;
+use LibMelanie\Api\Mel;
+use LibMelanie\Api\Mel\Users\Outofoffice;
+use LibMelanie\Api\Mel\Users\Share;
 
 /**
  * Classe utilisateur pour Melanie2
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/Melanie2
  * @api
  * 
  * @property string $dn DN de l'utilisateur dans l'annuaire            
@@ -78,4 +79,4 @@ use LibMelanie\Api\Mce\Users\Outofoffice;
  * @method bool load() Charge les données de l'utilisateur depuis l'annuaire Mélanie2 (en fonction de l'uid ou l'email)
  * @method bool exists() Est-ce que l'utilisateur existe dans l'annuaire Mélanie2 (en fonction de l'uid ou l'email)
  */
-class User extends Mce\User {}
+class User extends Mel\User {}

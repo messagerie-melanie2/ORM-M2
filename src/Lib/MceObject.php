@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -26,7 +26,7 @@ use LibMelanie\Exceptions;
  * Objet MCE, implémente les getter/setter pour le mapping des données
  *
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
+ * @package LibMCE
  * @subpackage Lib
  */
 abstract class MceObject {
@@ -54,12 +54,12 @@ abstract class MceObject {
 	 * 
 	 * @return string Namespace courant
 	 */
-	protected function __getNamespace() {
+	public function __getNamespace() {
 		if (!isset($_namespace)) {
 			$class = $this->get_class;
-			$class = \explode('\\', $class);
+			$class = explode('\\', $class);
 			array_pop($class);
-			$this->_namespace = \implode('\\', $class);
+			$this->_namespace = implode('\\', $class);
 		}
 		return $this->_namespace;
 	}

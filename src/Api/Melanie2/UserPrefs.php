@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -20,7 +20,7 @@
  */
 namespace LibMelanie\Api\Melanie2;
 
-use LibMelanie\Api\Mce;
+use LibMelanie\Api\Mel;
 
 /**
  * Classe pour la gestion des propriétés des évènements
@@ -29,8 +29,8 @@ use LibMelanie\Api\Mce;
  * Certains champs sont mappés directement ou passe par des classes externes
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/Melanie2
  * @api
  * 
  * @property string $user Utilisateur lié à la preference
@@ -43,4 +43,4 @@ use LibMelanie\Api\Mce;
  * @method bool save() Sauvegarde la preference dans la base de données
  * @method bool delete() Supprime la preference, en fonction de l'utilisateur, du scope et du nom
  */
-class UserPrefs extends Mce\UserPrefs {}
+class UserPrefs extends Mel\UserPrefs {}

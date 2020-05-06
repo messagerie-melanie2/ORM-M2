@@ -262,7 +262,7 @@ class Ldap {
    * Ne retourne qu'une seule entrée
    * 
    * @param string $username
-   *          Identifiant de l'utilisateur recherché
+   *          [Optionnel] Identifiant de l'utilisateur recherché
    * @param string $filter
    *          [Optionnel] Filtre ldap à utiliser pour la recherche
    * @param array $ldap_attr
@@ -271,7 +271,7 @@ class Ldap {
    *          [Optionnel] Server LDAP utilisé pour la requête
    * @return array
    */
-  public static function GetUserInfos($username, $filter = null, $ldap_attr = null, $server = null) {
+  public static function GetUserInfos($username = null, $filter = null, $ldap_attr = null, $server = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUserInfos($username)");
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
@@ -284,7 +284,10 @@ class Ldap {
       $filter = $ldap->getConfig("get_user_infos_filter");
     }
     if (isset($filter)) {
-      $filter = str_replace('%%username%%', $username, $filter);
+      if (isset($username)) {
+        $filter = str_replace('%%username%%', $username, $filter);
+        $filter = str_replace('%%uid%%', $username, $filter);
+      }
     } else {
       $filter = "(uid=$username)";
     }
@@ -318,12 +321,65 @@ class Ldap {
     // Retourne les données, null si vide
     return $infos;
   }
+
+  /**
+   * Retourne les données sur l'utilisateur lues depuis le Ldap
+   * en fonction de son DN
+   * Ne retourne qu'une seule entrée
+   * 
+   * @param string $user_dn
+   *          DN de l'utilisateur recherché
+   * @param array $ldap_attr
+   *          [Optionnel] Liste des attributs ldap à retourner
+   * @param string $server
+   *          [Optionnel] Server LDAP utilisé pour la requête
+   * @return array
+   */
+  public static function GetUserInfosFromDn($user_dn, $ldap_attr = null, $server = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUserInfosFromDn($user_dn)");
+    if (!isset($server)) {
+      $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+    }
+    // Récupération de l'instance LDAP en fonction du serveur
+    $ldap = self::GetInstance($server);
+    // Filtre ldap
+    $filter = "(objectclass=*)";
+    // Liste des attributes
+    if (!isset($ldap_attr)) {
+      $ldap_attr = $ldap->getConfig("get_user_infos_attributes");
+    }
+    else {
+      $ldap_attr = self::GetMaps($ldap_attr, $server);
+    }
+    // Récupération des données en cache
+    $keycache = "GetUserInfosFromDn:$server:" . md5(serialize($ldap_attr)) . ":$user_dn";
+    $infos = $ldap->getCache($keycache);
+    if (!isset($infos)) {
+      // Connexion anonymous pour lire les données
+      if ($ldap->anonymous()) {
+        // Lancement de la recherche
+        $sr = $ldap->read($user_dn, $filter, $ldap_attr, 0, 1);
+        if ($sr && $ldap->count_entries($sr) == 1) {
+          $infos = $ldap->get_entries($sr);
+          $infos = $infos[0];
+          $ldap->setCache($keycache, $infos);
+        } else {
+          $ldap->deleteCache($keycache);
+        }
+      }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+      }
+    }
+    // Retourne les données, null si vide
+    return $infos;
+  }
   
   /**
    * Retourne les boites partagées accessible pour un utilisateur depuis le LDAP
    * 
    * @param string $username
-   *          Identifiant de l'utilisateur recherché
+   *          [Optionnel] Identifiant de l'utilisateur recherché
    * @param string $filter
    *          [Optionnel] Filtre ldap à utiliser pour la recherche
    * @param array $ldap_attr
@@ -332,7 +388,7 @@ class Ldap {
    *          [Optionnel] Server LDAP utilisé pour la requête
    * @return array
    */
-  public static function GetUserBalPartagees($username, $filter = null, $ldap_attr = null, $server = null) {
+  public static function GetUserBalPartagees($username = null, $filter = null, $ldap_attr = null, $server = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUserBalPartagees($username)");
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
@@ -345,7 +401,10 @@ class Ldap {
       $filter = $ldap->getConfig("get_user_bal_partagees_filter");
     }
     if (isset($filter)) {
-      $filter = str_replace('%%username%%', $username, $filter);
+      if (isset($username)) {
+        $filter = str_replace('%%username%%', $username, $filter);
+        $filter = str_replace('%%uid%%', $username, $filter);
+      }
     } else {
       $filter = "(uid=$username.-.*)";
     }
@@ -382,7 +441,7 @@ class Ldap {
    * Retourne les boites partagées accessible en Emission ou Gestionnaire pour un utilisateur depuis le LDAP
    * 
    * @param string $username
-   *          Identifiant de l'utilisateur recherché
+   *          [Optionnel] Identifiant de l'utilisateur recherché
    * @param string $filter
    *          [Optionnel] Filtre ldap à utiliser pour la recherche
    * @param array $ldap_attr
@@ -391,7 +450,7 @@ class Ldap {
    *          [Optionnel] Server LDAP utilisé pour la requête
    * @return array
    */
-  public static function GetUserBalEmission($username, $filter = null, $ldap_attr = null, $server = null) {
+  public static function GetUserBalEmission($username = null, $filter = null, $ldap_attr = null, $server = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUserBalEmission($username)");
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
@@ -404,7 +463,10 @@ class Ldap {
       $filter = $ldap->getConfig("get_user_bal_emission_filter");
     }
     if (isset($filter)) {
-      $filter = str_replace('%%username%%', $username, $filter);
+      if (isset($username)) {
+        $filter = str_replace('%%username%%', $username, $filter);
+        $filter = str_replace('%%uid%%', $username, $filter);
+      }
     } else {
       $filter = "(|(mineqmelpartages=$username:C)(mineqmelpartages=$username:G))";
     }
@@ -441,7 +503,7 @@ class Ldap {
    * Retourne les boites partagées dont l'utilisateur est gestionnaire
    * 
    * @param string $username
-   *          Identifiant de l'utilisateur recherché
+   *          [Optionnel] Identifiant de l'utilisateur recherché
    * @param string $filter
    *          [Optionnel] Filtre ldap à utiliser pour la recherche
    * @param array $ldap_attr
@@ -450,7 +512,7 @@ class Ldap {
    *          [Optionnel] Server LDAP utilisé pour la requête
    * @return array
    */
-  public static function GetUserBalGestionnaire($username, $filter = null, $ldap_attr = null, $server = null) {
+  public static function GetUserBalGestionnaire($username = null, $filter = null, $ldap_attr = null, $server = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUserBalGestionnaire($username)");
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
@@ -463,7 +525,10 @@ class Ldap {
       $filter = $ldap->getConfig("get_user_bal_gestionnaire_filter"); 
     }
     if (isset($filter)) {
-      $filter = str_replace('%%username%%', $username, $filter);
+      if (isset($username)) {
+        $filter = str_replace('%%username%%', $username, $filter);
+        $filter = str_replace('%%uid%%', $username, $filter);
+      }
     } else {
       $filter = "(mineqmelpartages=$username:G)";
     }
@@ -496,13 +561,201 @@ class Ldap {
     // Retourne les données, null si vide
     return $infos;
   }
+
+  /**
+   * Retourne les groupes dont l'utilisateur est propriétaire
+   * 
+   * @param string $username
+   *          [Optionnel] Identifiant de l'utilisateur recherché
+   * @param string $filter
+   *          [Optionnel] Filtre ldap à utiliser pour la recherche
+   * @param array $ldap_attr
+   *          [Optionnel] Liste des attributs ldap à retourner
+   * @param string $server
+   *          [Optionnel] Server LDAP utilisé pour la requête
+   * @return array
+   */
+  public static function GetUserGroups($username = null, $filter = null, $ldap_attr = null, $server = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUserGroups($username)");
+    if (!isset($server)) {
+      $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+    }
+    // Récupération de l'instance LDAP en fonction du serveur
+    $ldap = self::GetInstance($server);
+    // Filtre ldap
+    if (!isset($filter)) {
+      // Génération du filtre
+      $filter = $ldap->getConfig("get_user_groups_filter"); 
+    }
+    if (isset($filter)) {
+      if (isset($username)) {
+        $filter = str_replace('%%username%%', $username, $filter);
+        $filter = str_replace('%%uid%%', $username, $filter);
+      }
+    } else {
+      $filter = "(&(objectclass=mineqMelListe)(owner=$username))";
+    }
+    // Liste des attributes
+    if (!isset($ldap_attr)) {
+      $ldap_attr = $ldap->getConfig("get_user_groups_attributes");
+    }
+    else {
+      $ldap_attr = self::GetMaps($ldap_attr, $server);
+    }
+    // Récupération des données en cache
+    $keycache = "GetUserGroups:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$username";
+    $infos = $ldap->getCache($keycache);
+    if (!isset($infos)) {
+      // Connexion anonymous pour lire les données
+      if ($ldap->anonymous()) {
+        // Lancement de la recherche
+        $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr);
+        if ($sr && $ldap->count_entries($sr) > 0) {
+          $infos = $ldap->get_entries($sr);
+          $ldap->setCache($keycache, $infos);
+        } else {
+          $ldap->deleteCache($keycache);
+        }
+      }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+      }
+    }
+    // Retourne les données, null si vide
+    return $infos;
+  }
+
+  /**
+   * Retourne les groupes dont l'utilisateur est membres
+   * 
+   * @param string $username
+   *          [Optionnel] Identifiant de l'utilisateur recherché
+   * @param string $filter
+   *          [Optionnel] Filtre ldap à utiliser pour la recherche
+   * @param array $ldap_attr
+   *          [Optionnel] Liste des attributs ldap à retourner
+   * @param string $server
+   *          [Optionnel] Server LDAP utilisé pour la requête
+   * @return array
+   */
+  public static function GetGroupsUserIsMember($username = null, $filter = null, $ldap_attr = null, $server = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetGroupsUserIsMember($username)");
+    if (!isset($server)) {
+      $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+    }
+    // Récupération de l'instance LDAP en fonction du serveur
+    $ldap = self::GetInstance($server);
+    // Filtre ldap
+    if (!isset($filter)) {
+      // Génération du filtre
+      $filter = $ldap->getConfig("get_groups_user_member_filter"); 
+    }
+    if (isset($filter)) {
+      if (isset($username)) {
+        $filter = str_replace('%%username%%', $username, $filter);
+        $filter = str_replace('%%uid%%', $username, $filter);
+      }
+    } else {
+      $filter = "(&(objectclass=mineqMelListe)(member=$username))";
+    }
+    // Liste des attributes
+    if (!isset($ldap_attr)) {
+      $ldap_attr = $ldap->getConfig("get_groups_user_member_attributes");
+    }
+    else {
+      $ldap_attr = self::GetMaps($ldap_attr, $server);
+    }
+    // Récupération des données en cache
+    $keycache = "GetGroupsUserIsMember:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$username";
+    $infos = $ldap->getCache($keycache);
+    if (!isset($infos)) {
+      // Connexion anonymous pour lire les données
+      if ($ldap->anonymous()) {
+        // Lancement de la recherche
+        $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr);
+        if ($sr && $ldap->count_entries($sr) > 0) {
+          $infos = $ldap->get_entries($sr);
+          $ldap->setCache($keycache, $infos);
+        } else {
+          $ldap->deleteCache($keycache);
+        }
+      }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+      }
+    }
+    // Retourne les données, null si vide
+    return $infos;
+  }
+
+  /**
+   * Retourne les listes de diffusion dont l'utilisateur est membres (par son e-mail)
+   * 
+   * @param string $email
+   *          [Optionnel] E-mail de l'utilisateur recherché
+   * @param string $filter
+   *          [Optionnel] Filtre ldap à utiliser pour la recherche
+   * @param array $ldap_attr
+   *          [Optionnel] Liste des attributs ldap à retourner
+   * @param string $server
+   *          [Optionnel] Server LDAP utilisé pour la requête
+   * @return array
+   */
+  public static function GetListsUserIsMember($email = null, $filter = null, $ldap_attr = null, $server = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetListsUserIsMember($email)");
+    if (!isset($server)) {
+      $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+    }
+    // Récupération de l'instance LDAP en fonction du serveur
+    $ldap = self::GetInstance($server);
+    // Filtre ldap
+    if (!isset($filter)) {
+      // Génération du filtre
+      $filter = $ldap->getConfig("get_lists_user_member_filter"); 
+    }
+    if (isset($filter)) {
+      if (isset($username)) {
+        $filter = str_replace('%%email%%', $email, $filter);
+      }
+    } else {
+      $filter = "(&(objectclass=mineqMelListe)(mineqMelMembres=$email))";
+    }
+    // Liste des attributes
+    if (!isset($ldap_attr)) {
+      $ldap_attr = $ldap->getConfig("get_lists_user_member_attributes");
+    }
+    else {
+      $ldap_attr = self::GetMaps($ldap_attr, $server);
+    }
+    // Récupération des données en cache
+    $keycache = "GetListsUserIsMember:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$email";
+    $infos = $ldap->getCache($keycache);
+    if (!isset($infos)) {
+      // Connexion anonymous pour lire les données
+      if ($ldap->anonymous()) {
+        // Lancement de la recherche
+        $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr);
+        if ($sr && $ldap->count_entries($sr) > 0) {
+          $infos = $ldap->get_entries($sr);
+          $ldap->setCache($keycache, $infos);
+        } else {
+          $ldap->deleteCache($keycache);
+        }
+      }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+      }
+    }
+    // Retourne les données, null si vide
+    return $infos;
+  }
   
   /**
    * Retourne les informations sur un utilisateur depuis son adresse email depuis le LDAP
    * Ne retourne qu'une seule entrée
    * 
    * @param string $email
-   *          Adresse email de l'utilisateur
+   *          [Optionnel] Adresse email de l'utilisateur
    * @param string $filter
    *          [Optionnel] Filtre ldap à utiliser pour la recherche
    * @param array $ldap_attr
@@ -511,7 +764,7 @@ class Ldap {
    *          [Optionnel] Server LDAP utilisé pour la requête
    * @return mixed dn cn uid
    */
-  public static function GetUserInfosFromEmail($email, $filter = null, $ldap_attr = null, $server = null) {
+  public static function GetUserInfosFromEmail($email = null, $filter = null, $ldap_attr = null, $server = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUserInfosFromEmail($email)");
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
@@ -524,7 +777,9 @@ class Ldap {
       $filter = $ldap->getConfig("get_user_infos_from_email_filter");
     }
     if (isset($filter)) {
-      $filter = str_replace('%%email%%', $email, $filter);
+      if (isset($email)) {
+        $filter = str_replace('%%email%%', $email, $filter);
+      }
     } else {
       $filter = "(mineqmelmailemission=$email)";
     }
@@ -749,6 +1004,13 @@ class Ldap {
   public function deleteCache($key) {
     // Delete les données du cache
     unset($this->cache[$key]);
+  }
+  /**
+   * Vider toutes les données en cache
+   */
+  public function emptyCache() {
+    // Delete les données du cache
+    $this->cache = [];
   }
   
   /**
@@ -1018,6 +1280,7 @@ class Ldap {
   public function mod_add($dn, $entry) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->mod_add($dn)");
     self::$last_request = "ldap_mod_add($dn)";
+    $this->emptyCache();
     return @ldap_mod_add($this->connection, $dn, $entry);
   }
   /**
@@ -1034,6 +1297,7 @@ class Ldap {
   public function mod_replace($dn, $entry) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->mod_replace($dn)");
     self::$last_request = "ldap_mod_replace($dn)";
+    $this->emptyCache();
     return @ldap_mod_replace($this->connection, $dn, $entry);
   }
   /**
@@ -1050,6 +1314,7 @@ class Ldap {
   public function mod_del($dn, $entry) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->mod_del($dn)");
     self::$last_request = "ldap_mod_del($dn)";
+    $this->emptyCache();
     return @ldap_mod_del($this->connection, $dn, $entry);
   }
   /**
@@ -1064,6 +1329,7 @@ class Ldap {
   public function add($dn, $entry) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->add($dn)");
     self::$last_request = "ldap_add($dn)";
+    $this->emptyCache();
     return @ldap_add($this->connection, $dn, $entry);
   }
   /**
@@ -1079,6 +1345,7 @@ class Ldap {
   public function modify($dn, $entry) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->modify($dn)");
     self::$last_request = "ldap_modify($dn)";
+    $this->emptyCache();
     return @ldap_modify($this->connection, $dn, $entry);
   }
   /**
@@ -1091,6 +1358,7 @@ class Ldap {
   public function delete($dn) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->delete($dn)");
     self::$last_request = "ldap_delete($dn)";
+    $this->emptyCache();
     return @ldap_delete($this->connection, $dn);
   }
   /**
@@ -1109,6 +1377,7 @@ class Ldap {
   public function rename($dn, $newrdn, $newparent, $deleteoldrdn) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->rename($dn)");
     self::$last_request = "ldap_rename($dn, $newrdn)";
+    $this->emptyCache();
     return @ldap_rename($this->connection, $dn, $newrdn, $newparent, $deleteoldrdn);
   }
   /**

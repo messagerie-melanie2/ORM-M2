@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -18,19 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace LibMelanie\Api\Mel;
+namespace LibMelanie\Api\Gen;
 
 use LibMelanie\Api\Defaut;
-use LibMelanie\Api\Mce\Users\Outofoffice;
-use LibMelanie\Api\Mce\Users\Share;
+use LibMelanie\Api\Gen\Users\Outofoffice;
+use LibMelanie\Api\Gen\Users\Share;
 use LibMelanie\Log\M2Log;
 
 /**
  * Classe utilisateur pour Gen
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/Gen
  * @api
  * 
  * @property string $dn DN de l'utilisateur dans l'annuaire            
@@ -124,35 +124,47 @@ class User extends Defaut\User {
    * @ignore
    */
   const GET_BALP_GESTIONNAIRE_ATTRIBUTES = null;
+  /**
+   * Filtre pour la méthode getGroups()
+   * 
+   * @ignore
+   */
+  const GET_GROUPS_FILTER = null;
+  /**
+   * Attributs par défauts pour la méthode getGroups()
+   * 
+   * @ignore
+   */
+  const GET_GROUPS_ATTRIBUTES = ['dn','fullname','type','email','members'];
+  /**
+   * Filtre pour la méthode getGroupsIsMember()
+   * 
+   * @ignore
+   */
+  const GET_GROUPS_IS_MEMBER_FILTER = null;
+  /**
+   * Attributs par défauts pour la méthode getGroupsIsMember()
+   * 
+   * @ignore
+   */
+  const GET_GROUPS_IS_MEMBER_ATTRIBUTES = ['dn','fullname','type','email','members'];
+  /**
+   * Filtre pour la méthode getListsIsMember()
+   * 
+   * @ignore
+   */
+  const GET_LISTS_IS_MEMBER_FILTER = null;
+  /**
+   * Attributs par défauts pour la méthode getListsIsMember()
+   * 
+   * @ignore
+   */
+  const GET_LISTS_IS_MEMBER_ATTRIBUTES = ['dn','fullname','type','email','members'];
 
   /**
    * Configuration du mapping qui surcharge la conf
    */
-  protected static $mapping = [
-    "user_dn"                       => 'dn',                            // DN de l'utilisateur
-    "user_cn"                       => 'cn',                            // Nom complet de l'utilisateur
-    "user_displayname"              => 'displayname',                   // Display name de l'utilisateur
-    "user_mel_reception_principal"  => 'mail',                          // Adresse e-mail principale de l'utilisateur en reception
-    "user_mel_reception"            => 'mail',                          // Liste d'adresses e-mail en reception pour l'utilisateur
-    "user_mel_emission_principal"   => 'mail',                          // Adresse e-mail principale de l'utilisateur en emission
-    "user_mel_emission"             => 'mail',                          // Liste d'adresses e-mail en émission pour l'utilisateur
-    "user_mel_service"              => 'departmentnumber',              // Department Number
-    "user_mel_partages"             => 'mcedelegation',                 // Liste des partages pour cette boite
-    "user_mel_routage"              => 'mineqmelroutage',               // Champ utilisé pour le routage des messages
-    "user_type_entree"              => 'mineqtypeentree',               // Type d'entrée (boite individuelle, partagée, ressource, ...)
-    "user_employeenumber"           => 'employeenumber',                // Matricule de l'utilisateur
-    "user_street"                   => 'street',                        // Rue
-    "user_postalcode"               => 'postalcode',                    // Code postal
-    "user_locality"                 => 'l',                             // Ville
-    "user_info"                     => 'info',                          // Informations
-    "user_description"              => 'description',                   // Description
-    "user_phonenumber"              => 'telephonenumber',               // Numéro de téléphone
-    "user_mobilephone"              => 'mobile',                        // Numéro de mobile
-    "user_roomnumber"               => 'roomnumber',                    // Numéro de bureau
-    "user_title"                    => 'title',                         // Titre
-    "user_businesscat"              => 'businesscategory',              // Cetégorie
-    "user_gender"                   => 'gender',                        // Genre
-  ];
+  protected static $mapping = [];
 
   /**
    * ***************************************************
@@ -264,7 +276,6 @@ class User extends Defaut\User {
   protected function setMapSupported_shares() {
     return false;
   }
-
 
   /**
    * Récupération du champ server_host

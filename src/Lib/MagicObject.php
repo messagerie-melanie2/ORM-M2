@@ -143,91 +143,129 @@ abstract class MagicObject {
 	 * @ignore
 	*/
 	public function __set($name, $value) {
-        $lname = strtolower($name);
-        // Récupèration des données de mapping
-        if (isset(MappingMce::$Data_Mapping[$this->objectType])
-                && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
-            // Typage
-            if (!is_null($value) /* MANTIS 3642: Impossible de remettre à zéro le champ "event_recurenddate" */
-                    && isset(MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::type])) {
-                switch (MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::type]) {
-                    // INTEGER
-                    case MappingMce::integer:
-                        if (!is_array($value)) { 
-                          $value = intval($value);
+    $name = strtolower($name);
+    $lname = $name;
+    // Récupèration des données de mapping
+    if (isset(MappingMce::$Data_Mapping[$this->objectType])
+            && isset(MappingMce::$Data_Mapping[$this->objectType][$name])) {
+        $lname = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::name];
+        // Typage
+        if (!is_null($value) /* MANTIS 3642: Impossible de remettre à zéro le champ "event_recurenddate" */
+                && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type])) {
+            switch (MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type]) {
+                // INTEGER
+                case MappingMce::integer:
+                    if (!is_array($value)) { 
+                      $value = intval($value);
+                    }
+                    break;
+                // DOUBLE
+                case MappingMce::double:
+                    if (!is_array($value)) { 
+                      $value = doubleval($value);
+                    }
+                    break;
+                // STRING LDAP
+                case MappingMce::stringLdap:
+                    // Gestion d'un prefix ?
+                    if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap])) {
+                      $_prefix = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap];
+                      $_found = false;
+                      $_value = $this->data[$lname];
+                      foreach ($_value as $k => $val) {
+                        if (strpos($val, $_prefix) === 0) {
+                          // Modification de la valeur prefixee
+                          $_found = true;
+                          $_value[$k] = $_prefix . $val;
+                          break;
                         }
-                        break;
-                    // DOUBLE
-                    case MappingMce::double:
-                        if (!is_array($value)) { 
-                          $value = doubleval($value);
-                        }
-                        break;
-                    // STRING LDAP
-                    case MappingMce::stringLdap:
-                        if (is_array($value)) {
-                          $value = [$value[0]];
-                        }
-                        else {
-                          $value = [$value];
-                        }
-                        break;
-                    // ARRAY LDAP
-                    case MappingMce::arrayLdap:
-                      if (is_array($value)) {
-                        unset($value['count']);
+                      }
+                      if (!$_found) {
+                        // Ajoute la nouvelle valeur prefixee
+                        $_value[] = $_prefix . $val;
+                      }
+                      $value = $_value;
+                    }
+                    else {
+                      if (empty($value)) {
+                        $value = [];
+                      }
+                      else if (is_array($value)) {
+                        $value = [$value[0]];
                       }
                       else {
                         $value = [$value];
                       }
-                      break;
-                    // STRING
-                    case MappingMce::string:
-                        // Gérer la taille des strings dans la BDD
-                        if (!is_array($value) && isset(MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::size])) {
-                            $value = mb_substr($value, 0, MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::size]);
-                        }
-                        break;
-                    // DATE
-                    case MappingMce::date:
-                        try {
-                            if ($value instanceof \DateTime) {
-                                if (isset(MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::format]))
-                                    $value = $value->format(MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::format]);
-                                else
-                                    $value = $value->format('Y-m-d H:i:s');
-                            } else if (!is_array($value)) {
-                                if (isset(MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::format]))
-                                    $value = date(MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::format], strtotime($value));
-                                else
-                                    $value = date('Y-m-d H:i:s', strtotime($value));
-                            }
-                        }
-                        catch (\Exception $ex) {
-                            M2Log::Log(M2Log::LEVEL_ERROR, "MagicObject->__set($name, $value) : Exception dans le format de date, utilisation de la valeur par defaut");
-                            // Une erreur s'est produite, on met une valeur par défaut pour le pas bloquer la lecture des données
-                            $value = "1970-01-01 00:00:00";
-                        }
-
-                        break;
-                    // TIMESTAMP
-                    case MappingMce::timestamp:
+                    }
+                    break;
+                // ARRAY LDAP
+                case MappingMce::arrayLdap:
+                  if (is_array($value)) {
+                    unset($value['count']);
+                  }
+                  else {
+                    $value = [$value];
+                  }
+                  break;
+                // BOOLEAN LDAP
+                case MappingMce::booleanLdap:
+                  if (is_array($value)) {
+                    $value = $value[0] ?: null;
+                  }
+                  if ($value) {
+                    $value = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue] ?: '1';
+                  }
+                  else {
+                    $value = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::falseLdapValue] ?: '0';
+                  }
+                  $value = [$value];
+                  break;
+                // STRING
+                case MappingMce::string:
+                    // Gérer la taille des strings dans la BDD
+                    if (!is_array($value) && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::size])) {
+                        $value = mb_substr($value, 0, MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::size]);
+                    }
+                    break;
+                // DATE
+                case MappingMce::date:
+                    try {
                         if ($value instanceof \DateTime) {
-                            $value = $value->getTimestamp();
-                        } else if (!is_array($value))  {
-                            $value = intval($value);
+                            if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::format]))
+                                $value = $value->format(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::format]);
+                            else
+                                $value = $value->format('Y-m-d H:i:s');
+                        } else if (!is_array($value)) {
+                            if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::format]))
+                                $value = date(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::format], strtotime($value));
+                            else
+                                $value = date('Y-m-d H:i:s', strtotime($value));
                         }
-                        break;
-                }
-            }
-            $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
-        }
-        if (isset($this->data[$lname]) && is_scalar($value) && !is_array($value) && $this->data[$lname] === $value)
-            return false;
+                    }
+                    catch (\Exception $ex) {
+                        M2Log::Log(M2Log::LEVEL_ERROR, "MagicObject->__set($name, $value) : Exception dans le format de date, utilisation de la valeur par defaut");
+                        // Une erreur s'est produite, on met une valeur par défaut pour le pas bloquer la lecture des données
+                        $value = "1970-01-01 00:00:00";
+                    }
 
-        $this->data[$lname] = $value;
-        $this->haschanged[$lname] = true;
-        $this->isLoaded = false;
+                    break;
+                // TIMESTAMP
+                case MappingMce::timestamp:
+                    if ($value instanceof \DateTime) {
+                        $value = $value->getTimestamp();
+                    } else if (!is_array($value))  {
+                        $value = intval($value);
+                    }
+                    break;
+            }
+        }        
+    }
+    if (isset($this->data[$lname]) && is_scalar($value) && !is_array($value) && $this->data[$lname] === $value) {
+      return false;
+    }
+    $this->data[$lname] = $value;
+    $this->haschanged[$lname] = true;
+    $this->isLoaded = false;
 	}
 
 	/**
@@ -245,7 +283,7 @@ abstract class MagicObject {
 		// Récupèration des données de mapping
 		if (isset(MappingMce::$Data_Mapping[$this->objectType])
 		    && isset(MappingMce::$Data_Mapping[$this->objectType][$name])) {
-      $lname = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::name];
+      			$lname = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::name];
 		}
 		if (isset($this->data[$lname])) {
 		  $value = $this->data[$lname];
@@ -256,12 +294,38 @@ abstract class MagicObject {
 		      // STRING LDAP
 		      case MappingMce::stringLdap:
 		        if (is_array($value)) {
-		          if (isset($value[0])) {
-		            $value = $value[0];
-		          }
-		          else {
-		            $value = "";
-		          }
+              // Gestion d'un prefix
+              if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap])) {
+                $_prefix = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap];
+                $_found = false;
+                foreach ($value as $val) {
+                  if (strpos($val, $_prefix) === 0) {
+                    $value = trim(str_replace($_prefix, '', $val));
+                    $_found = true;
+                    break;
+                  }
+                }
+                // Valeur par défaut
+                if (!$_found) {
+                  if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut])) {
+                    $value = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut];
+                  }
+                  else {
+                    $value = "";
+                  }
+                }
+              }
+              else {
+                if (isset($value[0])) {
+                  $value = $value[0];
+                }
+                else if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut])) {
+                  $value = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut];
+                }
+                else {
+                  $value = "";
+                }
+              }
 		        }
 		        break;
 	        // ARRAY LDAP
@@ -272,6 +336,18 @@ abstract class MagicObject {
 		        else {
 		          $value = [$value];
 		        }
+            break;
+          // BOOLEAN LDAP
+          case MappingMce::booleanLdap:
+		        if (is_array($value)) {
+              $value = $value[0] ?: null;              
+		        }
+		        if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue])) {
+              $value = $value === MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue];
+            }
+            else {
+              $value = $value == '1' ? true : false;
+            }
 		        break;
 		    }
 		  }		    
@@ -280,8 +356,9 @@ abstract class MagicObject {
 		// Récupération de la valeur par défaut
 		if (isset(MappingMce::$Data_Mapping[$this->objectType])
 		    && isset(MappingMce::$Data_Mapping[$this->objectType][$name])
-		    && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut]))
-		  return MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut];
+		    && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut])) {
+      return MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut];
+    }
 		return null;
 	}
 
@@ -293,14 +370,49 @@ abstract class MagicObject {
 	 * @ignore
 	 */
 	public function __isset($name) {
-		$lname = strtolower($name);
+    $name = strtolower($name);
+		$lname = $name;
 		// Récupèration des données de mapping
 		if (isset(MappingMce::$Data_Mapping[$this->objectType])
-				&& isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
-			$lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
-		}
-		$isset = isset($this->data[$lname]);
-
+				&& isset(MappingMce::$Data_Mapping[$this->objectType][$name])) {
+			$lname = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::name];
+    }
+    // Gestion du cas du prefix ldap ?
+    if (isset(MappingMce::$Data_Mapping[$this->objectType])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$name])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type])
+        && MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type] == MappingMce::stringLdap
+        && isset($this->data[$lname])
+        && is_array($this->data[$lname])) {
+      if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap])) {
+        $_prefix = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap];
+        $isset = false;
+        foreach ($this->data[$lname] as $val) {
+          if (strpos($val, $_prefix) === 0) {
+            $isset = true;
+            break;
+          }
+        }
+      }
+      else {
+        $isset = isset($this->data[$lname]) && isset($this->data[$lname][0]);
+      }
+    }
+    else if (isset(MappingMce::$Data_Mapping[$this->objectType])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$name])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type])
+        && MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type] == MappingMce::booleanLdap) {
+      $isset = true;
+    }
+    else {
+      $isset = isset($this->data[$lname]);
+    }
+    // Récupération de la valeur par défaut
+		if (!$isset && isset(MappingMce::$Data_Mapping[$this->objectType])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$name])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut])) {
+      $isset = true;
+    }
 		return $isset;
 	}
 
@@ -312,14 +424,40 @@ abstract class MagicObject {
 	 * @ignore
 	 */
 	public function __unset($name) {
-		$lname = strtolower($name);
+		$name = strtolower($name);
+		$lname = $name;
 		// Récupèration des données de mapping
 		if (isset(MappingMce::$Data_Mapping[$this->objectType])
-				&& isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
-			$lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
+				&& isset(MappingMce::$Data_Mapping[$this->objectType][$name])) {
+			$lname = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::name];
 		}
-
-		if (isset($this->data[$lname])) {
+    // Gestion du cas du prefix ldap ?
+    if (isset(MappingMce::$Data_Mapping[$this->objectType])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$name])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type])
+        && MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type] == MappingMce::stringLdap
+        && isset($this->data[$lname])
+        && is_array($this->data[$lname])) {
+      if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap])) {
+        $_prefix = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap];
+        foreach ($this->data[$lname] as $k => $val) {
+          if (strpos($val, $_prefix) === 0) {
+            unset($this->data[$lname][$k]);
+            $this->haschanged[$lname] = true;
+            break;
+          }
+        }
+        // Vider complétement si le tableau est vide
+        if (!count($this->data[$lname])) {
+          $this->data[$lname] = null;
+        }
+      }
+      else {
+        $this->data[$lname] = null;
+        $this->haschanged[$lname] = true;
+      }
+    }
+    else if (isset($this->data[$lname])) {
 			unset($this->data[$lname]);
 			$this->haschanged[$lname] = true;
 		}
@@ -344,22 +482,18 @@ abstract class MagicObject {
 				&& isset(MappingMce::$Data_Mapping[$this->objectType][$var])) {
 			$var = MappingMce::$Data_Mapping[$this->objectType][$var][MappingMce::name];
 		}
-
 		if ($operator == "set" && count($arguments) == 1){
 			$this->$var = $arguments[0];
 			return true;
 		}
-
 		if ($operator == "set" && count($arguments) == 2 && $arguments[1] === false){
 			$this->data[$var] = $arguments[0];
 			return true;
 		}
-
 		// getter without argument = return variable, null if not set
 		if ($operator == "get" && count($arguments) == 0) {
 			return $this->$var;
 		}
-
 		// getter with one argument = return variable if set, else the argument
 		else if ($operator == "get" && count($arguments) == 1) {
 			if (isset($this->$var)) {
@@ -368,7 +502,6 @@ abstract class MagicObject {
 			else
 				return $arguments[0];
 		}
-
 		if ($operator == "has" && count($arguments) == 0)
 			return isset($this->$var);
 

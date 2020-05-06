@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -20,15 +20,15 @@
  */
 namespace LibMelanie\Api\Melanie2;
 
-use LibMelanie\Api\Mce;
+use LibMelanie\Api\Mel;
 
 /**
  * Classe pour la gestion des Sync pour les addressbook
  * Certains champs sont mappés directement ou passe par des classes externes
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/Melanie2
  * @api
  * 
  * @property integer $token Numéro de token associé à l'objet Sync
@@ -38,4 +38,4 @@ use LibMelanie\Api\Mce;
  * @method bool load() Chargement du AddressbookSync, en fonction de l'addressbook et du token
  * @method bool exists() Test si le AddressbookSync existe, en fonction de l'addressbook et du token
  */
-class AddressbookSync extends Mce\AddressbookSync {}
+class AddressbookSync extends Mel\AddressbookSync {}

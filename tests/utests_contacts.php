@@ -45,12 +45,12 @@ if (!defined('CONFIGURATION_APP_LIBM2')) {
 set_include_path(__DIR__.'/..');
 include_once 'includes/libm2.php';
 
-use LibMelanie\Api\Melanie2\User;
-use LibMelanie\Api\Melanie2\Contact;
-use LibMelanie\Api\Melanie2\Addressbook;
+use LibMelanie\Api\Mce\User;
+use LibMelanie\Api\Mce\Contact;
+use LibMelanie\Api\Mce\Addressbook;
 use LibMelanie\Config\MappingMce;
 use LibMelanie\Log\M2Log;
-use LibMelanie\Api\Melanie2\AddressbookSync;
+use LibMelanie\Api\Mce\AddressbookSync;
 
 $log = function ($message) {
 	echo "[LibM2] $message \r\n";

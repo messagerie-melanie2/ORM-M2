@@ -1,3 +1,10 @@
+ORM M2 - 0.6.0.2
+------
+- Correctifs
+- 0005744: [LDAP] Prévoir de vider le cache après une modification
+- 0005734: Avoir tous les objets dans tous les namespaces
+- 0005735: Ajouter deux méthodes pour lister les groupes LDAP auquel un utilisateur appartient
+
 ORM M2 - 0.6.0.1
 ------
 - Correctifs mineurs

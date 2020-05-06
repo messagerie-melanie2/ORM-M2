@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -20,14 +20,14 @@
  */
 namespace LibMelanie\Api\Melanie2;
 
-use LibMelanie\Api\Mce;
+use LibMelanie\Api\Mel;
 
 /**
  * Classe attendee pour les évènements pour Melanie2
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/Melanie2
  * @api
  * 
  * @property string $email Email du participant
@@ -38,4 +38,4 @@ use LibMelanie\Api\Mce;
  * @property Attendee::RESPONSE_* $response Réponse du participant
  * @property Attendee::ROLE_* $role Role du participant
  */
-class Attendee extends Mce\Attendee {}
+class Attendee extends Mel\Attendee {}

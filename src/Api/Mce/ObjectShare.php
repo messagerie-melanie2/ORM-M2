@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -21,15 +21,13 @@
 namespace LibMelanie\Api\Mce;
 
 use LibMelanie\Api\Defaut;
-use LibMelanie\Objects\UserMelanie;
-use LibMelanie\Log\M2Log;
 
 /**
  * Classe objet partagé LDAP pour MCE
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/MCE
  * @api
  * 
  * @property string $uid Identifiant unique de l'utilisateur

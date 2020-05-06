@@ -22,9 +22,9 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Api\Mce\User;
-use LibMelanie\Api\Mce\Contact;
-use LibMelanie\Api\Mce\Addressbook;
+use LibMelanie\Api\Defaut\User;
+use LibMelanie\Api\Defaut\Contact;
+use LibMelanie\Api\Defaut\Addressbook;
 use LibMelanie\Log\M2Log;
 
 // Utilisation de la librairie Sabre VObject pour la conversion ICS
@@ -36,7 +36,7 @@ use Sabre\VObject;
  * Méthodes Statiques
  *
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
+ * @package LibMCE
  * @subpackage Lib
  */
 class ContactToVCard {
@@ -45,7 +45,7 @@ class ContactToVCard {
    *
    * @var string
    */
-  const PRODID = '-//ORM LibMelanie2 PHP/PNE Messagerie/MEDDE';
+  const PRODID = '-//Groupe Messagerie MTES/ORM LibMCE';
   /**
    * Version ICalendar utilisé pour la génération du VCard
    *
@@ -69,7 +69,7 @@ class ContactToVCard {
    * @param VObject\Component\VCard $vcard
    * @return string $vcard
    */
-  public static function Convert(Contact $contact, Addressbook $addressbook = null, User $user = null, VObject\Component\VCard $vcard = null) {
+  public static function Convert($contact, $addressbook = null, $user = null, VObject\Component\VCard $vcard = null) {
     if (! isset($vcard)) {
       $vcard = self::getVCard($contact, $addressbook, $user);
     }
@@ -85,7 +85,7 @@ class ContactToVCard {
    * @param User $user
    * @return VObject\Component\VCard $vcard
    */
-  public static function getVCard(Contact $contact, Addressbook $addressbook = null, User $user = null) {
+  public static function getVCard($contact, $addressbook = null, $user = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "VCardToContact->getVCard()");
     $vcontact = new VObject\Component\VCard();
     // PRODID et Version

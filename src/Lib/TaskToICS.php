@@ -21,9 +21,9 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Api\Mce\User;
-use LibMelanie\Api\Mce\Task;
-use LibMelanie\Api\Mce\Taskslist;
+use LibMelanie\Api\Defaut\User;
+use LibMelanie\Api\Defaut\Task;
+use LibMelanie\Api\Defaut\Taskslist;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\Config;
 
@@ -36,7 +36,7 @@ use Sabre\VObject;
  * Méthodes Statiques
  *
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
+ * @package LibMCE
  * @subpackage Lib
  *
  */
@@ -74,7 +74,7 @@ class TaskToICS {
 	 * @param User $user
 	 * @return string $ics
 	 */
-	public static function Convert(Task $task, Taskslist $taskslist = null, User $user = null) {
+	public static function Convert($task, $taskslist = null, User $user = null) {
 	  M2Log::Log(M2Log::LEVEL_DEBUG, "TaskToICS->Convert()");
 		$vcalendar = new VObject\Component\VCalendar();
 		$vtodo = $vcalendar->add('VTODO');
@@ -97,7 +97,7 @@ class TaskToICS {
 	 * @param User $user
 	 * @return VTodo
 	 */
-	private static function getVtodoFromTask(VObject\Component $vtodo, Task $task, Taskslist $taskslist = null, User $user = null) {
+	private static function getVtodoFromTask(VObject\Component $vtodo, $task, $taskslist = null, $user = null) {
 	  	M2Log::Log(M2Log::LEVEL_DEBUG, "TaskToICS->getVtodoFromTask()");
 	  	// Timezone
 		if (isset($user)) {

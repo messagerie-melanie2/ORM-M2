@@ -1,6 +1,6 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie MCE
+ * Ce fichier est développé pour la gestion de la lib MCE
  * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
@@ -20,17 +20,14 @@
  */
 namespace LibMelanie\Api\Mce;
 
-use LibMelanie\Lib\MceObject;
-use LibMelanie\Objects\AddressbookMelanie;
-use LibMelanie\Log\M2Log;
-use LibMelanie\Config\Config;
+use LibMelanie\Api\Defaut;
 
 /**
  * Classe de carnet d'adresses pour MCE
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/MCE
  * @api
  * 
  * @property string $id Identifiant unique du carnet d'adresses
@@ -47,90 +44,4 @@ use LibMelanie\Config\Config;
  * @method void getCTag() Charge la propriété ctag avec l'identifiant de modification du carnet d'adresses
  * @method bool asRight($action) Retourne un boolean pour savoir si les droits sont présents
  */
-class Addressbook extends MceObject {
-  /**
-   * Utilisateur associé au carnet d'adresses
-   * 
-   * @var User $user
-   * @ignore
-   *
-   */
-  public $user;
-  
-  /**
-   * Constructeur de l'objet
-   * 
-   * @param User $user          
-   */
-  function __construct($user = null) {
-    // Défini la classe courante
-    $this->get_class = get_class($this);
-    
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
-    // Définition du carnet d'adresse Mel
-    $this->objectmelanie = new AddressbookMelanie();
-    // Définition des objets associés
-    if (isset($user)) {
-      $this->user = $user;
-      $this->objectmelanie->user_uid = $this->user->uid;
-    }
-  }
-  
-  /**
-   * Défini l'utilisateur Melanie
-   * 
-   * @param User $user          
-   * @ignore
-   *
-   */
-  public function setUserMelanie($user) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
-    $this->user = $user;
-    $this->objectmelanie->user_uid = $this->user->uid;
-  }
-  
-  /**
-   * ***************************************************
-   * METHOD MAPPING
-   */
-  /**
-   * Récupère la liste de tous les contacts
-   * need: $this->id
-   * 
-   * @return Contact[]
-   */
-  public function getAllContacts() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getAllContacts()");
-    $_contacts = $this->objectmelanie->getAllContacts();
-    if (!isset($_contacts))
-      return null;
-    $contacts = [];
-    foreach ($_contacts as $_contact) {
-      $contact = new Contact($this->user, $this);
-      $contact->setObjectMelanie($_contact);
-      $contacts[$_contact->id] = $contact;
-    }
-    // Détruit les variables pour libérer le plus rapidement de la mémoire
-    unset($_contacts);
-    // TODO: Test - Nettoyage mémoire
-    //gc_collect_cycles();
-    return $contacts;
-  }
-  
-  /**
-   * ***************************************************
-   * DATA MAPPING
-   */
-  /**
-   * Mapping carddavurl field
-   */
-  protected function getMapCarddavurl() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCarddavurl()");
-    if (!isset($this->objectmelanie)) throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
-    $url = null;
-    if (Config::is_set(Config::ADDRESSBOOK_CARDDAV_URL)) {
-      $url = str_replace(['%u', '%o', '%i'], [$this->user->uid, $this->objectmelanie->owner, $this->objectmelanie->id], Config::get(Config::ADDRESSBOOK_CARDDAV_URL));
-    }
-    return $url;
-  }
-}
+class Addressbook extends Defaut\Addressbook {}

@@ -1,9 +1,12 @@
 <?php
 /**
- * Ce fichier est développé pour la gestion de la librairie Mélanie2
+ * Ce fichier est développé pour la gestion de la lib MCE
+ * 
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
+ * 
  * ORM Mél Copyright © 2020 Groupe Messagerie/MTES
+ * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,40 +20,15 @@
  */
 namespace LibMelanie\Api\Mce\Users;
 
+use LibMelanie\Api\Defaut;
+
 /**
  * Classe utilisateur pour MCE
  * pour la gestion du type de boite
  * 
  * @author Groupe Messagerie/MTES - Apitech
- * @package Librairie MCE
- * @subpackage API MCE
+ * @package LibMCE
+ * @subpackage API/MCE
  * @api
  */
-class Type {
-  // *** Type de boite
-  /**
-   * Boite individuelle
-   */
-  const INDIVIDUELLE = 'BALI';
-  /**
-   * Boite partagée
-   */
-  const PARTAGEE = 'BALP';
-  /**
-   * Boite de ressource
-   */
-  const RESSOURCE = 'BALR';
-  /**
-   * Boite d'unité
-   */
-  const UNITE = 'BALU';
-  /**
-   * Boite de service
-   */
-  const SERVICE = 'BALS';
-  /**
-   * Boite applicative
-   */
-  const APPLICATIVE = 'BALA';
-
-}
+class Type extends Defaut\Users\Type {}

@@ -45,7 +45,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	/**
 	 * Constructeur de l'objet, appelé par PDO
 	 */
-	function __construct() {
+	public function __construct() {
 	    // Défini la classe courante
 	    $this->get_class = get_class($this);
 
@@ -63,12 +63,48 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	}
 
 	/**
+	 * String representation of object
+	 *
+	 * @return string
+	 */
+	public function serialize() {
+		return serialize([
+			'data'        => $this->data,
+			'isExist'     => $this->isExist,
+			'isLoaded'    => $this->isLoaded,
+			'objectType'  => $this->objectType,
+			'primaryKeys' => $this->primaryKeys,
+			'get_class'   => $this->get_class,
+			'tableName'   => $this->tableName,
+		]);
+	}
+
+	/**
+	 * Constructs the object
+	 *
+	 * @param string $serialized
+	 * @return void
+	 */
+	public function unserialize($serialized) {
+		$array = unserialize($serialized);
+		if ($array) {
+			$this->data = $array['data'];
+			$this->isExist = $array['isExist'];
+			$this->isLoaded = $array['isLoaded'];
+			$this->objectType = $array['objectType'];
+			$this->primaryKeys = $array['primaryKeys'];
+			$this->get_class = $array['get_class'];
+			$this->tableName = $array['tableName'];
+		}
+	}
+
+	/**
 	 * Chargement de l'objet
 	 * need: $this->id
 	 * need: $this->user_uid
 	 * @return boolean isExist
 	 */
-	function load() {
+	public function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
 		if (!isset($this->id)) return false;
 		if (!isset($this->user_uid)) return false;
@@ -111,7 +147,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * (non-PHPdoc)
 	 * @see IObjectMelanie::save()
 	 */
-	function save() {
+	public function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
@@ -202,7 +238,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * (non-PHPdoc)
 	 * @see IObjectMelanie::delete()
 	 */
-	function delete() {
+	public function delete() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
 		if (!isset($this->tableName)) return false;
 
@@ -254,7 +290,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * (non-PHPdoc)
 	 * @see IObjectMelanie::exists()
 	 */
-	function exists() {
+	public function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->tableName)) return false;
@@ -287,7 +323,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * L'appel externe n'est donc pas nécessaire (mais cette méthode doit rester public)
 	 * @param bool $isExist si l'objet existe
 	 */
-	function pdoConstruct($isExist) {
+	public function pdoConstruct($isExist) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->pdoConstruct($isExist)");
 		$this->initializeHasChanged();
 		$this->isExist = $isExist;
@@ -298,7 +334,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * need: $this->id
 	 * @return Task[]
 	 */
-	function getAllTasks() {
+	public function getAllTasks() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getAllTasks()");
 		if (!isset($this->id)) return false;
 
@@ -314,7 +350,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * need: $this->id
 	 * @return string
 	 */
-	function getCTag() {
+	public function getCTag() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getCTag()");
 		if (!isset($this->id)) return false;
 		if (!isset($this->ctag)) {
@@ -330,13 +366,13 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 		return $this->ctag;
 	}
 
-  /**
+  	/**
 	 * Recupère le timezone par défaut pour le
 	 * need: $this->user_uid
 	 * 
 	 * @deprecated
 	 */
-	function getTimezone() {
+	public function getTimezone() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getTimezone()");
 		if (!isset($this->user_uid)) return DefaultConfig::CALENDAR_DEFAULT_TIMEZONE;
 
@@ -388,7 +424,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * @param string $action
 	 * @return boolean
 	 */
-	function asRight($action) {
+	public function asRight($action) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->asRight($action)");
 		return (DefaultConfig::$PERMS[$action] & $this->perm_taskslist) === DefaultConfig::$PERMS[$action];
 	}

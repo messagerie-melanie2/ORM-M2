@@ -23,6 +23,7 @@ namespace LibMelanie\Lib;
 
 use LibMelanie\Config\MappingMce;
 use LibMelanie\Log\M2Log;
+use Serializable;
 
 /**
  * Objet magic pour les getter et setter en fonction des requêtes SQL
@@ -31,7 +32,7 @@ use LibMelanie\Log\M2Log;
  * @package Librairie Mélanie2
  * @subpackage Lib
  */
-abstract class MagicObject {
+abstract class MagicObject implements Serializable {
 	/**
 	 * Stockage des données cachées
 	 * @var array
@@ -66,7 +67,41 @@ abstract class MagicObject {
 	 * Classe courante
 	 * @var string
 	 */
-	protected $get_class;
+  protected $get_class;
+  
+  /**
+	 * String representation of object
+	 *
+	 * @return string
+	 */
+	public function serialize() {
+		return serialize([
+      'data'        => $this->data,
+      'isExist'     => $this->isExist,
+      'isLoaded'    => $this->isLoaded,
+      'objectType'  => $this->objectType,
+      'primaryKeys' => $this->primaryKeys,
+      'get_class'   => $this->get_class,
+    ]);
+	}
+
+	/**
+	 * Constructs the object
+	 *
+	 * @param string $serialized
+	 * @return void
+	 */
+	public function unserialize($serialized) {
+    $array = unserialize($serialized);
+    if ($array) {
+      $this->data = $array['data'];
+      $this->isExist = $array['isExist'];
+      $this->isLoaded = $array['isLoaded'];
+      $this->objectType = $array['objectType'];
+      $this->primaryKeys = $array['primaryKeys'];
+      $this->get_class = $array['get_class'];
+    }
+	}
 
 	/**
 	 * Remet à 0 le haschanged
@@ -116,11 +151,19 @@ abstract class MagicObject {
 
 	/**
 	 * Return data array
-	 * @return array:
+	 * @return array
 	 */
 	public function __get_data() {
 	    return $this->data;
-	}
+  }
+  
+  /**
+	 * Set data array
+	 * @param array
+	 */
+	public function __set_data($data) {
+    $this->data = $data;
+  }
 
 	/**
 	 * Copy l'objet depuis un autre

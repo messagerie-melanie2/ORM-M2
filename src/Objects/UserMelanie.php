@@ -44,9 +44,15 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   /**
    * Quel serveur LDAP utiliser pour la lecture des données
    * 
-   * @var boolean
+   * @var string
    */
   private $server;
+  /**
+   * Mapping des données
+   * 
+   * @var array
+   */
+  private $mapping;
   /**
    * Liste des propriétés qui ne peuvent pas être modifiées
    * 
@@ -87,18 +93,23 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     $this->objectType = $this->objectType[count($this->objectType) - 1];
 
     // Init du serveur
-    $this->server = $server;
+    if (isset($server)) {
+      $this->server = $server;
+    }
+    if (isset($mapping)) {
+      $this->mapping = $mapping;
+    }
 
     // Gestion des proprietes non modifiables
     if (isset($unchangeableProperties)) {
       $this->_unchangeableProperties = $unchangeableProperties;
     }
-    else {
+    else if (!isset($this->_unchangeableProperties)) {
       $this->_unchangeableProperties = self::$unchangeableProperties;
     }
 
     // Gestion du mapping global
-    static::Init($mapping, $server);
+    static::Init($this->mapping, $this->server);
     
     // Gestion du mapping des clés primaires
     if (isset(MappingMce::$Primary_Keys[$this->objectType])) {
@@ -112,12 +123,53 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   }
 
   /**
+	 * String representation of object
+	 *
+	 * @return string
+	 */
+	public function serialize() {
+		return serialize([
+      'data'        => $this->data,
+      'isExist'     => $this->isExist,
+      'isLoaded'    => $this->isLoaded,
+      'objectType'  => $this->objectType,
+      'primaryKeys' => $this->primaryKeys,
+      'get_class'   => $this->get_class,
+      '_unchangeableProperties'   => $this->_unchangeableProperties,
+      'mapping'     => $this->mapping,
+    ]);
+	}
+
+	/**
+	 * Constructs the object
+	 *
+	 * @param string $serialized
+	 * @return void
+	 */
+	public function unserialize($serialized) {
+    $array = unserialize($serialized);
+    if ($array) {
+      $this->data = $array['data'];
+      $this->isExist = $array['isExist'];
+      $this->isLoaded = $array['isLoaded'];
+      $this->objectType = $array['objectType'];
+      $this->primaryKeys = $array['primaryKeys'];
+      $this->get_class = $array['get_class'];
+      $this->_unchangeableProperties = $array['_unchangeableProperties'];
+      $this->mapping = $array['mapping'];
+      if (isset($this->mapping)) {
+        self::Init($this->mapping, null);
+      }
+    }
+	}
+
+  /**
    * Appel l'initialisation du mapping
    * 
    * @param array $mapping Données de mapping
    * @return boolean
    */
-  protected static function Init($mapping, $server) {
+  protected static function Init($mapping = [], $server = null) {
     if (!self::$isInit) {
       if (isset($server) && isset(Config\Ldap::$SERVERS[$server]['mapping'])) {
         $mapping = array_merge($mapping, Config\Ldap::$SERVERS[$server]['mapping']);
@@ -157,6 +209,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function load($attributes = null, $filter = null, $filterFromEmail = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->load()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     // Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
     if (!isset($this->uid) && !isset($this->email) && !isset($this->dn)) {
       return false;
@@ -214,6 +268,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function exists($attributes = null, $filter = null, $filterFromEmail = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->exists()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     // Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
     if (!isset($this->uid) && !isset($this->email) && !isset($this->dn)) {
       return false;
@@ -255,6 +311,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function save() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     $entry = $this->getEntry();
     if (!empty($entry) && isset($this->dn)) {
       $ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$MASTER_LDAP);
@@ -271,6 +329,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function delete() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->delete()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     throw new \Exception('Not implemented');
   }
   
@@ -347,6 +407,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function authentification($password, $master = false, $user_dn = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->authentification()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if ($master) {
       $this->server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
     }
@@ -371,6 +433,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getBalp($attributes = null, $filter = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getBalpList()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return [];
     }
@@ -394,7 +458,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       // Parcours la list des balp pour générer les objet UserMelanie
       foreach ($result as $data) {
         if (is_array($data)) {
-          $balp = new UserMelanie();
+          $balp = new UserMelanie($this->server);
           $balp->setData($data);
           $balps[$balp->uid] = $balp;
         }
@@ -413,6 +477,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getBalpEmission($attributes = null, $filter = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getBalpListEmission()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return [];
     }
@@ -436,7 +502,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       // Parcours la list des balp pour générer les objet UserMelanie
       foreach ($result as $data) {
         if (is_array($data)) {
-          $balp = new UserMelanie();
+          $balp = new UserMelanie($this->server);
           $balp->setData($data);
           $balps[$balp->uid] = $balp;
         }
@@ -455,6 +521,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getBalpGestionnaire($attributes = null, $filter = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getBalpListGestionnaire()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
@@ -478,7 +546,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       // Parcours la list des balp pour générer les objet UserMelanie
       foreach ($result as $data) {
         if (is_array($data)) {
-          $balp = new UserMelanie();
+          $balp = new UserMelanie($this->server);
           $balp->setData($data);
           $balps[$balp->uid] = $balp;
         }
@@ -497,6 +565,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getGroups($attributes = null, $filter = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getGroups()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->dn)) {
       return false;
     }
@@ -520,7 +590,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       // Parcours la liste des listes pour générer les objet UserMelanie
       foreach ($result as $data) {
         if (is_array($data)) {
-          $list = new UserMelanie();
+          $list = new UserMelanie($this->server);
           $list->setData($data);
           $lists[] = $list;
         }
@@ -539,6 +609,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getGroupsIsMember($attributes = null, $filter = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getGroupsIsMember()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
@@ -562,7 +634,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       // Parcours la liste des listes pour générer les objet UserMelanie
       foreach ($result as $data) {
         if (is_array($data)) {
-          $list = new UserMelanie();
+          $list = new UserMelanie($this->server);
           $list->setData($data);
           $lists[] = $list;
         }
@@ -581,6 +653,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getListsIsMember($attributes = null, $filter = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getListsIsMember()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
@@ -604,7 +678,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       // Parcours la liste des listes pour générer les objet UserMelanie
       foreach ($result as $data) {
         if (is_array($data)) {
-          $list = new UserMelanie();
+          $list = new UserMelanie($this->server);
           $list->setData($data);
           $lists[] = $list;
         }
@@ -621,6 +695,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getDefaultCalendar() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultCalendar()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
@@ -662,6 +738,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getUserCalendars() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserCalendars()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
@@ -692,6 +770,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getSharedCalendars() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedCalendars()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
@@ -724,6 +804,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getDefaultTaskslist() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultTaskslist()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
@@ -765,6 +847,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getUserTaskslists() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserTaskslists()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
@@ -795,6 +879,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getSharedTaskslists() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedTaskslists()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
@@ -827,6 +913,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getDefaultAddressbook() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultAddressbook()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
@@ -868,6 +956,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getUserAddressbooks() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserAddressbooks()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
@@ -898,6 +988,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getSharedAddressbooks() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedAddressbooks()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
@@ -930,6 +1022,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    */
   public function getTimezone() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getTimezone()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
     // Initialisation du backend SQL
     Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid)) {

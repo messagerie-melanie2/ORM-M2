@@ -21,6 +21,7 @@
 namespace LibMelanie\Lib;
 
 use LibMelanie\Exceptions;
+use Serializable;
 
 /**
  * Objet MCE, implémente les getter/setter pour le mapping des données
@@ -29,7 +30,7 @@ use LibMelanie\Exceptions;
  * @package LibMCE
  * @subpackage Lib
  */
-abstract class MceObject {
+abstract class MceObject implements Serializable {
 	/**
 	 * Objet Mel
 	 */
@@ -49,13 +50,23 @@ abstract class MceObject {
 	private $_namespace;
 
 	/**
+	 * Liste des callback enregistrés pour le cache
+	 */
+	private $_cacheCallbacks;
+
+	/**
+	 * Liste des propriétés à sérialiser pour le cache
+	 */
+	protected $serializedProperties = [];
+
+	/**
 	 * Récupère le namespace de la classe courante en fonction du get_class
 	 * L'utilisateur de __NAMESPACE__ n'est pas possible pour un héritage
 	 * 
 	 * @return string Namespace courant
 	 */
 	public function __getNamespace() {
-		if (!isset($_namespace)) {
+		if (!isset($this->_namespace)) {
 			$class = $this->get_class;
 			$class = explode('\\', $class);
 			array_pop($class);
@@ -66,7 +77,9 @@ abstract class MceObject {
 
 	/**
 	 * Défini l'objet Melanie
+	 * 
 	 * @param ObjectMelanie $objectmelanie
+	 * 
 	 * @ignore
 	 */
 	public function setObjectMelanie($objectmelanie) {
@@ -75,11 +88,21 @@ abstract class MceObject {
 
 	/**
 	 * Récupère l'objet Melanie
+	 * 
 	 * @ignore
 	 */
 	public function getObjectMelanie() {
 		if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 		return $this->objectmelanie;
+	}
+
+	/**
+	 * Est-ce que l'object melanie est bien positionné ?
+	 * 
+	 * @ignore
+	 */
+	public function issetObjectMelanie() {
+		return isset($this->objectmelanie);
 	}
 
 	/**
@@ -176,6 +199,62 @@ abstract class MceObject {
 			return call_user_func_array([$this, $name], $arguments);
 		} else {
 			return call_user_func_array([$this->objectmelanie, $name], $arguments);
+		}
+	}
+
+	/**
+	 * String representation of object
+	 *
+	 * @return string
+	 */
+	public function serialize() {
+		$array = [];
+		foreach ($this->serializedProperties as $prop) {
+			$array[$prop] = $this->$prop;
+		}
+		$array['_namespace'] = $this->_namespace;
+		$array['get_class'] = $this->get_class;
+		$array['objectmelanie'] = serialize($this->objectmelanie);
+		return serialize($array);
+	}
+
+	/**
+	 * Constructs the object
+	 *
+	 * @param string $serialized
+	 * 
+	 * @return void
+	 */
+	public function unserialize($serialized) {
+		$array = unserialize($serialized);
+		if ($array) {
+			$this->_namespace = $array['_namespace'];
+			$this->get_class = $array['get_class'];
+			$this->objectmelanie = unserialize($array['objectmelanie']);
+			foreach ($this->serializedProperties as $prop) {
+				$this->$prop = $array[$prop];
+			}
+		}
+	}
+
+	/**
+	 * Enregistrement des methodes de gestion du cache
+	 */
+	public function registerCache($app, $callback) {
+		if (!isset($this->_cacheCallbacks)) {
+			$this->_cacheCallbacks = [];
+		}
+		$this->_cacheCallbacks[$app] = $callback;
+	}
+
+	/**
+	 * Lancement des methodes de gestion du cache (nouveau contenu)
+	 */
+	public function executeCache() {
+		if (is_array($this->_cacheCallbacks)) {
+			foreach ($this->_cacheCallbacks as $callback) {
+				call_user_func($callback);
+			}
 		}
 	}
 }

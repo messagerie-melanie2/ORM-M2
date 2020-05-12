@@ -58,7 +58,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	/**
 	 * Constructeur par défaut, appelé par PDO
 	 */
-	function __construct() {
+	public function __construct() {
 	    // Défini la classe courante
 	    $this->get_class = get_class($this);
 
@@ -75,10 +75,50 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	}
 
 	/**
+	 * String representation of object
+	 *
+	 * @return string
+	 */
+	public function serialize() {
+		return serialize([
+			'data'        => $this->data,
+			'isExist'     => $this->isExist,
+			'isLoaded'    => $this->isLoaded,
+			'objectType'  => $this->objectType,
+			'primaryKeys' => $this->primaryKeys,
+			'get_class'   => $this->get_class,
+			'organizer_uid'   		=> $this->organizer_uid,
+			'organizer_calendar'   	=> $this->organizer_calendar,
+			'organizer_attendees'   => $this->organizer_attendees,
+		]);
+	}
+
+	/**
+	 * Constructs the object
+	 *
+	 * @param string $serialized
+	 * @return void
+	 */
+	public function unserialize($serialized) {
+		$array = unserialize($serialized);
+		if ($array) {
+			$this->data = $array['data'];
+			$this->isExist = $array['isExist'];
+			$this->isLoaded = $array['isLoaded'];
+			$this->objectType = $array['objectType'];
+			$this->primaryKeys = $array['primaryKeys'];
+			$this->get_class = $array['get_class'];
+			$this->organizer_uid = $array['organizer_uid'];
+			$this->organizer_calendar = $array['organizer_calendar'];
+			$this->organizer_attendees = $array['organizer_attendees'];
+		}
+	}
+
+	/**
 	 * Charge l'objet
 	 * @return bool isExist
 	 */
-	function load() {
+	public function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
@@ -114,7 +154,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 * Sauvegarde l'objet
 	 * @return boolean True si c'est une command Insert, False si c'est un Update
 	 */
-	function save() {
+	public function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
@@ -212,7 +252,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 * Supprime l'objet
 	 * @return boolean
 	 */
-	function delete() {
+	public function delete() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->delete()");
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
@@ -245,14 +285,14 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 * Permet de forcer la variable isExist
 	 * @param boolean $isExist
 	 */
-	function setExist($isExist) {
+	public function setExist($isExist) {
 	  $this->isExist = $isExist;
 	}
 
 	/**
 	 * Si l'objet existe
 	 */
-	function exists() {
+	public function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
@@ -296,7 +336,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 * @param String[] $case_unsensitive_fields Liste des champs pour lesquels on ne sera pas sensible à la casse
 	 * @return EventMelanie[] Array
 	 */
-	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
+	public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList()");
 		// Mapping pour les operateurs
 		$opmapping = [];
@@ -548,7 +588,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 * puisse mettre à jour leur statut
 	 * @return boolean True si OK, False sinon
 	 */
-	function updateMeetingEtag() {
+	public function updateMeetingEtag() {
 		// Si l'uid de l'évènement n'est pas défini, on ne peut pas faire l'update
 		if (!isset($this->uid)) return false;
 
@@ -575,7 +615,7 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 * L'appel externe n'est donc pas nécessaire (mais cette méthode doit rester public)
 	 * @param bool $isExist si l'objet existe
 	 */
-	function pdoConstruct($isExist) {
+	public function pdoConstruct($isExist) {
 		//M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->pdoConstruct($isExist)");
 		$this->initializeHasChanged();
 		$this->isExist = $isExist;

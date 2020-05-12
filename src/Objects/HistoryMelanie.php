@@ -39,7 +39,7 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 	/**
 	 * Constructeur par défaut, appelé par PDO
 	 */
-	function __construct() {
+	public function __construct() {
 	    // Défini la classe courante
 	    $this->get_class = get_class($this);
 
@@ -58,7 +58,7 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 	/**
 	 * charger l'objet
 	 */
-	function load() {
+	public function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
@@ -94,7 +94,7 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 	 * Sauvegarder l'objet
 	 * @return boolean True si c'est une command Insert, False si c'est un Update
 	 */
-	function save() {
+	public function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
@@ -188,14 +188,14 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 	 * Suppression de l'objet
 	 * @return boolean
 	 */
-	function delete() {
+	public function delete() {
 		return false;
 	}
 
 	/**
 	 * Est-ce que l'objet existe déjà
 	 */
-	function exists() {
+	public function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;

@@ -96,6 +96,34 @@ class Taskslist extends MceObject {
    * METHOD MAPPING
    */
   /**
+   * Enregistrement de l'objet
+   * Nettoie le cache du user
+   * 
+   * @return null si erreur, boolean sinon (true insert, false update)
+   */
+  public function save() {
+    $ret = $this->objectmelanie->save();
+    if (!is_null($ret) && isset($this->user)) {
+      $this->user->cleanTaskslists();
+    }
+    return $ret;
+  }
+
+  /**
+   * Suppression de l'objet
+   * Nettoie le cache du user
+   * 
+   * @return boolean
+   */
+  public function delete() {
+    $ret = $this->objectmelanie->delete();
+    if ($ret && isset($this->user)) {
+      $this->user->cleanTaskslists();
+    }
+    return $ret;
+  }
+
+  /**
    * Récupère la liste de toutes les tâches
    * need: $this->id
    * 

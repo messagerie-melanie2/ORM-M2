@@ -1,3 +1,9 @@
+ORM M2 - 0.6.0.3
+------
+- 0005761: Serialization des objets pour la mise en cache
+- 0005760: Méthodes clean pour nettoyer les données en cache
+- 0005762: Mettre en place des events pour la gestion du cache
+
 ORM M2 - 0.6.0.2
 ------
 - Correctifs

@@ -182,6 +182,32 @@ abstract class User extends MceObject {
    */
   protected $_preferences;
 
+  /**
+   * Liste des propriétés à sérialiser pour le cache
+   */
+  protected $serializedProperties = [
+    'objectshare',
+    'otherldapobject',
+    '_defaultCalendar',
+    '_userCalendars',
+    '_sharedCalendars',
+    '_defaultAddressbook',
+    '_userAddressbooks',
+    '_sharedAddressbooks',
+    '_defaultTaskslist',
+    '_userTaskslists',
+    '_sharedTaskslists',
+    '_objectsShared',
+    '_objectsSharedEmission',
+    '_objectsSharedGestionnaire',
+    '_shares',
+    '_lists',
+    '_server',
+    '_isLoaded',
+    '_isExist',
+    '_preferences',
+  ];
+
   // **** Constantes pour les preferences
   /**
    * Scope de preference par defaut pour l'utilisateur
@@ -379,6 +405,7 @@ abstract class User extends MceObject {
     if ($useIsLoaded) {
       $this->_isLoaded = $ret;
     }
+    $this->executeCache();
     return $ret;
   }
   /**
@@ -438,6 +465,7 @@ abstract class User extends MceObject {
         $this->_objectsShared[$key] = new $class($this->_server);
         $this->_objectsShared[$key]->setObjectMelanie($object);
       }
+      $this->executeCache();
     }
     return $this->_objectsShared;
   }
@@ -469,6 +497,7 @@ abstract class User extends MceObject {
         $this->_objectsShared[$key] = new static($this->_server);
         $this->_objectsShared[$key]->setObjectMelanie($object);
       }
+      $this->executeCache();
     }
     return $this->_objectsShared;
   }
@@ -501,6 +530,7 @@ abstract class User extends MceObject {
         $this->_objectsSharedEmission[$key] = new $class($this->_server);
         $this->_objectsSharedEmission[$key]->setObjectMelanie($object);
       }
+      $this->executeCache();
     }
     return $this->_objectsSharedEmission;
   }
@@ -532,6 +562,7 @@ abstract class User extends MceObject {
         $this->_objectsSharedEmission[$key] = new static($this->_server);
         $this->_objectsSharedEmission[$key]->setObjectMelanie($object);
       }
+      $this->executeCache();
     }
     return $this->_objectsSharedEmission;
   }
@@ -564,6 +595,7 @@ abstract class User extends MceObject {
         $this->_objectsSharedGestionnaire[$key] = new $class($this->_server);
         $this->_objectsSharedGestionnaire[$key]->setObjectMelanie($object);
       }
+      $this->executeCache();
     }
     return $this->_objectsSharedGestionnaire;
   }
@@ -595,6 +627,7 @@ abstract class User extends MceObject {
         $this->_objectsSharedGestionnaire[$key] = new static($this->_server);
         $this->_objectsSharedGestionnaire[$key]->setObjectMelanie($object);
       }
+      $this->executeCache();
     }
     return $this->_objectsSharedGestionnaire;
   }
@@ -627,6 +660,7 @@ abstract class User extends MceObject {
         $this->_lists[$key] = new $class($this->_server);
         $this->_lists[$key]->setObjectMelanie($object);
       }
+      $this->executeCache();
     }
     return $this->_lists;
   }
@@ -659,6 +693,7 @@ abstract class User extends MceObject {
         $this->_lists[$key] = new $class($this->_server);
         $this->_lists[$key]->setObjectMelanie($object);
       }
+      $this->executeCache();
     }
     return $this->_lists;
   }
@@ -691,6 +726,7 @@ abstract class User extends MceObject {
         $this->_lists[$key] = new $class($this->_server);
         $this->_lists[$key]->setObjectMelanie($object);
       }
+      $this->executeCache();
     }
     return $this->_lists;
   }
@@ -707,6 +743,7 @@ abstract class User extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getPreference($scope, $name)");
     if (!isset($this->_preferences)) {
       $this->_get_preferences();
+      $this->executeCache();
     }
     if (isset($this->_preferences["$scope:$name"])) {
       return $this->_preferences["$scope:$name"]->value;
@@ -793,6 +830,7 @@ abstract class User extends MceObject {
     }
     $this->_preferences["$scope:$name"]->value = $value;
     $ret = $this->_preferences["$scope:$name"]->save();
+    $this->executeCache();
     return !is_null($ret);  
   }
   /**
@@ -861,6 +899,7 @@ abstract class User extends MceObject {
     }
     $ret = $this->_preferences["$scope:$name"]->delete();
     unset($this->_preferences["$scope:$name"]);
+    $this->executeCache();
     return !is_null($ret);  
   }
 
@@ -890,6 +929,7 @@ abstract class User extends MceObject {
         $this->_defaultCalendar = new $Calendar($this);
         $this->_defaultCalendar->setObjectMelanie($_calendar);
       }
+      $this->executeCache();
     }
     return $this->_defaultCalendar;
   }
@@ -919,6 +959,7 @@ abstract class User extends MceObject {
       else {
         $this->_defaultCalendar = null;
       }
+      $this->executeCache();
       return true;
     }
     return false;
@@ -948,6 +989,7 @@ abstract class User extends MceObject {
       $this->setDefaultCalendar($calendar->id);
       // Création du display_cals (utile pour que pacome fonctionne)
       $this->savePreference(self::PREF_SCOPE_CALENDAR, 'display_cals', 'a:0:{}');
+      $this->executeCache();
       return true;
     }
     return false;
@@ -984,7 +1026,7 @@ abstract class User extends MceObject {
           $this->_userCalendars[$_calendar->id] = $calendar;
         }
       }
-      
+      $this->executeCache();
     }
     return $this->_userCalendars;
   }
@@ -1009,8 +1051,20 @@ abstract class User extends MceObject {
         $calendar->setObjectMelanie($_calendar);
         $this->_sharedCalendars[$_calendar->id] = $calendar;
       }
+      $this->executeCache();
     }
     return $this->_sharedCalendars;
+  }
+
+  /**
+   * Nettoyer les donnés en cache 
+   * (appelé lors de la modification d'un calendrier)
+   */
+  public function cleanCalendars() {
+    $this->_defaultCalendar = null;
+    $this->_userCalendars = null;
+    $this->_sharedCalendars = null;
+    $this->executeCache();
   }
   
   /**
@@ -1039,7 +1093,7 @@ abstract class User extends MceObject {
         $this->_defaultTaskslist = new $Taskslist($this);
         $this->_defaultTaskslist->setObjectMelanie($_taskslist);
       }
-      
+      $this->executeCache();
     }
     return $this->_defaultTaskslist;
   }
@@ -1069,6 +1123,7 @@ abstract class User extends MceObject {
       else {
         $this->_defaultTaskslist = null;
       }
+      $this->executeCache();
       return true;
     }
     return false;
@@ -1096,6 +1151,7 @@ abstract class User extends MceObject {
     if ($taskslist->save()) {
       // Création du default taskslist
       $this->setDefaultTaskslist($taskslist->id);
+      $this->executeCache();
       return true;
     }
     return false;
@@ -1131,7 +1187,7 @@ abstract class User extends MceObject {
           $this->_userTaskslists[$_taskslist->id] = $taskslist;
         }
       }
-      
+      $this->executeCache();
     }
     return $this->_userTaskslists;
   }
@@ -1156,8 +1212,20 @@ abstract class User extends MceObject {
         $taskslist->setObjectMelanie($_taskslist);
         $this->_sharedTaskslists[$_taskslist->id] = $taskslist;
       }
+      $this->executeCache();
     }
     return $this->_sharedTaskslists;
+  }
+
+  /**
+   * Nettoyer les donnés en cache 
+   * (appelé lors de la modification d'un calendrier)
+   */
+  public function cleanTaskslists() {
+    $this->_defaultTaskslist = null;
+    $this->_userTaskslists = null;
+    $this->_sharedTaskslists = null;
+    $this->executeCache();
   }
   
   /**
@@ -1186,6 +1254,7 @@ abstract class User extends MceObject {
         $this->_defaultAddressbook = new $Addressbook($this);
         $this->_defaultAddressbook->setObjectMelanie($_addressbook);
       }
+      $this->executeCache();
     }
     return $this->_defaultAddressbook;
   }
@@ -1215,6 +1284,7 @@ abstract class User extends MceObject {
       else {
         $this->_defaultAddressbook = null;
       }
+      $this->executeCache();
       return true;
     }
     return false;
@@ -1242,6 +1312,7 @@ abstract class User extends MceObject {
     if ($addressbook->save()) {
       // Création du default addressbook
       $this->setDefaultAddressbook($addressbook->id);
+      $this->executeCache();
       return true;
     }
     return false;
@@ -1277,6 +1348,7 @@ abstract class User extends MceObject {
           $this->_userAddressbooks[$_addressbook->id] = $addressbook;
         }
       }
+      $this->executeCache();
     }
     return $this->_userAddressbooks;
   }
@@ -1300,8 +1372,20 @@ abstract class User extends MceObject {
         $addressbook->setObjectMelanie($_addressbook);
         $this->_sharedAddressbooks[$_addressbook->id] = $addressbook;
       }
+      $this->executeCache();
     }
     return $this->_sharedAddressbooks;
+  }
+
+  /**
+   * Nettoyer les donnés en cache 
+   * (appelé lors de la modification d'un calendrier)
+   */
+  public function cleanAddressbooks() {
+    $this->_defaultAddressbook = null;
+    $this->_userAddressbooks = null;
+    $this->_sharedAddressbooks = null;
+    $this->executeCache();
   }
   
   /**

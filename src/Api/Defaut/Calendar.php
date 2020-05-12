@@ -98,6 +98,34 @@ class Calendar extends MceObject {
    * METHOD MAPPING
    */
   /**
+   * Enregistrement de l'objet
+   * Nettoie le cache du user
+   * 
+   * @return null si erreur, boolean sinon (true insert, false update)
+   */
+  public function save() {
+    $ret = $this->objectmelanie->save();
+    if (!is_null($ret) && isset($this->user)) {
+      $this->user->cleanCalendars();
+    }
+    return $ret;
+  }
+
+  /**
+   * Suppression de l'objet
+   * Nettoie le cache du user
+   * 
+   * @return boolean
+   */
+  public function delete() {
+    $ret = $this->objectmelanie->delete();
+    if ($ret && isset($this->user)) {
+      $this->user->cleanCalendars();
+    }
+    return $ret;
+  }
+
+  /**
    * Récupère la liste de tous les évènements
    * need: $this->id
    * 
@@ -106,8 +134,9 @@ class Calendar extends MceObject {
   public function getAllEvents() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getAllEvents()");
     $_events = $this->objectmelanie->getAllEvents();
-    if (!isset($_events))
+    if (!isset($_events)) {
       return null;
+    }
     $events = [];
     $exceptions = [];
     $Event = $this->__getNamespace() . '\\Event';

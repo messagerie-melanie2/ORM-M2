@@ -50,7 +50,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 * @param string $objectType Type de l'objet (optionnel)
 	 * @param string/array $primaryKeys La ou les clé primaire pour la gestion de l'objet (optionnel)
 	 */
-	function __construct($objectType = null, $primaryKeys = null) {
+	public function __construct($objectType = null, $primaryKeys = null) {
 	    // Défini la classe courante
 	    $this->get_class = get_class($this);
 
@@ -76,9 +76,45 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	}
 
 	/**
+	 * String representation of object
+	 *
+	 * @return string
+	 */
+	public function serialize() {
+		return serialize([
+			'data'        => $this->data,
+			'isExist'     => $this->isExist,
+			'isLoaded'    => $this->isLoaded,
+			'objectType'  => $this->objectType,
+			'primaryKeys' => $this->primaryKeys,
+			'get_class'   => $this->get_class,
+			'tableName'   => $this->tableName,
+		]);
+	}
+
+	/**
+	 * Constructs the object
+	 *
+	 * @param string $serialized
+	 * @return void
+	 */
+	public function unserialize($serialized) {
+		$array = unserialize($serialized);
+		if ($array) {
+			$this->data = $array['data'];
+			$this->isExist = $array['isExist'];
+			$this->isLoaded = $array['isLoaded'];
+			$this->objectType = $array['objectType'];
+			$this->primaryKeys = $array['primaryKeys'];
+			$this->get_class = $array['get_class'];
+			$this->tableName = $array['tableName'];
+		}
+	}
+
+	/**
 	 * Charge l'objet
 	 */
-	function load() {
+	public function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->load()");
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
@@ -127,7 +163,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 * Sauvegarde l'objet
 	 * @return boolean True si c'est une command Insert, False si c'est un Update
 	 */
-	function save() {
+	public function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->save()");
 		$insert = false;
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
@@ -227,7 +263,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 * Supprime l'objet
 	 * @return boolean
 	 */
-	function delete() {
+	public function delete() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->delete()");
 		// Si les clés primaires et la table ne sont pas définies, impossible de supprimer l'objet
 		if (!isset($this->primaryKeys)) return false;
@@ -269,7 +305,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 * Si l'objet existe
 	 * @return boolean
 	 */
-	function exists() {
+	public function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->exists()");
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return false;
@@ -323,7 +359,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 * @param String[] $case_unsensitive_fields Liste des champs pour lesquels on ne sera pas sensible à la casse
 	 * @return ObjectMelanie[] Array
 	 */
-	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
+	public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->getList()");
 		if (!isset($this->tableName)) return false;
 		// Mapping pour les operateurs
@@ -570,7 +606,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	 * @param bool $isExist si l'objet existe
 	 * @param string $objectType Type de l'objet
 	 */
-	function pdoConstruct($isExist, $objectType) {
+	public function pdoConstruct($isExist, $objectType) {
 		$this->initializeHasChanged();
 		$this->__construct($objectType);
 		$this->isExist = $isExist;

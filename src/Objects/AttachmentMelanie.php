@@ -36,7 +36,7 @@ use LibMelanie\Log\M2Log;
  *
  */
 class AttachmentMelanie extends MagicObject implements IObjectMelanie {
-  /**
+  	/**
 	 * constructeur par défaut, appelé par PDO
 	 */
 	function __construct() {

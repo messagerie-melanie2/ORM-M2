@@ -72,6 +72,15 @@ abstract class Group extends MceObject {
    */
   protected $_members;
 
+  /**
+   * Liste des propriétés à sérialiser pour le cache
+   */
+  protected $serializedProperties = [
+    '_server',
+    '_isLoaded',
+    '_isExist',
+  ];
+
   // **** Configuration des filtres et des attributs par défaut
   /**
    * Filtre pour la méthode load()

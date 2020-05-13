@@ -78,6 +78,16 @@ abstract class ObjectShare extends MceObject {
   protected $_server;
 
   /**
+   * Liste des propriétés à sérialiser pour le cache
+   */
+  protected $serializedProperties = [
+    '_mailbox',
+    '_user_uid',
+    '_mailbox_uid',
+    '_server',
+  ];
+
+  /**
    * Constructeur de l'objet
    */
   public function __construct($server = null) {

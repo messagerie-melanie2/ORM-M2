@@ -55,7 +55,7 @@ class Addressbook extends MceObject {
    * @ignore
    *
    */
-  public $user;
+  protected $user;
   
   /**
    * Constructeur de l'objet

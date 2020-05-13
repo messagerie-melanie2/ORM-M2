@@ -48,7 +48,7 @@ class GroupMelanie extends UserMelanie {
    * @param array $mapping Données de mapping
    * @return boolean
    */
-  protected static function Init($mapping, $server) {
+  protected static function Init($mapping = [], $server = null) {
     if (!self::$isInit) {
       if (isset($server) && isset(Config\Ldap::$SERVERS[$server]['mapping_group'])) {
         $mapping = array_merge($mapping, Config\Ldap::$SERVERS[$server]['mapping_group']);

@@ -915,9 +915,15 @@ abstract class User extends MceObject {
       // Le calendrier principal est peut être déjà dans _sharedCalendars ou _userCalendars
       if (isset($this->_sharedCalendars)) {
         $this->_defaultCalendar = $this->_sharedCalendars[$this->uid] ?: null;
+        if (isset($this->_defaultCalendar)) {
+          $this->_defaultCalendar->setUserMelanie($this);
+        }
       }
       else if (isset($this->_userCalendars)) {
         $this->_defaultCalendar = $this->_userCalendars[$this->uid] ?: null;
+        if (isset($this->_defaultCalendar)) {
+          $this->_defaultCalendar->setUserMelanie($this);
+        }
       }
       else {
         // Sinon on le charge depuis la base
@@ -930,6 +936,9 @@ abstract class User extends MceObject {
         $this->_defaultCalendar->setObjectMelanie($_calendar);
       }
       $this->executeCache();
+    }
+    else {
+      $this->_defaultCalendar->setUserMelanie($this);
     }
     return $this->_defaultCalendar;
   }
@@ -1008,6 +1017,7 @@ abstract class User extends MceObject {
       // Si les calendriers partagés sont chargés on utilise les données
       if (isset($this->_sharedCalendars)) {
         foreach ($this->_sharedCalendars as $_key => $_cal) {
+          $this->_sharedCalendars[$_key]->setUserMelanie($this);
           if ($_cal->owner == $this->uid) {
             $this->_userCalendars[$_key] = $_cal;
           }
@@ -1027,6 +1037,11 @@ abstract class User extends MceObject {
         }
       }
       $this->executeCache();
+    }
+    else {
+      foreach ($this->_userCalendars as $key => $cal) {
+        $this->_userCalendars[$key]->setUserMelanie($this);
+      }
     }
     return $this->_userCalendars;
   }
@@ -1052,6 +1067,11 @@ abstract class User extends MceObject {
         $this->_sharedCalendars[$_calendar->id] = $calendar;
       }
       $this->executeCache();
+    }
+    else {
+      foreach ($this->_sharedCalendars as $key => $cal) {
+        $this->_sharedCalendars[$key]->setUserMelanie($this);
+      }
     }
     return $this->_sharedCalendars;
   }
@@ -1079,9 +1099,15 @@ abstract class User extends MceObject {
       // La listes de taches principale est peut être déjà dans _sharedTaskslists ou _userTaskslists
       if (isset($this->_sharedTaskslists)) {
         $this->_defaultTaskslist = $this->_sharedTaskslists[$this->uid] ?: null;
+        if (isset($this->_defaultTaskslist)) {
+          $this->_defaultTaskslist->setUserMelanie($this);
+        }
       }
       else if (isset($this->_userTaskslists)) {
         $this->_defaultTaskslist = $this->_userTaskslists[$this->uid] ?: null;
+        if (isset($this->_defaultTaskslist)) {
+          $this->_defaultTaskslist->setUserMelanie($this);
+        }
       }
       // Sinon on charge depuis la base de données
       else {
@@ -1094,6 +1120,9 @@ abstract class User extends MceObject {
         $this->_defaultTaskslist->setObjectMelanie($_taskslist);
       }
       $this->executeCache();
+    }
+    else {
+      $this->_defaultTaskslist->setUserMelanie($this);
     }
     return $this->_defaultTaskslist;
   }
@@ -1170,6 +1199,7 @@ abstract class User extends MceObject {
       // Si les listes de taches partagés sont chargés on utilise les données
       if (isset($this->_sharedTaskslists)) {
         foreach ($this->_sharedTaskslists as $_key => $_list) {
+          $this->_sharedTaskslists[$_key]->setUserMelanie($this);
           if ($_list->owner == $this->uid) {
             $this->_userTaskslists[$_key] = $_list;
           }
@@ -1188,6 +1218,11 @@ abstract class User extends MceObject {
         }
       }
       $this->executeCache();
+    }
+    else {
+      foreach ($this->_userTaskslists as $key => $list) {
+        $this->_userTaskslists[$key]->setUserMelanie($this);
+      }
     }
     return $this->_userTaskslists;
   }
@@ -1213,6 +1248,11 @@ abstract class User extends MceObject {
         $this->_sharedTaskslists[$_taskslist->id] = $taskslist;
       }
       $this->executeCache();
+    }
+    else {
+      foreach ($this->_sharedTaskslists as $key => $list) {
+        $this->_sharedTaskslists[$key]->setUserMelanie($this);
+      }
     }
     return $this->_sharedTaskslists;
   }
@@ -1240,9 +1280,15 @@ abstract class User extends MceObject {
       // La listes de taches principale est peut être déjà dans _sharedAddressbooks ou _userAddressbooks
       if (isset($this->_sharedAddressbooks)) {
         $this->_defaultAddressbook = $this->_sharedAddressbooks[$this->uid] ?: null;
+        if (isset($this->_defaultAddressbook)) {
+          $this->_defaultAddressbook->setUserMelanie($this);
+        }
       }
       else if (isset($this->_userAddressbooks)) {
         $this->_defaultAddressbook = $this->_userAddressbooks[$this->uid] ?: null;
+        if (isset($this->_defaultAddressbook)) {
+          $this->_defaultAddressbook->setUserMelanie($this);
+        }
       }
       // Sinon on charge depuis la base de données
       else {
@@ -1255,6 +1301,9 @@ abstract class User extends MceObject {
         $this->_defaultAddressbook->setObjectMelanie($_addressbook);
       }
       $this->executeCache();
+    }
+    else {
+      $this->_defaultAddressbook->setUserMelanie($this);
     }
     return $this->_defaultAddressbook;
   }
@@ -1331,6 +1380,7 @@ abstract class User extends MceObject {
       // Si les listes de carnets partagés sont chargés on utilise les données
       if (isset($this->_sharedAddressbooks)) {
         foreach ($this->_sharedAddressbooks as $_key => $_book) {
+          $this->_sharedAddressbooks[$_key]->setUserMelanie($this);
           if ($_book->owner == $this->uid) {
             $this->_userAddressbooks[$_key] = $_book;
           }
@@ -1349,6 +1399,11 @@ abstract class User extends MceObject {
         }
       }
       $this->executeCache();
+    }
+    else {
+      foreach ($this->_userAddressbooks as $key => $book) {
+        $this->_userAddressbooks[$key]->setUserMelanie($this);
+      }
     }
     return $this->_userAddressbooks;
   }
@@ -1373,6 +1428,11 @@ abstract class User extends MceObject {
         $this->_sharedAddressbooks[$_addressbook->id] = $addressbook;
       }
       $this->executeCache();
+    }
+    else {
+      foreach ($this->_sharedAddressbooks as $key => $book) {
+        $this->_sharedAddressbooks[$key]->setUserMelanie($this);
+      }
     }
     return $this->_sharedAddressbooks;
   }

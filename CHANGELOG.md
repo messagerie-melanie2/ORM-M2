@@ -1,3 +1,7 @@
+ORM M2 - 0.6.0.4
+------
+- Amélioration de la serialization pour la mise en cache des objets
+
 ORM M2 - 0.6.0.3
 ------
 - 0005761: Serialization des objets pour la mise en cache

@@ -837,7 +837,7 @@ class User extends Defaut\User {
       $data[] = '50~';
     }
     // Type de message d'absence
-    $data[] = $object->type == Outofoffice::TYPE_INTERNAL ? 'RAIN' : 'RAEX';
+    $data[] = $object->type == Outofoffice::TYPE_INTERNAL ? 'RAIN:' : 'RAEX:';
     // Date de debut
     $data[] = 'DDEB:' . (isset($object->start) ? $object->start->format('Ymd') : '');
     // Date de fin

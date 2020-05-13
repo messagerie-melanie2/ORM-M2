@@ -1024,8 +1024,6 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getTimezone()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
-    // Initialisation du backend SQL
-    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
     if (!isset($this->uid)) {
       return DefaultConfig::CALENDAR_DEFAULT_TIMEZONE;
     }

@@ -1,3 +1,10 @@
+ORM M2 - 0.6.0.5
+------
+- Correctif sur le gestionnaire d'absence Mel
+- Correctifs sur des problèmes de cache
+- Suppression d'un ancien accés à la base de donnés
+
+
 ORM M2 - 0.6.0.4
 ------
 - Amélioration de la serialization pour la mise en cache des objets

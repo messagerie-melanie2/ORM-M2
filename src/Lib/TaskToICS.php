@@ -21,9 +21,9 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Api\Melanie2\User;
-use LibMelanie\Api\Melanie2\Task;
-use LibMelanie\Api\Melanie2\Taskslist;
+use LibMelanie\Api\Defaut\User;
+use LibMelanie\Api\Defaut\Task;
+use LibMelanie\Api\Defaut\Taskslist;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\Config;
 
@@ -35,9 +35,9 @@ use Sabre\VObject;
  * Class de génération de l'ICS en fonction de l'objet évènement
  * Méthodes Statiques
  *
- * @author PNE Messagerie/Apitech
- * @package Librairie Mélanie2
- * @subpackage Lib Mélanie2
+ * @author Groupe Messagerie/MTES - Apitech
+ * @package LibMCE
+ * @subpackage Lib
  *
  */
 class TaskToICS {
@@ -45,7 +45,7 @@ class TaskToICS {
 	 * Identifiant de l'outil utilisant l'ICS (pour la génération)
 	 * @var string
 	 */
-	const PRODID = '-//ORM LibMelanie2 PHP/PNE Messagerie/MEDDE';
+	const PRODID = '-//Groupe Messagerie MTES/ORM LibMCE';
 	/**
 	 * Version ICalendar utilisé pour la génération de l'ICS
 	 * @var string
@@ -74,23 +74,13 @@ class TaskToICS {
 	 * @param User $user
 	 * @return string $ics
 	 */
-	public static function Convert(Task $task, Taskslist $taskslist = null, User $user = null) {
+	public static function Convert($task, $taskslist = null, User $user = null) {
 	  M2Log::Log(M2Log::LEVEL_DEBUG, "TaskToICS->Convert()");
 		$vcalendar = new VObject\Component\VCalendar();
 		$vtodo = $vcalendar->add('VTODO');
 		// PRODID et Version
 		$vcalendar->PRODID = self::PRODID;
 		$vcalendar->VERSION = self::VERSION;
-		// Gestion du timezone
-	  if (isset($user)) {
-		  $timezone = $user->getTimezone();
-		}
-	  elseif (isset($taskslist)) {
-			$timezone = $taskslist->getTimezone();
-		}
-		if (empty($timezone)) {
-		  $timezone = Config::get(Config::CALENDAR_DEFAULT_TIMEZONE);
-		}
 		// UID
 		$vtodo->UID = $task->uid;
 		// Génération de l'objet vtodo
@@ -107,17 +97,17 @@ class TaskToICS {
 	 * @param User $user
 	 * @return VTodo
 	 */
-	private static function getVtodoFromTask(VObject\Component $vtodo, Task $task, Taskslist $taskslist = null, User $user = null) {
-	  M2Log::Log(M2Log::LEVEL_DEBUG, "TaskToICS->getVtodoFromTask()");
-	  // Timezone
+	private static function getVtodoFromTask(VObject\Component $vtodo, $task, $taskslist = null, $user = null) {
+	  	M2Log::Log(M2Log::LEVEL_DEBUG, "TaskToICS->getVtodoFromTask()");
+	  	// Timezone
 		if (isset($user)) {
-		  $timezone = $user->getTimezone();
+		  	$timezone = $user->getTimezone();
 		}
-	  elseif (isset($taskslist)) {
+	  	elseif (isset($taskslist)) {
 			$timezone = $taskslist->getTimezone();
 		}
 		if (empty($timezone)) {
-		  $timezone = Config::get(Config::CALENDAR_DEFAULT_TIMEZONE);
+		  	$timezone = Config::get(Config::CALENDAR_DEFAULT_TIMEZONE);
 		}
 		M2Log::Log(M2Log::LEVEL_DEBUG, "TaskToICS->getVtodoFromTask() timezone : " . $timezone);
 		// Class
@@ -186,7 +176,7 @@ class TaskToICS {
 				&& $task->owner != $user->uid
 				&& isset($taskslist)
 				&& $taskslist->owner !=  $user->uid
-		    && !$taskslist->asRight(Config::get(Config::PRIV))) {
+		    	&& !$taskslist->asRight(Config::get(Config::PRIV))) {
 			$vtodo->SUMMARY = 'Événement privé';
 		} else {
 			// Titre

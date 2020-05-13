@@ -45,10 +45,7 @@ if (!defined('CONFIGURATION_APP_LIBM2')) {
 set_include_path(__DIR__.'/..');
 include_once 'includes/libm2.php';
 
-use LibMelanie\Api\Melanie2\User;
-use LibMelanie\Api\Melanie2\Task;
-use LibMelanie\Api\Melanie2\Taskslist;
-use LibMelanie\Config\MappingMelanie;
+use LibMelanie\Api\Mce\User;
 use LibMelanie\Log\M2Log;
 
 $log = function ($message) {
@@ -71,7 +68,7 @@ $result = [
 		'deleted' => [],
 ];
 
-$task = new \LibMelanie\Api\Melanie2\Task();
+$task = new \LibMelanie\Api\Mce\Task();
 $task->taskslist = 'thomas.payen';
 foreach ($task->getList(['uid']) as $_task) {
 	$result['added'][] = $_task->uid.'.ics';
@@ -103,8 +100,8 @@ var_export($result);
 // 		['uid', 'name', 'taskslist', 'start'], /* Champs à retourner par la requête */
 // 		'(#name# OR #uid#) AND #taskslist#', /* Filtre à appliquer à la requête */
 // 		[ /* Liste des opérateurs à appliquer */
-// 				'name' => MappingMelanie::like, /* Utilisation du LIKE */
-// 				'uid' => MappingMelanie::eq /* Utilisation du différent (<>) */
+// 				'name' => MappingMce::like, /* Utilisation du LIKE */
+// 				'uid' => MappingMce::eq /* Utilisation du différent (<>) */
 // 		]
 // );
 

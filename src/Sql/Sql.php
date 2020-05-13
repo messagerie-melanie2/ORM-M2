@@ -37,11 +37,29 @@ use LibMelanie\Config\Config;
  */
 class Sql {
   /**
+   * Instances LDAP
+   * 
+   * @var Sql
+   */
+  private static $instances = [];
+  /**
    * Connexion PDO en cours
    *
    * @var PDO
    */
-  private $connection = null;
+  private $connection;
+  /**
+   * Est-ce que la connexion courante est le serveur par défaut ?
+   * 
+   * @var boolean
+   */
+  private $is_default;
+  /**
+   * Type de base de données utilisée
+   * 
+   * @var string
+   */
+  private $db_type;
   /**
    * String de connexion
    *
@@ -71,7 +89,7 @@ class Sql {
    *
    * @var PDO
    */
-  private $connection_read = null;
+  private $connection_read;
   /**
    * String de connexion pour la lecture
    *
@@ -114,7 +132,7 @@ class Sql {
    *
    * @var resource
    */
-  private $ret_sel;
+  private $ret_sel = false;
   /**
    * Derniere requete utilisee, sert pour les logs shutdown
    * 
@@ -123,24 +141,64 @@ class Sql {
   private static $last_request;
 
   /**
+   * ************ SINGLETON **
+   */
+  /**
+   * Récupèration de l'instance lié au serveur
+   * 
+   * @param string $server
+   *          Nom du serveur, l'instance sera liée à ce nom qui correspond à la configuration du serveur
+   *          Optionnel, si non renseigné utilise la valeur de ConfigSQL::$SGBD_SERVER
+   * @return Sql
+   */
+  public static function GetInstance($server = null) {
+    if (!isset($server)) {
+      $server = \LibMelanie\Config\ConfigSQL::$SGBD_SERVER;
+    }
+    if (!isset(self::$instances[$server])) {
+      if (!isset(\LibMelanie\Config\ConfigSQL::$SERVERS[$server])) {
+        M2Log::Log(M2Log::LEVEL_ERROR, "Sql->GetInstance() Erreur la configuration du serveur '$server' n'existe pas");
+        return false;
+      }
+      $conf = \LibMelanie\Config\ConfigSQL::$SERVERS[$server];
+      // Lecture du read
+      $conf_read = null;
+      if (isset(\LibMelanie\Config\ConfigSQL::$SERVERS[$server."_read"])) {
+        $conf_read = \LibMelanie\Config\ConfigSQL::$SERVERS[$server."_read"];
+      }
+      else if (isset($conf['read'])) {
+        $conf_read = $conf['read'];
+      }
+      self::$instances[$server] = new self($server === \LibMelanie\Config\ConfigSQL::$SGBD_SERVER, $conf, $conf_read);
+    }
+    return self::$instances[$server];
+  }
+
+  /**
    * Constructor SQL
    *
+   * @param boolean $is_default Est-ce que cette connexion est celle par defaut ?
    * @param array $db configuration vers la base de données
+   * @param array $db_read configuration vers la base de données en lecture
    * @access public
    */
-  public function __construct($db, $db_read = null) {
+  public function __construct($is_default, $db, $db_read = null) {
     // Défini la classe courante
     $this->get_class = get_class($this);
 
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
+    
+    // Connexion par defaut ?
+    $this->is_default = $is_default;
     // Définition des données de connexion
-    $this->cnxstring = "pgsql:dbname=$db[database];host=$db[hostspec];port=$db[port]";
+    $this->db_type = isset($db['phptype']) ? $db['phptype'] : 'pgsql';
+    $this->cnxstring = "$this->db_type:dbname=$db[database];host=$db[hostspec];port=$db[port]";
     $this->username = $db['username'];
     $this->password = $db['password'];
     $this->persistent = $db['persistent'];
     // Définition des données de connexion pour la lecture
     if (isset($db_read)) {
-      $this->cnxstring_read = "pgsql:dbname=$db_read[database];host=$db_read[hostspec];port=$db_read[port]";
+      $this->cnxstring_read = "$this->db_type:dbname=$db_read[database];host=$db_read[hostspec];port=$db_read[port]";
       $this->username_read = $db_read['username'];
       $this->password_read = $db_read['password'];
       $this->persistent_read = $db_read['persistent'];
@@ -149,6 +207,24 @@ class Sql {
     // MANTIS 3547: Réutiliser les prepare statements pour les requêtes identiques
     $this->PreparedStatementCache = [];
     $this->getConnection();
+  }
+
+  /**
+   * Getter for Database Type
+   * 
+   * @return string Type de base (pgsql, mysql, ...)
+   */
+  public function databaseType() {
+    return $this->db_type;
+  }
+
+  /**
+   * Getter for Is Default value
+   * 
+   * @return boolean
+   */
+  public function isDefault() {
+    return $this->is_default;
   }
 
   /**
@@ -178,9 +254,9 @@ class Sql {
       }
     }
     // Connexion persistante ?
-    $driver = [\PDO::ATTR_PERSISTENT => ($this->persistent == 'true'),\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
+    $options = [\PDO::ATTR_PERSISTENT => ($this->persistent == 'true'),\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
     try {
-      $this->connection = new \PDO($this->cnxstring, $this->username, $this->password, $driver);
+      $this->connection = new \PDO($this->cnxstring, $this->username, $this->password, $options);
     }
     catch (\PDOException $e) {
       // Erreur de connexion
@@ -190,9 +266,9 @@ class Sql {
     // Connexion à la base de données en lecture
     if (isset($this->cnxstring_read)) {
       // Connexion persistante ?
-      $driver_read = [\PDO::ATTR_PERSISTENT => ($this->persistent_read == 'true'),\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
+      $options_read = [\PDO::ATTR_PERSISTENT => ($this->persistent_read == 'true'),\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
       try {
-        $this->connection_read = new \PDO($this->cnxstring_read, $this->username_read, $this->password_read, $driver_read);
+        $this->connection_read = new \PDO($this->cnxstring_read, $this->username_read, $this->password_read, $options_read);
       }
       catch (\PDOException $e) {
         // Erreur de connexion
@@ -213,18 +289,19 @@ class Sql {
     // Fermer tous les statements
     $this->PreparedStatementCache = [];
     // Deconnexion de la bdd
-    if (! is_null($this->connection)) {
+    if (isset($this->connection)) {
       $this->connection = null;
       M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->disconnect() Close connection");
     }
     // Deconnexion de la bdd pour la lecture
-    if (! is_null($this->connection_read)) {
+    if (isset($this->connection_read)) {
       $this->connection_read = null;
       M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->disconnect() Close connection read");
     }
     // Utilisation des selaformes
     if (Config::get(Config::SEL_ENABLED) && $this->ret_sel !== false) {
       Selaforme::selaforme_release($this->ret_sel);
+      $this->ret_sel = false;
     }
   }
 
@@ -235,8 +312,8 @@ class Sql {
    */
   public function getConnection() {
     // Si la connexion n'existe pas, on se connecte
-    if (is_null($this->connection)) {
-      if (! $this->connect()) {
+    if (!isset($this->connection)) {
+      if (!$this->connect()) {
         $this->connection = null;
       }
     }
@@ -257,13 +334,13 @@ class Sql {
    *
    * @access public
    */
-  public function executeQuery($query, $params, $class, $objectType, $cached_statement = true) {
+  public function executeQuery($query, $params = null, $class = null, $objectType = null, $cached_statement = true) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->executeQuery($query, $class)");
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->executeQuery() params : " . print_r($params, true));
     // Sauvegarde de la derniere requete
     self::$last_request = ['query' => $query, 'params' => $params];
     // Si la connexion n'est pas instanciée
-    if (is_null($this->connection)) {
+    if (!isset($this->connection)) {
       // Throw exception, erreur
       M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->executeQueryToObject(): Problème de connexion à la base de données");
       throw new Exceptions\Melanie2DatabaseException("Erreur de base de données Mélanie2 : Erreur de connexion", 21);
@@ -276,7 +353,7 @@ class Sql {
     if (strpos($query, "SELECT") === 0) {
       // Récupération du cache
       $cache = Cache::getFromSQLCache(null, is_array($params) ? array_keys($params) : $params, $query, $params);
-      if (! is_null($cache) && $cache !== false) {
+      if (!is_null($cache) && $cache !== false) {
         return $cache;
       }
     }
@@ -287,14 +364,14 @@ class Sql {
       }
       else {
         // Choix de la connexion lecture/ecriture
-        if (strpos($query, "SELECT") === 0 && ! is_null($this->connection_read) && ! $this->connection->inTransaction) {
-          if (! isset($this->connection_read)) {
+        if (strpos($query, "SELECT") === 0 && isset($this->connection_read) && !$this->connection->inTransaction) {
+          if (!isset($this->connection_read)) {
             return null;
           }
           $sth = $this->connection_read->prepare($query);
         }
         else {
-          if (! isset($this->connection)) {
+          if (!isset($this->connection)) {
             return null;
           }
           $sth = $this->connection->prepare($query);
@@ -304,14 +381,18 @@ class Sql {
           $this->PreparedStatementCache[$query] = $sth;
         }
       }
-      if (isset($class))
+      if (isset($class)) {
         $sth->setFetchMode(\PDO::FETCH_CLASS, $class);
-      else
+      }
+      else {
         $sth->setFetchMode(\PDO::FETCH_BOTH);
-      if (isset($params))
+      }
+      if (isset($params)) {
         $res = $sth->execute($params);
-      else
+      }
+      else {
         $res = $sth->execute();
+      }
     }
     catch (\PDOException $ex) {
       // Throw exception, erreur
@@ -325,10 +406,12 @@ class Sql {
     if (strpos($query, "SELECT") === 0) {
       while ($object = $sth->fetch()) {
         if (isset($class) && method_exists($object, "pdoConstruct")) {
-          if (isset($objectType))
+          if (isset($objectType)) {
             $object->pdoConstruct(true, $objectType);
-          else
+          }
+          else {
             $object->pdoConstruct(true);
+          }
         }
         $arrayData[] = $object;
       }
@@ -360,13 +443,13 @@ class Sql {
    *
    * @access public
    */
-  public function executeQueryToObject($query, $params, $object, $cached_statement = true) {
+  public function executeQueryToObject($query, $params = null, $object, $cached_statement = true) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->executeQueryToObject($query, " . get_class($object) . ")");
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->executeQueryToObject() params : " . print_r($params, true));
     // Sauvegarde de la derniere requete
     self::$last_request = ['query' => $query, 'params' => $params];
     // Si la connexion n'est pas instanciée
-    if (is_null($this->connection)) {
+    if (!isset($this->connection)) {
       // Throw exception, erreur
       M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->executeQueryToObject(): Problème de connexion à la base de données");
       throw new Exceptions\Melanie2DatabaseException("Erreur de base de données Mélanie2 : Erreur de connexion", 21);
@@ -379,7 +462,7 @@ class Sql {
     if (strpos($query, "SELECT") == 0) {
       // Récupération du cache
       $cache = Cache::getFromSQLCache(null, is_array($params) ? array_keys($params) : $params, $query, $params, $object);
-      if (! is_null($cache) && $cache !== false) {
+      if (!is_null($cache) && $cache !== false) {
         if (method_exists($object, "__copy_from")) {
           if ($object->__copy_from($cache)) {
             return true;
@@ -394,14 +477,14 @@ class Sql {
       }
       else {
         // Choix de la connexion lecture/ecriture
-        if (strpos($query, "SELECT") === 0 && ! is_null($this->connection_read) && ! $this->connection->inTransaction) {
-          if (! isset($this->connection_read)) {
+        if (strpos($query, "SELECT") === 0 && !is_null($this->connection_read) && !$this->connection->inTransaction) {
+          if (!isset($this->connection_read)) {
             return false;
           }
           $sth = $this->connection_read->prepare($query);
         }
         else {
-          if (! isset($this->connection)) {
+          if (!isset($this->connection)) {
             return false;
           }
           $sth = $this->connection->prepare($query);
@@ -412,10 +495,12 @@ class Sql {
         }
       }
       $sth->setFetchMode(\PDO::FETCH_INTO, $object);
-      if (isset($params))
+      if (isset($params)) {
         $res = $sth->execute($params);
-      else
+      }
+      else {
         $res = $sth->execute();
+      }
     }
     catch (\PDOException $ex) {
       // Throw exception, erreur

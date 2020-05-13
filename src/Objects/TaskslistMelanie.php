@@ -25,7 +25,7 @@ use LibMelanie\Lib\MagicObject;
 use LibMelanie\Interfaces\IObjectMelanie;
 use LibMelanie\Sql;
 use LibMelanie\Config\ConfigSQL;
-use LibMelanie\Config\MappingMelanie;
+use LibMelanie\Config\MappingMce;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\DefaultConfig;
 
@@ -45,22 +45,56 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	/**
 	 * Constructeur de l'objet, appelé par PDO
 	 */
-	function __construct() {
+	public function __construct() {
 	    // Défini la classe courante
 	    $this->get_class = get_class($this);
 
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
-	    // Initialisation du backend SQL
-		Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 
 		// Récupération du type d'objet en fonction de la class
 		$this->objectType = explode('\\',$this->get_class);
 		$this->objectType = $this->objectType[count($this->objectType)-1];
-		$this->tableName = MappingMelanie::$Table_Name[$this->objectType];
+		$this->tableName = MappingMce::$Table_Name[$this->objectType];
 
-		if (isset(MappingMelanie::$Primary_Keys[$this->objectType])) {
-			if (is_array(MappingMelanie::$Primary_Keys[$this->objectType])) $this->primaryKeys = MappingMelanie::$Primary_Keys[$this->objectType];
-			else $this->primaryKeys = [MappingMelanie::$Primary_Keys[$this->objectType]];
+		if (isset(MappingMce::$Primary_Keys[$this->objectType])) {
+			if (is_array(MappingMce::$Primary_Keys[$this->objectType])) $this->primaryKeys = MappingMce::$Primary_Keys[$this->objectType];
+			else $this->primaryKeys = [MappingMce::$Primary_Keys[$this->objectType]];
+		}
+	}
+
+	/**
+	 * String representation of object
+	 *
+	 * @return string
+	 */
+	public function serialize() {
+		return serialize([
+			'data'        => $this->data,
+			'isExist'     => $this->isExist,
+			'isLoaded'    => $this->isLoaded,
+			'objectType'  => $this->objectType,
+			'primaryKeys' => $this->primaryKeys,
+			'get_class'   => $this->get_class,
+			'tableName'   => $this->tableName,
+		]);
+	}
+
+	/**
+	 * Constructs the object
+	 *
+	 * @param string $serialized
+	 * @return void
+	 */
+	public function unserialize($serialized) {
+		$array = unserialize($serialized);
+		if ($array) {
+			$this->data = $array['data'];
+			$this->isExist = $array['isExist'];
+			$this->isLoaded = $array['isLoaded'];
+			$this->objectType = $array['objectType'];
+			$this->primaryKeys = $array['primaryKeys'];
+			$this->get_class = $array['get_class'];
+			$this->tableName = $array['tableName'];
 		}
 	}
 
@@ -70,10 +104,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * need: $this->user_uid
 	 * @return boolean isExist
 	 */
-	function load() {
+	public function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->id)) return false;
 		if (!isset($this->user_uid)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -82,13 +114,13 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 		}
 		$query = Sql\SqlMelanieRequests::listObjectsByUid;
 		// Replace name
-		$query = str_replace('{user_uid}', MappingMelanie::$Data_Mapping[$this->objectType]['owner'][MappingMelanie::name], $query);
-		$query = str_replace('{datatree_name}', MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name], $query);
-		$query = str_replace('{datatree_ctag}', MappingMelanie::$Data_Mapping[$this->objectType]['ctag'][MappingMelanie::name], $query);
-		$query = str_replace('{datatree_synctoken}', MappingMelanie::$Data_Mapping[$this->objectType]['synctoken'][MappingMelanie::name], $query);
-		$query = str_replace('{attribute_value}', MappingMelanie::$Data_Mapping[$this->objectType]['name'][MappingMelanie::name], $query);
-		$query = str_replace('{perm_object}', MappingMelanie::$Data_Mapping[$this->objectType]['perm'][MappingMelanie::name], $query);
-		$query = str_replace('{datatree_id}', MappingMelanie::$Data_Mapping[$this->objectType]['object_id'][MappingMelanie::name], $query);
+		$query = str_replace('{user_uid}', MappingMce::$Data_Mapping[$this->objectType]['owner'][MappingMce::name], $query);
+		$query = str_replace('{datatree_name}', MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name], $query);
+		$query = str_replace('{datatree_ctag}', MappingMce::$Data_Mapping[$this->objectType]['ctag'][MappingMce::name], $query);
+		$query = str_replace('{datatree_synctoken}', MappingMce::$Data_Mapping[$this->objectType]['synctoken'][MappingMce::name], $query);
+		$query = str_replace('{attribute_value}', MappingMce::$Data_Mapping[$this->objectType]['name'][MappingMce::name], $query);
+		$query = str_replace('{perm_object}', MappingMce::$Data_Mapping[$this->objectType]['perm'][MappingMce::name], $query);
+		$query = str_replace('{datatree_id}', MappingMce::$Data_Mapping[$this->objectType]['object_id'][MappingMce::name], $query);
 
 		// Params
 		$params = [
@@ -101,7 +133,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 		];
 
 		// Liste les calendriers de l'utilisateur
-		$this->isExist = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
+		$this->isExist = Sql\Sql::GetInstance()->executeQueryToObject($query, $params, $this);
 		if ($this->isExist) {
 			//$this->getCTag();
 			$this->initializeHasChanged();
@@ -115,10 +147,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * (non-PHPdoc)
 	 * @see IObjectMelanie::save()
 	 */
-	function save() {
+	public function save() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
 		if (!isset($this->primaryKeys)) return null;
@@ -136,17 +166,17 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 		}
 		// Si l'objet existe on fait un UPDATE
 		if ($this->isExist) {
-			if (isset($this->haschanged[MappingMelanie::$Data_Mapping[$this->objectType]['name'][MappingMelanie::name]])
-					&& $this->haschanged[MappingMelanie::$Data_Mapping[$this->objectType]['name'][MappingMelanie::name]]) {
+			if (isset($this->haschanged[MappingMce::$Data_Mapping[$this->objectType]['name'][MappingMce::name]])
+					&& $this->haschanged[MappingMce::$Data_Mapping[$this->objectType]['name'][MappingMce::name]]) {
 				$this->saveName();
 			}
 		} else {
 			if (!isset($this->user_uid)) return false;
 			// C'est une Insertion
 			$insert = true;
-			Sql\DBMelanie::BeginTransaction();
+			Sql\Sql::GetInstance()->beginTransaction();
 			$query = Sql\SqlMelanieRequests::insertObject;
-			$res = Sql\DBMelanie::ExecuteQuery(Sql\SqlMelanieRequests::getNextObject);
+			$res = Sql\Sql::GetInstance()->executeQuery(Sql\SqlMelanieRequests::getNextObject);
 			$datatree_id = $res[0][0];
 			$datatree_name = isset($this->id) ? $this->id : md5(time() . $datatree_id);
 			$params = [
@@ -156,7 +186,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 					'user_uid' => $this->user_uid,
 			    'group_uid' => isset($this->group) ?  $this->group : DefaultConfig::TASKSLIST_GROUP_UID,
 			];
-			if (Sql\DBMelanie::ExecuteQuery($query, $params)) {
+			if (Sql\Sql::GetInstance()->executeQuery($query, $params)) {
 				$this->isExist = true;
 				// Name
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
@@ -166,8 +196,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 						'attribute_key' => '',
 						'attribute_value' => isset($this->name) ?  $this->name : $datatree_name,
 				];
-				if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
-			        Sql\DBMelanie::Rollback();
+				if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
+			        Sql\Sql::GetInstance()->rollBack();
 			        return null;
 				}
 				// owner
@@ -178,8 +208,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 						'attribute_key' => '',
 						'attribute_value' => $this->user_uid,
 				];
-			    if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
-			        Sql\DBMelanie::Rollback();
+			    if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
+			        Sql\Sql::GetInstance()->rollBack();
 			        return null;
 				}
 				// perm
@@ -190,13 +220,13 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 						'attribute_key' => $this->user_uid,
 						'attribute_value' => '30',
 				];
-			    if (!Sql\DBMelanie::ExecuteQuery($query, $params)) {
-			        Sql\DBMelanie::Rollback();
+			    if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
+			        Sql\Sql::GetInstance()->rollBack();
 			        return null;
 				}
-				Sql\DBMelanie::Commit();
+				Sql\Sql::GetInstance()->commit();
 			} else {
-			    Sql\DBMelanie::Rollback();
+			    Sql\Sql::GetInstance()->rollBack();
 			    return null;
 			}
 		}
@@ -208,10 +238,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * (non-PHPdoc)
 	 * @see IObjectMelanie::delete()
 	 */
-	function delete() {
+	public function delete() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->tableName)) return false;
 
 		// Si l'objet existe on fait un UPDATE
@@ -222,22 +250,22 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 					"datatree_id" => $this->object_id,
 			];
 			$ok = true;
-			Sql\DBMelanie::BeginTransaction();
+			Sql\Sql::GetInstance()->beginTransaction();
 			$query = Sql\SqlMelanieRequests::deleteObject1;
 			// Supprimer l'objet
-			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
+			$ok &= Sql\Sql::GetInstance()->executeQuery($query, $params);
 			$query = Sql\SqlMelanieRequests::deleteObject2;
 			// Supprimer l'objet
-			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
+			$ok &= Sql\Sql::GetInstance()->executeQuery($query, $params);
 			$query = Sql\SqlMelanieRequests::deleteObject3;
 			$query = str_replace("{objects_table}", "nag_tasks", $query);
-			$query = str_replace("{datatree_name}", MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name], $query);
+			$query = str_replace("{datatree_name}", MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name], $query);
 			// Params
 			$params = [
 			    "datatree_name" => $this->id,
 			];
 			// Supprimer l'objet
-			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
+			$ok &= Sql\Sql::GetInstance()->executeQuery($query, $params);
 			// Ne pas supprimer du horde_histories qui part en timeout sur la prod
 			// TODO: Trouver une solution
 //  			$query = Sql\SqlMelanieRequests::deleteObject4;
@@ -246,13 +274,13 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 //  					"object_uid" => DefaultConfig::TASKSLIST_PREF_SCOPE.":".$this->id.":%",
 //  			];
 //  			// Supprimer l'objet
-//  			$ok &= Sql\DBMelanie::ExecuteQuery($query, $params);
+//  			$ok &= Sql\Sql::GetInstance()->executeQuery($query, $params);
       if ($ok) {
-        Sql\DBMelanie::Commit();
+        Sql\Sql::GetInstance()->commit();
         $this->initializeHasChanged();
         $this->isExist = false;
       }
-      else Sql\DBMelanie::Rollback();
+      else Sql\Sql::GetInstance()->rollBack();
 			return $ok;
 		}
 		return false;
@@ -262,10 +290,8 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * (non-PHPdoc)
 	 * @see IObjectMelanie::exists()
 	 */
-	function exists() {
+	public function exists() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->exists()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
 		if (!isset($this->tableName)) return false;
 		// Test si l'objet existe, pas besoin de load
@@ -278,14 +304,14 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 
 		$query = Sql\SqlObjectRequests::getObject;
 		// Liste des champs
-		$query = str_replace("{fields_list}", MappingMelanie::$Data_Mapping[$this->objectType]['object_id'][MappingMelanie::name], $query);
+		$query = str_replace("{fields_list}", MappingMce::$Data_Mapping[$this->objectType]['object_id'][MappingMce::name], $query);
 		// Nom de la table
 		$query = str_replace("{table_name}", $this->tableName, $query);
 		// Clause where
 		$query = str_replace("{where_clause}", $whereClause, $query);
 
 		// Liste les objets
-		$res = Sql\DBMelanie::ExecuteQuery($query, $params);
+		$res = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		$this->isExist = (count($res) >= 1);
 		return $this->isExist;
 	}
@@ -297,7 +323,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * L'appel externe n'est donc pas nécessaire (mais cette méthode doit rester public)
 	 * @param bool $isExist si l'objet existe
 	 */
-	function pdoConstruct($isExist) {
+	public function pdoConstruct($isExist) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->pdoConstruct($isExist)");
 		$this->initializeHasChanged();
 		$this->isExist = $isExist;
@@ -308,17 +334,15 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * need: $this->id
 	 * @return Task[]
 	 */
-	function getAllTasks() {
+	public function getAllTasks() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getAllTasks()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->id)) return false;
 
 		// Params
-		$params = [MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name] => $this->id];
+		$params = [MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name] => $this->id];
 
 		// Liste les tâches de la liste
-		return Sql\DBMelanie::ExecuteQuery(Sql\SqlTaskRequests::listAllTasks, $params, 'LibMelanie\Objects\ObjectMelanie', 'TaskMelanie');
+		return Sql\Sql::GetInstance()->executeQuery(Sql\SqlTaskRequests::listAllTasks, $params, 'LibMelanie\Objects\ObjectMelanie', 'TaskMelanie');
 	}
 
 	/**
@@ -326,17 +350,15 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * need: $this->id
 	 * @return string
 	 */
-	function getCTag() {
+	public function getCTag() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getCTag()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->id)) return false;
 		if (!isset($this->ctag)) {
 		  // Params
-		  $params = [MappingMelanie::$Data_Mapping[$this->objectType]['id'][MappingMelanie::name] => $this->id];
+		  $params = [MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name] => $this->id];
 
 		  // Récupération du tag
-		  Sql\DBMelanie::ExecuteQueryToObject(Sql\SqlTaskRequests::getCTag, $params, $this);
+		  Sql\Sql::GetInstance()->executeQueryToObject(Sql\SqlTaskRequests::getCTag, $params, $this);
 		  if (!isset($this->ctag)) $this->ctag = md5($this->id);
 		  M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getCTag() this->ctag: " . $this->ctag);
 		}
@@ -344,16 +366,14 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 		return $this->ctag;
 	}
 
-  /**
+  	/**
 	 * Recupère le timezone par défaut pour le
 	 * need: $this->user_uid
 	 * 
 	 * @deprecated
 	 */
-	function getTimezone() {
+	public function getTimezone() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getTimezone()");
-		// Initialisation du backend SQL
-	    Sql\DBMelanie::Initialize(ConfigSQL::$CURRENT_BACKEND);
 		if (!isset($this->user_uid)) return DefaultConfig::CALENDAR_DEFAULT_TIMEZONE;
 
 		if (!isset($this->timezone)) {
@@ -368,7 +388,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 			];
 
 			// Récupération du timezone
-			$res = Sql\DBMelanie::ExecuteQueryToObject($query, $params, $this);
+			$res = Sql\Sql::GetInstance()->executeQueryToObject($query, $params, $this);
 			// Test si le timezone est valide en PHP
 			try {
 				$tz = new \DateTimeZone($this->timezone);
@@ -395,7 +415,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	        "attribute_value" => $this->name,
 	        "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
 	    ];
-	    Sql\DBMelanie::ExecuteQuery($query, $params);
+	    Sql\Sql::GetInstance()->executeQuery($query, $params);
 	  }
 	}
 
@@ -404,7 +424,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	 * @param string $action
 	 * @return boolean
 	 */
-	function asRight($action) {
+	public function asRight($action) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->asRight($action)");
 		return (DefaultConfig::$PERMS[$action] & $this->perm_taskslist) === DefaultConfig::$PERMS[$action];
 	}

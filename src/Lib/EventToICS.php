@@ -22,12 +22,12 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Api\Melanie2\Attachment;
-use LibMelanie\Api\Melanie2\Recurrence;
-use LibMelanie\Api\Melanie2\User;
-use LibMelanie\Api\Melanie2\Event;
-use LibMelanie\Api\Melanie2\Attendee;
-use LibMelanie\Api\Melanie2\Calendar;
+use LibMelanie\Api\Defaut\Attachment;
+use LibMelanie\Api\Defaut\Recurrence;
+use LibMelanie\Api\Defaut\User;
+use LibMelanie\Api\Defaut\Event;
+use LibMelanie\Api\Defaut\Attendee;
+use LibMelanie\Api\Defaut\Calendar;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\Config;
 
@@ -39,9 +39,9 @@ use Sabre\VObject;
  * Class de génération de l'ICS en fonction de l'objet évènement
  * Méthodes Statiques
  *
- * @author PNE Messagerie/Apitech
- * @package Librairie Mélanie2
- * @subpackage Lib Mélanie2
+ * @author Groupe Messagerie/MTES - Apitech
+ * @package LibMCE
+ * @subpackage Lib
  *            
  */
 class EventToICS {
@@ -50,7 +50,7 @@ class EventToICS {
    *
    * @var string
    */
-  const PRODID = '-//ORM LibMelanie2 PHP/PNE Messagerie/MTES';
+  const PRODID = '-//Groupe Messagerie MTES/ORM LibMCE';
   /**
    * Version ICalendar utilisé pour la génération de l'ICS
    *
@@ -86,9 +86,10 @@ class EventToICS {
    *          Si l'ics doit inclure les pièces jointes
    * @param boolean $isfreebusy
    *          Si on ne retourne que les freebusy (pas de pièce jointe ou de participants)
+   * 
    * @return string $ics
    */
-  public static function Convert(Event $event, Calendar $calendar = null, User $user = null, VObject\Component\VCalendar $vcalendar = null, $useattachments = true, $isfreebusy = false) {
+  public static function Convert($event, $calendar = null, $user = null, VObject\Component\VCalendar $vcalendar = null, $useattachments = true, $isfreebusy = false) {
     if (!isset($vcalendar)) {
       $vcalendar = self::getVCalendar($event, $calendar, $user, $useattachments, $isfreebusy);
     }
@@ -107,9 +108,10 @@ class EventToICS {
    *          Si l'ics doit inclure les pièces jointes
    * @param boolean $isfreebusy
    *          Si on ne retourne que les freebusy (pas de pièce jointe ou de participants)
+   * 
    * @return VObject\Component\VCalendar $vcalendar
    */
-  public static function getVCalendar(Event $event, Calendar $calendar = null, User $user = null, $useattachments = true, $isfreebusy = false, $vcalendar = null) {
+  public static function getVCalendar($event, $calendar = null, $user = null, $useattachments = true, $isfreebusy = false, $vcalendar = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "EventToICS->getVCalendar()");
     if (!isset($vcalendar)) {
       $vcalendar = new VObject\Component\VCalendar();
@@ -314,7 +316,7 @@ class EventToICS {
    *          Si on ne retourne que les freebusy (pas de pièce jointe ou de participants)
    * @return VObject\Component $vevent
    */
-  private static function getVeventFromEvent(VObject\Component $vevent, Event $event, Calendar $calendar = null, User $user = null, $useattachments = true, $isfreebusy = false) {
+  private static function getVeventFromEvent(VObject\Component $vevent, $event, $calendar = null, $user = null, $useattachments = true, $isfreebusy = false) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "EventToICS->getVeventFromEvent()");
     // Class
     if (isset($event->class)) {

@@ -21,9 +21,9 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Api\Melanie2\Task;
-use LibMelanie\Api\Melanie2\User;
-use LibMelanie\Api\Melanie2\Taskslist;
+use LibMelanie\Api\Defaut\Task;
+use LibMelanie\Api\Defaut\User;
+use LibMelanie\Api\Defaut\Taskslist;
 use LibMelanie\Config\Config;
 use Sabre\VObject;
 
@@ -34,9 +34,9 @@ use Sabre\VObject;
  * Class de génération de l'évènement en fonction de l'ICS
  * Méthodes Statiques
  *
- * @author PNE Messagerie/Apitech
- * @package Librairie Mélanie2
- * @subpackage Lib Mélanie2
+ * @author Groupe Messagerie/MTES - Apitech
+ * @package LibMCE
+ * @subpackage Lib
  *
  */
 class ICSToTask {
@@ -44,7 +44,7 @@ class ICSToTask {
 	 * Identifiant de l'outil utilisant l'ICS (pour la génération)
 	 * @var string
 	 */
-	const PRODID = '-//ORM LibMelanie2 PHP/PNE Messagerie/MEDDE';
+	const PRODID = '-//Groupe Messagerie MTES/ORM LibMCE';
 	/**
 	 * Version ICalendar utilisé pour la génération de l'ICS
 	 * @var string
@@ -65,14 +65,14 @@ class ICSToTask {
 	 * @param User $user
 	 * @return Task
 	 */
-	public static function Convert($ics, Task $task, Calendar $calendar = null, User $user = null) {
+	public static function Convert($ics, $task, $taskslist = null, $user = null) {
 		$vcalendar = VObject\Reader::read($ics);
 		// Gestion du timezone
 		if (isset($user)) {
 		  $timezone = $user->getTimezone();
 		}
 		elseif (isset($calendar)) {
-		  $timezone = $calendar->getTimezone();
+		  $timezone = $taskslist->getTimezone();
 		}
 		if (empty($timezone)) {
 		  $timezone = Config::get(Config::CALENDAR_DEFAULT_TIMEZONE);

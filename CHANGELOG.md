@@ -1,6 +1,46 @@
+ORM M2 - 0.6.0.4
+------
+- Amélioration de la serialization pour la mise en cache des objets
+
+ORM M2 - 0.6.0.3
+------
+- 0005761: Serialization des objets pour la mise en cache
+- 0005760: Méthodes clean pour nettoyer les données en cache
+- 0005762: Mettre en place des events pour la gestion du cache
+
+ORM M2 - 0.6.0.2
+------
+- Correctifs
+- 0005744: [LDAP] Prévoir de vider le cache après une modification
+- 0005734: Avoir tous les objets dans tous les namespaces
+- 0005735: Ajouter deux méthodes pour lister les groupes LDAP auquel un utilisateur appartient
+
+ORM M2 - 0.6.0.1
+------
+- Correctifs mineurs
+- Améliorer le support pour le multi-instance de base de données
+
+ORM M2 - 0.6
+------
+- 0005647: [Utilisateur] Méthodes pour créer les objets par défaut (principals)
+- 0005646: [Utilisateur] Modifier les requêtes pour sélectionner les objets par défaut
+- 0005639: [Agenda] Problème avec le recurrence_id
+- 0005642: [Général] Gestion de multiple d'entrées et de serveurs d'annuaire pour un seul objet
+- 0005641: [Général] Intégrer la configuration LDAP directement dans l'objet User
+- 0005614: [Général] Modifier les objets Mélanie2 en objet MCE
+- 0005615: [Général] Créer une branche spécifique Api/Mel
+- 0005616: [Général] Garder la compatibilité avec Api/Melanie2
+- 0005601: [Général] Mettre en place un driver LDAP
+
 ORM M2 - 0.5.0.24
 ------
 - Gérer la désactivation des pièces jointes lors de la lecture d'un ICS
+
+
+ORM M2 - 0.5.0.24
+------
+- Gérer la désactivation des pièces jointes lors de la lecture d'un ICS
+
 
 ORM M2 - 0.5.0.23
 ------

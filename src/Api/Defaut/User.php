@@ -244,7 +244,7 @@ abstract class User extends MceObject {
    * 
    * @ignore
    */
-  const LOAD_ATTRIBUTES = ['dn','uid','fullname','type','email'];
+  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_routage', 'shares', 'type'];
   /**
    * Filtre pour la méthode getBalp()
    * 
@@ -256,7 +256,7 @@ abstract class User extends MceObject {
    * 
    * @ignore
    */
-  const GET_BALP_ATTRIBUTES = ['dn','uid','fullname','type','email'];
+  const GET_BALP_ATTRIBUTES = ['fullname', 'email_send', 'email_send_list', 'uid', 'shares'];
   /**
    * Filtre pour la méthode getBalpEmission()
    * 
@@ -268,7 +268,7 @@ abstract class User extends MceObject {
    * 
    * @ignore
    */
-  const GET_BALP_EMISSION_ATTRIBUTES = ['dn','uid','fullname','type','email'];
+  const GET_BALP_EMISSION_ATTRIBUTES = self::GET_BALP_ATTRIBUTES;
   /**
    * Filtre pour la méthode getBalpGestionnaire()
    * 
@@ -280,7 +280,7 @@ abstract class User extends MceObject {
    * 
    * @ignore
    */
-  const GET_BALP_GESTIONNAIRE_ATTRIBUTES = ['dn','uid','fullname','type','email'];
+  const GET_BALP_GESTIONNAIRE_ATTRIBUTES = self::GET_BALP_ATTRIBUTES;
   /**
    * Filtre pour la méthode getGroups()
    * 

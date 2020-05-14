@@ -1,3 +1,10 @@
+ORM M2 - 0.6.0.6
+------
+- Correctif sur la generation de l'entree LDAP
+- Mise en place des objets pour la MCE
+- Suppression des index non nécessaire
+
+
 ORM M2 - 0.6.0.5
 ------
 - Correctif sur le gestionnaire d'absence Mel

@@ -115,7 +115,7 @@ class User extends Defaut\User {
    * 
    * @ignore
    */
-  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'service', 'info', 'server_routage', 'internet_access_admin', 'internet_access_user', 'shares', 'type', 'liens_import'];
+  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_routage', 'internet_access_user', 'shares', 'type'];
   /**
    * Filtre pour la méthode getBalp()
    * 
@@ -127,7 +127,7 @@ class User extends Defaut\User {
    * 
    * @ignore
    */
-  const GET_BALP_ATTRIBUTES = ['fullname', 'email_send', 'email_send_list', 'uid', 'shares', 'internet_access_admin', 'internet_access_user'];
+  const GET_BALP_ATTRIBUTES = ['fullname', 'email_send', 'email_send_list', 'uid', 'shares', 'internet_access_user'];
   /**
    * Filtre pour la méthode getBalpEmission()
    * 
@@ -139,7 +139,7 @@ class User extends Defaut\User {
    * 
    * @ignore
    */
-  const GET_BALP_EMISSION_ATTRIBUTES = ['fullname', 'email_send', 'email_send_list', 'uid', 'shares'];
+  const GET_BALP_EMISSION_ATTRIBUTES = ['fullname', 'email_send', 'email_send_list', 'uid', 'shares', 'internet_access_user'];
   /**
    * Filtre pour la méthode getBalpGestionnaire()
    * 
@@ -151,7 +151,7 @@ class User extends Defaut\User {
    * 
    * @ignore
    */
-  const GET_BALP_GESTIONNAIRE_ATTRIBUTES = ['fullname', 'email_send', 'email_send_list', 'uid', 'shares'];
+  const GET_BALP_GESTIONNAIRE_ATTRIBUTES = ['fullname', 'email_send', 'email_send_list', 'uid', 'shares', 'internet_access_user'];
   /**
    * Filtre pour la méthode getGroups()
    * 

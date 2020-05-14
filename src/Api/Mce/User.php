@@ -24,6 +24,7 @@ use LibMelanie\Log\M2Log;
 use LibMelanie\Api\Mce\Users\Outofoffice;
 use LibMelanie\Api\Mce\Users\Share;
 use LibMelanie\Api\Defaut;
+use LibMelanie\Config\MappingMce;
 
 /**
  * Classe utilisateur pour MCE
@@ -112,22 +113,31 @@ class User extends Defaut\User {
   const GET_LISTS_IS_MEMBER_FILTER = null;
 
   /**
+   * Liste des attributs à récupérer depuis l'autre annuaire
+   * 
+   * @ignore
+   */
+  const OTHER_LDAP_ATTRIBUTES = ['fullname', 'name', 'street', 'postalcode', 'locality', 'title'];
+
+  /**
    * Configuration du mapping qui surcharge la conf
    */
   const MAPPING = [
-    "user_cn"                       => 'cn',
-    "user_displayname"              => 'cn',
-    "user_mel_reception_principal"  => 'mail',
-    "user_mel_reception"            => 'mail',
-    "user_mel_emission_principal"   => 'mail',
-    "user_mel_emission"             => 'mail',
-    "user_mel_partages"             => 'mcedelegation',                 // Liste des partages pour cette boite
-    "user_mel_routage"              => 'mailhost',                      // Champ utilisé pour le routage des messages
-    "user_type_entree"              => 'mcetypecompte',
-    "user_street"                   => 'street',                        // Rue
-    "user_postalcode"               => 'postalcode',                    // Code postal
-    "user_locality"                 => 'l',                             // Ville
-    "user_title"                    => 'title',                         // Titre
+    "dn"                      => 'dn',                            // DN de l'utilisateur
+    "uid"                     => 'uid',                           // Identifiant de l'utilisateur
+    "fullname"                => 'cn',                            // Nom complet de l'utilisateur
+    "name"                    => 'cn',                            // Nom court de l'utilisateur
+    "email"                   => 'mail',                          // Adresse e-mail principale de l'utilisateur en reception
+    "email_list"              => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
+    "email_send"              => 'mail',                          // Adresse e-mail principale de l'utilisateur en emission
+    "email_send_list"         => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
+    "shares"                  => [MappingMce::name => 'mcedelegation', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
+    "server_routage"          => [MappingMce::name => 'mailhost', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
+    "type"                    => 'mcetypecompte',                 // Type d'entrée (boite individuelle, partagée, ressource, ...)
+    "street"                  => 'street',                        // Rue
+    "postalcode"              => 'postalcode',                    // Code postal
+    "locality"                => 'l',                             // Ville
+    "title"                   => 'title',                         // Titre
   ];
   
   /**
@@ -268,7 +278,7 @@ class User extends Defaut\User {
     }
     else if (!isset($this->otherldapobject->uid)) {
       $this->otherldapobject->uid = $this->uid;
-      $this->otherldapobject->load();
+      $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
     }
     return $this->otherldapobject->fullname;
   }
@@ -292,7 +302,7 @@ class User extends Defaut\User {
     }
     else if (!isset($this->otherldapobject->uid)) {
       $this->otherldapobject->uid = $this->uid;
-      $this->otherldapobject->load();
+      $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
     }
     return $this->otherldapobject->name;
   }
@@ -316,7 +326,7 @@ class User extends Defaut\User {
     }
     else if (!isset($this->otherldapobject->uid)) {
       $this->otherldapobject->uid = $this->uid;
-      $this->otherldapobject->load();
+      $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
     }
     return $this->otherldapobject->street;
   }
@@ -341,7 +351,7 @@ class User extends Defaut\User {
     }
     else if (!isset($this->otherldapobject->uid)) {
       $this->otherldapobject->uid = $this->uid;
-      $this->otherldapobject->load();
+      $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
     }
     return $this->otherldapobject->locality;
   }
@@ -366,7 +376,7 @@ class User extends Defaut\User {
     }
     else if (!isset($this->otherldapobject->uid)) {
       $this->otherldapobject->uid = $this->uid;
-      $this->otherldapobject->load();
+      $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
     }
     return $this->otherldapobject->title;
   }

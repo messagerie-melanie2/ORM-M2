@@ -83,23 +83,11 @@ class User extends Defaut\User {
    */
   const LOAD_FROM_EMAIL_FILTER = "";
   /**
-   * Attributs par défauts pour la méthode load()
-   * 
-   * @ignore
-   */
-  const LOAD_ATTRIBUTES = null;
-  /**
    * Filtre pour la méthode getBalp()
    * 
    * @ignore
    */
   const GET_BALP_FILTER = "";
-  /**
-   * Attributs par défauts pour la méthode getBalp()
-   * 
-   * @ignore
-   */
-  const GET_BALP_ATTRIBUTES = null;
   /**
    * Filtre pour la méthode getBalpEmission()
    * 
@@ -107,35 +95,17 @@ class User extends Defaut\User {
    */
   const GET_BALP_EMISSION_FILTER = "";
   /**
-   * Attributs par défauts pour la méthode getBalpEmission()
-   * 
-   * @ignore
-   */
-  const GET_BALP_EMISSION_ATTRIBUTES = null;
-  /**
    * Filtre pour la méthode getBalpGestionnaire()
    * 
    * @ignore
    */
   const GET_BALP_GESTIONNAIRE_FILTER = "";
   /**
-   * Attributs par défauts pour la méthode getBalpGestionnaire()
-   * 
-   * @ignore
-   */
-  const GET_BALP_GESTIONNAIRE_ATTRIBUTES = null;
-  /**
    * Filtre pour la méthode getGroups()
    * 
    * @ignore
    */
-  const GET_GROUPS_FILTER = null;
-  /**
-   * Attributs par défauts pour la méthode getGroups()
-   * 
-   * @ignore
-   */
-  const GET_GROUPS_ATTRIBUTES = ['dn','fullname','type','email','members'];
+  const GET_GROUPS_FILTER = "";
   /**
    * Filtre pour la méthode getGroupsIsMember()
    * 
@@ -143,23 +113,11 @@ class User extends Defaut\User {
    */
   const GET_GROUPS_IS_MEMBER_FILTER = null;
   /**
-   * Attributs par défauts pour la méthode getGroupsIsMember()
-   * 
-   * @ignore
-   */
-  const GET_GROUPS_IS_MEMBER_ATTRIBUTES = ['dn','fullname','type','email','members'];
-  /**
    * Filtre pour la méthode getListsIsMember()
    * 
    * @ignore
    */
   const GET_LISTS_IS_MEMBER_FILTER = null;
-  /**
-   * Attributs par défauts pour la méthode getListsIsMember()
-   * 
-   * @ignore
-   */
-  const GET_LISTS_IS_MEMBER_ATTRIBUTES = ['dn','fullname','type','email','members'];
 
   /**
    * Configuration du mapping qui surcharge la conf

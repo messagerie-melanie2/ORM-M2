@@ -366,7 +366,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     $entry = [];
     foreach ($this->haschanged as $key => $changed) {
       if ($changed) {
-        if (!in_array($key, $this->unchangeableProperties)) {
+        if (!in_array($key, $this->_unchangeableProperties)) {
           $entry[$key] = $this->data[$key];
         }
       }

@@ -241,9 +241,9 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (isset($this->dn)) {
       $data = Ldap::GetUserInfosFromDn($this->dn, $attributesmapping, $this->server);
     } else if (isset($this->uid)) {
-      $data = Ldap::GetUserInfos(null, $this->generateFilter($filter), $attributesmapping, $this->server);
+      $data = Ldap::GetUserInfos($this->uid, $this->generateFilter($filter), $attributesmapping, $this->server);
     } else if (isset($this->email)) {
-      $data = Ldap::GetUserInfosFromEmail(null, $this->generateFilter($filterFromEmail), $attributesmapping, $this->server);
+      $data = Ldap::GetUserInfosFromEmail($this->email, $this->generateFilter($filterFromEmail), $attributesmapping, $this->server);
     }
     if (isset($data)) {
       $this->setData($data);

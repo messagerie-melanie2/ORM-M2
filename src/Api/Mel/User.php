@@ -211,7 +211,7 @@ class User extends Defaut\User {
     "mission"                 => [MappingMce::name => 'mineqmission', MappingMce::type => MappingMce::arrayLdap], // Mission
     "photo_src"               => 'jpegphoto',                     // Photo de l'utilisateur
     "gender"                  => 'gender',                        // Genre
-    "liens_import"            => [MappingMce::name => 'mineqliensimport', MappingMce::prefixLdap => 'AGRI.Lien: uid=', MappingMce::type => MappingMce::stringLdap],              // Lien d'import autres annuaires
+    "liens_import"            => 'mineqliensimport',              // Lien d'import autres annuaires
     "is_agriculture"          => 'mineqliensimport',              // Calcul si l'utilisateur appartient à l'agriculture
     "observation"             => [MappingMce::name => 'info', MappingMce::prefixLdap => 'OBSERVATION:', MappingMce::type => MappingMce::stringLdap],
     "acces_internet_profil"   => [MappingMce::name => 'info', MappingMce::prefixLdap => 'AccesInternet.Profil: ', MappingMce::type => MappingMce::stringLdap],
@@ -415,7 +415,7 @@ class User extends Defaut\User {
    * @return boolean $is_agriculture Est-ce que l'utilisateur appartient au MAA (calcul sur le liens import)
    */
   protected function getMapIs_agriculture() {
-    return strpos($this->liens_import, 'AGRI.Lien: uid=') !== false;
+    return strpos($this->liens_import, 'AGRI.Lien: ') === 0;
   }
 
   /**

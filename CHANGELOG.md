@@ -1,3 +1,9 @@
+ORM M2 - 0.6.0.7
+------
+- Correctifs pour les User MCE
+- Correctif pour la gestion du other ldap
+- Correctif pour l'agri pour les User Mel
+
 ORM M2 - 0.6.0.6
 ------
 - Correctif sur la generation de l'entree LDAP

@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2020  Groupe MCD/MTES
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,16 +32,16 @@ class Version {
     /**
      * Numéro de version
      */
-    const VERSION = '0.6.0.6';
+    const VERSION = '0.6.0.7';
 
     /**
      * Numéro de version normalisé
      */
-    const NORMALIZED_VERSION = '0.6.0.6';
+    const NORMALIZED_VERSION = '0.6.0.7';
 
     /**
      * Build
      */
-    const BUILD = '20200514152252';
+    const BUILD = '20200528190252';
 
 }

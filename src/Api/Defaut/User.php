@@ -356,6 +356,29 @@ abstract class User extends MceObject {
    * ***************************************************
    * METHOD MAPPING
    */
+  /**
+   * Enregistrement de l'objet
+   * Nettoie le cache du user
+   * 
+   * @return null si erreur, boolean sinon (true insert, false update)
+   */
+  public function save() {
+    $ret = $this->objectmelanie->save();
+    $this->executeCache();
+    return $ret;
+  }
+
+  /**
+   * Suppression de l'objet
+   * Nettoie le cache du user
+   * 
+   * @return boolean
+   */
+  public function delete() {
+    $ret = $this->objectmelanie->delete();
+    $this->executeCache();
+    return $ret;
+  }
 
   /**
    * Authentification sur le serveur LDAP

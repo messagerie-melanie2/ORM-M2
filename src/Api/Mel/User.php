@@ -190,6 +190,7 @@ class User extends Defaut\User {
     "type"                    => 'mineqtypeentree',               // Type d'entrée (boite individuelle, partagée, ressource, ...)
     "internet_access_admin"   => [MappingMce::name => 'mineqmelaccesinterneta', MappingMce::defaut => false, MappingMce::type => MappingMce::booleanLdap],        // Droit d'accès depuis internet donné par l'administrateur
     "internet_access_user"    => [MappingMce::name => 'mineqmelaccesinternetu', MappingMce::defaut => false, MappingMce::type => MappingMce::booleanLdap],        // Droit d'accès depuis internet accepté par l'utilisateur
+    "internet_access_enable"  => ['mineqmelaccesinterneta', 'mineqmelaccesinternetu'],
     "use_photo_ader"          => 'mineqpublicationphotoader',     // Flag publier la photo de l'utilisateur sur Ader
     "use_photo_intranet"      => 'mineqpublicationphotointranet', // Flag publier la photo de l'utilisateur sur l'intranet
     "employee_number"         => [MappingMce::name => 'employeenumber', MappingMce::defaut => 'non renseigné'],                // Matricule de l'utilisateur
@@ -356,6 +357,9 @@ class User extends Defaut\User {
         // Pas de droit gestionnaire pour les imports Agri
         continue;
       }
+      if (empty($share->user)) {
+        continue;
+      }
       $right = '';
       switch ($share->type) {
         case Share::TYPE_ADMIN:
@@ -388,7 +392,10 @@ class User extends Defaut\User {
       $this->_shares = [];
       foreach ($_shares as $_share) {
         $share = new Share();
-        list($share->user, $right) = \explode(':', $_share, 2);
+        list($share->user, $right) = explode(':', $_share, 2);
+        if (empty($share->user)) {
+          continue;
+        }
         switch (\strtoupper($right)) {
           case 'G':
             $share->type = Share::TYPE_ADMIN;

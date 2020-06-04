@@ -1,3 +1,9 @@
+ORM M2 - 0.6.0.8
+------
+- 0005793: Gérer le cache lors du save de User
+- 0005792: Problème dans les partages de User
+- 0005790: Permettre d'associer un champ User à plusieurs champs LDAP
+
 ORM M2 - 0.6.0.7
 ------
 - Correctifs pour les User MCE

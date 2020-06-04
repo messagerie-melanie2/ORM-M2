@@ -182,6 +182,10 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
         if (is_array($map)) {
           if (!isset($map[MappingMce::type])) {
             $mapping[$key][MappingMce::type] = MappingMce::stringLdap;
+            if (!isset($map[MappingMce::name])) {
+              // Si pas de type ni de nom c'est surement un tableau de champs
+              $mapping[$key][MappingMce::name] = $map;
+            }
           }
         }
         else {
@@ -229,8 +233,17 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
     				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
           }
-          if (!isset($this->data[$key]) && !in_array($key, $attributesmapping)) {
-            $attributesmapping[] = $key;
+          if (is_array($key)) {
+            foreach ($key as $k) {
+              if (!isset($this->data[$k]) && !in_array($k, $attributesmapping)) {
+                $attributesmapping[] = $k;
+              }
+            }
+          }
+          else {
+            if (!isset($this->data[$key]) && !in_array($key, $attributesmapping)) {
+              $attributesmapping[] = $key;
+            }
           }
         }
         if (!empty($attributes) && empty($attributesmapping)) {
@@ -281,15 +294,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Mapping pour les champs
 		$attributesmapping = [];
 		if (is_array($attributes)) {
-    		// Recherche l'attribut dans la conf de mapping
-    		foreach ($attributes as $key) {
-    			// Récupèration des données de mapping
-    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
-    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
-    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
-    			}
-    			$attributesmapping[] = $key;
-    		}
+    	$attributesmapping = $this->_get_mapping_attributes($attributes);
 		}
     // Récupération des données depuis le LDAP avec le dn, l'uid ou l'email
     if (isset($this->dn)) {
@@ -441,15 +446,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Mapping pour les champs
 		$attributesmapping = [];
 		if (is_array($attributes)) {
-    		// Recherche l'attribut dans la conf de mapping
-    		foreach ($attributes as $key) {
-    			// Récupèration des données de mapping
-    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
-    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
-    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
-    			}
-    			$attributesmapping[] = $key;
-    		}
+    	$attributesmapping = $this->_get_mapping_attributes($attributes);
 		}
     // Récupération des Balp depuis le LDAP
     $result = Ldap::GetUserBalPartagees(null, $this->generateFilter($filter), $attributesmapping, $this->server);
@@ -485,15 +482,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Mapping pour les champs
 		$attributesmapping = [];
 		if (is_array($attributes)) {
-    		// Recherche l'attribut dans la conf de mapping
-    		foreach ($attributes as $key) {
-    			// Récupèration des données de mapping
-    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
-    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
-    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
-    			}
-    			$attributesmapping[] = $key;
-    		}
+    	$attributesmapping = $this->_get_mapping_attributes($attributes);
 		}
     // Récupération des Balp depuis le LDAP
     $result = Ldap::GetUserBalEmission(null, $this->generateFilter($filter), $attributesmapping, $this->server);
@@ -529,15 +518,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Mapping pour les champs
 		$attributesmapping = [];
 		if (is_array($attributes)) {
-    		// Recherche l'attribut dans la conf de mapping
-    		foreach ($attributes as $key) {
-    			// Récupèration des données de mapping
-    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
-    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
-    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
-    			}
-    			$attributesmapping[] = $key;
-    		}
+      $attributesmapping = $this->_get_mapping_attributes($attributes);
 		}
     // Récupération des Balp depuis le LDAP
     $result = Ldap::GetUserBalGestionnaire(null, $this->generateFilter($filter), $attributesmapping, $this->server);
@@ -573,15 +554,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Mapping pour les champs
 		$attributesmapping = [];
 		if (is_array($attributes)) {
-    		// Recherche l'attribut dans la conf de mapping
-    		foreach ($attributes as $key) {
-    			// Récupèration des données de mapping
-    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
-    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
-    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
-    			}
-    			$attributesmapping[] = $key;
-    		}
+    	$attributesmapping = $this->_get_mapping_attributes($attributes);
 		}
     // Récupération des Balp depuis le LDAP
     $result = Ldap::GetUserGroups(null, $this->generateFilter($filter), $attributesmapping, $this->server);
@@ -617,15 +590,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Mapping pour les champs
 		$attributesmapping = [];
 		if (is_array($attributes)) {
-    		// Recherche l'attribut dans la conf de mapping
-    		foreach ($attributes as $key) {
-    			// Récupèration des données de mapping
-    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
-    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
-    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
-    			}
-    			$attributesmapping[] = $key;
-    		}
+    	$attributesmapping = $this->_get_mapping_attributes($attributes);
 		}
     // Récupération des Balp depuis le LDAP
     $result = Ldap::GetGroupsUserIsMember(null, $this->generateFilter($filter), $attributesmapping, $this->server);
@@ -661,15 +626,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Mapping pour les champs
 		$attributesmapping = [];
 		if (is_array($attributes)) {
-    		// Recherche l'attribut dans la conf de mapping
-    		foreach ($attributes as $key) {
-    			// Récupèration des données de mapping
-    			if (isset(MappingMce::$Data_Mapping[$this->objectType])
-    					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
-    				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
-    			}
-    			$attributesmapping[] = $key;
-    		}
+      $attributesmapping = $this->_get_mapping_attributes($attributes);
 		}
     // Récupération des Balp depuis le LDAP
     $result = Ldap::GetListsUserIsMember(null, $this->generateFilter($filter), $attributesmapping, $this->server);
@@ -1047,5 +1004,37 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getTimezone() this->timezone: " . $this->timezone);
     }
     return $this->timezone;
+  }
+
+
+  /**
+   * Génère un tableau d'attribut mappés
+   * 
+   * @param array $attributes Liste des attributs a mapper
+   * 
+   * @return array $attributesmapping
+   */
+  private function _get_mapping_attributes($attributes) {
+    // Mapping pour les champs
+		$attributesmapping = [];
+    // Recherche l'attribut dans la conf de mapping
+    foreach ($attributes as $key) {
+      // Récupèration des données de mapping
+      if (isset(MappingMce::$Data_Mapping[$this->objectType])
+          && isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+        $key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
+      }
+      if (is_array($key)) {
+        foreach ($key as $k) {
+          if (!in_array($k, $attributesmapping)) {
+            $attributesmapping[] = $k;
+          }
+        }
+      }
+      else if (!in_array($key, $attributesmapping)) {
+        $attributesmapping[] = $key;
+      }
+    }
+    return $attributesmapping;
   }
 }

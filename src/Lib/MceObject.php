@@ -121,7 +121,7 @@ abstract class MceObject implements Serializable {
 		// Call SetMapProperty
 		if (method_exists($this, "setMap$uname")) {
 			$this->{"setMap$uname"}($value);
-		} else {
+		} else if (isset($this->objectmelanie)) {
 			$this->objectmelanie->$lname = $value;
 		}
 	}
@@ -141,7 +141,7 @@ abstract class MceObject implements Serializable {
 		// Call GetMapProperty
 		if (method_exists($this, "getMap$uname")) {
 			return $this->{"getMap$uname"}();
-		} elseif (isset($this->objectmelanie->$lname)) {
+		} elseif (isset($this->objectmelanie) && isset($this->objectmelanie->$lname)) {
 			return $this->objectmelanie->$lname;
 		}
 		return null;
@@ -162,7 +162,7 @@ abstract class MceObject implements Serializable {
 	    if (method_exists($this, "issetMap$uname")) {
 	        return $this->{"issetMap$uname"}();
 	    } else {
-	        return isset($this->objectmelanie->$lname);
+	        return isset($this->objectmelanie) && isset($this->objectmelanie->$lname);
 	    }
 	}
 
@@ -176,7 +176,7 @@ abstract class MceObject implements Serializable {
 	 */
 	public function __unset($name) {
 		$lname = strtolower($name);
-		if (isset($this->objectmelanie->$lname)) {
+		if (isset($this->objectmelanie) && isset($this->objectmelanie->$lname)) {
 			unset($this->objectmelanie->$lname);
 		}
 	}
@@ -197,7 +197,7 @@ abstract class MceObject implements Serializable {
 		// Call method
 		if (method_exists($this, $name)) {
 			return call_user_func_array([$this, $name], $arguments);
-		} else {
+		} else if (isset($this->objectmelanie)) {
 			return call_user_func_array([$this->objectmelanie, $name], $arguments);
 		}
 	}

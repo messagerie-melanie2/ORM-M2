@@ -40,4 +40,73 @@ class Share extends MceObject {
   const TYPE_WRITE = 'E';
   const TYPE_SEND = 'C';
   const TYPE_ADMIN = 'G';
+
+  /**
+   * Liste des propriétés à sérialiser pour le cache
+   */
+  protected $serializedProperties = [
+    'user',
+    'type',
+  ];
+
+  /**
+   * Identifiant de l'utilisateur
+   * @var string $user
+   */
+  protected $user;
+  /**
+   * Type de partage (Voir Share::TYPE_*)
+   * @var string $type
+   */
+  protected $type;
+  
+  /**
+   * Mapping user field
+   *
+   * @param string $user
+   */
+  protected function setMapUser($user) {
+    $this->user = $user;
+  }
+  /**
+   * Mapping user field
+   * 
+   * @return string $type
+   */
+  protected function getMapUser() {
+    return $this->user;
+  }
+  /**
+   * Mapping user field
+   *
+   * @return boolean
+   */
+  protected function issetMapUser() {
+    return isset($this->user);
+  }
+
+  /**
+   * Mapping type field
+   *
+   * @param string $type
+   */
+  protected function setMapType($type) {
+    $this->type = $type;
+  }
+  /**
+   * Mapping type field
+   * 
+   * @return string $type
+   */
+  protected function getMapType() {
+    return $this->type;
+  }
+  /**
+   * Mapping type field
+   *
+   * @return boolean
+   */
+  protected function issetMapType() {
+    return isset($this->type);
+  }
 }

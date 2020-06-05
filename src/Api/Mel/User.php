@@ -765,11 +765,10 @@ class User extends Defaut\User {
    */
   protected function getMapOutofoffices() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOutofoffices()");
-		$objects = [];
-    $length = isset($this->objectmelanie->mineqmelreponse['count']) ? $this->objectmelanie->mineqmelreponse['count'] : count($this->objectmelanie->mineqmelreponse);
-    for ($i = 0; $i < $length; $i++) {
-      $type = strpos($this->objectmelanie->mineqmelreponse[$i], "RAIN") !== false ? Outofoffice::TYPE_INTERNAL : Outofoffice::TYPE_EXTERNAL;
-      $objects[$type] = $this->createObjectFromData($this->objectmelanie->mineqmelreponse[$i], $type);
+    $objects = [];
+    foreach ($this->objectmelanie->outofoffices as $oof) {
+      $type = strpos($oof, "RAIN") !== false ? Outofoffice::TYPE_INTERNAL : Outofoffice::TYPE_EXTERNAL;
+      $objects[$type] = $this->createObjectFromData($oof, $type);
     }
     return $objects;
 	}
@@ -825,7 +824,7 @@ class User extends Defaut\User {
     foreach ($OofObjects as $OofObject) {
       $reponses[] = $this->createDataFromObject($OofObject);
     }
-    $this->objectmelanie->mineqmelreponse = $reponses;
+    $this->objectmelanie->outofoffices = $reponses;
 	}
 	
 	/**

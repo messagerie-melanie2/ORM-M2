@@ -71,7 +71,7 @@ class Share extends MceObject {
   /**
    * Mapping user field
    * 
-   * @return string $type
+   * @return string $user
    */
   protected function getMapUser() {
     return $this->user;

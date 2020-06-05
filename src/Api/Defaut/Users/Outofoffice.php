@@ -42,4 +42,196 @@ class Outofoffice extends MceObject {
   // TYPE d'absence Internal ou External
   const TYPE_EXTERNAL = 'ext';
   const TYPE_INTERNAL = 'int';
+
+  /**
+   * Liste des propriétés à sérialiser pour le cache
+   */
+  protected $serializedProperties = [
+    'start',
+    'end',
+    'enable',
+    'message',
+    'order',
+    'type',
+  ];
+
+  /**
+   * Date de début de l'absence
+   * @var \Datetime $start
+   */
+  protected $start;
+  /**
+   * Mapping start field
+   *
+   * @param \Datetime $start
+   */
+  protected function setMapStart($start) {
+    $this->start = $start;
+  }
+  /**
+   * Mapping start field
+   * 
+   * @return \Datetime $start
+   */
+  protected function getMapStart() {
+    return $this->start;
+  }
+  /**
+   * Mapping start field
+   *
+   * @return boolean
+   */
+  protected function issetMapStart() {
+    return isset($this->start);
+  }
+
+  /**
+   * Date de fin de l'absence
+   * @var \Datetime $end
+   */
+  protected $end;
+  /**
+   * Mapping end field
+   *
+   * @param \Datetime $end
+   */
+  protected function setMapEnd($end) {
+    $this->end = $end;
+  }
+  /**
+   * Mapping end field
+   * 
+   * @return \Datetime $end
+   */
+  protected function getMapEnd() {
+    return $this->end;
+  }
+  /**
+   * Mapping end field
+   *
+   * @return boolean
+   */
+  protected function issetMapEnd() {
+    return isset($this->end);
+  }
+
+  /**
+   * Est-ce que l'absence est active
+   * @var boolean $enable
+   */
+  protected $enable;
+  /**
+   * Mapping enable field
+   *
+   * @param boolean $enable
+   */
+  protected function setMapEnable($enable) {
+    $this->enable = $enable;
+  }
+  /**
+   * Mapping enable field
+   * 
+   * @return boolean $enable
+   */
+  protected function getMapEnable() {
+    return $this->enable;
+  }
+  /**
+   * Mapping enable field
+   *
+   * @return boolean
+   */
+  protected function issetMapEnable() {
+    return isset($this->enable);
+  }
+
+  /**
+   * Message d'absence a afficher
+   * @var string $message
+   */
+  protected $message;
+  /**
+   * Mapping message field
+   *
+   * @param string $message
+   */
+  protected function setMapMessage($message) {
+    $this->message = $message;
+  }
+  /**
+   * Mapping message field
+   * 
+   * @return string $message
+   */
+  protected function getMapMessage() {
+    return $this->message;
+  }
+  /**
+   * Mapping message field
+   *
+   * @return boolean
+   */
+  protected function issetMapMessage() {
+    return isset($this->message);
+  }
+
+  /**
+   * Ordre de tri du message d'absence
+   * @var int $order
+   */
+  protected $order;
+  /**
+   * Mapping order field
+   *
+   * @param int $order
+   */
+  protected function setMapOrder($order) {
+    $this->order = $order;
+  }
+  /**
+   * Mapping order field
+   * 
+   * @return int $order
+   */
+  protected function getMapOrder() {
+    return $this->order;
+  }
+  /**
+   * Mapping order field
+   *
+   * @return boolean
+   */
+  protected function issetMapOrder() {
+    return isset($this->order);
+  }
+
+  /**
+   * Type d'absence (Interne, Externe)
+   * @var Outofoffice::TYPE_* $type
+   */
+  protected $type;
+  /**
+   * Mapping type field
+   *
+   * @param Outofoffice::TYPE_* $type
+   */
+  protected function setMapType($type) {
+    $this->type = $type;
+  }
+  /**
+   * Mapping type field
+   * 
+   * @return Outofoffice::TYPE_* $type
+   */
+  protected function getMapType() {
+    return $this->type;
+  }
+  /**
+   * Mapping type field
+   *
+   * @return boolean
+   */
+  protected function issetMapType() {
+    return isset($this->type);
+  }
 }

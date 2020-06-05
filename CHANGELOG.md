@@ -1,3 +1,8 @@
+ORM M2 - 0.6.0.9
+------
+- 0005795: [Bug] Problème dans l'objet Outofoffice
+
+
 ORM M2 - 0.6.0.8
 ------
 - 0005793: Gérer le cache lors du save de User

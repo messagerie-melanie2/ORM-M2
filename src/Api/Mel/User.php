@@ -187,6 +187,7 @@ class User extends Defaut\User {
     "password_need_change"    => 'mineqpassworddoitchanger',      // Message pour indiquer que le mot de passe de l'utilisateur doit changer
     "shares"                  => [MappingMce::name => 'mineqmelpartages', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
     "server_routage"          => [MappingMce::name => 'mineqmelroutage', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
+    "server_host"             => [MappingMce::name => 'mineqmelroutage', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
     "type"                    => 'mineqtypeentree',               // Type d'entrée (boite individuelle, partagée, ressource, ...)
     "internet_access_admin"   => [MappingMce::name => 'mineqmelaccesinterneta', MappingMce::defaut => false, MappingMce::type => MappingMce::booleanLdap],        // Droit d'accès depuis internet donné par l'administrateur
     "internet_access_user"    => [MappingMce::name => 'mineqmelaccesinternetu', MappingMce::defaut => false, MappingMce::type => MappingMce::booleanLdap],        // Droit d'accès depuis internet accepté par l'utilisateur
@@ -352,30 +353,32 @@ class User extends Defaut\User {
     }
     $this->_shares = $shares;
     $_shares = [];
-    foreach ($shares as $share) {
-      if ($this->getMapIs_agriculture() && $share->type == Share::TYPE_ADMIN) {
-        // Pas de droit gestionnaire pour les imports Agri
-        continue;
+    if (is_array($shares)) {
+      foreach ($shares as $share) {
+        if ($this->getMapIs_agriculture() && $share->type == Share::TYPE_ADMIN) {
+          // Pas de droit gestionnaire pour les imports Agri
+          continue;
+        }
+        if (empty($share->user)) {
+          continue;
+        }
+        $right = '';
+        switch ($share->type) {
+          case Share::TYPE_ADMIN:
+            $right = 'G';
+            break;
+          case Share::TYPE_SEND:
+            $right = 'C';
+            break;
+          case Share::TYPE_WRITE:
+            $right = 'E';
+            break;
+          case Share::TYPE_READ:
+            $right = 'L';
+            break;
+        }
+        $_shares[] = $share->user . ':' . $right;
       }
-      if (empty($share->user)) {
-        continue;
-      }
-      $right = '';
-      switch ($share->type) {
-        case Share::TYPE_ADMIN:
-          $right = 'G';
-          break;
-        case Share::TYPE_SEND:
-          $right = 'C';
-          break;
-        case Share::TYPE_WRITE:
-          $right = 'E';
-          break;
-        case Share::TYPE_READ:
-          $right = 'L';
-          break;
-      }
-      $_shares[] = $share->user . ':' . $right;
     }
     $this->objectmelanie->shares = $_shares;
   }
@@ -390,27 +393,29 @@ class User extends Defaut\User {
     if (!isset($this->_shares)) {
       $_shares = $this->objectmelanie->shares;
       $this->_shares = [];
-      foreach ($_shares as $_share) {
-        $share = new Share();
-        list($share->user, $right) = explode(':', $_share, 2);
-        if (empty($share->user)) {
-          continue;
+      if (is_array($_shares)) {
+        foreach ($_shares as $_share) {
+          $share = new Share();
+          list($share->user, $right) = explode(':', $_share, 2);
+          if (empty($share->user)) {
+            continue;
+          }
+          switch (\strtoupper($right)) {
+            case 'G':
+              $share->type = Share::TYPE_ADMIN;
+              break;
+            case 'C':
+              $share->type = Share::TYPE_SEND;
+              break;
+            case 'E':
+              $share->type = Share::TYPE_WRITE;
+              break;
+            case 'L':
+              $share->type = Share::TYPE_READ;
+              break;
+          }
+          $this->_shares[$share->user] = $share;
         }
-        switch (\strtoupper($right)) {
-          case 'G':
-            $share->type = Share::TYPE_ADMIN;
-            break;
-          case 'C':
-            $share->type = Share::TYPE_SEND;
-            break;
-          case 'E':
-            $share->type = Share::TYPE_WRITE;
-            break;
-          case 'L':
-            $share->type = Share::TYPE_READ;
-            break;
-        }
-        $this->_shares[$share->user] = $share;
       }
     }
     return $this->_shares;

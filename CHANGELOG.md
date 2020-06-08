@@ -1,3 +1,9 @@
+ORM M2 - 0.6.0.10
+------
+- Add server host conf in User Mél
+- Fix error in foreach for shares values
+
+
 ORM M2 - 0.6.0.9
 ------
 - 0005795: [Bug] Problème dans l'objet Outofoffice

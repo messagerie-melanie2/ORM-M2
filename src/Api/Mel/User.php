@@ -316,11 +316,13 @@ class User extends Defaut\User {
    */
   protected function getMapServer_host() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapServer_host()");
-    foreach ($this->server_routage as $route) {
-			if (strpos($route, self::SERVER_HOST_DELIMITER) !== false) {
-				$route = explode('@', $route, 2);
-				return $route[1];
-			}
+    if (is_array($this->server_routage)) {
+      foreach ($this->server_routage as $route) {
+        if (strpos($route, self::SERVER_HOST_DELIMITER) !== false) {
+          $route = explode('@', $route, 2);
+          return $route[1];
+        }
+      }
     }
     return null;
   }
@@ -332,11 +334,13 @@ class User extends Defaut\User {
    */
   protected function getMapServer_user() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapServer_user()");
-    foreach ($this->server_routage as $route) {
-			if (strpos($route, self::SERVER_HOST_DELIMITER) !== false) {
-				$route = explode('@', $route, 2);
-				return $route[0];
-			}
+    if (is_array($this->server_routage)) {
+      foreach ($this->server_routage as $route) {
+        if (strpos($route, self::SERVER_HOST_DELIMITER) !== false) {
+          $route = explode('@', $route, 2);
+          return $route[0];
+        }
+      }
     }
     return null;
   }
@@ -771,9 +775,11 @@ class User extends Defaut\User {
   protected function getMapOutofoffices() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOutofoffices()");
     $objects = [];
-    foreach ($this->objectmelanie->outofoffices as $oof) {
-      $type = strpos($oof, "RAIN") !== false ? Outofoffice::TYPE_INTERNAL : Outofoffice::TYPE_EXTERNAL;
-      $objects[$type] = $this->createObjectFromData($oof, $type);
+    if (is_array($this->objectmelanie->outofoffices)) {
+      foreach ($this->objectmelanie->outofoffices as $oof) {
+        $type = strpos($oof, "RAIN") !== false ? Outofoffice::TYPE_INTERNAL : Outofoffice::TYPE_EXTERNAL;
+        $objects[$type] = $this->createObjectFromData($oof, $type);
+      }
     }
     return $objects;
 	}
@@ -791,29 +797,31 @@ class User extends Defaut\User {
     $tab = explode(" ", substr($data, 0, $pos));
     $object = new Outofoffice();
     $object->type = $type;
-    foreach ($tab as $entry) {
-      if (strpos($entry, ':') !== false) {
-        list($key, $val) = explode(":", $entry, 2);
-        // Ajout des properties dans l'objet
-        switch ($key) {
-          case 'DDEB':
-            // Date de début
-            $object->start = strlen($val) ? new \DateTime($val) : null;
-            break;
-          case 'DFIN':
-            // Si la date de fin commence par 0, le message d'absence est désactivé
-            $object->enable = strpos($val, '0') !== 0;
-            // Date de fin
-            if (strpos($val, '/') !== false) {
-              $val = substr($val, 2);
-            }
-            $object->end = strlen($val) ? new \DateTime($val) : null;
-            break;
+    if (is_array($tab)) {
+      foreach ($tab as $entry) {
+        if (strpos($entry, ':') !== false) {
+          list($key, $val) = explode(":", $entry, 2);
+          // Ajout des properties dans l'objet
+          switch ($key) {
+            case 'DDEB':
+              // Date de début
+              $object->start = strlen($val) ? new \DateTime($val) : null;
+              break;
+            case 'DFIN':
+              // Si la date de fin commence par 0, le message d'absence est désactivé
+              $object->enable = strpos($val, '0') !== 0;
+              // Date de fin
+              if (strpos($val, '/') !== false) {
+                $val = substr($val, 2);
+              }
+              $object->end = strlen($val) ? new \DateTime($val) : null;
+              break;
+          }
         }
-      }
-      else if (strpos($entry, '~') !== false) {
-        // Gestion du tri
-        $object->order = intval(str_replace('~', '', $entry));
+        else if (strpos($entry, '~') !== false) {
+          // Gestion du tri
+          $object->order = intval(str_replace('~', '', $entry));
+        }
       }
     }
     $object->message = substr($data, $pos);
@@ -826,8 +834,10 @@ class User extends Defaut\User {
   protected function setMapOutofoffices($OofObjects) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapOutofoffices()");
     $reponses = [];
-    foreach ($OofObjects as $OofObject) {
-      $reponses[] = $this->createDataFromObject($OofObject);
+    if (is_array($OofObjects)) {
+      foreach ($OofObjects as $OofObject) {
+        $reponses[] = $this->createDataFromObject($OofObject);
+      }
     }
     $this->objectmelanie->outofoffices = $reponses;
 	}

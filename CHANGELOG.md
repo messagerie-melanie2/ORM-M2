@@ -1,3 +1,7 @@
+ORM M2 - 0.6.0.11
+------
+- 0005805: Ne pas utiliser "static" quand on peut soit être un Event soit une Exception
+
 ORM M2 - 0.6.0.10
 ------
 - Add server host conf in User Mél

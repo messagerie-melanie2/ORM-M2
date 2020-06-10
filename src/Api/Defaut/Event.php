@@ -429,7 +429,8 @@ class Event extends MceObject {
       $organizer_calendar_id = $organizer->calendar;
     } else {
       // Si l'évènement n'existe pas il faut essayer de récupérer l'évènement de l'organisateur
-      $listevents = new static();
+      $class = str_replace('\Exception', '\Event', $this->get_class);
+      $listevents = new $class();
       $listevents->uid = $this->uid;
       // XXX: Problème dans la gestion des participants
       // N'utiliser l'organizer uid que s'il existe ?
@@ -439,8 +440,10 @@ class Event extends MceObject {
       $events = $listevents->getList(null, null, null, 'attendees', false);
       // Si l'évènement n'existe pas et que l'organisateur est différent, c'est un organisateur externe
       if (count($events) == 0) {
+        $objectShareClass = str_replace('\Event', '\ObjectShare', $class);
+        $delimiter = constant("$objectShareClass::DELIMITER");
         if (strtolower($this->objectmelanie->organizer_uid) == strtolower($this->user->uid) 
-            || strpos(strtolower($this->objectmelanie->organizer_uid), strtolower($this->user->uid) . '.-.') !== false) {
+            || strpos(strtolower($this->objectmelanie->organizer_uid), strtolower($this->user->uid) . $delimiter) !== false) {
           // L'évènement n'existe pas, l'organisateur est celui qui créé l'évènement
           // Donc on est dans le cas d'une création interne
           $organizer->calendar = $this->calendar;
@@ -1162,7 +1165,8 @@ class Event extends MceObject {
   protected function deleteAttachments() {
     $event_uid = $this->objectmelanie->uid;
     $Attachment = $this->__getNamespace() . '\\Attachment';
-    $_events = new static();
+    $class = str_replace('\Exception', '\Event', $this->get_class);
+    $_events = new $class();
     $_events->uid = $event_uid;
     $nb_events = $_events->getList('count');
     $count = $nb_events['']->events_count;

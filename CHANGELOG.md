@@ -1,3 +1,7 @@
+ORM M2 - 0.6.0.12
+------
+- 0005837: Dans Api/Mce gérer le OTHER_LDAP qui n'est pas défini
+
 ORM M2 - 0.6.0.11
 ------
 - 0005805: Ne pas utiliser "static" quand on peut soit être un Event soit une Exception

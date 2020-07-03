@@ -274,14 +274,20 @@ class User extends Defaut\User {
    */
   protected function getMapFullname() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapFullname()");
-    if (!isset($this->otherldapobject)) {
-      $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP, null, static::MAPPING);
+    if (isset(\LibMelanie\Config\Ldap::$OTHER_LDAP)) {
+      if (!isset($this->otherldapobject)) {
+        $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP, null, static::MAPPING);
+      }
+      if (!isset($this->otherldapobject->uid) || !isset($this->otherldapobject->fullname)) {
+        $this->otherldapobject->uid = $this->uid;
+        $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
+      }
+      $fullname = $this->otherldapobject->fullname;
     }
-    if (!isset($this->otherldapobject->uid) || !isset($this->otherldapobject->fullname)) {
-      $this->otherldapobject->uid = $this->uid;
-      $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
+    else {
+      $fullname = $this->objectmelanie->fullname;
     }
-    return $this->otherldapobject->fullname;
+    return $fullname;
   }
 
   /**
@@ -298,14 +304,19 @@ class User extends Defaut\User {
    */
   protected function getMapName() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapName()");
-    if (!isset($this->otherldapobject)) {
-      $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP, null, static::MAPPING);
+    if (isset(\LibMelanie\Config\Ldap::$OTHER_LDAP)) {
+      if (!isset($this->otherldapobject)) {
+        $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP, null, static::MAPPING);
+      }
+      if (!isset($this->otherldapobject->uid)) {
+        $this->otherldapobject->uid = $this->uid;
+        $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
+      }
+      $name = $this->otherldapobject->name;
     }
-    if (!isset($this->otherldapobject->uid)) {
-      $this->otherldapobject->uid = $this->uid;
-      $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
+    else {
+      $name = $this->objectmelanie->name;
     }
-    $name = $this->otherldapobject->name;
     if (strpos($name, ' - ') !== false) {
       $name = explode(' - ', $name, 2);
       $name = $name[0];
@@ -327,14 +338,21 @@ class User extends Defaut\User {
    */
   protected function getMapStreet() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapStreet()");
-    if (!isset($this->otherldapobject)) {
-      $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP, null, static::MAPPING);
+    if (isset(\LibMelanie\Config\Ldap::$OTHER_LDAP)) {
+      if (!isset($this->otherldapobject)) {
+        $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP, null, static::MAPPING);
+      }
+      if (!isset($this->otherldapobject->uid)) {
+        $this->otherldapobject->uid = $this->uid;
+        $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
+      }
+      $street = $this->otherldapobject->street;
     }
-    if (!isset($this->otherldapobject->uid)) {
-      $this->otherldapobject->uid = $this->uid;
-      $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
+    else {
+      $street = $this->objectmelanie->street;
     }
-    return $this->otherldapobject->street;
+    
+    return $street;
   }
 
   /**
@@ -352,14 +370,20 @@ class User extends Defaut\User {
    */
   protected function getMapLocality() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapLocality()");
-    if (!isset($this->otherldapobject)) {
-      $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP, null, static::MAPPING);
+    if (isset(\LibMelanie\Config\Ldap::$OTHER_LDAP)) {
+      if (!isset($this->otherldapobject)) {
+        $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP, null, static::MAPPING);
+      }
+      if (!isset($this->otherldapobject->uid)) {
+        $this->otherldapobject->uid = $this->uid;
+        $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
+      }
+      $locality = $this->otherldapobject->locality;
     }
-    if (!isset($this->otherldapobject->uid)) {
-      $this->otherldapobject->uid = $this->uid;
-      $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
+    else {
+      $locality = $this->objectmelanie->locality;
     }
-    return $this->otherldapobject->locality;
+    return $locality;
   }
 
   /**
@@ -377,13 +401,19 @@ class User extends Defaut\User {
    */
   protected function getMapTitle() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapTitle()");
-    if (!isset($this->otherldapobject)) {
-      $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP, null, static::MAPPING);
+    if (isset(\LibMelanie\Config\Ldap::$OTHER_LDAP)) {
+      if (!isset($this->otherldapobject)) {
+        $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP, null, static::MAPPING);
+      }
+      if (!isset($this->otherldapobject->uid)) {
+        $this->otherldapobject->uid = $this->uid;
+        $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
+      }
+      $title = $this->otherldapobject->title;
     }
-    if (!isset($this->otherldapobject->uid)) {
-      $this->otherldapobject->uid = $this->uid;
-      $this->otherldapobject->load(self::OTHER_LDAP_ATTRIBUTES);
+    else {
+      $title = $this->objectmelanie->title;
     }
-    return $this->otherldapobject->title;
+    return $title;
   }
 }

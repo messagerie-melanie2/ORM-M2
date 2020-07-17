@@ -146,6 +146,29 @@ class User extends Defaut\User {
    * DATA MAPPING
    */
   /**
+   * Mapping uid field
+   *
+   * @param string $uid
+   */
+  protected function setMapUid($uid) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapUid(" . (is_string($uid) ? $uid : "") . ")");
+    if (!isset($this->objectmelanie)) {
+      throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
+    }
+    if (strpos($uid, 'uid=') === 0) {
+      // C'est un dn utilisateur
+      $this->objectmelanie->dn = $uid;
+    }
+    else if (strpos($uid, '@') !== false) {
+      // C'est une adresse e-mail
+      $this->objectmelanie->email = $uid;
+    }
+    else {
+      $this->objectmelanie->uid = $uid;
+    }
+  }
+  
+  /**
    * Récupération du champ internet_access_enable
    * 
    * @return boolean true si l'access internet de l'utilisateur est activé, false sinon

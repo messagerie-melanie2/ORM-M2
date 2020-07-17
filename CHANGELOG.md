@@ -1,3 +1,7 @@
+ORM M2 - 0.6.0.13
+------
+- 0005840: [User/MCE] Reconnaitre automatiquement une adresse e-mail
+
 ORM M2 - 0.6.0.12
 ------
 - 0005837: Dans Api/Mce gérer le OTHER_LDAP qui n'est pas défini

@@ -1,3 +1,8 @@
+ORM M2 - 0.6.0.14
+------
+- 0005879: Object Member pour les listes de diffusion
+- Update initial SQL schema
+
 ORM M2 - 0.6.0.13
 ------
 - 0005840: [User/MCE] Reconnaitre automatiquement une adresse e-mail

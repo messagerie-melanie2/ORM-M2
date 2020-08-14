@@ -1,3 +1,7 @@
+ORM M2 - 0.6.0.15
+------
+- Fix for Mel user filter by email
+
 ORM M2 - 0.6.0.14
 ------
 - 0005879: Object Member pour les listes de diffusion

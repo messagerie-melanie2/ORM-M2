@@ -90,12 +90,23 @@ $result = [
 		'added' => [],
 ];
 foreach ($events as $event) {
+	$uid = $event->uid;
 	$result['added'][] = $event->uid;
 }
 
 $results = array_merge($results, $result);
 
 var_export($results);
+
+// Load event
+echo "\r\n\r\n## Has Changed $uid\r\n\r\n";
+$event = new \LibMelanie\Api\Mce\Event($user, $calendar);
+$event->uid = $uid;
+if ($event->load()) {
+	echo "## has changed " . $event->hasChanged() . "\r\n\r\n";
+	$event->title = "Test has changed";
+	echo "## has changed " . $event->hasChanged() . "\r\n\r\n";
+}
 
 // // Est-ce que l'utilisateur a les droits d'écriture ?
 // if ($calendar->load()

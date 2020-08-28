@@ -106,6 +106,15 @@ abstract class MceObject implements Serializable {
 	}
 
 	/**
+	 * Détermine si l'objet a changé
+	 * 
+	 * @return boolean true si au moins un champ de l'objet a changé, false sinon
+	 */
+	public function hasChanged() {
+		return $this->objectmelanie->anyFieldHasChanged();
+	}
+
+	/**
 	 * PHP magic to set an instance variable
 	 *
 	 * @param string $name Nom de la propriété

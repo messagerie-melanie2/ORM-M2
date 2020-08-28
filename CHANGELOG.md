@@ -1,3 +1,8 @@
+ORM M2 - 0.6.0.16
+------
+- 0005899: Gérer une méthode hasChanged dans les objets
+- 0005898: [Base de données] Fonction PL/SQL de nettoyage des sync
+
 ORM M2 - 0.6.0.15
 ------
 - Fix for Mel user filter by email

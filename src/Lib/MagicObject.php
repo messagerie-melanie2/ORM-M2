@@ -108,7 +108,9 @@ abstract class MagicObject implements Serializable {
 	 * @ignore
 	 */
 	protected function initializeHasChanged() {
-		foreach (array_keys($this->haschanged) as $key) $this->haschanged[$key] = false;
+		foreach ($this->haschanged as $key => $value) {
+      		$this->haschanged[$key] = false;
+    	}
 	}
 	
 	/**
@@ -128,7 +130,23 @@ abstract class MagicObject implements Serializable {
       return $this->haschanged[$lname];
     }
 	  return false;
-	}
+  }
+  
+  /**
+   * Détermine si au moins un champ a changé
+   * 
+   * @return boolean
+   */
+  public function anyFieldHasChanged() {
+    $_hasChanged = false;
+    foreach ($this->haschanged as $value) {
+      $_hasChanged |= $value;
+      if ($_hasChanged) {
+        break;
+      }
+    }
+    return $_hasChanged;
+  }
 	
 	/**
 	 * Récupère la valeur du champ dans data

@@ -556,9 +556,9 @@ class ICS {
 	 * Lightning doit il envoyer les invitations aux participants
 	 */
 	const X_MOZ_SEND_INVITATIONS = 'X-MOZ-SEND-INVITATIONS';
-  /**
-   * Lightning doit il envoyer les invitations aux nouveaux participants
-   */
+  	/**
+   	 * Lightning doit il envoyer les invitations aux nouveaux participants
+   	 */
 	const X_MOZ_SEND_INVITATIONS_UNDISCLOSED = 'X-MOZ-SEND-INVITATIONS-UNDISCLOSED';
 	/**
 	 * Nom d'une pièce jointe (non défini dans les RFC ??)
@@ -574,10 +574,28 @@ class ICS {
 	const X_MOZ_RECEIVED_DTSTAMP = 'X-MOZ-RECEIVED-DTSTAMP';
 
 	// EVOLUTION ICS
-  /**
-   * Attachment name for Evolution
-   */
+  	/**
+	 * Attachment name for Evolution
+   	 */
 	const X_EVOLUTION_CALDAV_ATTACHMENT_NAME = 'X-EVOLUTION-CALDAV-ATTACHMENT-NAME';
+
+	// WR ICS
+	/**
+	 * Specifies the description of the calendar
+	 */
+	const X_WR_CALDESC = 'X-WR-CALDESC';
+	/**
+	 * Specifies the name of the calendar
+	 */
+	const X_WR_CALNAME = 'X-WR-CALNAME';
+	/**
+	 * Specifies a globally unique identifier for the calendar
+	 */
+	const X_WR_RELCALID = 'X-WR-RELCALID';
+	/**
+	 * Specifies the timezone of the calendar
+	 */
+	const X_WR_TIMEZONE = 'X-WR-TIMEZONE';
 
 	// Others X
 	/**

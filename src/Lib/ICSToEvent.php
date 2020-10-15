@@ -90,6 +90,14 @@ class ICSToEvent {
   public static function Convert($ics, $event, $calendar = null, $user = null, $useattachments = true) {
     $vcalendar = VObject\Reader::read($ics);
     $exceptions = [];
+    // 0005907: [ICS] Prendre en compte le X-WR-TIMEZONE
+    $x_wr_timezone = $vcalendar->{ICS::X_WR_TIMEZONE};
+    if (isset($x_wr_timezone)) {
+      $_list_timezones = \DateTimeZone::listIdentifiers();
+      if (!in_array($x_wr_timezone, $_list_timezones)) {
+        unset($x_wr_timezone);
+      }
+    }
     foreach ($vcalendar->VEVENT as $vevent) {
       $recurrence_id = $vevent->{ICS::RECURRENCE_ID};
       if (isset($recurrence_id)) {
@@ -129,7 +137,10 @@ class ICSToEvent {
         $object->all_day = isset($vevent->DTSTART->parameters[ICS::VALUE]) && $vevent->DTSTART->parameters[ICS::VALUE] == ICS::VALUE_DATE;
         $object->dtstart = $startDate;
         $object->dtend = $endDate;
-      }      
+      }
+      if (isset($x_wr_timezone)) {
+        $object->timezone = $x_wr_timezone;
+      }
       
       // Recurrence ID
       if (isset($recurrence_id)) {

@@ -1,3 +1,11 @@
+ORM M2 - 0.6.0.17
+------
+- 0005944: Deux nouvelles méthodes pour z-push
+- 0005943: Ajouter un mapping supported_shares pour Mél
+- 0005915: Script de mise à jour du champ realuid
+- 0005896: Nettoyage des enregistrements de sync
+- Mise a jour du schéma "20200921.sql" pour les triggers de sync
+
 ORM M2 - 0.6.0.16
 ------
 - 0005899: Gérer une méthode hasChanged dans les objets

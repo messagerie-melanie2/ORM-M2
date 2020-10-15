@@ -35,6 +35,7 @@ BEGIN
     UPDATE horde_datatree SET datatree_ctag = addressbook_ctag, datatree_synctoken = datatree_synctoken + 1 WHERE datatree_name = p_addressbook_id AND group_uid = 'horde.shares.turba';
     SELECT datatree_synctoken INTO a_datatree_synctoken FROM horde_datatree WHERE datatree_name = p_addressbook_id AND group_uid = 'horde.shares.turba';
     IF FOUND THEN
+        DELETE FROM turba_sync WHERE addressbook_id = p_addressbook_id AND contact_uid = p_contact_uid;
         INSERT INTO turba_sync VALUES (a_datatree_synctoken, p_addressbook_id, p_contact_uid, p_action);
     END IF;
 
@@ -83,6 +84,7 @@ BEGIN
     UPDATE horde_datatree SET datatree_ctag = calendar_ctag, datatree_synctoken = datatree_synctoken + 1 WHERE datatree_name = p_calendar_id AND group_uid = 'horde.shares.kronolith';
     SELECT datatree_synctoken INTO a_datatree_synctoken FROM horde_datatree WHERE datatree_name = p_calendar_id AND group_uid = 'horde.shares.kronolith';
     IF FOUND THEN
+        DELETE FROM kronolith_sync WHERE calendar_id = p_calendar_id AND event_uid = p_event_uid;
         INSERT INTO kronolith_sync VALUES (a_datatree_synctoken, p_calendar_id, p_event_uid, p_action);
     END IF;
 
@@ -131,6 +133,7 @@ BEGIN
     UPDATE horde_datatree SET datatree_ctag = taskslist_ctag, datatree_synctoken = datatree_synctoken + 1 WHERE datatree_name = p_taskslist_id AND group_uid = 'horde.shares.nag';
     SELECT datatree_synctoken INTO a_datatree_synctoken FROM horde_datatree WHERE datatree_name = p_taskslist_id AND group_uid = 'horde.shares.nag';
     IF FOUND THEN
+        DELETE FROM nag_sync WHERE taskslist_id = p_taskslist_id AND task_uid = p_task_uid;
         INSERT INTO nag_sync VALUES (a_datatree_synctoken, p_taskslist_id, p_task_uid, p_action);
     END IF;
 
@@ -142,7 +145,6 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql;
-
 
 --
 -- Name: horde_datatree; Type: TABLE

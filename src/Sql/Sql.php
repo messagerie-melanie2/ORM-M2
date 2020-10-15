@@ -175,6 +175,20 @@ class Sql {
   }
 
   /**
+   * Raccourcis pour la méthode GetInstance
+   * 
+   * Récupèration de l'instance lié au serveur
+   * 
+   * @param string $server
+   *          Nom du serveur, l'instance sera liée à ce nom qui correspond à la configuration du serveur
+   *          Optionnel, si non renseigné utilise la valeur de ConfigSQL::$SGBD_SERVER
+   * @return Sql
+   */
+  public static function i($server = null) {
+    return self::GetInstance();
+  }
+
+  /**
    * Constructor SQL
    *
    * @param boolean $is_default Est-ce que cette connexion est celle par defaut ?

@@ -55,6 +55,9 @@ use LibMelanie\Log\M2Log;
  * @property-read boolean $is_objectshare Est-ce que cet utilisateur est en fait un objet de partage
  * @property-read ObjectShare $objectshare Retourne l'objet de partage lié à cet utilisateur si s'en est un
  * 
+ * @property-read boolean $is_synchronisation_enable Est-ce que la synchronisation est activée pour l'utilisateur ?
+ * @property-read string $synchronisation_profile Profil de synchronisation positionné pour l'utilisateur (STANDARD ou SENSIBLE)
+ * 
  * @method string getTimezone() [OSOLETE] Chargement du timezone de l'utilisateur
  * @method bool authentification($password, $master = false) Authentification de l'utilisateur sur l'annuaire Mélanie2
  * @method bool save() Enregistrement de l'utilisateur dans l'annuaire

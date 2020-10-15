@@ -152,7 +152,7 @@ class EventToICS {
       }
     }
     // Exceptions
-    if (count($event->exceptions > 0)) {
+    if (is_array($event->exceptions) && count($event->exceptions) > 0) {
       $exdate = [];
       $first = true;
       foreach ($event->exceptions as $exception) {

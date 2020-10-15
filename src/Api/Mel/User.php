@@ -44,11 +44,14 @@ use LibMelanie\Config\MappingMce;
  * @property string $email_send Adresse email d'émission principale de l'utilisateur
  * @property array $email_send_list Liste de toutes les adresses email d'émission de l'utilisateur
  * @property string $password_need_change Est-ce que le mot de passe doit changer et pour quelle raison ? (Si la chaine n'est pas vide, le mot de passe doit changer)
+ * 
  * @property Share[] $shares Liste des partages de la boite
  * @property-read array $supported_shares Liste des droits supportés par cette boite
+ * 
  * @property boolean $internet_access_admin Accés Internet positionné par l'administrateur
  * @property boolean $internet_access_user Accés Internet positionné par l'utilisateur
  * @property-read boolean $internet_access_enable Est-ce que l'accès Internet de l'utilisateur est activé
+ * 
  * @property string $use_photo_ader Photo utilisable sur le réseau ADER (RIE)
  * @property string $use_photo_intranet Photo utilisable sur le réseau Intranet
  * @property string $service Service de l'utilisateur dans l'annuaire
@@ -69,21 +72,30 @@ use LibMelanie\Config\MappingMce;
  * @property array $business_category Catégories professionnelles de l'utilisateur
  * @property-read string $vpn_profile_name Nom du profil VPN de l'utilisateur
  * @property string $update_personnal_info Est-ce que l'utilisateur a le droit de mettre à jour ses informations personnelles
+ * 
  * @property array $server_routage Champ de routage pour le serveur de message de l'utilisateur
  * @property-read string $server_host Host du serveur de messagerie de l'utilisateur
  * @property-read string $server_user User du serveur de messagerie de l'utilisateur
+ * 
  * @property array $mission Missions de l'utilisateur
  * @property-read string $photo_src Photo de l'utilisateur
  * @property string $gender Genre de l'utilisateur
+ * 
  * @property string $liens_import Lien d'import dans l'annuaire
  * @property-read boolean $is_agriculture Est-ce que l'utilisateur appartient au MAA (calcul sur le liens import)
+ * 
  * @property Outofoffice[] $outofoffices Tableau de gestionnaire d'absence pour l'utilisateur
+ * 
  * @property-read boolean $is_objectshare Est-ce que cet utilisateur est en fait un objet de partage ?
  * @property-read ObjectShare $objectshare Retourne l'objet de partage lié à cet utilisateur si s'en est un
+ * 
  * @property string $acces_synchro_admin_profil Profil de synchronisation positionné par l'administrateur (STANDARD ou SENSIBLE)
  * @property string|DateTime $acces_synchro_admin_datetime Date de mise en place par l'administrateur de la synchronisation (format YmdHisZ)
  * @property string $acces_synchro_user_profil Profil de synchronisation positionné accepté par l'utilisateur (STANDARD ou SENSIBLE)
  * @property string|DateTime $acces_synchro_user_datetime Date d'acceptation de l'utilisateur pour la synchronisation (format YmdHisZ)
+ * @property-read boolean $is_synchronisation_enable Est-ce que la synchronisation est activée pour l'utilisateur ?
+ * @property-read string $synchronisation_profile Profil de synchronisation positionné pour l'utilisateur (STANDARD ou SENSIBLE)
+ * 
  * @property-read boolean $has_bureautique Est-ce que cet utilisateur a un compte bureautique associé ?
  * 
  * @method string getTimezone() [OSOLETE] Chargement du timezone de l'utilisateur
@@ -215,6 +227,7 @@ class User extends Defaut\User {
     "gender"                  => 'gender',                        // Genre
     "liens_import"            => 'mineqliensimport',              // Lien d'import autres annuaires
     "is_agriculture"          => 'mineqliensimport',              // Calcul si l'utilisateur appartient à l'agriculture
+    "supported_shares"        => 'mineqliensimport',              // Liste des droits supportés en fonction du lien import
     "observation"             => [MappingMce::name => 'info', MappingMce::prefixLdap => 'OBSERVATION:', MappingMce::type => MappingMce::stringLdap],
     "acces_internet_profil"   => [MappingMce::name => 'info', MappingMce::prefixLdap => 'AccesInternet.Profil: ', MappingMce::type => MappingMce::stringLdap],
     "acces_internet_ts"       => [MappingMce::name => 'info', MappingMce::prefixLdap => 'AccesInternet.AcceptationCGUts: ', MappingMce::type => MappingMce::stringLdap],
@@ -223,6 +236,8 @@ class User extends Defaut\User {
     "acces_synchro_admin_datetime"  => 'mineqmelaccessynchroa',       // Date de synchro administrateur
     "acces_synchro_user_profil"     => 'mineqmelaccessynchrou',       // Profil de synchro administrateur
     "acces_synchro_user_datetime"   => 'mineqmelaccessynchrou',       // Profil de synchro administrateur
+    "is_synchronisation_enable"     => 'mineqmelaccessynchrou',       // Est-ce que la synchronisation de l'utilisateur est activée ?
+    "synchronisation_profile"       => 'mineqmelaccessynchrou',       // Retourne le profil de synchronisation
   ];
 
   /**
@@ -688,7 +703,7 @@ class User extends Defaut\User {
     $this->objectmelanie->mineqmelaccessynchroa = [$acces_synchro_admin_datetime . '--' . $profil];
   }
 
-    /**
+  /**
    * Mapping acces_synchro_user_profil field
    * 
    * @return string Profil de synchronisation de l'utilisateur
@@ -765,6 +780,59 @@ class User extends Defaut\User {
     }
     $this->acces_synchro_user_datetime = $acces_synchro_user_datetime;
     $this->objectmelanie->mineqmelaccessynchrou = [$acces_synchro_user_datetime . '--' . $profil];
+  }
+
+  /**
+   * Mapping is_synchronisation_enable field
+   * 
+   * @return boolean true si la synchronisation est activée pour l'utilisateur
+   */
+  protected function getMapIs_synchronisation_enable() {
+    if (isset($this->objectmelanie->mineqmelaccessynchrou)
+        && isset($this->objectmelanie->mineqmelaccessynchrou[0])) {
+      return strpos($this->objectmelanie->mineqmelaccessynchrou[0], '--') !== false;
+    }
+    return false;
+  }
+
+  /**
+   * Mapping is_synchronisation_enable field
+   * 
+   * @param string $is_synchronisation_enable Si la synchronisation de l'utilisateur est activée
+   * 
+   * @return boolean false non supporté
+   */
+  protected function setMapIs_synchronisation_enable($is_synchronisation_enable) {
+    return false;
+  }
+
+  /**
+   * Mapping synchronisation_profile field
+   * 
+   * @return string Profil de synchronisation de l'utilisateur
+   */
+  protected function getMapSynchronisation_profile() {
+    if (!isset($this->acces_synchro_user_profil)
+        && isset($this->objectmelanie->mineqmelaccessynchrou)
+        && isset($this->objectmelanie->mineqmelaccessynchrou[0])) {
+      $_var = explode('--', $this->objectmelanie->mineqmelaccessynchrou[0], 2);
+      if (isset($_var[1])) {
+        $this->acces_synchro_user_profil = $_var[1];
+        $this->acces_synchro_user_datetime = $_var[0];
+      }
+    }
+    return $this->acces_synchro_user_profil;
+  }
+
+  /**
+   * Mapping synchronisation_profile field
+   * 
+   * @param string $synchronisation_profile Profil de synchronisation de l'utilisateur
+   * 
+   * @return boolean false non supporté
+   */
+  protected function setMapSynchronisation_profile($synchronisation_profile) {
+    return false;
   }
 
   /**

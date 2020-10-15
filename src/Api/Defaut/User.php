@@ -46,8 +46,12 @@ use LibMelanie\Api\Defaut\Users\Share;
  * @property array $email_list Liste de toutes les adresses email de l'utilisateur
  * @property string $email_send Adresse email d'émission principale de l'utilisateur
  * @property array $email_send_list Liste de toutes les adresses email d'émission de l'utilisateur
+ * 
  * @property Share[] $shares Liste des partages de la boite
  * @property-read array $supported_shares Liste des droits supportés par cette boite
+ * 
+ * @property-read boolean $is_synchronisation_enable Est-ce que la synchronisation est activée pour l'utilisateur ?
+ * @property-read string $synchronisation_profile Profil de synchronisation positionné pour l'utilisateur (STANDARD ou SENSIBLE)
  * 
  * @method bool save() Enregistrement de l'utilisateur dans l'annuaire
  */
@@ -1538,5 +1542,45 @@ abstract class User extends MceObject {
       }
     }
     return $this->objectshare;
+  }
+
+    /**
+   * Mapping is_synchronisation_enable field
+   * 
+   * @return boolean true si la synchronisation est activée pour l'utilisateur
+   */
+  protected function getMapIs_synchronisation_enable() {
+    return true;
+  }
+
+  /**
+   * Mapping is_synchronisation_enable field
+   * 
+   * @param string $is_synchronisation_enable Si la synchronisation de l'utilisateur est activée
+   * 
+   * @return boolean false non supporté
+   */
+  protected function setMapIs_synchronisation_enable($is_synchronisation_enable) {
+    return false;
+  }
+
+  /**
+   * Mapping synchronisation_profile field
+   * 
+   * @return string Profil de synchronisation de l'utilisateur
+   */
+  protected function getMapSynchronisation_profile() {
+    return 'STANDARD';
+  }
+
+  /**
+   * Mapping synchronisation_profile field
+   * 
+   * @param string $synchronisation_profile Profil de synchronisation de l'utilisateur
+   * 
+   * @return boolean false non supporté
+   */
+  protected function setMapSynchronisation_profile($synchronisation_profile) {
+    return false;
   }
 }

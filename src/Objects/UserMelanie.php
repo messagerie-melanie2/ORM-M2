@@ -620,9 +620,6 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getListsIsMember()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
-    if (!isset($this->uid)) {
-      return false;
-    }
     // Mapping pour les champs
 		$attributesmapping = [];
 		if (is_array($attributes)) {

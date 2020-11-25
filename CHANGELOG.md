@@ -1,3 +1,7 @@
+ORM M2 - 0.6.0.18
+------
+- 0005983: Problème avec la méthode getListsIsMember
+
 ORM M2 - 0.6.0.17
 ------
 - 0005944: Deux nouvelles méthodes pour z-push

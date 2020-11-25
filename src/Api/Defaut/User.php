@@ -708,7 +708,7 @@ abstract class User extends MceObject {
       if (!isset($attributes)) {
         $attributes = static::GET_GROUPS_IS_MEMBER_ATTRIBUTES;
       }
-      $filter = static::GET_GROUPS_IS_MEMBER_ATTRIBUTES;
+      $filter = static::GET_GROUPS_IS_MEMBER_FILTER;
       if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
           && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_groups_user_member_filter'])) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_groups_user_member_filter'];
@@ -741,7 +741,7 @@ abstract class User extends MceObject {
       if (!isset($attributes)) {
         $attributes = static::GET_LISTS_IS_MEMBER_ATTRIBUTES;
       }
-      $filter = static::GET_LISTS_IS_MEMBER_ATTRIBUTES;
+      $filter = static::GET_LISTS_IS_MEMBER_FILTER;
       if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
           && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_lists_user_member_filter'])) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_lists_user_member_filter'];

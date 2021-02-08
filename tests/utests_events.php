@@ -69,6 +69,32 @@ $calendar = new Calendar($user);
 $calendar->id = 'thomas.payen';
 $calendar->load();
 
+// Event
+$event = new \LibMelanie\Api\Mce\Event($user, $calendar);
+$event->ics = <<<EVENT
+BEGIN:VCALENDAR
+PRODID:-//SCC GOC-SMARTPHONE 2020//Geode//FR
+X-WR-TIMEZONE:Europe/Paris
+VERSION:2.0
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:E3723882-96E0-49C5-B4C9-D629AAC41206@test
+STATUS:TENTATTIVE
+DTSTAMP:20200907T10022300
+ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=TENTATIVE;CN=Thomas Payen:MAILTO:thomas.payen@i-carre.net
+DTSTART:20200925T090000
+DTEND:20200925T123000
+SUMMARY:MTE - Opération 500 portables 
+SEQUENCE:0
+CATEGORIES:RDV DSI 
+LOCATION:T. Séquoia
+DESCRIPTION:  
+END:VEVENT
+END:VCALENDAR
+EVENT;
+
+$event->save();
+
 // if ($calendar->load()) {
 // 	echo $calendar->synctoken;
 	
@@ -79,34 +105,34 @@ $calendar->load();
 // 	var_export($results);
 // }
 
-$results = [
-		'syncToken' => $calendar->synctoken,
-];
+// $results = [
+// 		'syncToken' => $calendar->synctoken,
+// ];
 
-$event = new \LibMelanie\Api\Mce\Event();
-$event->calendar = $calendar->id;
-$events = $event->getList(['uid']);
-$result = [
-		'added' => [],
-];
-foreach ($events as $event) {
-	$uid = $event->uid;
-	$result['added'][] = $event->uid;
-}
+// $event = new \LibMelanie\Api\Mce\Event();
+// $event->calendar = $calendar->id;
+// $events = $event->getList(['uid']);
+// $result = [
+// 		'added' => [],
+// ];
+// foreach ($events as $event) {
+// 	$uid = $event->uid;
+// 	$result['added'][] = $event->uid;
+// }
 
-$results = array_merge($results, $result);
+// $results = array_merge($results, $result);
 
-var_export($results);
+// var_export($results);
 
-// Load event
-echo "\r\n\r\n## Has Changed $uid\r\n\r\n";
-$event = new \LibMelanie\Api\Mce\Event($user, $calendar);
-$event->uid = $uid;
-if ($event->load()) {
-	echo "## has changed " . $event->hasChanged() . "\r\n\r\n";
-	$event->title = "Test has changed";
-	echo "## has changed " . $event->hasChanged() . "\r\n\r\n";
-}
+// // Load event
+// echo "\r\n\r\n## Has Changed $uid\r\n\r\n";
+// $event = new \LibMelanie\Api\Mce\Event($user, $calendar);
+// $event->uid = $uid;
+// if ($event->load()) {
+// 	echo "## has changed " . $event->hasChanged() . "\r\n\r\n";
+// 	$event->title = "Test has changed";
+// 	echo "## has changed " . $event->hasChanged() . "\r\n\r\n";
+// }
 
 // // Est-ce que l'utilisateur a les droits d'écriture ?
 // if ($calendar->load()

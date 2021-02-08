@@ -191,6 +191,8 @@ class User extends Defaut\User {
     "uid"                     => 'uid',                           // Identifiant de l'utilisateur
     "fullname"                => 'cn',                            // Nom complet de l'utilisateur
     "name"                    => 'displayname',                   // Display name de l'utilisateur
+    "lastname"                => 'sn',                            // Last name de l'utilisateur
+    "firstname"               => 'givenname',                     // First name de l'utilisateur
     "email"                   => 'mailpr',                        // Adresse e-mail principale de l'utilisateur en reception
     "email_list"              => [MappingMce::name => 'mail', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
     "email_send"              => 'mineqmelmailemissionpr',        // Adresse e-mail principale de l'utilisateur en emission
@@ -844,97 +846,34 @@ class User extends Defaut\User {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOutofoffices()");
     $objects = [];
     if (is_array($this->objectmelanie->outofoffices)) {
+      $i = 0;
       foreach ($this->objectmelanie->outofoffices as $oof) {
-        $type = strpos($oof, "RAIN") !== false ? Outofoffice::TYPE_INTERNAL : Outofoffice::TYPE_EXTERNAL;
-        $objects[$type] = $this->createObjectFromData($oof, $type);
+        $object = new Outofoffice($oof);
+        if ($object->type == Outofoffice::TYPE_ALL) {
+          $key = $object->type.$i++;
+        }
+        else {
+          $key = $object->type;
+        }
+        $objects[$key] = $object;
       }
     }
     return $objects;
 	}
-	
-	/**
-   * Créer un objet Outofoffice à partir des données de l'annuaire
-   * 
-   * @param array $data Données de l'annuaire pour le message d'absence
-   * @return Outofoffice
-   */
-  private function createObjectFromData($data, $type) {
-    // Positionnement de TEXTE qui doit être en dernier
-    $pos = strpos($data, "TEXTE:") + 6;
-    // On explode toutes les propriétés avant TEXTE
-    $tab = explode(" ", substr($data, 0, $pos));
-    $object = new Outofoffice();
-    $object->type = $type;
-    if (is_array($tab)) {
-      foreach ($tab as $entry) {
-        if (strpos($entry, ':') !== false) {
-          list($key, $val) = explode(":", $entry, 2);
-          // Ajout des properties dans l'objet
-          switch ($key) {
-            case 'DDEB':
-              // Date de début
-              $object->start = strlen($val) ? new \DateTime($val) : null;
-              break;
-            case 'DFIN':
-              // Si la date de fin commence par 0, le message d'absence est désactivé
-              $object->enable = strpos($val, '0') !== 0;
-              // Date de fin
-              if (strpos($val, '/') !== false) {
-                $val = substr($val, 2);
-              }
-              $object->end = strlen($val) ? new \DateTime($val) : null;
-              break;
-          }
-        }
-        else if (strpos($entry, '~') !== false) {
-          // Gestion du tri
-          $object->order = intval(str_replace('~', '', $entry));
-        }
-      }
-    }
-    $object->message = substr($data, $pos);
-    return $object;
-  }
+
   /**
    * Positionnement du champ out of offices
    * 
+   * @param Outofoffice[] $OofObjects
    */
   protected function setMapOutofoffices($OofObjects) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapOutofoffices()");
     $reponses = [];
     if (is_array($OofObjects)) {
       foreach ($OofObjects as $OofObject) {
-        $reponses[] = $this->createDataFromObject($OofObject);
+        $reponses[] = $OofObject->render();
       }
     }
     $this->objectmelanie->outofoffices = $reponses;
 	}
-	
-	/**
-   * Génère les data pour l'annuaire en fonction de l'objet
-   * 
-   * @param Outofoffice $object
-   * @return string Données a enregistrer dans l'annuaire
-   */
-  private function createDataFromObject(Outofoffice $object) {
-    $data = [];
-    // Gestion du classement
-    if (isset($object->order)) {
-      $data[] = $object->order . '~';
-    }
-    else {
-      $data[] = '50~';
-    }
-    // Type de message d'absence
-    $data[] = $object->type == Outofoffice::TYPE_INTERNAL ? 'RAIN:' : 'RAEX:';
-    // Date de debut
-    $data[] = 'DDEB:' . (isset($object->start) ? $object->start->format('Ymd') : '');
-    // Date de fin
-    $data[] = 'DFIN:' . ($object->enable ? '' : (isset($object->end) ? '0/' : '0')) . (isset($object->end) ? $object->end->format('Ymd') : '');
-    // Texte
-    $data[] = 'TEXTE:' . $object->message;
-
-    return implode(' ', $data);
-  }
-
 }

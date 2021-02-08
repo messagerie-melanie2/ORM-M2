@@ -1,3 +1,8 @@
+ORM M2 - 0.6.0.19
+------
+- Support lastname et firstname pour un User Mel
+- 0006035: [Outofoffice] Ajouter le support des absences récurrentes
+
 ORM M2 - 0.6.0.18
 ------
 - 0005983: Problème avec la méthode getListsIsMember

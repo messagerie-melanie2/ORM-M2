@@ -37,11 +37,25 @@ use LibMelanie\Lib\MceObject;
  * @property string $message Message d'absence a afficher
  * @property int $order Ordre de tri du message d'absence
  * @property Outofoffice::TYPE_* $type Type d'absence (Interne, Externe)
+ * @property Outofoffice::DAY_*[] $days Liste des jours pour une absence hebdomadaire
+ * @property \Datetime $hour_start Heure de début de l'absence
+ * @property \Datetime $hour_end Heure de fin de l'absence
+ * @property int $offset Offset du timezone en fonction de GMT
  */
 class Outofoffice extends MceObject {
   // TYPE d'absence Internal ou External
   const TYPE_EXTERNAL = 'ext';
   const TYPE_INTERNAL = 'int';
+  const TYPE_ALL = 'all';
+
+  // DAY utilisable
+  const DAY_SUNDAY = 'sun';
+  const DAY_MONDAY = 'mon';
+  const DAY_TUESDAY = 'tue';
+  const DAY_WEDNESDAY = 'wed';
+  const DAY_THURSDAY = 'thu';
+  const DAY_FRIDAY = 'fri';
+  const DAY_SATURDAY = 'sat';
 
   /**
    * Liste des propriétés à sérialiser pour le cache
@@ -49,11 +63,40 @@ class Outofoffice extends MceObject {
   protected $serializedProperties = [
     'start',
     'end',
+    'days',
+    'hour_start',
+    'hour_end',
+    'offset',
     'enable',
     'message',
     'order',
     'type',
   ];
+
+  /**
+   * Constructeur permettant de parser les données
+   * 
+   * @param string Ligne de l'entrée d'annuaire à parser
+   */
+  public function __construct($data = null) {
+    if (isset($data)) {
+      $this->define($data);
+    }
+  }
+
+  /**
+   * Define depuis un format annuaire l'entrée du message d'absence
+   * 
+   * @param string Ligne de l'entrée d'annuaire
+   */
+  public function define($data) {}
+
+  /**
+   * Retourne au format annuaire l'entrée du message d'absence
+   */
+  public function render() {
+    return null;
+  }
 
   /**
    * Date de début de l'absence
@@ -113,6 +156,126 @@ class Outofoffice extends MceObject {
    */
   protected function issetMapEnd() {
     return isset($this->end);
+  }
+
+  /**
+   * Liste des jours pour une récurrence hebdomadaire
+   * @var array $days
+   */
+  protected $days;
+  /**
+   * Mapping days field
+   *
+   * @param array $days
+   */
+  protected function setMapDays($days) {
+    $this->days = $days;
+  }
+  /**
+   * Mapping days field
+   * 
+   * @return array $days
+   */
+  protected function getMapDays() {
+    return $this->days;
+  }
+  /**
+   * Mapping days field
+   *
+   * @return boolean
+   */
+  protected function issetMapDays() {
+    return isset($this->days);
+  }
+
+  /**
+   * Heure de début pour une absence récurrente
+   * @var \Datetime $hour_start
+   */
+  protected $hour_start;
+  /**
+   * Mapping hour_start field
+   *
+   * @param \Datetime $hour_start
+   */
+  protected function setMapHour_start($hour_start) {
+    $this->hour_start = $hour_start;
+  }
+  /**
+   * Mapping hour_start field
+   * 
+   * @return \Datetime $hour_start
+   */
+  protected function getMapHour_start() {
+    return $this->hour_start;
+  }
+  /**
+   * Mapping hour_start field
+   *
+   * @return boolean
+   */
+  protected function issetMapHour_start() {
+    return isset($this->hour_start);
+  }
+
+  /**
+   * Heure de fin pour une absence récurrente
+   * @var \Datetime $hour_end
+   */
+  protected $hour_end;
+  /**
+   * Mapping hour_end field
+   *
+   * @param \Datetime $hour_end
+   */
+  protected function setMapHour_end($hour_end) {
+    $this->hour_end = $hour_end;
+  }
+  /**
+   * Mapping hour_end field
+   * 
+   * @return \Datetime $hour_end
+   */
+  protected function getMapHour_end() {
+    return $this->hour_end;
+  }
+  /**
+   * Mapping hour_end field
+   *
+   * @return boolean
+   */
+  protected function issetMapHour_end() {
+    return isset($this->hour_end);
+  }
+
+  /**
+   * Offset du timezone en fonction de GMT
+   * @var int $offset
+   */
+  protected $offset;
+  /**
+   * Mapping offset field
+   *
+   * @param int $offset
+   */
+  protected function setMapOffset($offset) {
+    $this->offset = $offset;
+  }
+  /**
+   * Mapping offset field
+   * 
+   * @return int $offset
+   */
+  protected function getMapOffset() {
+    return $this->offset;
+  }
+  /**
+   * Mapping offset field
+   *
+   * @return boolean
+   */
+  protected function issetMapOffset() {
+    return isset($this->offset);
   }
 
   /**

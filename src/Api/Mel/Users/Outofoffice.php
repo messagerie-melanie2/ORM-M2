@@ -324,9 +324,9 @@ class Outofoffice extends Defaut\Users\Outofoffice {
             $data[] = 'DDEB:' . (isset($this->start) ? $this->start->format('Ymd') : '');
             // Date de fin
             $data[] = 'DFIN:' . ($this->enable ? '' : (isset($this->end) ? '0/' : '0')) . (isset($this->end) ? $this->end->format('Ymd') : '');
-            // Forcer le fait de continuer les règles pour les récurrences
-            $data[] = 'DSVT:1';
         }
+        // Forcer le fait de continuer les règles pour les récurrences
+        $data[] = 'DSVT:1';
         // Texte
         $data[] = 'TEXTE:' . $this->message;
 

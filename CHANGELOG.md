@@ -1,3 +1,7 @@
+ORM M2 - 0.6.0.22
+------
+- [OutofOffice] Forcer DSVT:1 pour tous les absences
+
 ORM M2 - 0.6.0.21
 ------
 - Supprimer les doublons dans les Outofoffices

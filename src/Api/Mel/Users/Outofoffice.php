@@ -208,7 +208,7 @@ class Outofoffice extends Defaut\Users\Outofoffice {
         if (is_array($days) && count($days)) {
             $res = '';
             foreach ($days as $day) {
-                if ($key = array_search($day, $this->mappingDays)) {
+                if (($key = array_search($day, $this->mappingDays)) !== false) {
                     $res .= $key;
                 }
                 $this->days = $res;

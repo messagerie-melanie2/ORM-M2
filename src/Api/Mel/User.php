@@ -874,6 +874,6 @@ class User extends Defaut\User {
         $reponses[] = $OofObject->render();
       }
     }
-    $this->objectmelanie->outofoffices = $reponses;
+    $this->objectmelanie->outofoffices = array_unique($reponses);
 	}
 }

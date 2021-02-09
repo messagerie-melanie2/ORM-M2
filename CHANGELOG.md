@@ -1,3 +1,8 @@
+ORM M2 - 0.6.0.21
+------
+- Supprimer les doublons dans les Outofoffices
+- Problème avec le dimanche pour les absences récurrentes
+
 ORM M2 - 0.6.0.20
 ------
 - Fix problem with empty start and end in OutofOffice

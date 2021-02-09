@@ -146,6 +146,33 @@ class Ldap {
     $this->isAnonymous = false;
     return $this->isAuthenticate;
   }
+
+  /**
+   * Authentification SASL sur le serveur LDAP
+   * 
+   * @param string $binddn — [optional]
+   * @param string $password — [optional]
+   * @param string $sasl_mech — [optional]
+   * @param string $sasl_realm — [optional]
+   * @param string $sasl_authc_id — [optional]
+   * @param string $sasl_authz_id — [optional]
+   * @param string $props — [optional]
+   *
+   * @return bool — TRUE on success or FALSE on failure.
+   */
+  public function authenticateSASL($binddn = null, $password = null, $sasl_mech = null, $sasl_realm = null, $sasl_authc_id = null, $sasl_authz_id = null, $props = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->authenticateSASL()");
+    if (is_null($this->connection)) {
+      $this->connect();
+    }
+    // Authentification sur le seveur LDAP
+    if (isset($this->config['tls']) && $this->config['tls']) {
+      ldap_start_tls($this->connection);
+    }
+    $this->isAuthenticate = @ldap_sasl_bind($this->connection, $binddn, $password, $sasl_mech, $sasl_realm, $sasl_authc_id, $sasl_authz_id, $props);
+    $this->isAnonymous = false;
+    return $this->isAuthenticate;
+  }
   
   /**
    * Se connecte en faisant un bind anonyme sur la connexion LDAP
@@ -257,6 +284,25 @@ class Ldap {
     // Authentification
     return $ldap->authenticate($username, $password);
   }
+
+  /**
+   * Authentification en Kerberos/GSSAPI sur le serveur LDAP associé
+   * 
+   * @param string $server
+   *          [Optionnel] Server LDAP utilisé pour la requête
+   * @return boolean
+   */
+  public static function AuthentificationGSSAPI($server = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::AuthentificationGSSAPI()");
+    if (!isset($server)) {
+      $server = LibMelanie\Config\Ldap::$AUTH_LDAP;
+    }
+    // Récupération de l'instance LDAP en fonction du serveur
+    $ldap = self::GetInstance($server);
+    // Authentification
+    return $ldap->authenticateSASL(null, null, 'GSSAPI');
+  }
+
   /**
    * Retourne les données sur l'utilisateur lues depuis le Ldap
    * Ne retourne qu'une seule entrée

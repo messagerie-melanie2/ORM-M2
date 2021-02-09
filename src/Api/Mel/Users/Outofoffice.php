@@ -88,7 +88,7 @@ class Outofoffice extends Defaut\Users\Outofoffice {
      * @param \Datetime $start
      */
     protected function setMapStart($start) {
-        if (is_string($start)) {
+        if (is_string($start) && !empty($start)) {
             $this->start = new \DateTime($start);
         }
         else if ($start instanceof \DateTime) {
@@ -105,14 +105,14 @@ class Outofoffice extends Defaut\Users\Outofoffice {
      * @param \Datetime $end
      */
     protected function setMapEnd($end) {
-        if (is_string($end)) {
+        if (is_string($end) && !empty($end)) {
             // Si la date de fin commence par 0, le message d'absence est désactivé
             $this->enable = strpos($end, '0') !== 0;
             // Date de fin
             if (strpos($end, '/') !== false) {
                 $end = substr($end, 2);
             }
-            $this->end = strlen($end) ? new \DateTime($end) : null;
+            $this->end = strlen($end) > 1 ? new \DateTime($end) : null;
         }
         else if ($end instanceof \DateTime) {
             $this->end = $end;

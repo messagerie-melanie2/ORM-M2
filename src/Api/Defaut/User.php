@@ -390,13 +390,14 @@ abstract class User extends MceObject {
    * @param string $password
    * @param boolean $master Utiliser le serveur maitre (nécessaire pour faire des modifications)
    * @param string $user_dn DN de l'utilisateur si ce n'est pas le courant a utiliser
+   * @param boolean $gssapi Utiliser une authentification GSSAPI sans mot de passe
    * @return boolean
    */
-  public function authentification($password, $master = false, $user_dn = null) {
+  public function authentification($password = null, $master = false, $user_dn = null, $gssapi = false) {
     if ($master) {
       $this->_server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
     }
-    return $this->objectmelanie->authentification($password, $master, $user_dn);
+    return $this->objectmelanie->authentification($password, $master, $user_dn, $gssapi);
   }
 
   /**

@@ -183,7 +183,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 					'datatree_name' => $datatree_name,
 					'datatree_ctag' => md5($datatree_name),
 					'user_uid' => $this->user_uid,
-			    'group_uid' => isset($this->group) ?  $this->group : DefaultConfig::CALENDAR_GROUP_UID,
+			    	'group_uid' => isset($this->group) ?  $this->group : DefaultConfig::CALENDAR_GROUP_UID,
 			];
 			if (Sql\Sql::GetInstance()->executeQuery($query, $params)) {
 				$this->isExist = true;
@@ -191,7 +191,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
 				$params = [
 						'datatree_id' => $datatree_id,
-				    'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_NAME,
+				    	'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_NAME,
 						'attribute_key' => '',
 						'attribute_value' => isset($this->name) ?  $this->name : $datatree_name,
 				];
@@ -203,7 +203,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
 				$params = [
 						'datatree_id' => $datatree_id,
-				    'attribute_name' => DefaultConfig::ATTRIBUTE_OWNER,
+				    	'attribute_name' => DefaultConfig::ATTRIBUTE_OWNER,
 						'attribute_key' => '',
 						'attribute_value' => $this->user_uid,
 				];
@@ -215,7 +215,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
 				$params = [
 						'datatree_id' => $datatree_id,
-				    'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_PERM,
+				    	'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_PERM,
 						'attribute_key' => $this->user_uid,
 						'attribute_value' => '30',
 				];

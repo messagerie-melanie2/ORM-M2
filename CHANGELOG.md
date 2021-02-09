@@ -1,3 +1,9 @@
+ORM M2 - 0.6.0.20
+------
+- Fix problem with empty start and end in OutofOffice
+- 0006042: Ajouter une authentification GSSAPI pour l'utilisateur
+
+
 ORM M2 - 0.6.0.19
 ------
 - Support lastname et firstname pour un User Mel

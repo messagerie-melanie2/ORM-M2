@@ -408,16 +408,20 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @param string $password
    * @param boolean $master Utiliser le serveur maitre (nécessaire pour faire des modifications)
    * @param string $user_dn DN de l'utilisateur si ce n'est pas le courant a utiliser
+   * @param boolean $gssapi Utiliser une authentification GSSAPI sans mot de passe
    * @return boolean
    */
-  public function authentification($password, $master = false, $user_dn = null) {
+  public function authentification($password, $master = false, $user_dn = null, $gssapi = false) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->authentification()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if ($master) {
       $this->server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
     }
-    if (isset($user_dn)) {
+    if ($gssapi) {
+      return Ldap::AuthentificationGSSAPI($this->server);
+    }
+    else if (isset($user_dn)) {
       return Ldap::AuthentificationDirect($user_dn, $password, $this->server);
     }
     else if (isset($this->dn)) {

@@ -25,6 +25,7 @@ use LibMelanie\Api\Mel\Users\Outofoffice;
 use LibMelanie\Api\Mel\Users\Share;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\MappingMce;
+use LibMelanie\Config\Config;
 
 /**
  * Classe utilisateur pour Mel
@@ -97,6 +98,17 @@ use LibMelanie\Config\MappingMce;
  * @property-read string $synchronisation_profile Profil de synchronisation positionné pour l'utilisateur (STANDARD ou SENSIBLE)
  * 
  * @property-read boolean $has_bureautique Est-ce que cet utilisateur a un compte bureautique associé ?
+ * 
+ * @property-read boolean $is_individuelle Est-ce qu'il s'agit d'une boite individuelle ?
+ * @property-read boolean $is_partagee Est-ce qu'il s'agit d'une boite partagée ?
+ * @property-read boolean $is_fonctionnelle Est-ce qu'il s'agit d'une boite fonctionnelle ?
+ * @property-read boolean $is_ressource Est-ce qu'il s'agit d'une boite de ressources ?
+ * @property-read boolean $is_unite Est-ce qu'il s'agit d'une boite d'unité ?
+ * @property-read boolean $is_service Est-ce qu'il s'agit d'une boite de service ?
+ * @property-read boolean $is_personne Est-ce qu'il s'agit d'une boite personne ?
+ * @property-read boolean $is_applicative Est-ce qu'il s'agit d'une boite applicative ?
+ * @property-read boolean $is_list Est-ce qu'il s'agit d'une liste ?
+ * @property-read boolean $is_listab Est-ce qu'il s'agit d'une list a abonnement ?
  * 
  * @method string getTimezone() [OSOLETE] Chargement du timezone de l'utilisateur
  * @method bool save() Enregistrement de l'utilisateur dans l'annuaire
@@ -876,4 +888,16 @@ class User extends Defaut\User {
     }
     $this->objectmelanie->outofoffices = array_unique($reponses);
 	}
+
+  /**
+   * Mapping is_partagee field
+   * 
+   * @return boolean true si la boite est partagée
+   */
+  protected function getMapIs_partagee() {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_FONCTIONNELLE) 
+        || $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_RESSOURCE)
+        || $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_UNITE)
+        || $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_SERVICE);
+  }
 }

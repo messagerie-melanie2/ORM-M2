@@ -298,4 +298,46 @@ class DefaultConfig {
    * @var string
    */
   const SEL_FILE_NAME = '/tmp/_ORM_SQL_SeLaFoRmE_';
+
+  /*** LDAP */
+  /**
+   * Boite individuelle
+   */
+  const LDAP_TYPE_INDIVIDUELLE = 'BALI';
+  /**
+   * Boite partagée
+   */
+  const LDAP_TYPE_PARTAGEE = 'BALP';
+  /**
+   * Boite fonctionnelle
+   */
+  const LDAP_TYPE_FONCTIONNELLE = 'BALF';
+  /**
+   * Boite de ressource
+   */
+  const LDAP_TYPE_RESSOURCE = 'BALR';
+  /**
+   * Boite d'unité
+   */
+  const LDAP_TYPE_UNITE = 'BALU';
+  /**
+   * Boite de service
+   */
+  const LDAP_TYPE_SERVICE = 'BALS';
+  /**
+   * Boite applicative
+   */
+  const LDAP_TYPE_APPLICATIVE = 'BALA';
+  /**
+   * Personne sans boite
+   */
+  const LDAP_TYPE_PERSONNE = 'PERS';
+  /**
+   * Liste serveur de DIStribution
+   */
+  const LDAP_TYPE_LIST = 'LDIS';
+  /**
+   * Liste serveur de Distribution à ABonnement
+   */
+  const LDAP_TYPE_LISTAB = 'LDAB';
 }

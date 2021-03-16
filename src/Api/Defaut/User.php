@@ -28,6 +28,7 @@ use LibMelanie\Api\Defaut\Addressbook;
 use LibMelanie\Api\Defaut\Calendar;
 use LibMelanie\Api\Defaut\Taskslist;
 use LibMelanie\Api\Defaut\Users\Share;
+use LibMelanie\Config\Config;
 
 /**
  * Classe utilisateur par defaut
@@ -52,6 +53,17 @@ use LibMelanie\Api\Defaut\Users\Share;
  * 
  * @property-read boolean $is_synchronisation_enable Est-ce que la synchronisation est activée pour l'utilisateur ?
  * @property-read string $synchronisation_profile Profil de synchronisation positionné pour l'utilisateur (STANDARD ou SENSIBLE)
+ * 
+ * @property-read boolean $is_individuelle Est-ce qu'il s'agit d'une boite individuelle ?
+ * @property-read boolean $is_partagee Est-ce qu'il s'agit d'une boite partagée ?
+ * @property-read boolean $is_fonctionnelle Est-ce qu'il s'agit d'une boite fonctionnelle ?
+ * @property-read boolean $is_ressource Est-ce qu'il s'agit d'une boite de ressources ?
+ * @property-read boolean $is_unite Est-ce qu'il s'agit d'une boite d'unité ?
+ * @property-read boolean $is_service Est-ce qu'il s'agit d'une boite de service ?
+ * @property-read boolean $is_personne Est-ce qu'il s'agit d'une boite personne ?
+ * @property-read boolean $is_applicative Est-ce qu'il s'agit d'une boite applicative ?
+ * @property-read boolean $is_list Est-ce qu'il s'agit d'une liste ?
+ * @property-read boolean $is_listab Est-ce qu'il s'agit d'une list a abonnement ?
  * 
  * @method bool save() Enregistrement de l'utilisateur dans l'annuaire
  */
@@ -1655,7 +1667,7 @@ abstract class User extends MceObject {
     return $this->objectshare;
   }
 
-    /**
+  /**
    * Mapping is_synchronisation_enable field
    * 
    * @return boolean true si la synchronisation est activée pour l'utilisateur
@@ -1693,5 +1705,95 @@ abstract class User extends MceObject {
    */
   protected function setMapSynchronisation_profile($synchronisation_profile) {
     return false;
+  }
+
+  /**
+   * Mapping is_individuelle field
+   * 
+   * @return boolean true si la boite est individuelle
+   */
+  protected function getMapIs_individuelle() {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_INDIVIDUELLE);
+  }
+
+  /**
+   * Mapping is_partagee field
+   * 
+   * @return boolean true si la boite est partagée
+   */
+  protected function getMapIs_partagee() {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_PARTAGEE);
+  }
+
+  /**
+   * Mapping is_fonctionnelle field
+   * 
+   * @return boolean true si la boite est fonctionnelle
+   */
+  protected function getMapIs_fonctionnelle() {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_FONCTIONNELLE);
+  }
+
+  /**
+   * Mapping is_ressource field
+   * 
+   * @return boolean true si la boite est une ressource
+   */
+  protected function getMapIs_ressource() {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_RESSOURCE);
+  }
+  
+  /**
+   * Mapping is_unite field
+   * 
+   * @return boolean true si la boite est une unite
+   */
+  protected function getMapIs_unite() {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_UNITE);
+  }
+
+  /**
+   * Mapping is_service field
+   * 
+   * @return boolean true si la boite est un service
+   */
+  protected function getMapIs_service() {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_SERVICE);
+  }
+
+  /**
+   * Mapping is_personne field
+   * 
+   * @return boolean true si la boite est une personne
+   */
+  protected function getMapIs_personne() {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_PERSONNE);
+  }
+
+  /**
+   * Mapping is_applicative field
+   * 
+   * @return boolean true si la boite est une application
+   */
+  protected function getMapIs_applicative() {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_APPLICATIVE);
+  }
+
+  /**
+   * Mapping is_list field
+   * 
+   * @return boolean true si la boite est une list
+   */
+  protected function getMapIs_list() {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_LIST);
+  }
+
+  /**
+   * Mapping is_listab field
+   * 
+   * @return boolean true si la boite est une listab
+   */
+  protected function getMapIs_listab() {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_LISTAB);
   }
 }

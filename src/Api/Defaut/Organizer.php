@@ -202,7 +202,7 @@ class Organizer extends MceObject {
       $User = $this->__getNamespace() . '\\User';
       $user = new $User();
       $user->uid = $this->event->getCalendarMelanie()->owner;
-      if ($user->load(['type', 'fullname', 'name', 'email']) && $user->type == Users\Type::INDIVIDUELLE) {
+      if ($user->load(['type', 'fullname', 'name', 'email']) && $user->is_individuelle) {
         $owner = new $User();
         $owner->uid = $this->event->owner;
         if ($owner->is_objectshare) {

@@ -40,6 +40,10 @@ class Type {
    */
   const PARTAGEE = 'BALP';
   /**
+   * Boite fonctionnelle
+   */
+  const FONCTIONNELLE = 'BALF';
+  /**
    * Boite de ressource
    */
   const RESSOURCE = 'BALR';

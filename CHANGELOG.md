@@ -1,3 +1,7 @@
+ORM M2 - 0.6.0.24
+------
+- 0006062: Rendre les types de boites configurables
+
 ORM M2 - 0.6.0.23
 ------
 - 0006052: [En attente] Problème avec les non participants

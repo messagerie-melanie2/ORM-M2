@@ -20,7 +20,6 @@ namespace LibMelanie\Objects;
 use LibMelanie\Sql;
 use LibMelanie\Ldap\Ldap;
 use LibMelanie\Config;
-use LibMelanie\Config\ConfigSQL;
 use LibMelanie\Config\MappingMce;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Lib\MagicObject;
@@ -643,6 +642,52 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       }
     }
     return $lists;
+  }
+
+  /**
+   * Récupère la liste des workspaces dont l'utilisateur est owner
+   * 
+   * @return WorkspaceMelanie[]
+   */
+  public function getUserWorkspaces() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserWorkspaces()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
+    if (!isset($this->uid)) {
+      return false;
+    }
+    $query = Sql\SqlWorkspaceRequests::listUserWorkspaces;
+    $query = str_replace('{order_by}', '', $query);
+    $query = str_replace('{limit}', '', $query);
+    // Params
+    $params = [
+        "user_uid" => $this->uid,
+    ];
+    // Liste les calendriers de l'utilisateur
+    return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\WorkspaceMelanie', 'Workspace');
+  }
+
+  /**
+   * Récupère la liste des workspaces auxquels l'utilisateur accède
+   * 
+   * @return WorkspaceMelanie[]
+   */
+  public function getSharedWorkspaces() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedWorkspaces()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
+    if (!isset($this->uid)) {
+      return false;
+    }
+    $query = Sql\SqlWorkspaceRequests::listSharedWorkspaces;
+    $query = str_replace('{order_by}', '', $query);
+    $query = str_replace('{limit}', '', $query);
+    // Params
+    $params = [
+        "user_uid" => $this->uid,
+    ];
+    // Liste les calendriers de l'utilisateur
+    return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\WorkspaceMelanie', 'Workspace');
   }
   
   // -- CALENDAR

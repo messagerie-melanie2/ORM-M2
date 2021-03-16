@@ -24,6 +24,7 @@ use LibMelanie\Lib\MceObject;
 use LibMelanie\Exceptions;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Lib\ICS;
+use LibMelanie\Config\Config;
 
 /**
  * Classe evenement pour MCE,
@@ -196,20 +197,29 @@ class Organizer extends MceObject {
     $this->objectmelanie->organizer_calendar_id = $calendar;
     if (isset($this->event) 
         && $calendar == $this->event->calendar
-        && $this->event->getCalendarMelanie()->owner != $this->event->owner) {
+        && $this->event->getCalendarMelanie()->owner != $this->event->owner
+        && Config::get(Config::USE_SHARED_INVITATION)) {
       $User = $this->__getNamespace() . '\\User';
       $user = new $User();
       $user->uid = $this->event->getCalendarMelanie()->owner;
-      if ($user->load(['type', 'fullname', 'email']) && $user->type == Users\Type::INDIVIDUELLE) {
-        $newName = $user->fullname;
+      if ($user->load(['type', 'fullname', 'name', 'email']) && $user->type == Users\Type::INDIVIDUELLE) {
         $owner = new $User();
         $owner->uid = $this->event->owner;
         if ($owner->is_objectshare) {
           $owner->uid = $owner->objectshare->user_uid;
         }
-        if ($owner->load('name')) {
-          $oldName = $owner->name;
-          $newName = str_replace(' - ', " (via $oldName) - ", $newName);
+        if ($owner->load(['fullname', 'name'])) {
+          $search = Config::get(Config::SHARED_INVITATION_REPLACE_CHAR);
+          $replace = str_replace(
+            ['%%creator_name%%', '%%creator_fullname%%', '%%owner_name%%', '%%owner_fullname%%'], 
+            [$owner->name, $owner->fullname, $user->name, $user->fullname], 
+            Config::get(Config::SHARED_INVITATION_TEXT));
+          if (!empty($search)) {
+            $newName = str_replace($search, $replace, $user->fullname);
+          }
+          else {
+            $newName = $replace;
+          }
           $this->setMapName($newName);
           $this->setMapOwner_email($user->email);
         }

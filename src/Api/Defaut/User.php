@@ -71,6 +71,19 @@ abstract class User extends MceObject {
   protected $otherldapobject;
 
   /**
+   * Liste des workspaces de l'utilisateur
+   * 
+   * @var Workspace[]
+   */
+  protected $_userWorkspaces;
+  /**
+   * Liste de tous les workspaces auquel l'utilisateur a accés
+   * 
+   * @var Workspace[]
+   */
+  protected $_sharedWorkspaces;
+
+  /**
    * Calendrier par défaut de l'utilisateur
    * 
    * @var Calendar
@@ -192,6 +205,8 @@ abstract class User extends MceObject {
   protected $serializedProperties = [
     'objectshare',
     'otherldapobject',
+    '_userWorkspaces',
+    '_sharedWorkspaces',
     '_defaultCalendar',
     '_userCalendars',
     '_sharedCalendars',
@@ -929,6 +944,101 @@ abstract class User extends MceObject {
     unset($this->_preferences["$scope:$name"]);
     $this->executeCache();
     return !is_null($ret);  
+  }
+
+  /**
+   * Retourne la liste des workspaces de l'utilisateur
+   * 
+   * @return Workspace[]
+   */
+  public function getUserWorkspaces() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserWorkspaces()");
+    // Si la liste des workspaces n'est pas encore chargée
+    if (!isset($this->_userWorkspaces)) {
+      $this->_userWorkspaces = [];
+      // Si les workspaces partagés sont chargés on utilise les données
+      if (isset($this->_sharedWorkspaces)) {
+        foreach ($this->_sharedWorkspaces as $_key => $_work) {
+          if (!is_object($this->_sharedWorkspaces[$_key])) {
+            $this->_sharedWorkspaces = null;
+            $this->_userWorkspaces = null;
+            return $this->getUserWorkspaces();
+          }
+          $this->_sharedWorkspaces[$_key]->setUserMelanie($this);
+          if ($_work->owner == $this->uid) {
+            $this->_userWorkspaces[$_key] = $_work;
+          }
+        }
+      }
+      // Sinon on charge depuis la base de données
+      else {
+        $_workspaces = $this->objectmelanie->getUserWorkspaces();
+        if (!isset($_workspaces)) {
+          return null;
+        }
+        $Workspace = $this->__getNamespace() . '\\Workspace';
+        foreach ($_workspaces as $_workspace) {
+          $workspace = new $Workspace($this);
+          $workspace->setObjectMelanie($_workspace);
+          $this->_userWorkspaces[$_workspace->id] = $workspace;
+        }
+      }
+      $this->executeCache();
+    }
+    else {
+      foreach ($this->_userWorkspaces as $_key => $_work) {
+        if (!is_object($this->_userWorkspaces[$_key])) {
+          $this->_userWorkspaces = null;
+          return $this->getUserWorkspaces();
+        }
+        $this->_userWorkspaces[$_key]->setUserMelanie($this);
+      }
+    }
+    return $this->_userWorkspaces;
+  }
+
+  /**
+   * Retourne la liste des workspaces de l'utilisateur et ceux qui lui sont partagés
+   * 
+   * @return Workspace[]
+   */
+  public function getSharedWorkspaces() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedWorkspaces()");
+    // Si la liste des calendriers n'est pas encore chargée on liste depuis la base
+    if (!isset($this->_sharedWorkspaces)) {
+      $_workspaces = $this->objectmelanie->getSharedWorkspaces();
+      if (!isset($_workspaces)) {
+        return null;
+      }
+      $this->_sharedWorkspaces = [];
+      $Workspace = $this->__getNamespace() . '\\Workspace';
+      foreach ($_workspaces as $_workspace) {
+        $workspace = new $Workspace($this);
+        $workspace->setObjectMelanie($_workspace);
+        $this->_sharedWorkspaces[$_workspace->id] = $workspace;
+      }
+      $this->executeCache();
+    }
+    else {
+      foreach ($this->_sharedWorkspaces as $_key => $_work) {
+        if (!is_object($this->_sharedWorkspaces[$_key])) {
+          $this->_sharedWorkspaces = null;
+          return $this->getSharedWorkspaces();
+        }
+        $this->_sharedWorkspaces[$_key]->setUserMelanie($this);
+      }
+    }
+    return $this->_sharedWorkspaces;
+  }
+
+  /**
+   * Nettoyer les donnés en cache 
+   * (appelé lors de la modification d'un workspace)
+   */
+  public function cleanWorkspaces() {
+    $this->_userWorkspaces = null;
+    $this->_sharedWorkspaces = null;
+    $this->executeCache();
   }
 
   /**

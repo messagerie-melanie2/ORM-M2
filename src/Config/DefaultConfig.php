@@ -237,6 +237,15 @@ class DefaultConfig {
   
   /* Défini si le timezone doit être ajouté à l'ICS */
   const ICS_ADD_TIMEZONE = true;
+
+  /* Défini si le mode invitation partagée (via) est activé */
+  const USE_SHARED_INVITATION = true;
+
+  /* Quel caractère est remplacé dans le nom utilisateur pour le via */
+	const SHARED_INVITATION_REPLACE_CHAR = ' - ';
+
+  /* Quel texte utilisé pour le via, mots clés : %%creator_name%%, %%creator_fullname%%, %%owner_name%%, %%owner_fullname%% */
+	const SHARED_INVITATION_TEXT = ' (via %%creator_name%%) - ';
   
   /**
    * Droits sur les objets Melanie2

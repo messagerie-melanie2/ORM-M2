@@ -493,7 +493,7 @@ class Event extends MceObject {
       }
     }
     // Positionner le calendar_id de l'organisateur dans l'événement
-    $this->objectmelanie->organizer_calendar_id = $organizer_calendar_id;
+    $this->getMapOrganizer()->calendar = $organizer_calendar_id;
     // 0005049: La récupération du calendrier de l'organisateur pour les occurrences ne fonctionne pas
     // Positionner le calendar id de l'organisateur pour toutes les exceptions
     if (count($this->getMapExceptions()) > 0) {
@@ -799,11 +799,15 @@ class Event extends MceObject {
       $Calendar = $this->__getNamespace() . '\\Calendar';
       $Exception = $this->__getNamespace() . '\\Exception';
       foreach ($attendees as $attendee_key => $attendee) {
+        // MANTIS 0006052: [En attente] Problème avec les non participants
+        if ($attendee->role == Attendee::ROLE_NON_PARTICIPANT) {
+          continue;
+        }
         $attendee_uid = $attendee->uid;
         // Récupérer la liste des participants
         if (isset($attendee_uid)) {
           $attendees_uid[] = $attendee_uid;
-        }        
+        }
         // Si c'est un participant Mélanie2
         if (isset($attendee_uid)
             // 0005097: [En attente] Vérifier que le participant n'est pas aussi l'organisateur

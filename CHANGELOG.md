@@ -1,3 +1,11 @@
+ORM M2 - 0.6.0.23
+------
+- 0006052: [En attente] Problème avec les non participants
+- 0006049: Schéma SQL pour les espaces de travail
+- 0006048: Ajouter le support des espaces de travail
+- 0006059: Ajouter un champ de configuration pour le "via"
+- 0006060: Problème sur l'organisateur lorsqu'on ajoute des participants en modification et pas en création
+
 ORM M2 - 0.6.0.22
 ------
 - [OutofOffice] Forcer DSVT:1 pour tous les absences

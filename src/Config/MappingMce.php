@@ -71,7 +71,11 @@ class MappingMce {
 	      "AddressbookSync" 	=> "turba_sync",
 	      "AddressbookMelanie" 	=> "horde_datatree",
 	      "UserPrefs" 			=> "horde_prefs",
-	      "Share" 				=> "horde_datatree_attributes",
+		  "Share" 				=> "horde_datatree_attributes",
+		  "Workspace"			=> "dwp_workspaces",
+		  "WorkspaceShare"		=> "dwp_shares",
+		  "WorkspaceHashtag"	=> "dwp_hashtags",
+		  "WorkspaceHashtagRef"	=> "dwp_hashtags_workspaces",
 	  ];
 	  // Init Primary Keys
 	  self::$Primary_Keys = [
@@ -90,7 +94,11 @@ class MappingMce {
 	      "AddressbookSync" 	=> ["token", "addressbook"],
 	      "AddressbookMelanie" 	=> ["id", "owner", "group"],
 	      "UserPrefs" 			=> ["user", "scope", "name"],
-	      "Share" 				=> ["object_id", "name"],
+		  "Share" 				=> ["object_id", "name"],
+		  "Workspace"			=> ['uid'],
+		  "WorkspaceShare"		=> ['workspace', 'user'],
+		  "WorkspaceHashtag"	=> ['label'],
+		  "WorkspaceHashtagRef"	=> ['hashtag', 'workspace'],
 	  ];
 	  // Init Data Mapping
 	  self::$Data_Mapping = [
@@ -356,7 +364,40 @@ class MappingMce {
 	          "geo" 		=> [self::name => "object_geo", self::type => self::string, self::size => 255],
 	          "pager" 		=> [self::name => "object_pager", self::type => self::string, self::size => 25],
 	          "role" 		=> [self::name => "object_role", self::type => self::string, self::size => 255]
-	      ]
+		  ],
+		  // Gestion d'un workspace : objet Workspace
+		  "Workspace" => [
+				"id"			=> [self::name => "workspace_id", self::type => self::integer],
+				"uid"			=> [self::name => "workspace_uid", self::type => self::string, self::size => 40],
+				"created" 		=> [self::name => "created", self::type => self::date],
+				"modified"		=> [self::name => "modified", self::type => self::date],
+				"creator"		=> [self::name => "workspace_creator", self::type => self::string, self::size => 255],
+				"title"			=> [self::name => "workspace_title", self::type => self::string, self::size => 255],
+				"description"	=> [self::name => "workspace_description"],
+				"logo"			=> [self::name => "workspace_logo"],
+				"ispublic"		=> [self::name => "workspace_ispublic", self::type => self::integer],
+				"isarchived"	=> [self::name => "workspace_isarchived", self::type => self::integer],
+				"objects"		=> [self::name => "workspace_objects"],
+				"links"			=> [self::name => "workspace_links"],
+				"flux"			=> [self::name => "workspace_flux"],
+				"settings"		=> [self::name => "workspace_settings"],
+		  ],
+		  // Gestion des partage de workspace : object WorkspaceShare
+		  "WorkspaceShare" => [
+				"workspace" 	=> [self::name => "workspace_id", self::type => self::integer],
+				"user" 			=> [self::name => "user_uid", self::type => self::string, self::size => 255],
+				"rights" 		=> [self::name => "rights", self::type => self::string, self::size => 1],
+		  ],
+		  // Gestion des hashtags de workspace : objet WorkspaceHashtag
+		  "WorkspaceHashtag" => [
+				"id"	=> [self::name => "hashtag_id", self::type => self::integer],
+				"label"	=> [self::name => "hashtag", self::type => self::string, self::size => 255],
+		  ],
+		  // Gestion du lien entre les hashtags et les workspaces : objet WorkspaceHashtagRef
+		  "WorkspaceHashtagRef" => [
+				"hashtag"	=> [self::name => "hashtag_id", self::type => self::integer],
+				"workspace"	=> [self::name => "workspace_id", self::type => self::integer],
+		  ],
 	  ];
 	}
 

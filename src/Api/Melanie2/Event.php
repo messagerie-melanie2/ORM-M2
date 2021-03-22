@@ -3,7 +3,7 @@
  * Ce fichier est développé pour la gestion de la librairie Mélanie2
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * ORM M2 Copyright © 2017 PNE Annuaire et Messagerie/MEDDE
+ * ORM Mél Copyright © 2020 Groupe Messagerie/MTES
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -796,6 +796,10 @@ class Event extends Melanie2Object {
       $attendees = $this->attendees;
       $first = true;
       foreach ($attendees as $attendee_key => $attendee) {
+        // MANTIS 0006052: [En attente] Problème avec les non participants
+        if ($attendee->role == Attendee::ROLE_NON_PARTICIPANT) {
+          continue;
+        }
         $attendee_uid = $attendee->uid;
         // Récupérer la liste des participants
         if (isset($attendee_uid)) {

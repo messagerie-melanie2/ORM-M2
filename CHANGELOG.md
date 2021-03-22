@@ -1,3 +1,10 @@
+ORM M2 - 0.5.0.25
+------
+- 0006065: Gestion des pièces jointes pour un participant
+- 0006064: Nettoyer l'organisateur de la liste des participants
+- 0006066: Problème d'enregistrement des pièces jointes dans une occurrence
+- 0006052: [En attente] Problème avec les non participants
+
 ORM M2 - 0.5.0.24
 ------
 - Gérer la désactivation des pièces jointes lors de la lecture d'un ICS

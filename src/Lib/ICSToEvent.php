@@ -4,7 +4,7 @@
  * Ce fichier est développé pour la gestion de la librairie Mélanie2
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * ORM M2 Copyright © 2017 PNE Annuaire et Messagerie/MEDDE
+ * ORM Mél Copyright © 2020 Groupe Messagerie/MTES
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -404,9 +404,9 @@ class ICSToEvent {
           }
           // Ne pas conserver de participant avec la même adresse mail que l'organisateur
           // Test de non suppression du participant pour voir
-          //if ($object->organizer->email == $_attendee->email) {
-          //  continue;
-          //}
+          if ($object->organizer->email == $_attendee->email) {
+           continue;
+          }
           // Gestion du CNAME
           if (isset($attendee[ICS::CN])) {
             $_attendee->name = $attendee[ICS::CN]->getValue();
@@ -474,99 +474,102 @@ class ICSToEvent {
         $object->attendees = [];
       }
       // ATTACH
-      if ($useattachments && isset($vevent->ATTACH)) {
-        $attachments = $object->attachments;
-        $_attachments = [];
-        foreach ($vevent->ATTACH as $prop) {
-          $attach = $prop->parameters;
-          $_attach = new \LibMelanie\Api\Melanie2\Attachment();
-          if (isset($attach[ICS::VALUE]) && $attach[ICS::VALUE]->getValue() == ICS::VALUE_BINARY) {
-            $_attach->type = \LibMelanie\Api\Melanie2\Attachment::TYPE_BINARY;
-            $_attach->data = $prop->getValue();
-            if (isset($attach[ICS::X_MOZILLA_CALDAV_ATTACHMENT_NAME])) {
-              $_attach->name = $attach[ICS::X_MOZILLA_CALDAV_ATTACHMENT_NAME]->getValue();
-            } elseif (isset($attach[ICS::X_EVOLUTION_CALDAV_ATTACHMENT_NAME])) {
-              $_attach->name = $attach[ICS::X_EVOLUTION_CALDAV_ATTACHMENT_NAME]->getValue();
-            }
-            // Vérifier si l'extension est autorisée
-            if (preg_match(self::FORBIDDEN_ATTACH_EXT, $_attach->name)) {
-              continue;
-            }
-            $_attach->modified = time();
-            $_attach->owner = isset($user) ? $user->uid : $object->owner;
-            // MANTIS 0004706: L'enregistrement d'une pièce jointe depuis l'ICS ne se fait pas dans le bon dossier vfs
-            $_attach->path = $object->uid . '/' . $object->calendar;
-            $_attach->isfolder = false;
-            foreach ($attachments as $key => $attachment) {
-              if ($attachment->path == $_attach->path && $attachment->name == $_attach->name) {
-                unset($attachments[$key]);
+      $organizer_calendar = $organizer->calendar;
+      if ($useattachments && (!isset($calendar) || !isset($organizer) || !isset($organizer_calendar) || $organizer->extern || $organizer_calendar == $calendar->id)) {
+        if (isset($vevent->ATTACH)) {
+          $attachments = $object->attachments;
+          $_attachments = [];
+          foreach ($vevent->ATTACH as $prop) {
+            $attach = $prop->parameters;
+            $_attach = new \LibMelanie\Api\Melanie2\Attachment();
+            if (isset($attach[ICS::VALUE]) && $attach[ICS::VALUE]->getValue() == ICS::VALUE_BINARY) {
+              $_attach->type = \LibMelanie\Api\Melanie2\Attachment::TYPE_BINARY;
+              $_attach->data = $prop->getValue();
+              if (isset($attach[ICS::X_MOZILLA_CALDAV_ATTACHMENT_NAME])) {
+                $_attach->name = $attach[ICS::X_MOZILLA_CALDAV_ATTACHMENT_NAME]->getValue();
+              } elseif (isset($attach[ICS::X_EVOLUTION_CALDAV_ATTACHMENT_NAME])) {
+                $_attach->name = $attach[ICS::X_EVOLUTION_CALDAV_ATTACHMENT_NAME]->getValue();
               }
-            }
-            $_attach->save();
-            $_attachments[] = $_attach;
-          } else {
-            $is_m2web_url = false;
-            $data = $prop->getValue();
-            // Si pas de VALUE, on est peut être sur une URL melanie2web
-            foreach ($attachments as $key => $attachment) {
-              if ($attachment->getDownloadURL() == $data) {
-                unset($attachments[$key]);
-                $is_m2web_url = true;
+              // Vérifier si l'extension est autorisée
+              if (preg_match(self::FORBIDDEN_ATTACH_EXT, $_attach->name)) {
+                continue;
               }
-            }
-            // Ce n'est pas une url M2Web, donc c'est une url classique
-            if (!$is_m2web_url) {
-              $attach_uri = $object->getAttribute('ATTACH-URI');
-              $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
-              if (!in_array($data, $attach_uri_array)) {
-                $attach_uri_array[] = $data;
-                $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
-                $object->setAttribute('ATTACH-URI', $attach_uri);
+              $_attach->modified = time();
+              $_attach->owner = isset($user) ? $user->uid : $object->owner;
+              // MANTIS 0004706: L'enregistrement d'une pièce jointe depuis l'ICS ne se fait pas dans le bon dossier vfs
+              $_attach->path = $object->realuid . '/' . $object->calendar;
+              $_attach->isfolder = false;
+              foreach ($attachments as $key => $attachment) {
+                if ($attachment->path == $_attach->path && $attachment->name == $_attach->name) {
+                  unset($attachments[$key]);
+                }
               }
-              $_attach->type = \LibMelanie\Api\Melanie2\Attachment::TYPE_URL;
-              $_attach->url = $data;
+              $_attach->save();
               $_attachments[] = $_attach;
+            } else {
+              $is_m2web_url = false;
+              $data = $prop->getValue();
+              // Si pas de VALUE, on est peut être sur une URL melanie2web
+              foreach ($attachments as $key => $attachment) {
+                if ($attachment->getDownloadURL() == $data) {
+                  unset($attachments[$key]);
+                  $is_m2web_url = true;
+                }
+              }
+              // Ce n'est pas une url M2Web, donc c'est une url classique
+              if (!$is_m2web_url) {
+                $attach_uri = $object->getAttribute('ATTACH-URI');
+                $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
+                if (!in_array($data, $attach_uri_array)) {
+                  $attach_uri_array[] = $data;
+                  $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
+                  $object->setAttribute('ATTACH-URI', $attach_uri);
+                }
+                $_attach->type = \LibMelanie\Api\Melanie2\Attachment::TYPE_URL;
+                $_attach->url = $data;
+                $_attachments[] = $_attach;
+              }
             }
           }
-        }
-        $object->attachments = $_attachments;
-        $attach_uri = $object->getAttribute('ATTACH-URI');
-        $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
-        $save_attach_uri = false;
-        // Supprimer les pièces jointes qui ne sont plus nécessaire
-        foreach ($attachments as $attachment) {
-          if ($attachment->type == \LibMelanie\Api\Melanie2\Attachment::TYPE_URL) {
-            if ($key = array_search($attachment->url, $attach_uri_array)) {
-              unset($attach_uri_array[$key]);
-              $save_attach_uri = true;
+          $object->attachments = $_attachments;
+          $attach_uri = $object->getAttribute('ATTACH-URI');
+          $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
+          $save_attach_uri = false;
+          // Supprimer les pièces jointes qui ne sont plus nécessaire
+          foreach ($attachments as $attachment) {
+            if ($attachment->type == \LibMelanie\Api\Melanie2\Attachment::TYPE_URL) {
+              if ($key = array_search($attachment->url, $attach_uri_array)) {
+                unset($attach_uri_array[$key]);
+                $save_attach_uri = true;
+              }
+            } else {
+              $attachment->delete();
             }
-          } else {
-            $attachment->delete();
           }
-        }
-        if ($save_attach_uri) {
-          $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
-          $object->setAttribute('ATTACH-URI', $attach_uri);
-        }
-      } else if ($useattachments) {
-        $attach_uri = $object->getAttribute('ATTACH-URI');
-        $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
-        $save_attach_uri = false;
-        // Supprimer toutes les pièces jointes
-        $attachments = $object->attachments;
-        foreach ($attachments as $attachment) {
-          if ($attachment->type == \LibMelanie\Api\Melanie2\Attachment::TYPE_URL) {
-            if ($key = array_search($attachment->url, $attach_uri_array)) {
-              unset($attach_uri_array[$key]);
-              $save_attach_uri = true;
+          if ($save_attach_uri) {
+            $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
+            $object->setAttribute('ATTACH-URI', $attach_uri);
+          }
+        } else {
+          $attach_uri = $object->getAttribute('ATTACH-URI');
+          $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
+          $save_attach_uri = false;
+          // Supprimer toutes les pièces jointes
+          $attachments = $object->attachments;
+          foreach ($attachments as $attachment) {
+            if ($attachment->type == \LibMelanie\Api\Melanie2\Attachment::TYPE_URL) {
+              if ($key = array_search($attachment->url, $attach_uri_array)) {
+                unset($attach_uri_array[$key]);
+                $save_attach_uri = true;
+              }
+            } else {
+              $attachment->delete();
             }
-          } else {
-            $attachment->delete();
           }
-        }
-        if ($save_attach_uri) {
-          $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
-          $object->setAttribute('ATTACH-URI', $attach_uri);
+          if ($save_attach_uri) {
+            $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
+            $object->setAttribute('ATTACH-URI', $attach_uri);
+          }
         }
       }
       // Gestion de la récurrence

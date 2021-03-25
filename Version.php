@@ -32,7 +32,7 @@ class Version {
     /**
      * Numéro de version
      */
-    const VERSION = '0.6.1.0';
+    const VERSION = '0.6.1';
 
     /**
      * Numéro de version normalisé

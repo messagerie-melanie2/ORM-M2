@@ -304,19 +304,22 @@ class Outofoffice extends Defaut\Users\Outofoffice {
             if (isset($this->offset)) {
                 $data[] = 'DGMT:' . $this->offset;
             }
-            // Heure de debut
-            if (isset($this->hour_start)) {
-                if ($this->hour_start->getTimezone()->getName() != 'Europe/Paris') {
-                    $this->hour_start->setTimezone(new \DateTimeZone('GMT'));
+            // 0006078: [Outofoffice] ne pas mettre les horaires si on est en journée entière (donc heure début = heure de fin)
+            if ($this->hour_start->format('His') != $this->hour_end->format('His')) {
+                // Heure de debut
+                if (isset($this->hour_start)) {
+                    if ($this->hour_start->getTimezone()->getName() != 'Europe/Paris') {
+                        $this->hour_start->setTimezone(new \DateTimeZone('GMT'));
+                    }
+                    $data[] = 'HDEB:' . $this->hour_start->format('His');
                 }
-                $data[] = 'HDEB:' . $this->hour_start->format('His');
-            }
-            // Heure de fin
-            if (isset($this->hour_end)) {
-                if ($this->hour_end->getTimezone()->getName() != 'Europe/Paris') {
-                    $this->hour_end->setTimezone(new \DateTimeZone('GMT'));
+                // Heure de fin
+                if (isset($this->hour_end)) {
+                    if ($this->hour_end->getTimezone()->getName() != 'Europe/Paris') {
+                        $this->hour_end->setTimezone(new \DateTimeZone('GMT'));
+                    }
+                    $data[] = 'HFIN:' . $this->hour_end->format('His');
                 }
-                $data[] = 'HFIN:' . $this->hour_end->format('His');
             }
         }
         else {

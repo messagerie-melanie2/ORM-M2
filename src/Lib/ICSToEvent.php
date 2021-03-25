@@ -102,8 +102,13 @@ class ICSToEvent {
       $recurrence_id = $vevent->{ICS::RECURRENCE_ID};
       if (isset($recurrence_id)) {
         $Exception = $event->__getNamespace() . '\\Exception';
-        $object = new $Exception($event, $user, $calendar);
-        $object->recurrence_id = $recurrence_id;
+        if (isset($event->exceptions[date($Exception::FORMAT_ID, strtotime($recurrence_id))])) {
+          $object = $event->exceptions[date($Exception::FORMAT_ID, strtotime($recurrence_id))];
+        }
+        else {
+          $object = new $Exception($event, $user, $calendar);
+          $object->recurrence_id = $recurrence_id;
+        }
       } else {
         $object = $event;
       }
@@ -147,9 +152,8 @@ class ICSToEvent {
         $date = $recurrence_id->getDateTime();
         if ($date->getTimezone()->getName() != $object->timezone) {
           $date->setTimezone(new \DateTimeZone($object->timezone));
-        }        
-        $object->recurrenceId = $date->format(self::SHORT_DB_DATE_FORMAT);
-        $object->setAttribute(ICS::RECURRENCE_ID, $date->format(self::DB_DATE_FORMAT));
+        }
+        $object->recurrence_id = $date->format(self::DB_DATE_FORMAT);
       }
       // Cas du FAKED MASTER
       if (isset($vevent->{ICS::X_MOZ_FAKED_MASTER}) && intval($vevent->{ICS::X_MOZ_FAKED_MASTER}->getValue()) == 1) {
@@ -297,16 +301,16 @@ class ICSToEvent {
       if (isset($vevent->{ICS::X_MOZ_SEND_INVITATIONS})) {
         $object->setAttribute(ICS::X_MOZ_SEND_INVITATIONS, $vevent->{ICS::X_MOZ_SEND_INVITATIONS}->getValue());
       } 
-//       else {
-//         $object->deleteAttribute(ICS::X_MOZ_SEND_INVITATIONS);
-//       }
+      else {
+        $object->deleteAttribute(ICS::X_MOZ_SEND_INVITATIONS);
+      }
       // X Moz Send Invitations Undisclosed
       if (isset($vevent->{ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED})) {
         $object->setAttribute(ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED, $vevent->{ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED}->getValue());
       } 
-//       else {
-//         $object->deleteAttribute(ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED);
-//       }
+      else {
+        $object->deleteAttribute(ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED);
+      }
       // X MOZ GENERATION
       if (isset($vevent->{ICS::X_MOZ_GENERATION})) {
         $object->setAttribute(ICS::X_MOZ_GENERATION, $vevent->{ICS::X_MOZ_GENERATION}->getValue());
@@ -331,11 +335,8 @@ class ICSToEvent {
       
       // CREATED
       if (isset($vevent->CREATED)) {
-        $object->setAttribute(ICS::CREATED, $vevent->CREATED->getValue());
         $object->created = strtotime($vevent->CREATED->getValue());
-      } else {
-        $object->deleteAttribute(ICS::CREATED);
-      }      
+      }
       // CLASS
       if (isset($vevent->CLASS)) {
         switch ($vevent->CLASS->getValue()) {
@@ -398,6 +399,12 @@ class ICSToEvent {
           if (isset($parameters[ICS::X_M2_ORG_MAIL])) {
             $organizer->owner_email = str_replace('mailto:', '', strtolower($parameters[ICS::X_M2_ORG_MAIL]->getValue()));
           }
+          // Gérer l'organizer calendar
+          $organizer_calendar = $organizer->calendar;
+          if (!isset($organizer_calendar) && !$organizer->extern && isset($calendar) && $organizer->uid == $calendar->owner) {
+            // ici on peut dire qu'on est dans le calendrier organisateur
+            $organizer->calendar = $calendar->id;
+          }
           $object->organizer = $organizer;
         }
         $_attendees = [];
@@ -415,10 +422,10 @@ class ICSToEvent {
             }
           }
           // Ne pas conserver de participant avec la même adresse mail que l'organisateur
-          // Test de non suppression du participant pour voir
-          //if ($object->organizer->email == $_attendee->email) {
-          //  continue;
-          //}
+          // Test de non suppression du participant pour voir / PENDING: Test non concluant on réactive
+          if ($object->organizer->email == $_attendee->email) {
+            continue;
+          }
           // Gestion du CNAME
           if (isset($attendee[ICS::CN])) {
             $_attendee->name = $attendee[ICS::CN]->getValue();
@@ -486,102 +493,125 @@ class ICSToEvent {
         $object->attendees = [];
       }
       // ATTACH
-      if ($useattachments && isset($vevent->ATTACH)) {
-        $attachments = $object->attachments;
-        $_attachments = [];
-        $Attachment = $event->__getNamespace() . '\\Attachment';
-        foreach ($vevent->ATTACH as $prop) {
-          $attach = $prop->parameters;
-          $_attach = new $Attachment();
-          if (isset($attach[ICS::VALUE]) && $attach[ICS::VALUE]->getValue() == ICS::VALUE_BINARY) {
-            $_attach->type = $Attachment::TYPE_BINARY;
-            $_attach->data = $prop->getValue();
-            if (isset($attach[ICS::X_MOZILLA_CALDAV_ATTACHMENT_NAME])) {
-              $_attach->name = $attach[ICS::X_MOZILLA_CALDAV_ATTACHMENT_NAME]->getValue();
-            } elseif (isset($attach[ICS::X_EVOLUTION_CALDAV_ATTACHMENT_NAME])) {
-              $_attach->name = $attach[ICS::X_EVOLUTION_CALDAV_ATTACHMENT_NAME]->getValue();
-            }
-            // Vérifier si l'extension est autorisée
-            if (preg_match(self::FORBIDDEN_ATTACH_EXT, $_attach->name)) {
-              continue;
-            }
-            $_attach->modified = time();
-            $_attach->owner = isset($user) ? $user->uid : $object->owner;
-            // MANTIS 0004706: L'enregistrement d'une pièce jointe depuis l'ICS ne se fait pas dans le bon dossier vfs
-            $_attach->path = $object->uid . '/' . $object->calendar;
-            $_attach->isfolder = false;
-            foreach ($attachments as $key => $attachment) {
-              if ($attachment->path == $_attach->path && $attachment->name == $_attach->name) {
-                unset($attachments[$key]);
+      $Attachment = $event->__getNamespace() . '\\Attachment';
+      $organizer_calendar = $organizer->calendar;
+      if ($useattachments && (!isset($calendar) || !isset($organizer) || !isset($organizer_calendar) || $organizer->extern || $organizer_calendar == $calendar->id)) {
+        if (isset($vevent->ATTACH)) {
+          $attachments = $object->attachments;
+          $_attachments = [];
+          // MANTIS 0004706: L'enregistrement d'une pièce jointe depuis l'ICS ne se fait pas dans le bon dossier vfs
+          $attach_path = $object->realuid . '/' . $object->calendar;
+          // 0006077: Lister les pièces jointes de la récurrence maitre dans les occurrences
+          if (isset($recurrence_id)) {
+            $attach_master_path = $object->uid . '/' . $object->calendar;
+          }
+          foreach ($vevent->ATTACH as $prop) {
+            $attach = $prop->parameters;
+            $_attach = new $Attachment();
+            if (isset($attach[ICS::VALUE]) && $attach[ICS::VALUE]->getValue() == ICS::VALUE_BINARY) {
+              $_attach->type = $Attachment::TYPE_BINARY;
+              $_attach->data = $prop->getValue();
+              if (isset($attach[ICS::X_MOZILLA_CALDAV_ATTACHMENT_NAME])) {
+                $_attach->name = $attach[ICS::X_MOZILLA_CALDAV_ATTACHMENT_NAME]->getValue();
+              } elseif (isset($attach[ICS::X_EVOLUTION_CALDAV_ATTACHMENT_NAME])) {
+                $_attach->name = $attach[ICS::X_EVOLUTION_CALDAV_ATTACHMENT_NAME]->getValue();
+              }
+              // Vérifier si l'extension est autorisée
+              if (preg_match(self::FORBIDDEN_ATTACH_EXT, $_attach->name)) {
+                continue;
+              }
+              $_attach->modified = time();
+              $_attach->owner = isset($user) ? $user->uid : $object->owner;
+              $_attach->path = $attach_path;
+              $_attach->isfolder = false;
+              $save = true;
+              foreach ($attachments as $key => $attachment) {
+                if ($attachment->path == $attach_path && $attachment->name == $_attach->name) {
+                  unset($attachments[$key]);
+                }
+                else if (isset($attach_master_path) && $attachment->path == $attach_master_path && $attachment->name == $_attach->name) {
+                  $save = false;
+                  unset($attachments[$key]);
+                }
+              }
+              if ($save) {
+                $_attach->save();
+                $_attachments[] = $_attach;
+              }
+            } else {
+              $is_m2web_url = false;
+              $data = $prop->getValue();
+              // Si pas de VALUE, on est peut être sur une URL melanie2web
+              foreach ($attachments as $key => $attachment) {
+                if ($attachment->getDownloadURL() == $data) {
+                  unset($attachments[$key]);
+                  $is_m2web_url = true;
+                }
+                else if (isset($recurrence_id)) {
+                  $attachment->path = $object->uid . '/' . $object->calendar;
+                  if ($attachment->getDownloadURL() == $data) {
+                    unset($attachments[$key]);
+                    $is_m2web_url = true;
+                  }
+                }
+              }
+              // Ce n'est pas une url M2Web, donc c'est une url classique
+              if (!$is_m2web_url) {
+                $attach_uri = $object->getAttribute('ATTACH-URI');
+                $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
+                if (!in_array($data, $attach_uri_array)) {
+                  $attach_uri_array[] = $data;
+                  $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
+                  $object->setAttribute('ATTACH-URI', $attach_uri);
+                }
+                $_attach->type = $Attachment::TYPE_URL;
+                $_attach->url = $data;
+                $_attachments[] = $_attach;
               }
             }
-            $_attach->save();
-            $_attachments[] = $_attach;
-          } else {
-            $is_m2web_url = false;
-            $data = $prop->getValue();
-            // Si pas de VALUE, on est peut être sur une URL melanie2web
-            foreach ($attachments as $key => $attachment) {
-              if ($attachment->getDownloadURL() == $data) {
-                unset($attachments[$key]);
-                $is_m2web_url = true;
+          }
+          $object->attachments = $_attachments;
+          $attach_uri = $object->getAttribute('ATTACH-URI');
+          $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
+          $save_attach_uri = false;
+          // Supprimer les pièces jointes qui ne sont plus nécessaire
+          foreach ($attachments as $attachment) {
+            if ($attachment->type == $Attachment::TYPE_URL) {
+              if ($key = array_search($attachment->url, $attach_uri_array)) {
+                unset($attach_uri_array[$key]);
+                $save_attach_uri = true;
               }
+            } else {
+              $attachment->delete();
             }
-            // Ce n'est pas une url M2Web, donc c'est une url classique
-            if (!$is_m2web_url) {
-              $attach_uri = $object->getAttribute('ATTACH-URI');
-              $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
-              if (!in_array($data, $attach_uri_array)) {
-                $attach_uri_array[] = $data;
-                $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
-                $object->setAttribute('ATTACH-URI', $attach_uri);
+          }
+          if ($save_attach_uri) {
+            $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
+            $object->setAttribute('ATTACH-URI', $attach_uri);
+          }
+        } else {
+          $attach_uri = $object->getAttribute('ATTACH-URI');
+          $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
+          $save_attach_uri = false;
+          // Supprimer toutes les pièces jointes
+          $attachments = $object->attachments;
+          foreach ($attachments as $attachment) {
+            if ($attachment->type == $Attachment::TYPE_URL) {
+              if ($key = array_search($attachment->url, $attach_uri_array)) {
+                unset($attach_uri_array[$key]);
+                $save_attach_uri = true;
               }
-              $_attach->type = $Attachment::TYPE_URL;
-              $_attach->url = $data;
-              $_attachments[] = $_attach;
+            } else {
+              $attachment->delete();
             }
           }
-        }
-        $object->attachments = $_attachments;
-        $attach_uri = $object->getAttribute('ATTACH-URI');
-        $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
-        $save_attach_uri = false;
-        // Supprimer les pièces jointes qui ne sont plus nécessaire
-        foreach ($attachments as $attachment) {
-          if ($attachment->type == $Attachment::TYPE_URL) {
-            if ($key = array_search($attachment->url, $attach_uri_array)) {
-              unset($attach_uri_array[$key]);
-              $save_attach_uri = true;
-            }
-          } else {
-            $attachment->delete();
+          if ($save_attach_uri) {
+            $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
+            $object->setAttribute('ATTACH-URI', $attach_uri);
           }
-        }
-        if ($save_attach_uri) {
-          $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
-          $object->setAttribute('ATTACH-URI', $attach_uri);
-        }
-      } else if ($useattachments) {
-        $attach_uri = $object->getAttribute('ATTACH-URI');
-        $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
-        $save_attach_uri = false;
-        // Supprimer toutes les pièces jointes
-        $attachments = $object->attachments;
-        foreach ($attachments as $attachment) {
-          if ($attachment->type == $Attachment::TYPE_URL) {
-            if ($key = array_search($attachment->url, $attach_uri_array)) {
-              unset($attach_uri_array[$key]);
-              $save_attach_uri = true;
-            }
-          } else {
-            $attachment->delete();
-          }
-        }
-        if ($save_attach_uri) {
-          $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
-          $object->setAttribute('ATTACH-URI', $attach_uri);
         }
       }
+
       // Gestion de la récurrence
       if (isset($vevent->RRULE) && !isset($recurrence_id)) {
         $Recurrence = $event->__getNamespace() . '\\Recurrence';
@@ -594,7 +624,7 @@ class ICSToEvent {
             $date = $exdate->getDateTime();
             // Enregistrer les exceptions en GMT dans la base
             $date->setTimezone(new \DateTimeZone('GMT'));
-            $exception->recurrenceId = $date->format(self::SHORT_DB_DATE_FORMAT);
+            $exception->recurrence_id = $date->format(self::DB_DATE_FORMAT);
             $exception->deleted = true;
             $exception->uid = $event->uid;
             

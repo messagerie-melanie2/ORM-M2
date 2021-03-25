@@ -332,10 +332,40 @@ class Attendee extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapNeed_action()");
     if (!isset($this->need_action) 
         && isset($this->email)) {
-      $User = $this->__getNamespace() . '\\User';
-      $user = new $User();
-      $user->email = $this->email;
-      $this->need_action = $user->load('info') && in_array('ORM.Agenda.EnAttente: oui', $user->info);
+      $need_action = Config::get(Config::NEED_ACTION_ENABLE);
+      if ($need_action) {
+        $filter = Config::get(Config::NEED_ACTION_DISABLE_FILTER);
+      }
+      else {
+        $filter = Config::get(Config::NEED_ACTION_ENABLE_FILTER);
+      }
+      if (isset($filter)) {
+        $User = $this->__getNamespace() . '\\User';
+        $user = new $User();
+        $user->email = $this->email;
+        $fields = [];
+        foreach ($filter as $field => $f) {
+          $fields[] = $field;
+        }
+        if ($user->load($fields)) {
+          foreach ($fields as $field) {
+            $match = false;
+            if (is_array($user->$field)) {
+              if (in_array($filter[$field], $user->$field)) {
+                $match = true;
+              }
+            }
+            else if ($user->$field == $filter[$field]) {
+              $match = true;
+            }
+            if ($match) {
+              $need_action = !$need_action;
+              break;
+            }
+          }
+        }
+      }
+      $this->need_action = $need_action;
     }   
     return $this->need_action;
   }

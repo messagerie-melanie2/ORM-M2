@@ -45,6 +45,7 @@ use LibMelanie\Config\Config;
  * @property string $partstat Statut de participation de l'organisateur
  * @property string $sent_by Sent-By pour l'organisateur
  * @property string $owner_email Email du owner du calendrier s'il est partagé
+ * @property string $owner_uid Uid de l'organisateur ou du owner du calendrier s'il est partagé
  * @property string $rsvp Repondez svp pour l'organisateur
  * @property bool $extern Boolean pour savoir si l'organisateur est externe au ministère
  */
@@ -76,6 +77,10 @@ class Organizer extends MceObject {
    * @var array
    */
   private $organizer_json_decoded = null;
+  /**
+   * Uid de l'organisateur ou du owner du calendrier s'il est partagé
+   */
+  private $owner_uid = null;
   /**
    * Défini si l'organisateur est externe au ministère
    * Cela change la façon de le sauvegarder
@@ -148,6 +153,32 @@ class Organizer extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapName()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     return $this->objectmelanie->organizer_uid;
+  }
+
+  /**
+   * Mapping owner_uid field
+   * 
+   * @ignore
+   *
+   */
+  protected function getMapOwner_uid() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapName()");
+    if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
+    if (!isset($this->owner_uid)) {
+      $owner_email = $this->getMapOwner_email();
+      if (isset($owner_email)) {
+        $User = $this->__getNamespace() . '\\User';
+        $user = new $User();
+        $user->email = $owner_email;
+        if ($user->load('uid')) {
+          $this->owner_uid = $user->uid;
+        }
+      }
+      if (!isset($uid)) {
+        $this->owner_uid = $this->getMapUid();
+      }
+    }
+    return $this->owner_uid;
   }
   
   /**
@@ -238,12 +269,17 @@ class Organizer extends MceObject {
       if ($this->event instanceof Exception) {
         $eventParent = $this->event->getEventParent();
         if (isset($eventParent)) {
-          return $eventParent->getObjectMelanie()->organizer_calendar_id;
+          $organizer_calendar_id = $eventParent->getObjectMelanie()->organizer_calendar_id;
         }       
       }
-      return $this->objectmelanie->organizer_calendar_id;
+      if (!isset($organizer_calendar_id)) {
+        $organizer_calendar_id = $this->objectmelanie->organizer_calendar_id;
+      }
     }
-    return $this->objectmelanie->organizer_calendar;
+    if (!isset($organizer_calendar_id)) {
+      $organizer_calendar_id = $this->objectmelanie->organizer_calendar;
+    }
+    return $organizer_calendar_id;
   }
   
   /**
@@ -287,7 +323,7 @@ class Organizer extends MceObject {
       $user->email = $email;
       if ($user->load(['uid', 'fullname'])) {
         if ($user->is_objectshare) {
-          $this->objectmelanie->organizer_uid = $user->objectshare->mailbox->uid;
+          $this->objectmelanie->organizer_uid = $user->objectshare->uid;
           $name = $user->objectshare->mailbox->fullname;
         }
         else {

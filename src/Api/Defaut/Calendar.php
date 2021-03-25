@@ -159,8 +159,7 @@ class Calendar extends MceObject {
             $exception->deleted = false;
           }
           $recId = new \DateTime(substr($exception->realuid, strlen($exception->realuid) - strlen($Exception::FORMAT_STR . $Exception::RECURRENCE_ID), strlen($Exception::FORMAT_STR)));
-          $exception->recurrenceId = $recId->format($Exception::FORMAT_ID);
-          $exceptions[$exception->uid . $exception->calendar][$exception->recurrenceId] = $exception;
+          $exceptions[$exception->uid . $exception->calendar][$recId->format($Exception::FORMAT_ID)] = $exception;
         }
       } catch (\Exception $ex) {
         M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getAllEvents() Exception: " . $ex);
@@ -187,7 +186,8 @@ class Calendar extends MceObject {
           $event->deleted = true;
           $event->modified = $modified;
           $event->exceptions = $_exceptions;
-          $event->getObjectMelanie()->setExist(true);
+          $event->setIsExist();
+          $event->setIsLoaded();
           $events[$event->uid . $event->calendar] = $event;
         }
       } else {
@@ -244,8 +244,7 @@ class Calendar extends MceObject {
             $exception->deleted = false;
           }
           $recId = new \DateTime(substr($exception->realuid, strlen($exception->realuid) - strlen($Exception::FORMAT_STR . $Exception::RECURRENCE_ID), strlen($Exception::FORMAT_STR)));
-          $exception->recurrenceId = $recId->format($Exception::FORMAT_ID);
-          $exceptions[$exception->uid . $exception->calendar][$exception->recurrenceId] = $exception;
+          $exceptions[$exception->uid . $exception->calendar][$recId->format($Exception::FORMAT_ID)] = $exception;
         }
       } catch (\Exception $ex) {
         M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getRangeEvents() Exception: " . $ex);
@@ -272,7 +271,8 @@ class Calendar extends MceObject {
           $event->deleted = true;
           $event->modified = $modified;
           $event->exceptions = $_exceptions;
-          $event->getObjectMelanie()->setExist(true);
+          $event->setIsExist();
+          $event->setIsLoaded();
           $events[$event->uid . $event->calendar] = $event;
         }
       } else {

@@ -51,7 +51,6 @@ use LibMelanie\Api\Mel;
  * @property int $modified Timestamp de la modification de l'évènement
  * @property Recurrence $recurrence Inaccessible depuis une exception
  * @property bool $deleted Défini si l'exception est un évènement ou juste une suppression
- * @property string $recurrenceId Défini la date de l'exception pour l'occurrence
  * @property string $recurrence_id Défini la date de l'exception pour l'occurrence (nouvelle version)
  * @property-read string $realuid UID réellement stocké dans la base de données (utilisé pour les exceptions) (Lecture seule)
  * 

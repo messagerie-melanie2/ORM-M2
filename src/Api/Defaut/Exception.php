@@ -55,7 +55,6 @@ use LibMelanie\Config\Config;
  * @property int $modified Timestamp de la modification de l'évènement
  * @property Recurrence $recurrence Inaccessible depuis une exception
  * @property bool $deleted Défini si l'exception est un évènement ou juste une suppression
- * @property string $recurrenceId Défini la date de l'exception pour l'occurrence
  * @property string $recurrence_id Défini la date de l'exception pour l'occurrence (nouvelle version)
  * @property-read string $realuid UID réellement stocké dans la base de données (utilisé pour les exceptions) (Lecture seule)
  * 
@@ -65,12 +64,6 @@ use LibMelanie\Config\Config;
  * @method bool delete() Supprime l'évènement et met à jour l'historique dans la base de données
  */
 class Exception extends Event {
-  /**
-   * Recurrence ID de l'exception
-   * 
-   * @var string DateTime format
-   */
-  private $recurrenceId;
   /**
    * Evenement parent de l'exception
    * 
@@ -203,6 +196,10 @@ class Exception extends Event {
     if (!isset($this->owner)) {
       $this->owner = $this->user->uid;
     }
+    // Sauvegarde des participants
+    if ($saveAttendees) {
+      $this->newSaveAttendees();
+    }
     // Sauvegarde l'objet
     $insert = $this->objectmelanie->save();
     if (!is_null($insert)) {
@@ -256,17 +253,17 @@ class Exception extends Event {
    * @ignore
    *
    */
-  function load() {
+  function load($checkDeleted = false) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->load()");
     $exist = parent::load();
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->load() exist : " . $exist);
-    if ($exist && isset($this->start) && isset($this->end)) {
-      $this->deleted = false;
-    } else {
-      $this->deleted = true;
+    if ($checkDeleted) {
+      if ($exist && isset($this->start) && isset($this->end)) {
+        $this->deleted = false;
+      } else {
+        $this->deleted = true;
+      }
     }
-    // TODO: Test - Nettoyage mémoire
-    //gc_collect_cycles();
     return $exist;
   }
   
@@ -292,26 +289,6 @@ class Exception extends Event {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRecurrence()");
     throw new Exceptions\ObjectMelanieUndefinedException();
   }
-  
-  /**
-   * Mapping recurrenceId field
-   * 
-   * @param string $recurrenceId          
-   */
-  protected function setMapRecurrenceid($recurrenceId) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRecurrenceid($recurrenceId)");
-    $this->recurrenceId = $recurrenceId;
-    $recId = date(self::FORMAT_ID, strtotime($this->recurrenceId));
-    $this->objectmelanie->realuid = $this->getMapUid();
-    $this->objectmelanie->uid = $this->getMapUid() . '-' . $recId . self::RECURRENCE_ID;
-  }
-  /**
-   * Mapping recurrenceId field
-   */
-  protected function getMapRecurrenceid() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRecurrenceid()");
-    return $this->recurrenceId;
-  }
 
   /**
    * Mapping recurrence_id field
@@ -326,6 +303,7 @@ class Exception extends Event {
     else {
       $this->objectmelanie->uid = $this->getMapUid() . '-' . date(self::FORMAT_ID, strtotime($recurrence_id)) . self::RECURRENCE_ID;
     }
+    $this->objectmelanie->realuid = $this->getMapUid();
     $this->objectmelanie->recurrence_id = $recurrence_id;
   }
   /**
@@ -357,7 +335,7 @@ class Exception extends Event {
     else {
       $_recId = $this->getAttribute(\LibMelanie\Lib\ICS::RECURRENCE_ID);
     }
-    $recId = isset($_recId) ? new \DateTime($_recId) : new \DateTime($this->recurrenceId);
+    $recId = new \DateTime($_recId);
     $this->objectmelanie->realuid = $uid;
     $this->objectmelanie->uid = $uid . '-' . $recId->format(self::FORMAT_ID) . self::RECURRENCE_ID;
   }
@@ -381,21 +359,21 @@ class Exception extends Event {
   protected function getMapOrganizer() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOrganizer()");
     if (!isset($this->organizer)) {
-      if (isset($this->eventParent->organizer) && !empty($this->eventParent->organizer->uid)) {
+      if (isset($this->eventParent) && !$this->eventParent->deleted && isset($this->eventParent->organizer) && !empty($this->eventParent->organizer->uid)) {
         $this->organizer = clone $this->eventParent->organizer;
         $this->organizer->setEvent($this);
+        $this->organizer->setObjectMelanie($this->objectmelanie);
       }
       else {
         $Organizer = $this->__getNamespace() . '\\Organizer';
         $this->organizer = new $Organizer($this);
-        if (isset($this->eventParent)) {
+        if (isset($this->eventParent) && !$this->eventParent->deleted) {
           // Ajouter l'organisateur sur l'événement parent pour les occurrences suivantes
           $this->eventParent->organizer = clone $this->organizer;
           $this->eventParent->organizer->setEvent($this->eventParent);
         }        
       }
     }      
-      
     return $this->organizer;
   }
 }

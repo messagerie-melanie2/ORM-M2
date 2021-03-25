@@ -1,3 +1,15 @@
+ORM M2 - 0.6.1.0
+------
+- 0006069: Optimisation de l'utilisation des récurrences et exceptions
+- 0006065: Gestion des pièces jointes pour un participant
+- 0006064: Nettoyer l'organisateur de la liste des participants
+- 0006071: [ICS] supprimer le VALUE=DURATION du TRIGGER de la VALARM
+- 0006066: Problème d'enregistrement des pièces jointes dans une occurrence
+- 0006078: [Outofoffice] ne pas mettre les horaires si on est en journée entière
+- 0006072: L'organisateur n'est pas enregistré dans les exceptions
+- 0005643: Ouverture globale du en attente
+- 0006077: Lister les pièces jointes de la récurrence maitre dans les occurrences
+
 ORM M2 - 0.6.0.24
 ------
 - 0006062: Rendre les types de boites configurables

@@ -175,7 +175,10 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		if ($this->isExist) {
 			// Modification
 			if (!isset($this->haschanged[MappingMce::$Data_Mapping[$this->objectType]['modified'][MappingMce::name]])
-					|| !$this->haschanged[MappingMce::$Data_Mapping[$this->objectType]['modified'][MappingMce::name]]) $this->modified = time();
+					|| !$this->haschanged[MappingMce::$Data_Mapping[$this->objectType]['modified'][MappingMce::name]]) {
+				$this->modified = time();
+				$this->modified_json = $this->modified;
+			} 
 
 			// Paramètres de la requête
 			$params = [];
@@ -218,7 +221,10 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 			}
 			// Gestion de l'event_id
 			if (!isset($this->id)) $this->id = hash('sha256', $this->uid . $this->calendar . uniqid(), false);
-			if (!isset($this->modified)) $this->modified = time();
+			if (!isset($this->modified)) {
+				$this->modified = time();
+				$this->modified_json = $this->modified;
+			} 
 
 			// Si l'objet n'existe pas, on fait un INSERT
 			// Liste les insertion à faire
@@ -281,14 +287,6 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		return $ret;
 	}
 	
-	/**
-	 * Permet de forcer la variable isExist
-	 * @param boolean $isExist
-	 */
-	public function setExist($isExist) {
-	  $this->isExist = $isExist;
-	}
-
 	/**
 	 * Si l'objet existe
 	 */

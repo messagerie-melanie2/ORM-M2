@@ -156,36 +156,14 @@ class EventToICS {
       $exdate = [];
       $first = true;
       foreach ($event->exceptions as $exception) {
-        $exRecId = isset($exception->recurrence_id) ? $exception->recurrence_id : $exception->getAttribute(ICS::RECURRENCE_ID);
+        $exRecId = $exception->recurrence_id;
         $allDay = $exception->all_day;
-        if (!isset($exRecId)) {
-          if ($event->deleted || !$exception->deleted) {
-            if ($exception->all_day) {
-              $exRecId = date('Y-m-d', strtotime($exception->recurrenceId));
-              $allDay = true;
-            }
-            else {
-              $exRecId = date('Y-m-d', strtotime($exception->recurrenceId)) . ' ' . $exception->dtstart->format('H:i:s');
-              $allDay = false;
-            }
-          } else {
-            if ($event->all_day) {
-              $exRecId = date('Y-m-d', strtotime($exception->recurrenceId));
-              $allDay = true;
-            }
-            else {
-              $exRecId = date('Y-m-d', strtotime($exception->recurrenceId)) . ' ' . $event->dtstart->format('H:i:s');
-              $allDay = false;
-            }
-          }
-        }
         if ($allDay) {
           $exdatetime = new \DateTime($exRecId, new \DateTimeZone('UTC'));
         }
         else {
           $exdatetime = new \DateTime($exRecId, new \DateTimeZone($exception->timezone));
         }
-
         if ($event->deleted) {
           if ($first) {
             $first = false;
@@ -361,11 +339,19 @@ class EventToICS {
       $date = $dateTime->format('Ymd\THis\Z');
       $vevent->add(ICS::DTSTAMP, $date);
       $vevent->add(ICS::LAST_MODIFIED, $date);
-      $created = $event->getAttribute(ICS::CREATED);
-      if (isset($created))
-        $vevent->add(ICS::CREATED, $created);
-      else
-        $vevent->add(ICS::CREATED, $date);
+      if (isset($event->created)) {
+        $dateTime = new \DateTime('@' . $event->created, new \DateTimeZone($event->timezone));
+        $dateTime->setTimezone(new \DateTimeZone('UTC'));
+        $dateCreated = $dateTime->format('Ymd\THis\Z');
+        $vevent->add(ICS::CREATED, $dateCreated);
+      }
+      else {
+        $created = $event->getAttribute(ICS::CREATED);
+        if (isset($created))
+          $vevent->add(ICS::CREATED, $created);
+        else
+          $vevent->add(ICS::CREATED, $date);
+      }
     }
 
     // DateTime
@@ -420,9 +406,7 @@ class EventToICS {
       // Alarm
       if (isset($event->alarm) && $event->alarm != 0) {
         $valarm = $vevent->add('VALARM');
-        // $valarm->TRIGGER = '-PT'.$event->alarm.'M';
         $valarm->TRIGGER = self::formatAlarm($event->alarm);
-        $valarm->TRIGGER[ICS::VALUE] = ICS::VALUE_DURATION;
         $valarm->ACTION = ICS::ACTION_DISPLAY;
       }
       // Attributs sur l'alarme

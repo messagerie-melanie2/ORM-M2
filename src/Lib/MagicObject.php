@@ -131,6 +131,22 @@ abstract class MagicObject implements Serializable {
     }
 	  return false;
   }
+
+  /**
+	 * Positionne si le champ a changé
+	 * 
+	 * @param string $name
+   * @param boolean $haschanged
+	 */
+	public function setFieldHasChanged($name, $haschanged = true) {
+	  $lname = strtolower($name);
+	  // Récupèration des données de mapping
+	  if (isset(MappingMce::$Data_Mapping[$this->objectType])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
+      $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
+    }
+    $this->haschanged[$lname] = $haschanged;
+  }
   
   /**
    * Détermine si au moins un champ a changé
@@ -165,6 +181,56 @@ abstract class MagicObject implements Serializable {
       return $this->data[$lname];
     }
     return null;
+	}
+
+  /**
+	 * Positionne la valeur du champ dans data
+   * 
+	 * @param string $name
+   * @param string $value
+	 */
+	public function setFieldValueToData($name, $value) {
+	  $lname = strtolower($name);
+	  // Récupèration des données de mapping
+	  if (isset(MappingMce::$Data_Mapping[$this->objectType])
+	      && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
+      $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
+    }
+    $this->data[$lname] = $value;
+	}
+
+  /**
+	 * Positionne la valeur de isLoaded
+   * 
+	 * @param boolean $isLoaded
+	 */
+  public function setIsLoaded($isLoaded = true) {
+    $this->isLoaded = $isLoaded;
+  }
+  /**
+	 * Retourne la valeur de isLoaded
+   * 
+	 * @return boolean $isLoaded
+	 */
+  public function getIsLoaded() {
+    return is_bool($this->isLoaded) ? $this->isLoaded : false;
+  }
+
+  /**
+	 * Positionne la valeur de isExist
+   * 
+	 * @param boolean $isExist
+	 */
+	public function setIsExist($isExist = true) {
+	  $this->isExist = $isExist;
+	}
+  /**
+	 * Retourne la valeur de isExist
+   * 
+	 * @return boolean $isExist
+	 */
+	public function getIsExist() {
+    return is_bool($this->isExist) ? $this->isExist : false;
 	}
 
 	/**

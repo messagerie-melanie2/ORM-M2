@@ -340,4 +340,23 @@ class DefaultConfig {
    * Liste serveur de Distribution à ABonnement
    */
   const LDAP_TYPE_LISTAB = 'LDAB';
+
+  /**
+   * Est-ce que le en attente est activé ou désactivé par défaut ?
+   */
+  const NEED_ACTION_ENABLE = true;
+  /**
+   * Si le en attente est désactivé, filtre les utilisateurs qui l'on activé
+   * Format : ['<champ>' => '<valeur>'] 
+   * Exemple : ['info' => 'en attente : oui'] 
+   * si le le champ de l'utilisateur matche la valeur c'est activé
+   */
+  const NEED_ACTION_ENABLE_FILTER = null;
+  /**
+   * Si le en attente est activé, filtre les utilisateurs qui l'on désactivé
+   * Format : ['<champ>' => '<valeur>'] 
+   * Exemple : ['info' => 'en attente : oui'] 
+   * si le le champ de l'utilisateur matche la valeur c'est désactivé
+   */
+  const NEED_ACTION_DISABLE_FILTER = null; 
 }

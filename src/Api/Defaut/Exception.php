@@ -317,6 +317,18 @@ class Exception extends Event {
     else {
       $_recId = $this->getAttribute(\LibMelanie\Lib\ICS::RECURRENCE_ID);
     }
+    if (!isset($_recId) && strpos($this->objectmelanie->uid, self::RECURRENCE_ID) !== false) {
+      // On tombe dans un cas pas propre ou l'exception n'a pas du tout de recurrence_id
+      $_recId = substr($this->objectmelanie->uid, strlen($this->objectmelanie->uid) - strlen(self::FORMAT_STR . self::RECURRENCE_ID));
+      $_recId = substr($_recId, 0, strlen(self::FORMAT_STR));
+      if (isset($this->eventParent) && !$this->eventParent->deleted) {
+        $startTime = $this->eventParent->getMapDtstart();
+      }
+      else {
+        $startTime = $this->getMapDtstart();
+      }
+      $_recId = date("Y-m-d", strtotime($_recId)) . ' ' . $startTime->format('H:i:s');
+    }
     return $_recId;
   }
   
@@ -335,9 +347,15 @@ class Exception extends Event {
     else {
       $_recId = $this->getAttribute(\LibMelanie\Lib\ICS::RECURRENCE_ID);
     }
-    $recId = new \DateTime($_recId);
-    $this->objectmelanie->realuid = $uid;
-    $this->objectmelanie->uid = $uid . '-' . $recId->format(self::FORMAT_ID) . self::RECURRENCE_ID;
+    if (isset($_recId)) {
+      $recId = new \DateTime($_recId);
+      $this->objectmelanie->realuid = $uid;
+      $this->objectmelanie->uid = $uid . '-' . $recId->format(self::FORMAT_ID) . self::RECURRENCE_ID;
+    }
+    else {
+      $this->objectmelanie->realuid = $uid;
+      $this->objectmelanie->uid = $uid;
+    }
   }
   /**
    * Mapping uid field
@@ -363,6 +381,7 @@ class Exception extends Event {
         $this->organizer = clone $this->eventParent->organizer;
         $this->organizer->setEvent($this);
         $this->organizer->setObjectMelanie($this->objectmelanie);
+        $this->organizer_json = $this->eventParent->organizer_json;
       }
       else {
         $Organizer = $this->__getNamespace() . '\\Organizer';

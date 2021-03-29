@@ -3,7 +3,9 @@
 -- Name: workspaces_seq; Type: SEQUENCE; Schema: public; Owner: horde
 --
 
-CREATE SEQUENCE workspaces_seq
+-- DROP SEQUENCE workspaces_seq;
+
+CREATE SEQUENCE public.workspaces_seq
     START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
@@ -14,8 +16,9 @@ CREATE SEQUENCE workspaces_seq
 -- Table "dwp_workspaces"
 -- Name: dwp_workspaces; Type: TABLE; Schema: public; Owner: horde
 --
+-- DROP TABLE dwp_workspaces;
 
-CREATE TABLE dwp_workspaces
+CREATE TABLE public.dwp_workspaces
 (
 	workspace_id bigint DEFAULT nextval('workspaces_seq'::text) PRIMARY KEY,
 	workspace_uid varchar(40) NOT NULL,
@@ -33,29 +36,33 @@ CREATE TABLE dwp_workspaces
 	workspace_settings text
 );
 
-CREATE INDEX dwp_workspaces_uid_idx ON dwp_workspaces (workspace_uid);
+CREATE INDEX dwp_workspaces_uid_idx ON public.dwp_workspaces (workspace_uid);
 
 --
 -- Table "dwp_shares"
 -- Name: dwp_shares; Type: TABLE; Schema: public; Owner: horde
 --
 
-CREATE TABLE dwp_shares
+-- DROP TABLE dwp_shares;
+
+CREATE TABLE public.dwp_shares
 (
 	workspace_id bigint NOT NULL
-		REFERENCES dwp_workspaces (workspace_id) ON UPDATE CASCADE ON DELETE CASCADE,
+		REFERENCES public.dwp_workspaces (workspace_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	user_uid varchar(255) NOT NULL,
 	rights varchar(1) NOT NULL
 );
 
-CREATE INDEX dwp_shares_user_idx ON dwp_shares (user_uid);
+CREATE INDEX dwp_shares_user_idx ON public.dwp_shares (user_uid);
 
 --
 -- Sequence "hashtags_seq"
 -- Name: hashtags_seq; Type: SEQUENCE; Schema: public; Owner: horde
 --
 
-CREATE SEQUENCE hashtags_seq
+-- DROP SEQUENCE hashtags_seq;
+
+CREATE SEQUENCE public.hashtags_seq
     START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
@@ -67,13 +74,15 @@ CREATE SEQUENCE hashtags_seq
 -- Name: dwp_hashtags; Type: TABLE; Schema: public; Owner: horde
 --
 
-CREATE TABLE dwp_hashtags
+-- DROP TABLE dwp_hashtags;
+
+CREATE TABLE public.dwp_hashtags
 (
 	hashtag_id bigint DEFAULT nextval('hashtags_seq'::text) PRIMARY KEY,
 	hashtag varchar(255) NOT NULL
 );
 
-CREATE INDEX dwp_hashtags_hashtag_idx ON dwp_hashtags (hashtag);
+CREATE INDEX dwp_hashtags_hashtag_idx ON public.dwp_hashtags (hashtag);
 
 
 --
@@ -81,12 +90,14 @@ CREATE INDEX dwp_hashtags_hashtag_idx ON dwp_hashtags (hashtag);
 -- Name: dwp_hashtags_workspaces; Type: TABLE; Schema: public; Owner: horde
 --
 
-CREATE TABLE dwp_hashtags_workspaces
+-- DROP TABLE dwp_hashtags_workspaces;
+
+CREATE TABLE public.dwp_hashtags_workspaces
 (
 	hashtag_id bigint NOT NULL
-		REFERENCES dwp_hashtags (hashtag_id) ON UPDATE CASCADE ON DELETE CASCADE,
+		REFERENCES public.dwp_hashtags (hashtag_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	workspace_id bigint NOT NULL
-		REFERENCES dwp_workspaces (workspace_id) ON UPDATE CASCADE ON DELETE CASCADE
+		REFERENCES public.dwp_workspaces (workspace_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Index pour les LIKE sur les hashtags : https://www.cybertec-postgresql.com/en/postgresql-more-performance-for-like-and-ilike-statements/

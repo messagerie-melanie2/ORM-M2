@@ -1,3 +1,10 @@
+ORM M2 - 0.6.1.1
+------
+- Nouvel index sur realuid
+- Problème de schéma dans les workspaces
+- Correctif: Ajoute l'organisateur json dans l'exception
+- Correctif: Problème quand le recurrence_id est vide dans une exception
+
 ORM M2 - 0.6.1.0
 ------
 - 0006069: Optimisation de l'utilisation des récurrences et exceptions

@@ -65,6 +65,8 @@ class Ldap {
                     "port" => 636,
                     /* Base DN de recherche */
                     "base_dn" => "dc=example,dc=com",
+                    /* Base DN de recherche pour les boites partagées */
+                    "shared_base_dn" => "dc=example,dc=com",
                     /* Version du protocole LDAP */
                     "version" => 3,
                     /* Connexion TLS */

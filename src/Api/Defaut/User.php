@@ -961,10 +961,30 @@ abstract class User extends MceObject {
   /**
    * Retourne la liste des workspaces de l'utilisateur
    * 
+   * @param string $orderby [Optionnel] nom du champ a trier
+   * @param boolean $asc [Optionnel] tri ascendant ?
+   * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
+   * @param integer $offset [Optionnel] offset pour la pagination
+   * 
    * @return Workspace[]
    */
-  public function getUserWorkspaces() {
+  public function getUserWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserWorkspaces()");
+    // Si on charge par orderby, limit ou offset
+    if (isset($orderby) || isset($limit) || isset($offset)) {
+      $_workspaces = $this->objectmelanie->getUserWorkspaces($orderby, $asc, $limit, $offset);
+      if (!isset($_workspaces)) {
+        return null;
+      }
+      $Workspace = $this->__getNamespace() . '\\Workspace';
+      $workspaces = [];
+      foreach ($_workspaces as $_workspace) {
+        $workspace = new $Workspace($this);
+        $workspace->setObjectMelanie($_workspace);
+        $workspaces[$_workspace->id] = $workspace;
+      }
+      return $workspaces;
+    }
     // Si la liste des workspaces n'est pas encore chargée
     if (!isset($this->_userWorkspaces)) {
       $this->_userWorkspaces = [];
@@ -1012,10 +1032,30 @@ abstract class User extends MceObject {
   /**
    * Retourne la liste des workspaces de l'utilisateur et ceux qui lui sont partagés
    * 
+   * @param string $orderby [Optionnel] nom du champ a trier
+   * @param boolean $asc [Optionnel] tri ascendant ?
+   * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
+   * @param integer $offset [Optionnel] offset pour la pagination
+   * 
    * @return Workspace[]
    */
-  public function getSharedWorkspaces() {
+  public function getSharedWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedWorkspaces()");
+    // Si on charge par orderby, limit ou offset
+    if (isset($orderby) || isset($limit) || isset($offset)) {
+      $_workspaces = $this->objectmelanie->getSharedWorkspaces($orderby, $asc, $limit, $offset);
+      if (!isset($_workspaces)) {
+        return null;
+      }
+      $Workspace = $this->__getNamespace() . '\\Workspace';
+      $workspaces = [];
+      foreach ($_workspaces as $_workspace) {
+        $workspace = new $Workspace($this);
+        $workspace->setObjectMelanie($_workspace);
+        $workspaces[$_workspace->id] = $workspace;
+      }
+      return $workspaces;
+    }
     // Si la liste des calendriers n'est pas encore chargée on liste depuis la base
     if (!isset($this->_sharedWorkspaces)) {
       $_workspaces = $this->objectmelanie->getSharedWorkspaces();

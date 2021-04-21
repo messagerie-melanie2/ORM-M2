@@ -33,6 +33,12 @@ class SqlWorkspaceRequests {
 	/**
 	 * @var SELECT
 	 * @param REPLACE {order_by}, {limit}
+	 */
+	const listPublicsWorkspaces = "SELECT dwp_workspaces.* FROM dwp_workspaces WHERE workspace_ispublic = 1{order_by}{limit};";
+
+	/**
+	 * @var SELECT
+	 * @param REPLACE {order_by}, {limit}
 	 * @param PDO :user_id
 	 */
 	const listUserWorkspaces = "SELECT dwp_workspaces.* FROM dwp_workspaces INNER JOIN dwp_shares USING (workspace_id) WHERE user_uid = :user_uid AND rights = 'o'{order_by}{limit};";

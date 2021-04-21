@@ -1,0 +1,1 @@
+CREATE INDEX dwp_workspaces_modified_idx ON public.dwp_workspaces (modified DESC);

@@ -269,10 +269,40 @@ class Workspace extends MceObject {
    * Lister les workspaces par hashtag
    * 
    * @param string $hashtag Hashtag recherché
-   * @return WorkspaceMelanie[]
+   * @param string $orderby [Optionnel] nom du champ a trier
+   * @param boolean $asc [Optionnel] tri ascendant ?
+   * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
+   * @param integer $offset [Optionnel] offset pour la pagination
+   * 
+   * @return Workspace[]
    */
-	public function listWorkspacesByHashtag($hashtag) {
-    $res = $this->objectmelanie->listWorkspacesByHashtag($hashtag);
+	public function listWorkspacesByHashtag($hashtag, $orderby = null, $asc = true, $limit = null, $offset = null) {
+    $res = $this->objectmelanie->listWorkspacesByHashtag($hashtag, $orderby, $asc, $limit, $offset);
+    $Workspace = $this->__getNamespace() . '\\Workspace';
+    $workspaces = [];
+    if (is_array($res)) {
+      foreach ($res as $w) {
+        $workspace = new $Workspace();
+        $workspace->setObjectMelanie($w);
+        $workspaces[] = $workspace;
+      }
+    }
+    return $workspaces;
+  }
+
+
+  /**
+   * Lister les workspaces par hashtag
+   * 
+   * @param string $orderby [Optionnel] nom du champ a trier
+   * @param boolean $asc [Optionnel] tri ascendant ?
+   * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
+   * @param integer $offset [Optionnel] offset pour la pagination
+   * 
+   * @return Workspace[]
+   */
+	public function listPublicsWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
+    $res = $this->objectmelanie->listPublicsWorkspaces($orderby, $asc, $limit, $offset);
     $Workspace = $this->__getNamespace() . '\\Workspace';
     $workspaces = [];
     if (is_array($res)) {

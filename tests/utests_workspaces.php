@@ -92,12 +92,17 @@ $user->uid = 'thomas.payen';
 // 	$workspace->save();
 // }
 
-$workspaces = (new Workspace())->listWorkspacesByHashtag('Interministériel');
+// $workspaces = (new Workspace())->listPublicsWorkspaces('modified', false, 5, 5);
+$workspaces = $user->getSharedWorkspaces('modified', false, 2, 1);
 
 // // Lister les workspaces de l'utilisateur
 // $workspaces = $user->getSharedWorkspaces();
 
-var_export($workspaces);
+// var_export($workspaces);
+
+foreach ($workspaces as $workspace) {
+	echo $workspace->modified . ': ' . $workspace->title . ' / ' . $workspace->description . " \r\n\r\n";
+}
 
 // if (count($workspaces) === 0) {
 // 	$workspace = new Workspace($user);

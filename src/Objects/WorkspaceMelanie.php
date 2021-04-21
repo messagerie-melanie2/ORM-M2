@@ -40,22 +40,46 @@ class WorkspaceMelanie extends ObjectMelanie {
 	}
 
     /**
+     * Lister les workspaces publics
+     * 
+     * @param string $orderby [Optionnel] nom du champ a trier
+     * @param boolean $asc [Optionnel] tri ascendant ?
+     * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
+     * @param integer $offset [Optionnel] offset pour la pagination
+     * 
+     * @return WorkspaceMelanie[]
+     */
+    public function listPublicsWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
+        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->listWorkspacesByHashtag()");
+        $query = Sql\SqlWorkspaceRequests::listPublicsWorkspaces;
+        $query = str_replace('{order_by}', Sql\Sql::GetOrderByClause($this->objectType, $orderby, $asc), $query);
+        $query = str_replace('{limit}', Sql\Sql::GetLimitClause($limit, $offset), $query);
+        // Liste les workspaces par hashtag
+        return Sql\Sql::GetInstance()->executeQuery($query, null, $this->get_class, $this->objectType);
+    }
+
+    /**
      * Lister les workspaces par hashtag
      * 
      * @param string $hashtag Hashtag recherché
+     * @param string $orderby [Optionnel] nom du champ a trier
+     * @param boolean $asc [Optionnel] tri ascendant ?
+     * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
+     * @param integer $offset [Optionnel] offset pour la pagination
+     * 
      * @return WorkspaceMelanie[]
      */
-	public function listWorkspacesByHashtag($hashtag) {
+	public function listWorkspacesByHashtag($hashtag, $orderby = null, $asc = true, $limit = null, $offset = null) {
         M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->listWorkspacesByHashtag()");
         $query = Sql\SqlWorkspaceRequests::listWorkspacesByHashtag;
-        $query = str_replace('{order_by}', '', $query);
-        $query = str_replace('{limit}', '', $query);
+        $query = str_replace('{order_by}', Sql\Sql::GetOrderByClause($this->objectType, $orderby, $asc), $query);
+        $query = str_replace('{limit}', Sql\Sql::GetLimitClause($limit, $offset), $query);
         // Params
         $params = [
             "hashtag" => $hashtag,
         ];
         // Liste les workspaces par hashtag
-        return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\WorkspaceMelanie', 'Workspace');
+        return Sql\Sql::GetInstance()->executeQuery($query, $params, $this->get_class, $this->objectType);
     }
 
     /**
@@ -70,8 +94,8 @@ class WorkspaceMelanie extends ObjectMelanie {
             return false;
         }
         $query = Sql\SqlWorkspaceRequests::listWorkspaceHashtags;
-        $query = str_replace('{order_by}', '', $query);
-        $query = str_replace('{limit}', '', $query);
+        $query = str_replace('{order_by}', Sql\Sql::GetOrderByClause(), $query);
+        $query = str_replace('{limit}', Sql\Sql::GetLimitClause(), $query);
         // Params
         $params = [
             "workspace_id" => $this->id,
@@ -92,8 +116,8 @@ class WorkspaceMelanie extends ObjectMelanie {
             return false;
         }
         $query = Sql\SqlWorkspaceRequests::listWorkspaceShares;
-        $query = str_replace('{order_by}', '', $query);
-        $query = str_replace('{limit}', '', $query);
+        $query = str_replace('{order_by}', Sql\Sql::GetOrderByClause(), $query);
+        $query = str_replace('{limit}', Sql\Sql::GetLimitClause(), $query);
         // Params
         $params = [
             "workspace_id" => $this->id,

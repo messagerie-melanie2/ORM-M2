@@ -1,3 +1,9 @@
+ORM M2 - 0.6.1.2
+------
+- 0006101: Si shared_base_dn n'est pas configuré utiliser base_dn
+- 0006087: Lister les workspaces publics
+- 0006088: Gerer la pagination des workspaces
+
 ORM M2 - 0.6.1.1
 ------
 - Nouvel index sur realuid

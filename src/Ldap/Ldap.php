@@ -467,8 +467,13 @@ class Ldap {
     if (!isset($infos)) {
       // Connexion anonymous pour lire les données
       if ($ldap->anonymous()) {
+        // Base de recherche ?
+        $base_dn = $ldap->getConfig("shared_base_dn");
+        if (!isset($base_dn)) {
+          $base_dn = $ldap->getConfig("base_dn");
+        }
         // Lancement de la recherche
-        $sr = $ldap->search($ldap->getConfig("shared_base_dn"), $filter, $ldap_attr);
+        $sr = $ldap->search($base_dn, $filter, $ldap_attr);
         if ($sr && $ldap->count_entries($sr) > 0) {
           $infos = $ldap->get_entries($sr);
           $ldap->setCache($keycache, $infos);
@@ -529,8 +534,13 @@ class Ldap {
     if (!isset($infos)) {
       // Connexion anonymous pour lire les données
       if ($ldap->anonymous()) {
+        // Base de recherche ?
+        $base_dn = $ldap->getConfig("shared_base_dn");
+        if (!isset($base_dn)) {
+          $base_dn = $ldap->getConfig("base_dn");
+        }
         // Lancement de la recherche
-        $sr = $ldap->search($ldap->getConfig("shared_base_dn"), $filter, $ldap_attr);
+        $sr = $ldap->search($base_dn, $filter, $ldap_attr);
         if ($sr && $ldap->count_entries($sr) > 0) {
           $infos = $ldap->get_entries($sr);
           $ldap->setCache($keycache, $infos);
@@ -591,8 +601,13 @@ class Ldap {
     if (!isset($infos)) {
       // Connexion anonymous pour lire les données
       if ($ldap->anonymous()) {
+        // Base de recherche ?
+        $base_dn = $ldap->getConfig("shared_base_dn");
+        if (!isset($base_dn)) {
+          $base_dn = $ldap->getConfig("base_dn");
+        }
         // Lancement de la recherche
-        $sr = $ldap->search($ldap->getConfig("shared_base_dn"), $filter, $ldap_attr);
+        $sr = $ldap->search($base_dn, $filter, $ldap_attr);
         if ($sr && $ldap->count_entries($sr) > 0) {
           $infos = $ldap->get_entries($sr);
           $ldap->setCache($keycache, $infos);

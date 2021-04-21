@@ -27,6 +27,7 @@ use LibMelanie\Log\M2Log;
 use LibMelanie\Lib\Selaforme;
 use LibMelanie\Exceptions;
 use LibMelanie\Config\Config;
+use LibMelanie\Config\MappingMce;
 
 /**
  * Gestion de la connexion Sql
@@ -574,6 +575,50 @@ class Sql {
   public static function getLastRequest() {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Sql::getLastRequest()");
     return self::$last_request;
+  }
+
+  /**
+   * Récupérer la clause de limit et de offset
+   * 
+   * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
+   * @param integer $offset [Optionnel] offset pour la pagination
+   * 
+   * @return string $limit_clause
+   */
+  public static function GetLimitClause($limit = null, $offset = null) {
+    $limit_clause = '';
+    // Gestion de la limite
+    if (isset($limit) && is_int($limit)) {
+        $limit_clause .= ' LIMIT '.$limit;
+    }
+    // Gestion de l'offset
+    if (isset($offset) && is_int($offset)) {
+        $limit_clause .= ' OFFSET '.$offset;
+    }
+    return $limit_clause;
+  }
+
+  /**
+   * Récupérer la clause de order by
+   * 
+   * @param string $objectType Type d'objet pour le mapping
+   * @param string $orderby Nom du champ pour le tri
+   * @param boolean $asc Tri ascendant ou non
+   * 
+   * @return string $orderby_clause
+   */
+  public static function GetOrderByClause($objectType = null, $orderby = null, $asc = true) {
+    $orderby_clause = '';
+    // Tri
+		if (!empty($orderby)) {
+      // Récupèration des données de mapping
+      if (isset(MappingMce::$Data_Mapping[$objectType])
+              && isset(MappingMce::$Data_Mapping[$objectType][$orderby])) {
+          $orderby = MappingMce::$Data_Mapping[$objectType][$orderby][MappingMce::name];
+      }
+      $orderby_clause .= " ORDER BY $orderby" . ($asc ? " ASC" : " DESC");
+    }
+    return $orderby_clause;
   }
 }
 ?>

@@ -494,22 +494,9 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 			}
 		}
 		// Tri
-		if (!empty($orderby)) {
-		    // Récupèration des données de mapping
-		    if (isset(MappingMce::$Data_Mapping[$this->objectType])
-		            && isset(MappingMce::$Data_Mapping[$this->objectType][$orderby])) {
-		        $orderby = MappingMce::$Data_Mapping[$this->objectType][$orderby][MappingMce::name];
-		    }
-		    $whereClause .= " ORDER BY $orderby" . ($asc ? " ASC" : " DESC");
-		}
-		// Limit
-		if (isset($limit)) {
-		    $whereClause .= " LIMIT $limit";
-		}
-		// Offset
-		if (isset($offset)) {
-		    $whereClause .= " OFFSET $offset";
-		}
+		$whereClause .= Sql\Sql::GetOrderByClause($this->objectType, $orderby, $asc);
+		// Limit & offset 
+		$whereClause .= Sql\Sql::GetLimitClause($limit, $offset);
 		// Chargement de la requête
 		$query = Sql\SqlAttachmentRequests::getAttachmentsList;
 		// Liste des champs

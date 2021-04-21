@@ -548,29 +548,19 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		    }
 		    $whereClause .= " ORDER BY k1.$orderby" . ($asc ? " ASC" : " DESC");
 		}
-		// Limit
-		if (isset($limit)) {
-		    $whereClause .= " LIMIT $limit";
-		}
-		// Offset
-		if (isset($offset)) {
-		    $whereClause .= " OFFSET $offset";
-		}
+		// Limit & offset 
+		$whereClause .= Sql\Sql::GetLimitClause($limit, $offset);
 		// Chargement de la requête
 		$query = Sql\SqlCalendarRequests::getListEvents;
 		// Liste des champs
 		if (!is_array($fields) && strtolower($fields) == 'count') {
-	    // On fait un count(*)
-	    $query = Sql\SqlCalendarRequests::getCountEvents;
+			// On fait un count(*)
+			$query = Sql\SqlCalendarRequests::getCountEvents;
 		} elseif (count($fieldsmapping) > 0) {
-		  // Chargement de la requête
-// 		  if (is_array($fields) && !in_array('attendees', $fields) && !in_array('organizer', $fields)) {
-// 		    $query = Sql\SqlCalendarRequests::getOptiListEvents;
-// 		  }
-		  // Champs demandés
+		  	// Champs demandés
 			$query = str_replace("{fields_list}", implode(", ", $fieldsmapping), $query);
 		} else {
-		  // Tous les champs
+		  	// Tous les champs
 			$query = str_replace("{fields_list}", "k1.*", $query);
 		}
 		// Clause where

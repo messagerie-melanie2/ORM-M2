@@ -647,9 +647,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   /**
    * Récupère la liste des workspaces dont l'utilisateur est owner
    * 
+   * @param string $orderby [Optionnel] nom du champ a trier
+   * @param boolean $asc [Optionnel] tri ascendant ?
+   * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
+   * @param integer $offset [Optionnel] offset pour la pagination
+   * 
    * @return WorkspaceMelanie[]
    */
-  public function getUserWorkspaces() {
+  public function getUserWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserWorkspaces()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
@@ -657,8 +662,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       return false;
     }
     $query = Sql\SqlWorkspaceRequests::listUserWorkspaces;
-    $query = str_replace('{order_by}', '', $query);
-    $query = str_replace('{limit}', '', $query);
+    $query = str_replace('{order_by}', Sql\Sql::GetOrderByClause('Workspace', $orderby, $asc), $query);
+    $query = str_replace('{limit}', Sql\Sql::GetLimitClause($limit, $offset), $query);
     // Params
     $params = [
         "user_uid" => $this->uid,
@@ -670,9 +675,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   /**
    * Récupère la liste des workspaces auxquels l'utilisateur accède
    * 
+   * @param string $orderby [Optionnel] nom du champ a trier
+   * @param boolean $asc [Optionnel] tri ascendant ?
+   * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
+   * @param integer $offset [Optionnel] offset pour la pagination
+   * 
    * @return WorkspaceMelanie[]
    */
-  public function getSharedWorkspaces() {
+  public function getSharedWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedWorkspaces()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
@@ -680,8 +690,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       return false;
     }
     $query = Sql\SqlWorkspaceRequests::listSharedWorkspaces;
-    $query = str_replace('{order_by}', '', $query);
-    $query = str_replace('{limit}', '', $query);
+    $query = str_replace('{order_by}', Sql\Sql::GetOrderByClause('Workspace', $orderby, $asc), $query);
+    $query = str_replace('{limit}', Sql\Sql::GetLimitClause($limit, $offset), $query);
     // Params
     $params = [
         "user_uid" => $this->uid,

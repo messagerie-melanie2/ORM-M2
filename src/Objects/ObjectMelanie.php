@@ -24,7 +24,6 @@ namespace LibMelanie\Objects;
 use LibMelanie\Lib\MagicObject;
 use LibMelanie\Interfaces\IObjectMelanie;
 use LibMelanie\Sql;
-use LibMelanie\Config\ConfigSQL;
 use LibMelanie\Config\MappingMce;
 use LibMelanie\Exceptions\UndefinedMappingException;
 use LibMelanie\Log\M2Log;
@@ -563,22 +562,9 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 			}
 		}
 		// Tri
-		if (!empty($orderby)) {
-		    // Récupèration des données de mapping
-		    if (isset(MappingMce::$Data_Mapping[$this->objectType])
-		            && isset(MappingMce::$Data_Mapping[$this->objectType][$orderby])) {
-		        $orderby = MappingMce::$Data_Mapping[$this->objectType][$orderby][MappingMce::name];
-		    }
-		    $whereClause .= " ORDER BY $orderby" . ($asc ? " ASC" : " DESC");
-		}
-		// Limit
-		if (isset($limit)) {
-		    $whereClause .= " LIMIT $limit";
-		}
-		// Offset
-		if (isset($offset)) {
-		    $whereClause .= " OFFSET $offset";
-		}
+		$whereClause .= Sql\Sql::GetOrderByClause($this->objectType, $orderby, $asc);
+		// Limit & offset 
+		$whereClause .= Sql\Sql::GetLimitClause($limit, $offset);
 		// Chargement de la requête
 		$query = Sql\SqlObjectRequests::getObject;
 		// Liste des champs

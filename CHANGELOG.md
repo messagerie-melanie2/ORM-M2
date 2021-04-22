@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.3
+------
+- 0006102: [API/MCE] Problème de récupération du server_host
+
 ORM M2 - 0.6.1.2
 ------
 - 0006101: Si shared_base_dn n'est pas configuré utiliser base_dn

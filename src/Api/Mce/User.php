@@ -190,7 +190,13 @@ class User extends Defaut\User {
    */
   protected function getMapServer_host() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapServer_host()");
-    return $this->server_routage;
+    if (is_array($this->server_routage) && isset($this->server_routage[0])) {
+      return $this->server_routage[0];
+    }
+    else if (is_string($this->server_routage)) {
+      return $this->server_routage;
+    }
+    return null;
   }
 
   /**

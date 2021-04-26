@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.4
+------
+- Utiliser le server_host MCE pour l'API GEN
+
 ORM M2 - 0.6.1.3
 ------
 - 0006102: [API/MCE] Problème de récupération du server_host

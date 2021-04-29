@@ -182,6 +182,9 @@ class EventToICS {
               $vevent->add(ICS::RDATE, $date);
               $vevent->DTSTART = clone $exdatetime;
             }
+            if (!isset($exception->modified)) {
+              continue;
+            }
             $dateTime = new \DateTime('@' . $exception->modified);
             $dateTime->setTimezone(new \DateTimeZone('UTC'));
             $date = $dateTime->format('Ymd') . 'T' . $dateTime->format('His') . 'Z';

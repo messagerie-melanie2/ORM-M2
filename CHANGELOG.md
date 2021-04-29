@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.5
+------
+- 0006117: [EventToICS] Cas particulier où l'event est deleted et l'exception aussi
+
 ORM M2 - 0.6.1.4
 ------
 - Utiliser le server_host MCE pour l'API GEN

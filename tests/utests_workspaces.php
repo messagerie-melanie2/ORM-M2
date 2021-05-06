@@ -46,6 +46,7 @@ if (!defined('CONFIGURATION_APP_LIBM2')) {
 set_include_path(__DIR__.'/..');
 include_once 'includes/libm2.php';
 
+use LibMelanie\Api\Defaut\Workspaces\Hashtag;
 use LibMelanie\Api\Mel\User;
 use LibMelanie\Api\Mel\Workspace;
 use LibMelanie\Api\Mel\Workspaces\Share;
@@ -93,15 +94,29 @@ $user->uid = 'thomas.payen';
 // }
 
 // $workspaces = (new Workspace())->listPublicsWorkspaces('modified', false, 5, 5);
-$workspaces = $user->getSharedWorkspaces('modified', false, 2, 1);
+// $workspaces = $user->getSharedWorkspaces('modified', false, 2, 1);
 
-// // Lister les workspaces de l'utilisateur
-// $workspaces = $user->getSharedWorkspaces();
+// // // Lister les workspaces de l'utilisateur
+// // $workspaces = $user->getSharedWorkspaces();
 
-// var_export($workspaces);
+// // var_export($workspaces);
 
-foreach ($workspaces as $workspace) {
-	echo $workspace->modified . ': ' . $workspace->title . ' / ' . $workspace->description . " \r\n\r\n";
+// foreach ($workspaces as $workspace) {
+// 	echo $workspace->modified . ': ' . $workspace->title . ' / ' . $workspace->description . " \r\n\r\n";
+// }
+
+$hashtags = (new Hashtag())->getList();
+
+$hashtags = (new Hashtag())->getList(null, null, null, "label");
+
+$hash = new Hashtag();
+$hash->label = "a%";
+$operators = ["label" => \LibMelanie\Config\MappingMce::like];
+$hashtags = $hash->getList(null, null, $operators, "label", true, 5);
+
+
+foreach ($hashtags as $hashtag) {
+	echo $hashtag->label . " \r\n\r\n";
 }
 
 // if (count($workspaces) === 0) {

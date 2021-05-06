@@ -1,3 +1,11 @@
+ORM M2 - 0.6.1.6
+------
+- 0006118: Nettoyer les erreurs dans les logs
+- 0006119: Sécuriser les appels à DateTime
+- 0006129: [ICS] Problème avec un RDATE enregistré par Roundcube
+- 0006130: ldap_search ne doit pas avoir $attributes à null
+- 0006133: Permettre le getList sans critère
+
 ORM M2 - 0.6.1.5
 ------
 - 0006117: [EventToICS] Cas particulier où l'event est deleted et l'exception aussi

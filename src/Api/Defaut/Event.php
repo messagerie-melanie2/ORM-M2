@@ -1645,7 +1645,13 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDtstart()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (!isset($this->dtstart)) {
-      $this->dtstart = new \DateTime($this->objectmelanie->start, new \DateTimeZone($this->getMapTimezone()));
+      try {
+        $this->dtstart = new \DateTime($this->objectmelanie->start, new \DateTimeZone($this->getMapTimezone()));
+      }
+      catch (\Exception $ex) {
+        M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->getMapDtstart() Erreur pour l'événement '" . $this->objectmelanie->uid . "' : " . $ex->getMessage());
+        $this->dtstart = new \DateTime();
+      }
     }
     return $this->dtstart;
   }
@@ -1657,8 +1663,14 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDtstart_utc()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (!isset($this->dtstart_utc)) {
-      $this->dtstart_utc = new \DateTime($this->objectmelanie->start, new \DateTimeZone($this->getMapTimezone()));
-      $this->dtstart_utc->setTimezone(new \DateTimeZone('UTC'));
+      try {
+        $this->dtstart_utc = new \DateTime($this->objectmelanie->start, new \DateTimeZone($this->getMapTimezone()));
+        $this->dtstart_utc->setTimezone(new \DateTimeZone('UTC'));
+      }
+      catch (\Exception $ex) {
+        M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->getMapDtstart_utc() Erreur pour l'événement '" . $this->objectmelanie->uid . "' : " . $ex->getMessage());
+        $this->dtstart_utc = new \DateTime();
+      }
     }
     return $this->dtstart_utc;
   }
@@ -1695,7 +1707,13 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDtend()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (!isset($this->dtend)) {
-      $this->dtend = new \DateTime($this->objectmelanie->end, new \DateTimeZone($this->getMapTimezone()));
+      try {
+        $this->dtend = new \DateTime($this->objectmelanie->end, new \DateTimeZone($this->getMapTimezone()));
+      }
+      catch (\Exception $ex) {
+        M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->getMapDtend() Erreur pour l'événement '" . $this->objectmelanie->uid . "' : " . $ex->getMessage());
+        $this->dtend = new \DateTime();
+      }
     }
     return $this->dtend;
   }
@@ -1707,8 +1725,14 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDtend_utc()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (!isset($this->dtend_utc)) {
-      $this->dtend_utc = new \DateTime($this->objectmelanie->end, new \DateTimeZone($this->getMapTimezone()));
-      $this->dtend_utc->setTimezone(new \DateTimeZone('UTC'));
+      try {
+        $this->dtend_utc = new \DateTime($this->objectmelanie->end, new \DateTimeZone($this->getMapTimezone()));
+        $this->dtend_utc->setTimezone(new \DateTimeZone('UTC'));
+      }
+      catch (\Exception $ex) {
+        M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->getMapDtend_utc() Erreur pour l'événement '" . $this->objectmelanie->uid . "' : " . $ex->getMessage());
+        $this->dtend_utc = new \DateTime();
+      }
     }
     return $this->dtend_utc;
   }
@@ -2113,7 +2137,6 @@ class Event extends MceObject {
         $path = str_replace('%e', $this->objectmelanie->uid, $path);
       }
       $attachment->path = $path;
-      M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapAttachments() path : " . $attachment->path);
       // MANTIS 0004689: Mauvaise optimisation du chargement des pièces jointes
       $fields = ["id", "type", "path", "name", "modified", "owner"];
       $this->attachments = $attachment->getList($fields);

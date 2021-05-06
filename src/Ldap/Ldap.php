@@ -1522,10 +1522,10 @@ class Ldap {
    * @return NULL|array
    */
   public function getMappingAttributes($attributes) {
-    if (is_null($attributes)) {
-      return null;
+    if (is_null($attributes) || !is_array($attributes)) {
+      return [];
     }
-    $mapAttributes = array();
+    $mapAttributes = [];
     foreach ($attributes as $attribute) {
       if (!isset($this->config['mapping']) || !isset($this->config['mapping'][$attribute])) {
         $mapAttributes[] = $attribute;

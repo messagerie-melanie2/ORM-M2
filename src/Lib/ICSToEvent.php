@@ -494,7 +494,7 @@ class ICSToEvent {
       }
       // ATTACH
       $Attachment = $event->__getNamespace() . '\\Attachment';
-      $organizer_calendar = $organizer->calendar;
+      $organizer_calendar = isset($organizer) ? $organizer->calendar : null;
       if ($useattachments && (!isset($calendar) || !isset($organizer) || !isset($organizer_calendar) || $organizer->extern || $organizer_calendar == $calendar->id)) {
         if (isset($vevent->ATTACH)) {
           $attachments = $object->attachments;
@@ -630,6 +630,15 @@ class ICSToEvent {
             
             $exceptions[] = $exception;
           }
+        }
+        // Gérer les RDATE
+        if (isset($vevent->RDATE)) {
+          $rrule = $object->recurrence->rrule;
+          $rrule[ICS::RDATE] = [];
+          foreach ($vevent->RDATE as $rdate) {
+            $rrule[ICS::RDATE][] = $rdate->getDateTime();
+          }
+          $object->recurrence->rrule = $rrule;
         }
       }
       // Ajout de l'objet aux exceptions

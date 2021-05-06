@@ -141,7 +141,23 @@ class EventToICS {
             if ($key == ICS::INTERVAL && $value == 1) {
               // On n'affiche pas l'interval 1 dans l'ICS
               continue;
-            } else if (is_array($value)) {
+            }
+            else if ($key == ICS::RDATE) {
+              // Gérer le RDATE enregistré dans la récurrence
+              if (is_array($value)) {
+                foreach ($value as $val) {
+                  // Ajout du RDATE
+                  $vevent->add(ICS::RDATE, $val);
+                }
+              }
+              else {
+                // Ajout du RDATE
+                $vevent->add(ICS::RDATE, $value);
+              }
+              // Le RDATE ne va pas dans le RRULE
+              continue;
+            }
+            else if (is_array($value)) {
               $value = implode(',', $value);
             }
             $params[] = "$key=$value";

@@ -308,7 +308,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 		// Nom de la table
 		$query = str_replace("{table_name}", $this->tableName, $query);
 		// Clause where
-		$query = str_replace("{where_clause}", $whereClause, $query);
+		$query = str_replace("{where_clause}", ' WHERE ' . $whereClause, $query);
 
 		// Liste les objets
 		$res = Sql\Sql::GetInstance()->executeQuery($query, $params);

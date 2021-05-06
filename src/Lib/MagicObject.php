@@ -383,6 +383,11 @@ abstract class MagicObject implements Serializable {
                     } else if (!is_array($value))  {
                         $value = intval($value);
                     }
+                    // MANTIS 0006124: Problème avec les timestamp négatif
+                    // Problème avec cet update
+                    // if ($value < 0) {
+                    //   $value = time();
+                    // }
                     break;
             }
         }        

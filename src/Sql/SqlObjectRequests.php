@@ -35,7 +35,7 @@ class SqlObjectRequests {
 	 * @var SELECT
 	 * @param Replace {fields_list}, {table_name}, {where_clause}
 	 */
-	const getObject = "SELECT {fields_list} FROM {table_name} WHERE {where_clause};";
+	const getObject = "SELECT {fields_list} FROM {table_name}{where_clause};";
 
 	/**
 	 * Insertion d'un objet générique dans la table Mélanie2

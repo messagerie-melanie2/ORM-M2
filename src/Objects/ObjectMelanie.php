@@ -146,7 +146,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		// Nom de la table
 		$query = str_replace("{table_name}", $this->tableName, $query);
 		// Clause where
-		$query = str_replace("{where_clause}", $whereClause, $query);
+		$query = str_replace("{where_clause}", ' WHERE ' . $whereClause, $query);
 
 		// Récupération
 		$this->isExist = Sql\Sql::GetInstance()->executeQueryToObject($query, $params, $this);
@@ -336,7 +336,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		// Nom de la table
 		$query = str_replace("{table_name}", $this->tableName, $query);
 		// Clause where
-		$query = str_replace("{where_clause}", $whereClause, $query);
+		$query = str_replace("{where_clause}", ' WHERE ' . $whereClause, $query);
 		// Liste les objets
 		$res = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		$this->isExist = (count($res) >= 1);
@@ -560,6 +560,10 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 					}
 				}
 			}
+		}
+		// Gestion d'une clause where vide
+		if (!empty($whereClause)) {
+			$whereClause = ' WHERE ' . $whereClause;
 		}
 		// Tri
 		$whereClause .= Sql\Sql::GetOrderByClause($this->objectType, $orderby, $asc);

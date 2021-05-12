@@ -339,7 +339,7 @@ class Event extends MceObject {
       else {
         $EventProperty = $this->__getNamespace() . '\\EventProperty';
         $eventproperty = new $EventProperty();
-        $eventproperty->event = $this->realuid;
+        $eventproperty->event = $this->objectmelanie->uid;
         if (isset($this->calendarmce)) {
           $eventproperty->calendar = $this->calendarmce->id;
         } else {
@@ -1157,7 +1157,7 @@ class Event extends MceObject {
     $EventProperty = $this->__getNamespace() . '\\EventProperty';
     // Génération de l'attribut pour le getList
     $eventproperty = new $EventProperty();
-    $eventproperty->event = $this->realuid;
+    $eventproperty->event = $this->objectmelanie->uid;
     if (isset($this->calendarmce)) {
       $eventproperty->calendar = $this->calendarmce->id;
     } else {
@@ -1318,7 +1318,7 @@ class Event extends MceObject {
       $this->saveAttributes();
       // Gestion de l'historique
       $history = new HistoryMelanie();
-      $history->uid = Config::get(Config::CALENDAR_PREF_SCOPE) . ":" . $this->calendar . ":" . $this->realuid;
+      $history->uid = Config::get(Config::CALENDAR_PREF_SCOPE) . ":" . $this->calendar . ":" . $this->objectmelanie->uid;
       $history->action = $insert ? Config::get(Config::HISTORY_ADD) : Config::get(Config::HISTORY_MODIFY);
       $history->timestamp = time();
       $history->description = "LibM2/" . Config::get(Config::APP_NAME);
@@ -1465,10 +1465,10 @@ class Event extends MceObject {
           } else {
             $exception->deleted = false;
           }
-          $recId = new \DateTime(substr($exception->realuid, strlen($exception->realuid) - strlen($Exception::FORMAT_STR . $Exception::RECURRENCE_ID), strlen($Exception::FORMAT_STR)));
+          $recId = new \DateTime(substr($_event->uid, strlen($_event->uid) - strlen($Exception::FORMAT_STR . $Exception::RECURRENCE_ID), strlen($Exception::FORMAT_STR)));
           $exceptions[$exception->uid . $exception->calendar][$recId->format($Exception::FORMAT_ID)] = $exception;
           // MANTIS 3680: Charger tous les attributs lors d'un getList
-          $events_uid[] = $exception->realuid;
+          $events_uid[] = $_event->uid;
         }
       } catch (\Exception $ex) {
         M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getList() Exception: " . $ex);
@@ -1934,12 +1934,7 @@ class Event extends MceObject {
   protected function getMapRealUid() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRealUid()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    if (isset($this->objectmelanie->realuid)) {
-      return $this->objectmelanie->realuid;
-    }
-    else {
-      return $this->objectmelanie->uid;
-    }
+    return $this->objectmelanie->uid;
   }
   
   /**

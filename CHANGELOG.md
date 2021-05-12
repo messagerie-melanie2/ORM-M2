@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.8
+------
+- Fix problem with realuid
+
 ORM M2 - 0.6.1.7
 ------
 - 0006137: Problème de récupération de l'organisateur dans le s'inviter

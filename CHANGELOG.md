@@ -1,3 +1,8 @@
+ORM M2 - 0.6.1.7
+------
+- 0006137: Problème de récupération de l'organisateur dans le s'inviter
+- 0006138: Problème de realuid dans un Event
+
 ORM M2 - 0.6.1.6
 ------
 - 0006118: Nettoyer les erreurs dans les logs

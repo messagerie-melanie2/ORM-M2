@@ -124,12 +124,6 @@ class Event extends MceObject {
    */
   protected $deleted;
   /**
-   * UID reel enregistré temporairement
-   * 
-   * @var string
-   */
-  protected $tmpuid;
-  /**
    * Tableau d'exceptions pour la récurrence
    * 
    * @var Exception[]
@@ -442,7 +436,7 @@ class Event extends MceObject {
             $organizer_event = $this;
             $organizer_calendar_id = $this->calendar;
           }
-          else if ($_event->hasattendees && $_event->organizer->calendar == $_event->calendar) {
+          else if ($_event->hasattendees && $_event->getMapOrganizer()->calendar == $_event->calendar) {
             $organizer_calendar_id = $_event->calendar;
             if (strpos($this->get_class, '\Exception') !== false) {
               $Exception = $this->__getNamespace() . '\\Exception';
@@ -862,7 +856,7 @@ class Event extends MceObject {
         $attendees_uid[] = $this->calendar;
         $Event = $this->__getNamespace() . '\\Event';
         $event = new $Event();
-        $event->uid = $this->realuid;
+        $event->uid = $this->uid;
         $event->calendar = $attendees_uid;
         // Liste des opérateurs
         $operators = [
@@ -1317,8 +1311,6 @@ class Event extends MceObject {
     if (!isset($this->owner)) {
       $this->owner = $this->user->uid;
     }
-    // Positionnement du realuid
-    $this->objectmelanie->realuid = $this->tmpuid;
     // Sauvegarde l'objet
     $insert = $this->objectmelanie->save();
     if (!is_null($insert)) {
@@ -1557,7 +1549,7 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapUid(" . (is_string($uid) ? $uid : "") . ")");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->objectmelanie->uid = $uid;
-    $this->tmpuid = $uid;
+    $this->objectmelanie->realuid = $uid;
   }
   /**
    * Mapping modified field
@@ -1942,7 +1934,12 @@ class Event extends MceObject {
   protected function getMapRealUid() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRealUid()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    return $this->objectmelanie->uid;
+    if (isset($this->objectmelanie->realuid)) {
+      return $this->objectmelanie->realuid;
+    }
+    else {
+      return $this->objectmelanie->uid;
+    }
   }
   
   /**

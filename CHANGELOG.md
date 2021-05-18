@@ -1,3 +1,8 @@
+ORM M2 - 0.6.1.9
+------
+- 0006142: Problème de en attente avec une liste de diffusion
+- 0006143: [En attente] Copier le organizer calendar, le organizer json et la liste des participants vide
+
 ORM M2 - 0.6.1.8
 ------
 - Fix problem with realuid

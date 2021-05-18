@@ -320,9 +320,33 @@ class Attendee extends MceObject {
         $this->uid = $user->uid;
       }
     }      
-    if (!isset($this->uid))
-      $this->uid = $this->email;
     return $this->uid;
+  }
+
+  /**
+   * Mapping is_individuelle field
+   * 
+   * @return boolean true si la boite est individuelle
+   */
+  protected function getMapIs_individuelle() {
+    if (isset($this->uid) || isset($this->email)) {
+      $User = $this->__getNamespace() . '\\User';
+      $user = new $User();
+      if (isset($this->uid)) {
+        $user->uid = $this->uid;
+      }
+      else {
+        $user->email = $this->email;
+      }
+      if ($user->load()) {
+        return $user->is_individuelle || $user->is_applicative;
+      }
+      else {
+        // C'est un participant externe, donc on le traite comme une boite individuelle
+        return true;
+      }
+    }
+    return true;
   }
   
   /**
@@ -347,7 +371,7 @@ class Attendee extends MceObject {
         foreach ($filter as $field => $f) {
           $fields[] = $field;
         }
-        if ($user->load($fields)) {
+        if ($user->load($fields) && ($user->is_individuelle || $user->is_applicative)) {
           foreach ($fields as $field) {
             $match = false;
             if (is_array($user->$field)) {
@@ -363,6 +387,9 @@ class Attendee extends MceObject {
               break;
             }
           }
+        }
+        else {
+          $need_action = false;
         }
       }
       $this->need_action = $need_action;

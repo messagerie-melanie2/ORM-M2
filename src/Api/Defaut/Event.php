@@ -481,13 +481,13 @@ class Event extends MceObject {
           $organizer_event = new $Event(null, $this->user, $organizer_calendar);
           $organizer_event->recurrence_id = $this->recurrence_id;
         }
-        $organizer_event->uid = $this->uid;
+        $organizer_event->uid = $this->objectmelanie->uid;
         if (!$organizer_event->load()) {
           if (strpos($this->get_class, '\Exception') !== false) {
             // Si c'est juste l'exception qui n'existe pas on la crée
             $Event = $this->__getNamespace() . '\\Event';
             $organizer_master_event = new $Event($this->user, $organizer_calendar);
-            $organizer_master_event->uid = $this->uid;
+            $organizer_master_event->uid = $this->objectmelanie->realuid;
             if ($organizer_master_event->load()) {
               // Créer l'exception chez l'organisateur
               $organizer_event = $this->createOrganizerException($organizer_master_event);
@@ -658,7 +658,7 @@ class Event extends MceObject {
 
     $organizer_event->addException($organizer_event_exception);
     $organizer_event->modified = time();
-    // Ne pas appeler le saveAttendees pour éviter les doubles sauvegardes (mode en attente)
+    // Enregistre l'évenement de l'organisateur
     $organizer_event->save();
 
     return $organizer_event_exception;
@@ -783,6 +783,7 @@ class Event extends MceObject {
     // Si la sauvegarde en attente doit se faire
     if ($saveNeedAction) {
       $attendees_uid = [];
+      $clean_deleted_attendees = true;
       // Parcours la liste des participant
       $attendees = $this->attendees;
       $User = $this->__getNamespace() . '\\User';
@@ -803,6 +804,10 @@ class Event extends MceObject {
           // Récupérer la liste des participants
           if (isset($attendee_uid)) {
             $attendees_uid[] = $attendee_uid;
+          }
+          // Si ce n'est pas une boite individuelle il ne faut pas gérer les suppressions de participants
+          if (!$attendee->is_individuelle) {
+            $clean_deleted_attendees = false;
           }
           // Si c'est un participant Mélanie2
           if (isset($attendee_uid)
@@ -851,8 +856,7 @@ class Event extends MceObject {
         }
       }
       // MANTIS 0005053: [En attente] Lors de la suppression d'un participant, passer son événement en annulé
-      if ($this->exists() 
-          && count($attendees_uid) > 0) {
+      if ($this->exists()) {
         $attendees_uid[] = $this->calendar;
         $Event = $this->__getNamespace() . '\\Event';
         $event = new $Event();
@@ -863,9 +867,11 @@ class Event extends MceObject {
             'uid'       => MappingMce::eq,
             'calendar'  => MappingMce::diff,
         ];
+        // Filtre
+        $filter = "#uid# AND #calendar#";
         $User = $this->__getNamespace() . '\\User';
         // Lister les événements pour les passer en annulé
-        foreach ($event->getList(null, null, $operators) as $_e) {
+        foreach ($event->getList(null, $filter, $operators) as $_e) {
           // Vérifier que le mode en attente est activé pour cet utilisateur
           $need_action = Config::get(Config::NEED_ACTION_ENABLE);
           if ($need_action) {
@@ -882,7 +888,7 @@ class Event extends MceObject {
             foreach ($filter as $field => $f) {
               $fields[] = $field;
             }
-            if ($user->load($fields)) {
+            if ($user->load($fields) && ($user->is_individuelle || $user->is_applicative)) {
               foreach ($fields as $field) {
                 $match = false;
                 if (is_array($user->$field)) {
@@ -899,11 +905,19 @@ class Event extends MceObject {
                 }
               }
             }
+            else {
+              $need_action = false;
+            }
           }
           if ($need_action) {
-            $_e->status = self::STATUS_CANCELLED;
+            // Copier l'événement même pour une annulation
+            $this->copyEventNeedAction($this, $_e, null, $copyFieldsList, $needActionFieldsList, null, null, strpos($this->get_class, '\Exception') !== false, true);
+            // Doit on annuler l'événement pour le participant ?
+            if ($clean_deleted_attendees) {
+              $_e->status = self::STATUS_CANCELLED;
+            }
             $_e->modified = time();
-            $_e->save();
+            $_e->save(false);
           }       
         }
       }
@@ -932,8 +946,7 @@ class Event extends MceObject {
       $saveAndNeedAction = false;
       // Si l'événement existe, copier la liste des champs importants qui ont changés
       foreach ($copyFieldsList as $field) {
-        if ($event->getObjectMelanie()->fieldHasChanged($field) 
-            && $event->getObjectMelanie()->getFieldValueFromData($field) != $attendee_event->getObjectMelanie()->getFieldValueFromData($field)) {
+        if ($event->getObjectMelanie()->getFieldValueFromData($field) != $attendee_event->getObjectMelanie()->getFieldValueFromData($field)) {
           $save = true;
           $value = $event->getObjectMelanie()->getFieldValueFromData($field);
           $attendee_event->getObjectMelanie()->setFieldValueToData($field, $value);
@@ -943,6 +956,13 @@ class Event extends MceObject {
             $saveAndNeedAction = true;
           }
         }
+      }
+      // Gérer le cas particulier des attendees
+      $attendee_event_attendees = $attendee_event->getObjectMelanie()->getFieldValueFromData('attendees');
+      if (!empty($attendee_event_attendees)) {
+        $attendee_event->getObjectMelanie()->setFieldValueToData('attendees', '');
+        $attendee_event->getObjectMelanie()->setFieldHasChanged('attendees');
+        $save = true;
       }
       // Gestion des exceptions
       if (!$isException) {
@@ -1066,7 +1086,7 @@ class Event extends MceObject {
               if ($save) {
                 $attendee_event->modified = time();
                 // Enregistre l'événement dans l'agenda du participant
-                $attendee_event->save();
+                $attendee_event->save(false);
               }              
             }
           }

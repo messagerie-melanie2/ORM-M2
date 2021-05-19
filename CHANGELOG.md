@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.10
+------
+- 0006146: [Driver Mél] Filtre LDAP pour les listes de diffusion et les objets de partage
+
 ORM M2 - 0.6.1.9
 ------
 - 0006142: Problème de en attente avec une liste de diffusion

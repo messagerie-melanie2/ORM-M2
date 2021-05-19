@@ -133,7 +133,7 @@ class User extends Defaut\User {
    * 
    * @ignore
    */
-  const LOAD_FROM_EMAIL_FILTER = "(mail=%%email%%)";
+  const LOAD_FROM_EMAIL_FILTER = "(|(mail=%%email%%)(mineqmelmailemission=%%email%%))";
   /**
    * Attributs par défauts pour la méthode load()
    * 

@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.11
+------
+- 0006147: L'information journée entière est perdu pour l'organisateur
+
 ORM M2 - 0.6.1.10
 ------
 - 0006146: [Driver Mél] Filtre LDAP pour les listes de diffusion et les objets de partage

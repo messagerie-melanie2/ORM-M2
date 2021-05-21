@@ -645,12 +645,15 @@ class Event extends MceObject {
     $organizer_event_exception->attendees = $organizer_event->getMapAttendees();
     $organizer_event_exception->recurrence_id = $this->recurrence_id;
     // Récupération des champs de l'événement maitre
-    foreach (['uid', 'owner', 'class', 'status', 'title', 'description', 'location', 'category', 'alarm'] as $field) {
+    foreach (['uid', 'owner', 'class', 'status', 'title', 'description', 'location', 'category', 'alarm', 'transparency'] as $field) {
       $organizer_event_exception->$field = $organizer_event->$field;
     }
     // Dates de l'occurrence
     $organizer_event_exception->start = $this->start;
     $organizer_event_exception->end = $this->end;
+    $organizer_event_exception->all_day = $this->all_day;
+    $organizer_event_exception->timezone = $this->timezone;
+    $organizer_event_exception->created = time();
     $organizer_event_exception->modified = time();
     // Récupérer les attributs sur la notification des participants
     $organizer_event_exception->setAttribute(ICS::X_MOZ_SEND_INVITATIONS, $organizer_event->getAttribute(ICS::X_MOZ_SEND_INVITATIONS));
@@ -659,7 +662,7 @@ class Event extends MceObject {
     $organizer_event->addException($organizer_event_exception);
     $organizer_event->modified = time();
     // Enregistre l'évenement de l'organisateur
-    $organizer_event->save();
+    $organizer_event->save(false);
 
     return $organizer_event_exception;
   }

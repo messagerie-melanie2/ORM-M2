@@ -35,7 +35,7 @@ use Sabre\VObject;
  * Class de génération de VCard en fonction de l'objet contact
  * Méthodes Statiques
  *
- * @author Groupe Messagerie/MTES - Apitech
+ * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage Lib
  */

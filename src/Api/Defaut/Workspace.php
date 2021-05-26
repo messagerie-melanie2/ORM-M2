@@ -21,6 +21,8 @@
 namespace LibMelanie\Api\Defaut;
 
 use DateTime;
+use LibMelanie\Api\Gen\Group;
+use LibMelanie\Api\Gen\User;
 use LibMelanie\Lib\MceObject;
 use LibMelanie\Objects\WorkspaceMelanie;
 use LibMelanie\Log\M2Log;
@@ -28,7 +30,7 @@ use LibMelanie\Log\M2Log;
 /**
  * Classe workspace par defaut
  * 
- * @author Groupe Messagerie/MTES - Apitech
+ * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/Defaut
  * @api
@@ -96,6 +98,14 @@ class Workspace extends MceObject {
    * @ignore
    */
   protected $deletedShares;
+
+  /**
+   * Liste de diffusion associée au workspace
+   * 
+   * @var Group
+   * @ignore
+   */
+  protected $_emailList;
   
   /**
    * Constructeur de l'objet
@@ -313,6 +323,68 @@ class Workspace extends MceObject {
       }
     }
     return $workspaces;
+  }
+
+  /**
+   * Créer une liste de diffusion associée au workspace
+   * 
+   * @param string $name Nom de la liste
+   * 
+   * @return Group|null Retourne la liste créée ou null si erreur
+   */
+  public function createEmailList($members_email = [], $domain = null, $prefix = 'edt') {
+    // Vérifier si la liste n'existe pas déjà ?
+    $this->_emailList = $this->getEmailList();
+
+    if (!isset($this->_emailList)) {
+      // Lancer la création de la liste si elle n'existe pas
+      $this->_emailList = new Group(null, 'WorkspaceGroup');
+      $email = $this->getEmailList($prefix, $domain);
+      $this->_emailList->email = $email;
+      $this->_emailList->email_list = [$email];
+      $this->_emailList->fullname = "Liste " . $this->title;
+      $this->_emailList->members_email = $members_email;
+      $ret = $this->_emailList->save();
+      if (is_null($ret)) {
+        $this->_emailList;
+      }
+    }
+    // Retourne la liste
+    return $this->_emailList;
+  }
+
+  /**
+   * Retourne l'adresse email de la liste
+   * 
+   * @param string $domain Nom de domaine pour l'adresse email
+   */
+  protected function getListEmailAddress($prefix = '', $domain = null) {
+    if (!isset($domain)) {
+      // Si le domain n'est pas positionné, on prend celui du createur
+      $user = new User();
+      $user->uid = $this->creator;
+      if ($user->load()) {
+        $mail = explode('@', $user->email, 2);
+        $domain = $mail[1];
+      }
+    }
+    // Gestion du prefixe
+    if (!empty($prefix)) {
+      $prefix = $prefix.'.';
+    }
+    return $prefix.$this->uid.'@'.$domain;
+  }
+
+  /**
+   * Récupérer la liste associée au workspace
+   * 
+   * @return Group|null Retourne la liste associée ou null si elle n'existe pas
+   */
+  public function getEmailList() {
+    if (!isset($this->_emailList)) {
+
+    }
+    return $this->_emailList;
   }
 
   /**

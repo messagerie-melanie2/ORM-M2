@@ -1,3 +1,12 @@
+ORM M2 - 0.6.1.12
+------
+- 0006151: Le champ event_organizer_json est vide pour l'organisateur lorsqu'un particpant modifie une occurrence
+- 0006136: Gérer la création d'un objet LDAP
+- 0006150: Support du driver MI
+- 0006149: Support du driver GN
+- 0006153: Permettre une déconnexion forcée de toutes les instances
+- Suppression de la lib DBMelanie devenue inutile avec le multi-bases
+
 ORM M2 - 0.6.1.11
 ------
 - 0006147: L'information journée entière est perdu pour l'organisateur

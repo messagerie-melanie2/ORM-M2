@@ -34,7 +34,7 @@ use Sabre\VObject;
  * Class de génération de l'évènement en fonction de l'ICS
  * Méthodes Statiques
  *
- * @author Groupe Messagerie/MTES - Apitech
+ * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage Lib
  *

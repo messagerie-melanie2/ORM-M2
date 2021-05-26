@@ -25,7 +25,7 @@ use LibMelanie\Api\Defaut;
 /**
  * Classe workspace par defaut
  * 
- * @author Groupe Messagerie/MTES - Apitech
+ * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/Defaut
  * @api

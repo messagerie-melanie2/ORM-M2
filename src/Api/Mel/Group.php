@@ -5,7 +5,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  * 
- * ORM Mél Copyright © 2020 Groupe Messagerie/MTES
+ * ORM Mél Copyright © 2021 Groupe Messagerie/MTE
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ use LibMelanie\Config\MappingMce;
 /**
  * Classe groupe LDAP pour Mel
  * 
- * @author Groupe Messagerie/MTES - Apitech
+ * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/Mel
  * @api
@@ -68,9 +68,10 @@ class Group extends Defaut\Group {
      * Configuration du mapping qui surcharge la conf
      */
     const MAPPING = [
-        "dn"                      => 'dn',                            // DN de l'utilisateur
-        "fullname"                => 'cn',                            // Nom complet de l'utilisateur
-        "email"                   => 'mailpr',                        // Adresse e-mail principale de l'utilisateur en reception
+        "dn"                      => 'dn',                            // DN de la liste
+        "fullname"                => 'cn',                            // Nom complet de la liste
+        "name"                    => 'displayname',                   // Nom de la liste
+        "email"                   => 'mailpr',                        // Adresse e-mail principale de la liste en reception
         "email_list"              => [MappingMce::name => 'mail', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
         "service"                 => 'departmentnumber',              // Department Number
         "server_routage"          => [MappingMce::name => 'mineqmelroutage', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
@@ -79,6 +80,9 @@ class Group extends Defaut\Group {
         "members_email"           => [MappingMce::name => 'mineqmelmembres', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses mails de la liste
         "owners"                  => [MappingMce::name => 'owner', MappingMce::type => MappingMce::arrayLdap], // Liste des propriétaires du groupes
         "is_dynamic"              => [MappingMce::name => 'objectclass', MappingMce::type => MappingMce::arrayLdap], // Est-ce qu'il s'agit d'une liste dynamique ?
+        "restrictions"            => [MappingMce::name => 'mineqmelrestrictions', MappingMce::type => MappingMce::arrayLdap], // Restrictions de remise pour la liste
+        "remise"                  => 'mineqmelremise',                // Type de remise pour la liste
+        ""
     ];
 
     /**

@@ -25,7 +25,7 @@ use LibMelanie\Api\Defaut;
 /**
  * Classe hashtag par defaut
  * 
- * @author Groupe Messagerie/MTES - Apitech
+ * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/Mel
  * @api

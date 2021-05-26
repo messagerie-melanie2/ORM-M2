@@ -176,6 +176,22 @@ class Sql {
   }
 
   /**
+   * Forcer la déconnexion de toutes les instances de base
+   * Méthode a utiliser dans z-push pour libérer les ressources
+   * Parcours toutes les instances existantes et les déconnectes
+   */
+  public function ForceDisconnectAllInstances() {
+    // Rechercher toutes les instances existantes
+    foreach (\LibMelanie\Config\ConfigSQL::$SERVERS as $server) {
+      // si l'instance existe, on la déconnecte
+      if (isset(self::$instances[$server])) {
+        self::$instances[$server]->disconnect();
+        unset(self::$instances[$server]);
+      }
+    }
+  }
+
+  /**
    * Raccourcis pour la méthode GetInstance
    * 
    * Récupèration de l'instance lié au serveur

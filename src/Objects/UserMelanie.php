@@ -3,7 +3,7 @@
  * Ce fichier est développé pour la gestion de la librairie Mélanie2
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * ORM Mél Copyright © 2020 Groupe Messagerie/MTES
+ * ORM Mél Copyright © 2021 Groupe Messagerie/MTE
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -73,6 +73,20 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @var boolean
    */
   private static $isInit = false;
+
+  /**
+   * Supporter la création d'un objet ?
+   * 
+   * @var boolean
+   */
+  private $_supportCreation = false;
+
+  /**
+   * Configuration de l'objet dans le ldap
+   * 
+   * @var array
+   */
+  private $_itemConfiguration;
   
   /**
    * Constructeur de la class
@@ -80,8 +94,9 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @param string $server Serveur d'annuaire a utiliser en fonction de la configuration
    * @param array $unchangeableProperties Liste des propriétés qui ne peut pas être modifiées
    * @param array $mapping Données de mapping
+   * @param string $itemName Nom de l'objet associé dans la configuration LDAP
    */
-  public function __construct($server = null, $unchangeableProperties = null, $mapping = null) {
+  public function __construct($server = null, $unchangeableProperties = null, $mapping = null, $itemName = null) {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
@@ -118,6 +133,12 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
         $this->primaryKeys = [
             MappingMce::$Primary_Keys[$this->objectType]
         ];
+    }
+
+    // Charger la configuration de l'objet dans la configuration LDAP
+    $server = $server ?: Config\Ldap::$SEARCH_LDAP;
+    if (isset($itemName)) {
+      $this->readItemConfiguration($itemName, $server);
     }
   }
 
@@ -317,9 +338,28 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
-    $entry = $this->getEntry();
-    if (!empty($entry) && isset($this->dn)) {
+    // Est-ce que le dn est bien défini ?
+    if (!isset($this->dn)) {
+      return false;
+    }
+    // MANTIS 0006136: Gérer la création d'un objet LDAP
+    if ($this->_supportCreation && is_bool($this->isExist) && !$this->isExist) {
+      $entry = $this->getCreationEntry();
       $ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$MASTER_LDAP);
+      // Gérer une authentification externe
+      if (isset($this->_itemConfiguration['bind_dn'])) {
+        $ldap->authenticate($this->_itemConfiguration['bind_dn'], $this->_itemConfiguration['bind_password']);
+      }
+      return $ldap->add($this->dn, $entry);
+    }
+    // Modification de l'entrée si on est pas en création
+    $entry = $this->getEntry();
+    if (!empty($entry)) {
+      $ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$MASTER_LDAP);
+      // Gérer une authentification externe
+      if (isset($this->_itemConfiguration['bind_dn'])) {
+        $ldap->authenticate($this->_itemConfiguration['bind_dn'], $this->_itemConfiguration['bind_password']);
+      }
       return $ldap->modify($this->dn, $entry);
     }
     return false;
@@ -379,6 +419,26 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   }
 
   /**
+   * Récupère l'entrée à créer à partir de toutes les données
+   * 
+   * @return array
+   */
+  private function getCreationEntry() {
+    $entry = [];
+    // Récuperer les valeurs par défaut ?
+    if (isset($this->_itemConfiguration['default']) && is_array($this->_itemConfiguration['default'])) {
+      foreach ($this->_itemConfiguration['default'] as $key => $value) {
+        $entry[$key] = $value;
+      }
+    }
+    // Récupérer les données
+    foreach ($this->data as $key => $value) {
+      $entry[$key] = $value;
+    }
+    return $entry;
+  }
+
+  /**
    * Génération du filtre ldap en fonction des attributs du user
    * 
    * @param string $filter Filtre à traiter
@@ -408,16 +468,26 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @param boolean $master Utiliser le serveur maitre (nécessaire pour faire des modifications)
    * @param string $user_dn DN de l'utilisateur si ce n'est pas le courant a utiliser
    * @param boolean $gssapi Utiliser une authentification GSSAPI sans mot de passe
+   * @param string $itemName Nom de l'objet associé dans la configuration LDAP
+   * 
    * @return boolean
    */
-  public function authentification($password, $master = false, $user_dn = null, $gssapi = false) {
+  public function authentification($password, $master = false, $user_dn = null, $gssapi = false, $itemName = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->authentification()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if ($master) {
       $this->server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
     }
-    if ($gssapi) {
+    // Gérer l'itemName pour l'authentification également
+    if (isset($itemName)) {
+      $this->readItemConfiguration($itemName, $this->server);
+    }
+    // Authentification en direct ?
+    if (isset($this->_itemConfiguration) && isset($this->_itemConfiguration['bind_dn'])) {
+
+    }
+    else if ($gssapi) {
       return Ldap::AuthentificationGSSAPI($this->server);
     }
     else if (isset($user_dn)) {
@@ -1092,5 +1162,34 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       }
     }
     return $attributesmapping;
+  }
+
+  /**
+   * Lire la configuration LDAP de l'item si elle existe
+   * supporte également des configurations par partie : objet.item.name
+   * 
+   * @param string $itemName Nom de l'objet dans la configuration
+   * @param string $server Serveur ou chercher la configuration
+   */
+  private function readItemConfiguration($itemName, $server) {
+    if (isset(Config\Ldap::$SERVERS[$server])) {
+      if (isset(Config\Ldap::$SERVERS[$server][$itemName])) {
+        // Si l'itemName est directement dans la configuration
+        $this->_itemConfiguration = Config\Ldap::$SERVERS[$server][$itemName];
+        $this->_supportCreation = isset(Config\Ldap::$SERVERS[$server][$itemName]['creation']) ? Config\Ldap::$SERVERS[$server][$itemName]['creation'] : false;
+      }
+      else if (strpos($itemName, '.') !== false) {
+        // Si c'est un itemName par partie on cherche chaque partie dans la conf
+        $parts = explode('.', $itemName);
+        foreach ($parts as $part) {
+          if (isset(Config\Ldap::$SERVERS[$server][$part])) {
+            // Si l'itemName est directement dans la configuration
+            $this->_itemConfiguration = Config\Ldap::$SERVERS[$server][$part];
+            $this->_supportCreation = isset(Config\Ldap::$SERVERS[$server][$part]['creation']) ? Config\Ldap::$SERVERS[$server][$part]['creation'] : false;
+            return;
+          }
+        }
+      }
+    }
   }
 }

@@ -5,7 +5,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  * 
- * ORM Mél Copyright © 2020 Groupe Messagerie/MTES
+ * ORM Mél Copyright © 2021 Groupe Messagerie/MTE
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ use LibMelanie\Api\Defaut;
  * implémente les API de la librairie pour aller chercher les données dans la base de données
  * Certains champs sont mappés directement ou passe par des classes externes
  * 
- * @author Groupe Messagerie/MTES - Apitech
+ * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/MCE
  * @api

@@ -38,7 +38,13 @@ define('ENVIRONNEMENT_LIBM2', '');
 /**
  * Chemin vers la configuration externe
  */
-define('CONFIGURATION_PATH_LIBM2', '/etc/LibM2');
+
+if(getenv('CONFIGURATION_PATH_LIBM2')) {
+    define('CONFIGURATION_PATH_LIBM2', getenv('CONFIGURATION_PATH_LIBM2'));
+} else {
+    //?? ne devrait -il pas prendre le DEFAULT....
+    define('CONFIGURATION_PATH_LIBM2', '/etc/LibM2');
+}
 
 /**
  * MODE_SIMPLE ou MODE_MULTIPLE pour la configuration TYPE_EXTERNAL

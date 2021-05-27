@@ -182,7 +182,7 @@ class Sql {
    */
   public function ForceDisconnectAllInstances() {
     // Rechercher toutes les instances existantes
-    foreach (\LibMelanie\Config\ConfigSQL::$SERVERS as $server) {
+    foreach (\LibMelanie\Config\ConfigSQL::$SERVERS as $server => $conf) {
       // si l'instance existe, on la déconnecte
       if (isset(self::$instances[$server])) {
         self::$instances[$server]->disconnect();

@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.13
+------
+- Fix 0006153: Permettre une déconnexion forcée de toutes les instances
+
 ORM M2 - 0.6.1.12
 ------
 - 0006151: Le champ event_organizer_json est vide pour l'organisateur lorsqu'un particpant modifie une occurrence

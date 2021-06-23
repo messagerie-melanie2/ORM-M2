@@ -1,3 +1,9 @@
+ORM M2 - 0.6.1.14
+------
+ - 0006178: Quand un participant répond a une invitation, modifier automatiquement son statut
+ - 0006177: [Api/Mel] Ajouter un mapping pour Cerbère
+ - 0006176: Problème dans la recherche de l'évenement de l'organisateur pour une occurrence
+
 ORM M2 - 0.6.1.13
 ------
 - Fix 0006153: Permettre une déconnexion forcée de toutes les instances

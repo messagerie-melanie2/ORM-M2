@@ -481,7 +481,7 @@ class Event extends MceObject {
           $organizer_event = new $Event(null, $this->user, $organizer_calendar);
           $organizer_event->recurrence_id = $this->recurrence_id;
         }
-        $organizer_event->uid = $this->objectmelanie->uid;
+        $organizer_event->uid = $this->objectmelanie->realuid;
         if (!$organizer_event->load()) {
           if (strpos($this->get_class, '\Exception') !== false) {
             // Si c'est juste l'exception qui n'existe pas on la crée
@@ -525,12 +525,17 @@ class Event extends MceObject {
             // 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur
             if (strtolower($attendee->uid) == strtolower($this->calendarmce->owner)) {
               if ($attendee->response != $response) {
-                // 0005038: Lorsque le participant accepte, si l'événement est en provisoire dans son agenda le passer en confirmé
-                if ($response == $Attendee::RESPONSE_ACCEPTED
-                    && $attendee->response == $Attendee::RESPONSE_NEED_ACTION
-                    && isset($this->status)
-                    && $this->status == static::STATUS_TENTATIVE) {
-                  $this->status = static::STATUS_CONFIRMED;
+                // 0006178: Quand un participant répond a une invitation, modifier automatiquement son statut
+                switch ($response) {
+                  case $Attendee::RESPONSE_ACCEPTED:
+                    $this->status = static::STATUS_CONFIRMED;
+                    break;
+                  case $Attendee::RESPONSE_DECLINED:
+                    $this->status = static::STATUS_NONE;
+                    break;
+                  case $Attendee::RESPONSE_TENTATIVE:
+                    $this->status = static::STATUS_TENTATIVE;
+                    break;
                 }
                 $attendee->response = $response;
                 $organizer_event->setMapAttendees($organizer_attendees);

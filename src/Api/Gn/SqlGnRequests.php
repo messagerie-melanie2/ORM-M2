@@ -14,8 +14,8 @@ class SqlGnRequests extends SqlMelanieRequests
      * @param Replace {datatree_id}
      * @param PDO :group_uid, :user_uid, :datatree_name, :attribute_name, :attribute_perm, :attribute_permfg
      */
-    const listObjectsById = "
-        SELECT  hd1.datatree_id as datatree_id, 
+    const listObjectsById = "SELECT
+                hd1.datatree_id as {datatree_id}, 
                 hd1.user_uid as {user_uid}, 
                 hd1.datatree_name as {datatree_name}, 
                 hd1.datatree_ctag as {datatree_ctag}, 

@@ -20,11 +20,10 @@
  */
 namespace LibMelanie\Api\Gn;
 
-use LibMelanie\Api\Defaut;
 use LibMelanie\Config\MappingMce;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Objects\CalendarMelanie;
 use LibMelanie\Sql\Sql;
-use LibMelanie\Sql\SqlMelanieRequests;
 
 /**
  * Classe calendrier pour GN
@@ -35,20 +34,17 @@ use LibMelanie\Sql\SqlMelanieRequests;
  * @api
  *
  */
-class CalendarMelanie extends \LibMelanie\Objects\CalendarMelanie {
+class Calendar extends CalendarMelanie {
 
 
     public int $id;
-    public \LibMelanie\Api\Mce\User $owner;
 
 
 
-    public function __construct()
+    public function __construct($user = null)
     {
-        parent::__construct();
-        $this->sql = Sql::GetInstance();
+        $this->objectType = "CalendarMelanie";
     }
-
 
     /**
      * La classe Mel\Calendar ne permet pas la récupération par l'id seul
@@ -64,50 +60,35 @@ class CalendarMelanie extends \LibMelanie\Objects\CalendarMelanie {
         if (is_bool($this->isExist) && $this->isLoaded) {
             return $this->isExist;
         }
+        $maps = MappingMce::$Data_Mapping[$this->objectType];
+        $n = MappingMce::name;
         $query = SqlGnRequests::listObjectsById;
 
-        $query = str_replace('{user_uid}', MappingMce::$Data_Mapping[$this->objectType]['owner'][MappingMce::name], $query);
-        $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name], $query);
-        $query = str_replace('{datatree_ctag}', MappingMce::$Data_Mapping[$this->objectType]['ctag'][MappingMce::name], $query);
-        $query = str_replace('{datatree_synctoken}', MappingMce::$Data_Mapping[$this->objectType]['synctoken'][MappingMce::name], $query);
-        $query = str_replace('{attribute_value}', MappingMce::$Data_Mapping[$this->objectType]['name'][MappingMce::name], $query);
-        $query = str_replace('{datatree_id}', MappingMce::$Data_Mapping[$this->objectType]['object_id'][MappingMce::name], $query);
+
+        $query = str_replace('{user_uid}',  $maps['owner'][$n], $query);
+        $query = str_replace('{datatree_name}', $maps['name'][$n], $query);
+        $query = str_replace('{datatree_ctag}', $maps['ctag'][$n], $query);
+        $query = str_replace('{datatree_synctoken}', $maps['synctoken'][$n], $query);
+        $query = str_replace('{datatree_id}', $maps['id'][$n], $query);
 
 
-//die($query);
         // Params
         $params = [
             "datatree_id" => $this->id
         ];
 
-
-
-
+        $sql = Sql::GetInstance();
         // Liste les calendriers de l'utilisateur
-        $r = $this->sql->executeQuery($query, $params, self::class);
+        $r = $sql->executeQueryToObject($query, $params, $this);
 
-        print_r($this);
-        print $this->getCalendarName();
-        die('kkkkkkkkkkkkkkkkkkkkkkkkkk');
         if ($this->isExist) {
             $this->initializeHasChanged();
         }
-
-
-
-
-
-
-
 
         // Les données sont chargées
         $this->isLoaded = true;
         return $this->isExist;
     }
 
-
-    public function getOwner() {
-        die('ici');
-    }
 
 }

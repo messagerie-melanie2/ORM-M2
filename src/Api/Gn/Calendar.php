@@ -29,6 +29,8 @@ use LibMelanie\Sql\Sql;
  * Classe calendrier pour GN
  *
  * @author Groupe Messagerie/MTE - Apitech
+ * @author Groupe Messagerie/GN - OpenGroupe
+ * @author patrick.bassoukissa_sounda@open-groupe.com
  * @package LibMCE
  * @subpackage API/GN
  * @api
@@ -40,7 +42,10 @@ class Calendar extends CalendarMelanie {
     public int $id;
 
 
-
+    /**
+     * Calendar constructor.
+     * @param null $user
+     */
     public function __construct($user = null)
     {
         $this->objectType = "CalendarMelanie";
@@ -84,8 +89,7 @@ class Calendar extends CalendarMelanie {
         if ($this->isExist) {
             $this->initializeHasChanged();
         }
-
-        // Les données sont chargées
+        $this->isExist = true;
         $this->isLoaded = true;
         return $this->isExist;
     }

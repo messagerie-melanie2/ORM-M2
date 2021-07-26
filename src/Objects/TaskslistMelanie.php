@@ -101,18 +101,26 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 	/**
 	 * Chargement de l'objet
 	 * need: $this->id
-	 * need: $this->user_uid
+	 * optionnal: $this->user_uid
 	 * @return boolean isExist
 	 */
 	public function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
 		if (!isset($this->id)) return false;
-		if (!isset($this->user_uid)) return false;
+
 		// Test si l'objet existe, pas besoin de load
 		if (is_bool($this->isExist) && $this->isLoaded) {
 		  return $this->isExist;
 		}
-		$query = Sql\SqlMelanieRequests::listObjectsByUid;
+
+		// Gérer le load si user n'est pas défini
+		if (isset($this->user_uid)) {
+			$query = Sql\SqlMelanieRequests::listObjectsByUidAndUser;
+		}
+		else {
+			$query = Sql\SqlMelanieRequests::listObjectsByUid;
+		}
+
 		// Replace name
 		$query = str_replace('{user_uid}', MappingMce::$Data_Mapping[$this->objectType]['owner'][MappingMce::name], $query);
 		$query = str_replace('{datatree_name}', MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name], $query);
@@ -125,12 +133,17 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 		// Params
 		$params = [
 		    "group_uid" => DefaultConfig::TASKSLIST_GROUP_UID,
-				"user_uid" => $this->user_uid,
-				"datatree_name" => $this->id,
+			"user_uid" => $this->user_uid,
+			"datatree_name" => $this->id,
 		    "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
 		    "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
 		    "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP,
 		];
+
+		// Gérer le load si user n'est pas défini
+		if (isset($this->user_uid)) {
+			$params["user_uid"] = $this->user_uid;
+		}
 
 		// Liste les calendriers de l'utilisateur
 		$this->isExist = Sql\Sql::GetInstance()->executeQueryToObject($query, $params, $this);
@@ -138,6 +151,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 			//$this->getCTag();
 			$this->initializeHasChanged();
 		}
+
 		// Les données sont chargées
 		$this->isLoaded = true;
 		return $this->isExist;

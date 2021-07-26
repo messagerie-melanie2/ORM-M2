@@ -366,7 +366,7 @@ abstract class User extends MceObject {
     
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct($server)");
     // Définition de l'utilisateur
-    $this->objectmelanie = new UserMelanie($server, null, static::MAPPING);
+    $this->objectmelanie = new UserMelanie($server, null, static::MAPPING, $itemName);
     // Gestion d'un second serveur d'annuaire dans le cas ou les informations sont répartis
     if (isset(\LibMelanie\Config\Ldap::$OTHER_LDAP)) {
       $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP, null, static::MAPPING, $itemName);

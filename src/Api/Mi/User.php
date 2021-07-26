@@ -108,4 +108,31 @@ class User extends Mce\User {
     }
     $this->objectmelanie->outofoffices = array_unique($reponses);
 	}
+
+  /**
+   * Mapping is_synchronisation_enable field
+   * 
+   * @return boolean true si la synchronisation est activée pour l'utilisateur
+   */
+  protected function getMapIs_synchronisation_enable() {
+    return true;
+  }
+
+  /**
+   * Mapping synchronisation_profile field
+   * 
+   * @return string Profil de synchronisation de l'utilisateur
+   */
+  protected function getMapSynchronisation_profile() {
+    return 'STANDARD';
+  }
+
+  /**
+   * Mapping shares field
+   * 
+   * @return array Liste des partages supportés par cette boite ([Share::TYPE_*])
+   */
+  protected function getMapSupported_shares() {
+    return [Share::TYPE_ADMIN, Share::TYPE_SEND, Share::TYPE_WRITE, Share::TYPE_READ];
+  }
 }

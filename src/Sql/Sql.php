@@ -39,7 +39,7 @@ use LibMelanie\Config\MappingMce;
 class Sql {
   /**
    * Instances LDAP
-   *
+   * 
    * @var Sql
    */
   private static $instances = [];
@@ -51,13 +51,13 @@ class Sql {
   private $connection;
   /**
    * Est-ce que la connexion courante est le serveur par défaut ?
-   *
+   * 
    * @var boolean
    */
   private $is_default;
   /**
    * Type de base de données utilisée
-   *
+   * 
    * @var string
    */
   private $db_type;
@@ -136,7 +136,7 @@ class Sql {
   private $ret_sel = false;
   /**
    * Derniere requete utilisee, sert pour les logs shutdown
-   *
+   * 
    * @var string
    */
   private static $last_request;
@@ -146,7 +146,7 @@ class Sql {
    */
   /**
    * Récupèration de l'instance lié au serveur
-   *
+   * 
    * @param string $server
    *          Nom du serveur, l'instance sera liée à ce nom qui correspond à la configuration du serveur
    *          Optionnel, si non renseigné utilise la valeur de ConfigSQL::$SGBD_SERVER
@@ -193,9 +193,9 @@ class Sql {
 
   /**
    * Raccourcis pour la méthode GetInstance
-   *
+   * 
    * Récupèration de l'instance lié au serveur
-   *
+   * 
    * @param string $server
    *          Nom du serveur, l'instance sera liée à ce nom qui correspond à la configuration du serveur
    *          Optionnel, si non renseigné utilise la valeur de ConfigSQL::$SGBD_SERVER
@@ -218,7 +218,7 @@ class Sql {
     $this->get_class = get_class($this);
 
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
-
+    
     // Connexion par defaut ?
     $this->is_default = $is_default;
     // Définition des données de connexion
@@ -242,7 +242,7 @@ class Sql {
 
   /**
    * Getter for Database Type
-   *
+   * 
    * @return string Type de base (pgsql, mysql, ...)
    */
   public function databaseType() {
@@ -251,7 +251,7 @@ class Sql {
 
   /**
    * Getter for Is Default value
-   *
+   * 
    * @return boolean
    */
   public function isDefault() {
@@ -426,7 +426,6 @@ class Sql {
       }
     }
     catch (\PDOException $ex) {
-        die($ex->getMessage());
       // Throw exception, erreur
       M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->executeQuery(): Exception $ex");
       throw new Exceptions\Melanie2DatabaseException("Erreur de base de données Mélanie2 : Erreur d'execution de la requête", 22);
@@ -596,10 +595,10 @@ class Sql {
 
   /**
    * Récupérer la clause de limit et de offset
-   *
+   * 
    * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
    * @param integer $offset [Optionnel] offset pour la pagination
-   *
+   * 
    * @return string $limit_clause
    */
   public static function GetLimitClause($limit = null, $offset = null) {
@@ -617,11 +616,11 @@ class Sql {
 
   /**
    * Récupérer la clause de order by
-   *
+   * 
    * @param string $objectType Type d'objet pour le mapping
    * @param string $orderby Nom du champ pour le tri
    * @param boolean $asc Tri ascendant ou non
-   *
+   * 
    * @return string $orderby_clause
    */
   public static function GetOrderByClause($objectType = null, $orderby = null, $asc = true) {

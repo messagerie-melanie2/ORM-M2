@@ -69,8 +69,10 @@ class Group extends Defaut\Group {
      */
     const MAPPING = [
         "dn"                      => 'dn',                            // DN de la liste
+        "rdn"                     => 'mineqrdn',                      // RDN de la liste
         "fullname"                => 'cn',                            // Nom complet de la liste
         "name"                    => 'displayname',                   // Nom de la liste
+        "lastname"                => 'sn',                            // Last name de la liste
         "email"                   => 'mailpr',                        // Adresse e-mail principale de la liste en reception
         "email_list"              => [MappingMce::name => 'mail', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
         "service"                 => 'departmentnumber',              // Department Number
@@ -82,7 +84,10 @@ class Group extends Defaut\Group {
         "is_dynamic"              => [MappingMce::name => 'objectclass', MappingMce::type => MappingMce::arrayLdap], // Est-ce qu'il s'agit d'une liste dynamique ?
         "restrictions"            => [MappingMce::name => 'mineqmelrestrictions', MappingMce::type => MappingMce::arrayLdap], // Restrictions de remise pour la liste
         "remise"                  => 'mineqmelremise',                // Type de remise pour la liste
-        ""
+        "liens_import"            => 'mineqliensimport',              // Lien d'import autres annuaires
+        "unique_identifier"       => 'uniqueidentifier',              // Identifier unique pour le groupe
+        "mdrive"                  => [MappingMce::name => 'info', MappingMce::prefixLdap => 'MDRIVE: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'oui', MappingMce::falseLdapValue => 'non', MappingMce::emptyLdapValue => 'non'],
+        "gestion"                 => [MappingMce::name => 'info', MappingMce::prefixLdap => 'GESTION: ', MappingMce::type => MappingMce::stringLdap],
     ];
 
     /**

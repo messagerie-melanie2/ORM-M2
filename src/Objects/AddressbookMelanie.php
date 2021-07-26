@@ -101,18 +101,26 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	/**
 	 * Chargement de l'objet
 	 * need: $this->id
-	 * need: $this->user_uid
+	 * optionnal: $this->user_uid
 	 * @return boolean isExist
 	 */
 	public function load() {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
 		if (!isset($this->id)) return false;
-		if (!isset($this->user_uid)) return false;
+
 		// Test si l'objet existe, pas besoin de load
 		if (is_bool($this->isExist) && $this->isLoaded) {
 		  return $this->isExist;
 		}
-		$query = Sql\SqlMelanieRequests::listObjectsByUid;
+
+		// Gérer le load si user n'est pas défini
+		if (isset($this->user_uid)) {
+			$query = Sql\SqlMelanieRequests::listObjectsByUidAndUser;
+		}
+		else {
+			$query = Sql\SqlMelanieRequests::listObjectsByUid;
+		}
+
 		// Replace name
 		$query = str_replace('{user_uid}', MappingMce::$Data_Mapping[$this->objectType]['owner'][MappingMce::name], $query);
 		$query = str_replace('{datatree_name}', MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name], $query);
@@ -121,21 +129,28 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 		$query = str_replace('{attribute_value}', MappingMce::$Data_Mapping[$this->objectType]['name'][MappingMce::name], $query);
 		$query = str_replace('{perm_object}', MappingMce::$Data_Mapping[$this->objectType]['perm'][MappingMce::name], $query);
 		$query = str_replace('{datatree_id}', MappingMce::$Data_Mapping[$this->objectType]['object_id'][MappingMce::name], $query);
+
 		// Params
 		$params = [
 			"group_uid" => DefaultConfig::ADDRESSBOOK_GROUP_UID,
-			"user_uid" => $this->user_uid,
 			"datatree_name" => $this->id,
 		    "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
 		    "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,
 		    "attribute_permfg" => DefaultConfig::ATTRIBUTE_NAME_PERMGROUP,
 		];
+
+		// Gérer le load si user n'est pas défini
+		if (isset($this->user_uid)) {
+			$params["user_uid"] = $this->user_uid;
+		}
+
 		// Liste les calendriers de l'utilisateur
 		$this->isExist = Sql\Sql::GetInstance()->executeQueryToObject($query, $params, $this);
 		if ($this->isExist) {
 			//$this->getCTag();
 			$this->initializeHasChanged();
 		}
+
 		// Les données sont chargées
 		$this->isLoaded = true;
 		return $this->isExist;

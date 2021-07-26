@@ -338,31 +338,35 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
+    // Result
+    $ret = false;
     // Est-ce que le dn est bien défini ?
     if (!isset($this->dn)) {
-      return false;
+      return $ret;
     }
     // MANTIS 0006136: Gérer la création d'un objet LDAP
-    if ($this->_supportCreation && is_bool($this->isExist) && !$this->isExist) {
+    if ($this->_supportCreation && !$this->exists()) {
       $entry = $this->getCreationEntry();
       $ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$MASTER_LDAP);
       // Gérer une authentification externe
       if (isset($this->_itemConfiguration['bind_dn'])) {
-        $ldap->authenticate($this->_itemConfiguration['bind_dn'], $this->_itemConfiguration['bind_password']);
+        $ret = $ldap->authenticate($this->_itemConfiguration['bind_dn'], $this->_itemConfiguration['bind_password']);
       }
-      return $ldap->add($this->dn, $entry);
+      return $ret && $ldap->add($this->dn, $entry);
     }
-    // Modification de l'entrée si on est pas en création
-    $entry = $this->getEntry();
-    if (!empty($entry)) {
-      $ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$MASTER_LDAP);
-      // Gérer une authentification externe
-      if (isset($this->_itemConfiguration['bind_dn'])) {
-        $ldap->authenticate($this->_itemConfiguration['bind_dn'], $this->_itemConfiguration['bind_password']);
+    else {
+      // Modification de l'entrée si on est pas en création
+      $entry = $this->getEntry();
+      if (!empty($entry)) {
+        $ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$MASTER_LDAP);
+        // Gérer une authentification externe
+        if (isset($this->_itemConfiguration['bind_dn'])) {
+          $ret = $ldap->authenticate($this->_itemConfiguration['bind_dn'], $this->_itemConfiguration['bind_password']);
+        }
+        return $ret && $ldap->modify($this->dn, $entry);
       }
-      return $ldap->modify($this->dn, $entry);
     }
-    return false;
+    return $ret;
   }
   
   /**
@@ -435,6 +439,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     foreach ($this->data as $key => $value) {
       $entry[$key] = $value;
     }
+    // Ne pas mettre le dn
+    unset($entry['dn']);
     return $entry;
   }
 
@@ -485,7 +491,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     }
     // Authentification en direct ?
     if (isset($this->_itemConfiguration) && isset($this->_itemConfiguration['bind_dn'])) {
-
+      return Ldap::AuthentificationDirect($this->_itemConfiguration['bind_dn'], $this->_itemConfiguration['bind_password'], $this->server);
     }
     else if ($gssapi) {
       return Ldap::AuthentificationGSSAPI($this->server);
@@ -1172,20 +1178,21 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @param string $server Serveur ou chercher la configuration
    */
   private function readItemConfiguration($itemName, $server) {
-    if (isset(Config\Ldap::$SERVERS[$server])) {
-      if (isset(Config\Ldap::$SERVERS[$server][$itemName])) {
+    if (isset(Config\Ldap::$SERVERS[$server]) && isset(Config\Ldap::$SERVERS[$server]["items"])) {
+      $itemsConf = Config\Ldap::$SERVERS[$server]["items"];
+      if (isset($itemsConf[$itemName])) {
         // Si l'itemName est directement dans la configuration
-        $this->_itemConfiguration = Config\Ldap::$SERVERS[$server][$itemName];
-        $this->_supportCreation = isset(Config\Ldap::$SERVERS[$server][$itemName]['creation']) ? Config\Ldap::$SERVERS[$server][$itemName]['creation'] : false;
+        $this->_itemConfiguration = $itemsConf[$itemName];
+        $this->_supportCreation = isset($itemsConf[$itemName]['creation']) ? $itemsConf[$itemName]['creation'] : false;
       }
       else if (strpos($itemName, '.') !== false) {
         // Si c'est un itemName par partie on cherche chaque partie dans la conf
         $parts = explode('.', $itemName);
         foreach ($parts as $part) {
-          if (isset(Config\Ldap::$SERVERS[$server][$part])) {
+          if (isset($itemsConf[$part])) {
             // Si l'itemName est directement dans la configuration
-            $this->_itemConfiguration = Config\Ldap::$SERVERS[$server][$part];
-            $this->_supportCreation = isset(Config\Ldap::$SERVERS[$server][$part]['creation']) ? Config\Ldap::$SERVERS[$server][$part]['creation'] : false;
+            $this->_itemConfiguration = $itemsConf[$part];
+            $this->_supportCreation = isset($itemsConf[$part]['creation']) ? $itemsConf[$part]['creation'] : false;
             return;
           }
         }

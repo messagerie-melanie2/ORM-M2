@@ -1,3 +1,10 @@
+ORM M2 - 0.6.1.15
+------
+- 0006183: Plantage lors de la lecture d'un ICS mal formé
+- 0006204: Supporter une configuration dédiée pour des objets particuliers
+- 0006206: Permettre un load d'un Calendar/Addressbook/Taskslist sans user
+- Modification du Api/Gn/Group 
+
 ORM M2 - 0.6.1.14
 ------
  - 0006178: Quand un participant répond a une invitation, modifier automatiquement son statut

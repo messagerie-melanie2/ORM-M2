@@ -433,6 +433,7 @@ class MappingMce {
 	const booleanLdap = "booleanLdap";
 	const trueLdapValue = "trueLdapValue";
 	const falseLdapValue = "falseLdapValue";
+	const emptyLdapValue = "emptyLdapValue";
 	const timestamp = "timestamp";
 	const defaut = "defaut";
 	const sup = ">";

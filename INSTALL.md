@@ -49,8 +49,9 @@ Le fichier ldap.php va permettre de configurer un ou plusieurs serveurs ldap.
 Le fichier sql.php va permettre de configurer un ou plusieurs serveur PostgreSQL (seul serveur supporté par l'ORM M2 pour l'instant).  
 Le fichier config.php est plus général. En principe la seule modification à faire dans ce fichier est le nom de l'applications.
 
-Il est possible de créer un fichier env.php dans le répertoire /etc/LibM2 pour modifier le fonctionnement de la configuration. S'inspirer du fichier env.php interne à l'ORM pour plus d'informations : https://github.com/messagerie-melanie2/ORM-M2/blob/master/env.php
-
+Il est possible de créer un fichier env.php dans le répertoire /etc/LibM2 pour modifier le fonctionnement de la configuration. S'inspirer du fichier env.php interne à l'ORM pour plus d'informations : https://github.com/messagerie-melanie2/ORM-M2/blob/master/env.php<br>
+(ceci ne fonctionne pas si l'on souhaite modifier justement le path /etc/LibM2)<br>
+l'usage d'un .env définissant la const CONFIGURATION_PATH_LIBM2 est possible
 
 <h2>Production</h2>
 

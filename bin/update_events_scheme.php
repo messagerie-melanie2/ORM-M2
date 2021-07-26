@@ -2,15 +2,15 @@
 <?php
 /**
 * Ce script a pour but de mettre a jour les enregistrements d'événements sous l'ancien schema Horde vers le nouveau Mel
-* 
+*
 * L'ORM sait gérer les deux formats mais des optimisations de base de données nous oblige à abandonner l'ancien schéma
-* 
+*
 * Dans les mises à jour nécessaire au bon fonctionnement, voici la liste des champs à alimenter :
 *   - event_realuid l'uid réel d'un évenement permettant d'identifier les récurrences
 *   - organizer_calendar_id l'identifiant du calendrier de l'organisateur, pour permettre de faire les jointures avec les participants
-*   - 
-* 
-* 
+*   -
+*
+*
 */
 use LibMelanie\Sql;
 
@@ -21,7 +21,7 @@ if (!defined('CONFIGURATION_APP_LIBM2')) {
 
 include_once __DIR__.'/../includes/libm2.php';
 
-# DEFINITIONS INITIALES 
+# DEFINITIONS INITIALES
 // Recuperation du temps de depart
 $temps_debut = microtime_float();
 
@@ -40,16 +40,16 @@ $config = [
 
 	// Limite du nombre d'entrée à traiter, peut être null
 	'limit' => 1000000,
-	
+
 	// Configuration des traces
 	'trace' => false,
-	
+
 	// Configuration du mode bouchon : si true aucune donnees n'est inseree dans la base de donnees
 	'bouchon' => false,
-	
+
 	// Activer le mode debug pour logger dans un fichier
 	'debug' => true,
-	
+
 	// Chemin vers le fichier de debug
 	'debug_file' => '/var/log/update_events_scheme.log'
 ];
@@ -209,12 +209,12 @@ if ($config['trace']) {
 	echo "Nombre d'updates effectués : $updatesN\r\n";
 	echo "Nombre d'erreurs : $errorsN\r\n";
 	echo "--------------------------------------------------\r\n\r\n";
-	
+
 	echo "#### 1: ".(memory_get_usage()/1024/1024) . ' MiB'." ######\r\n";
 	echo "#### Cycles: ".gc_collect_cycles()." ######\r\n";
 	echo "#### 2: ".(memory_get_usage()/1024/1024) . ' MiB'." ######\r\n";
 	echo "#### Peak: ".(memory_get_peak_usage(true)/1024/1024) . ' MiB'." ######\r\n";
-	
+
 	echo "#####################################\r\n";
 	echo "DUREE EXECUTION: ".round($temps_fin - $temps_debut, 4)."\r\n";
 	echo "#####################################\r\n";

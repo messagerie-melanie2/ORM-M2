@@ -89,9 +89,8 @@ class Calendar extends CalendarMelanie {
         if ($this->isExist) {
             $this->initializeHasChanged();
         }
-        $this->isExist = true;
-        $this->isLoaded = true;
-        return $this->isExist;
+        return ($this->name);
+//        return $this->isExist;
     }
 
 

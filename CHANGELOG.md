@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.16
+------
+- Ajout de l'attribut double_authentification pour les Mel\User
+
 ORM M2 - 0.6.1.15
 ------
 - 0006183: Plantage lors de la lecture d'un ICS mal formé

@@ -339,10 +339,10 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     // Result
-    $ret = false;
+    $ret = true;
     // Est-ce que le dn est bien défini ?
     if (!isset($this->dn)) {
-      return $ret;
+      return false;
     }
     // MANTIS 0006136: Gérer la création d'un objet LDAP
     if ($this->_supportCreation && !$this->exists()) {

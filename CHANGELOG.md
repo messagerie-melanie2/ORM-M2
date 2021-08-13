@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.17
+------
+- Correctif double_authentification pour les Mel\User
+
 ORM M2 - 0.6.1.16
 ------
 - Ajout de l'attribut double_authentification pour les Mel\User

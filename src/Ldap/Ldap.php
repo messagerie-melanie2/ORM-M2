@@ -23,7 +23,7 @@ use LibMelanie\Exceptions;
 
 /**
  * Gestion de la connexion LDAP
- * 
+ *
  * @author PNE Messagerie/Apitech
  * @package Librairie Mélanie2
  * @subpackage LDAP
@@ -31,43 +31,43 @@ use LibMelanie\Exceptions;
 class Ldap {
   /**
    * Instances LDAP
-   * 
+   *
    * @var Ldap
    */
   private static $instances = [];
   /**
    * Connexion vers le serveur LDAP
-   * 
+   *
    * @var resource
    */
   private $connection = null;
   /**
    * Configuration de connexion
-   * 
+   *
    * @var array
    */
   private $config = [];
   /**
    * Utilisateur connecté
-   * 
+   *
    * @var string
    */
   private $username = null;
   /**
    * Stockage des données retournées en cache
-   * 
+   *
    * @var array
    */
   private $cache = [];
   /**
    * Permet de savoir si on est en connexion anonyme
-   * 
+   *
    * @var bool
    */
   private $isAnonymous = false;
   /**
    * Permet de savoir si on est en connexion authentifiée
-   * 
+   *
    * @var bool
    */
   private $isAuthenticate = false;
@@ -77,13 +77,13 @@ class Ldap {
    * @var string
    */
   private static $last_request;
-  
+
   /**
    * ************ SINGLETON **
    */
   /**
    * Récupèration de l'instance lié au serveur
-   * 
+   *
    * @param string $server
    *          Nom du serveur, l'instance sera liée à ce nom qui correspond à la configuration du serveur
    * @return Ldap
@@ -98,13 +98,13 @@ class Ldap {
     }
     return self::$instances[$server];
   }
-  
+
   /**
    * * Constructeurs *
    */
   /**
    * Constructeur par défaut
-   * 
+   *
    * @param string $config
    */
   public function __construct($config) {
@@ -115,20 +115,20 @@ class Ldap {
       $this->connect();
     }
   }
-  
+
   /**
    * Destructeur par défaut : appel à disconnect
    */
   function __destruct() {
     $this->disconnect();
   }
-  
+
   /**
    * **************** Authentification ***
    */
   /**
    * Authentification sur le serveur LDAP
-   * 
+   *
    * @param string $dn
    * @param string $password
    * @return boolean
@@ -149,7 +149,7 @@ class Ldap {
 
   /**
    * Authentification SASL sur le serveur LDAP
-   * 
+   *
    * @param string $binddn — [optional]
    * @param string $password — [optional]
    * @param string $sasl_mech — [optional]
@@ -173,10 +173,10 @@ class Ldap {
     $this->isAnonymous = false;
     return $this->isAuthenticate;
   }
-  
+
   /**
    * Se connecte en faisant un bind anonyme sur la connexion LDAP
-   * 
+   *
    * @param boolean $force
    *
    * @return boolean
@@ -200,13 +200,13 @@ class Ldap {
     $this->isAuthenticate = false;
     return $this->isAnonymous;
   }
-  
+
   /**
    * ************* Statics methods **
    */
   /**
    * Authentification sur le serveur LDAP associé
-   * 
+   *
    * @param string $username
    * @param string $password
    * @param string $server
@@ -267,7 +267,7 @@ class Ldap {
   /**
    * Authentification sur le serveur LDAP associé
    * Fait directement un bind avec le username et le password
-   * 
+   *
    * @param string $username
    * @param string $password
    * @param string $server
@@ -287,7 +287,7 @@ class Ldap {
 
   /**
    * Authentification en Kerberos/GSSAPI sur le serveur LDAP associé
-   * 
+   *
    * @param string $server
    *          [Optionnel] Server LDAP utilisé pour la requête
    * @return boolean
@@ -306,7 +306,7 @@ class Ldap {
   /**
    * Retourne les données sur l'utilisateur lues depuis le Ldap
    * Ne retourne qu'une seule entrée
-   * 
+   *
    * @param string $username
    *          [Optionnel] Identifiant de l'utilisateur recherché
    * @param string $filter
@@ -372,7 +372,7 @@ class Ldap {
    * Retourne les données sur l'utilisateur lues depuis le Ldap
    * en fonction de son DN
    * Ne retourne qu'une seule entrée
-   * 
+   *
    * @param string $user_dn
    *          DN de l'utilisateur recherché
    * @param array $ldap_attr
@@ -420,10 +420,10 @@ class Ldap {
     // Retourne les données, null si vide
     return $infos;
   }
-  
+
   /**
    * Retourne les boites partagées accessible pour un utilisateur depuis le LDAP
-   * 
+   *
    * @param string $username
    *          [Optionnel] Identifiant de l'utilisateur recherché
    * @param string $filter
@@ -490,7 +490,7 @@ class Ldap {
   }
   /**
    * Retourne les boites partagées accessible en Emission ou Gestionnaire pour un utilisateur depuis le LDAP
-   * 
+   *
    * @param string $username
    *          [Optionnel] Identifiant de l'utilisateur recherché
    * @param string $filter
@@ -557,7 +557,7 @@ class Ldap {
   }
   /**
    * Retourne les boites partagées dont l'utilisateur est gestionnaire
-   * 
+   *
    * @param string $username
    *          [Optionnel] Identifiant de l'utilisateur recherché
    * @param string $filter
@@ -578,7 +578,7 @@ class Ldap {
     // Filtre ldap
     if (!isset($filter)) {
       // Génération du filtre
-      $filter = $ldap->getConfig("get_user_bal_gestionnaire_filter"); 
+      $filter = $ldap->getConfig("get_user_bal_gestionnaire_filter");
     }
     if (isset($filter)) {
       if (isset($username)) {
@@ -625,7 +625,7 @@ class Ldap {
 
   /**
    * Retourne les groupes dont l'utilisateur est propriétaire
-   * 
+   *
    * @param string $username
    *          [Optionnel] Identifiant de l'utilisateur recherché
    * @param string $filter
@@ -646,7 +646,7 @@ class Ldap {
     // Filtre ldap
     if (!isset($filter)) {
       // Génération du filtre
-      $filter = $ldap->getConfig("get_user_groups_filter"); 
+      $filter = $ldap->getConfig("get_user_groups_filter");
     }
     if (isset($filter)) {
       if (isset($username)) {
@@ -686,9 +686,64 @@ class Ldap {
     return $infos;
   }
 
+    /**
+     * Retourne les groupes suivant le filter passé en parametre
+     *
+     * @param string $filter
+     *          Filtre ldap à utiliser pour la recherche
+     * @param array $ldap_attr
+     *          [Optionnel] Liste des attributs ldap à retourner
+     * @param int $sizelimit
+     *          Vous permet de limiter le nombre d'entrées à récupérer. Le fait de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.
+     * @param string $server
+     *          [Optionnel] Server LDAP utilisé pour la requête
+     * @return array
+     */
+    public static function GetGroups($filter, $ldap_attr = null, $sizelimit = 0, $server = null) {
+        M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetGroups($filter)");
+        if (!isset($server)) {
+            $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+        }
+        // Récupération de l'instance LDAP en fonction du serveur
+        $ldap = self::GetInstance($server);
+        // Filtre ldap
+        if (!isset($filter)) {
+            return [];
+        }
+
+        // Liste des attributes
+        if (!isset($ldap_attr)) {
+            $ldap_attr = $ldap->getConfig("get_groups_user_member_attributes");
+        }
+        else {
+            $ldap_attr = self::GetMaps($ldap_attr, $server);
+        }
+        // Récupération des données en cache
+        $keycache = "GetGroups:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr));
+        $infos = $ldap->getCache($keycache);
+        if (!isset($infos)) {
+            // Connexion anonymous pour lire les données
+            if ($ldap->anonymous()) {
+                // Lancement de la recherche
+                $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr,0, $sizelimit);
+                if ($sr && $ldap->count_entries($sr) > 0) {
+                    $infos = $ldap->get_entries($sr);
+                    $ldap->setCache($keycache, $infos);
+                } else {
+                    $ldap->deleteCache($keycache);
+                }
+            }
+            else {
+                throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+            }
+        }
+        // Retourne les données, null si vide
+        return $infos;
+    }
+
   /**
    * Retourne les groupes dont l'utilisateur est membres
-   * 
+   *
    * @param string $username
    *          [Optionnel] Identifiant de l'utilisateur recherché
    * @param string $filter
@@ -709,7 +764,7 @@ class Ldap {
     // Filtre ldap
     if (!isset($filter)) {
       // Génération du filtre
-      $filter = $ldap->getConfig("get_groups_user_member_filter"); 
+      $filter = $ldap->getConfig("get_groups_user_member_filter");
     }
     if (isset($filter)) {
       if (isset($username)) {
@@ -751,7 +806,7 @@ class Ldap {
 
   /**
    * Retourne les listes de diffusion dont l'utilisateur est membres (par son e-mail)
-   * 
+   *
    * @param string $email
    *          [Optionnel] E-mail de l'utilisateur recherché
    * @param string $filter
@@ -772,7 +827,7 @@ class Ldap {
     // Filtre ldap
     if (!isset($filter)) {
       // Génération du filtre
-      $filter = $ldap->getConfig("get_lists_user_member_filter"); 
+      $filter = $ldap->getConfig("get_lists_user_member_filter");
     }
     if (isset($filter)) {
       if (isset($username)) {
@@ -810,11 +865,11 @@ class Ldap {
     // Retourne les données, null si vide
     return $infos;
   }
-  
+
   /**
    * Retourne les informations sur un utilisateur depuis son adresse email depuis le LDAP
    * Ne retourne qu'une seule entrée
-   * 
+   *
    * @param string $email
    *          [Optionnel] Adresse email de l'utilisateur
    * @param string $filter
@@ -876,7 +931,7 @@ class Ldap {
   }
   /**
    * Retourne le nom du champ mappé configuré pour le serveur LDAP (par défault SEARCH)
-   * 
+   *
    * @param string $name
    * @param string $defaultValue
    *          [Optionnel] valeur par défaut si le mapping n'existe pas
@@ -890,13 +945,13 @@ class Ldap {
     }
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = self::GetInstance($server);
-    
+
     return $ldap->getMapping($name, $defaultValue);
   }
 
   /**
    * Retourne une liste d'attributs mappés a partir de la liste d'attributes_name
-   * 
+   *
    * @param array $attributes_name Liste des attributs a mapper
    */
   public static function GetMaps($attributes_name, $server = null) {
@@ -918,7 +973,7 @@ class Ldap {
     }
     return $mapAttrs;
   }
-  
+
   /**
    * Retourne la valeur (1ere si plusieurs) correspondant au nom en fonction des infos
    *
@@ -938,7 +993,7 @@ class Ldap {
     }
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = self::GetInstance($server);
-    
+
     $value = null;
     if (isset($infos[$ldap->getMapping($name, $defaultValue)])) {
       if (is_array($infos[$ldap->getMapping($name, $defaultValue)])
@@ -949,7 +1004,7 @@ class Ldap {
         $value = $infos[$ldap->getMapping($name, $defaultValue)];
       }
     }
-    
+
     return $value;
   }
   /**
@@ -969,17 +1024,17 @@ class Ldap {
     }
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = self::GetInstance($server);
-    
+
     $values = null;
     if (isset($infos[$ldap->getMapping($name, $defaultValue)])) {
       $values = $infos[$ldap->getMapping($name, $defaultValue)];
     }
-    
+
     return $values;
   }
   /**
    * Retourne si les valeurs existent dans le tableau pour le nom mappé
-   * 
+   *
    * @param array $infos
    * @param string $name
    * @param string $defaultValue
@@ -994,12 +1049,12 @@ class Ldap {
       }
       // Récupération de l'instance LDAP en fonction du serveur
       $ldap = self::GetInstance($server);
-      
+
       return isset($infos[$ldap->getMapping($name, $defaultValue)]);
   }
   /**
    * Retourne si la valeur existe dans le tableau du nom mappé
-   * 
+   *
    * @param array $infos
    * @param string $name
    * @param string $defaultValue
@@ -1016,7 +1071,7 @@ class Ldap {
       }
       // Récupération de l'instance LDAP en fonction du serveur
       $ldap = self::GetInstance($server);
-      
+
       return isset($infos[$ldap->getMapping($name, $defaultValue)][$valueNumber]);
   }
   /**
@@ -1027,13 +1082,13 @@ class Ldap {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getLastRequest()");
     return self::$last_request;
   }
-  
+
   /**
    * ************** Cache store *****
    */
   /**
    * Mise en cache des données
-   * 
+   *
    * @param string $key
    * @param \multitype $value
    */
@@ -1046,7 +1101,7 @@ class Ldap {
   }
   /**
    * Récupération des données depuis le cache
-   * 
+   *
    * @param string $key
    * @return \multitype:
    */
@@ -1059,7 +1114,7 @@ class Ldap {
   }
   /**
    * Suppression de la donnée en cache
-   * 
+   *
    * @param string $key
    */
   public function deleteCache($key) {
@@ -1073,7 +1128,7 @@ class Ldap {
     // Delete les données du cache
     $this->cache = [];
   }
-  
+
   /**
    * **************** Generic LDAP Methods ***
    */
@@ -1092,7 +1147,7 @@ class Ldap {
   }
   /**
    * Deconnection du serveur LDAP
-   * 
+   *
    * @return boolean
    */
   public function disconnect() {
@@ -1104,10 +1159,10 @@ class Ldap {
   }
   /**
    * Recherche dans le LDAP
-   * 
+   *
    * Effectue une recherche avec le filtre filter dans le dossier base_dn avec le paramétrage LDAP_SCOPE_SUBTREE.
    * C'est l'équivalent d'une recherche dans le dossier.
-   * 
+   *
    * @param string $base_dn
    *          Base DN de recherche
    * @param string $filter
@@ -1128,7 +1183,7 @@ class Ldap {
   }
   /**
    * Recherche dans le LDAP avec les Alias
-   * 
+   *
    * Effectue une recherche avec le filtre filter dans le dossier base_dn avec le paramétrage LDAP_SCOPE_SUBTREE.
    * C'est l'équivalent d'une recherche dans le dossier.
    *
@@ -1143,12 +1198,12 @@ class Ldap {
    * @param int $sizelimit
    *          Vous permet de limiter le nombre d'entrées à récupérer. Le fait de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.
    * @param int $deref
-   *          Spécifie le nombre d'alias qui doivent être gérés pendant la recherche. Il peut être un parmi les suivants :    
+   *          Spécifie le nombre d'alias qui doivent être gérés pendant la recherche. Il peut être un parmi les suivants :
    *             - LDAP_DEREF_NEVER - les alias ne sont jamais déréférencés.
    *             - LDAP_DEREF_SEARCHING - les alias doivent être déréférencés pendant la recherche mais pas lors de la localisation de l'objet de base de la recherche.
    *             - LDAP_DEREF_FINDING - les alias doivent être déréférencés lors de la localisation de l'objet de base mais pas durant la recherche.
    *             - LDAP_DEREF_ALWAYS - (défaut) les alias doivent toujours être déréférencés.
-   *               
+   *
    * @return resource a search result identifier or false on error.
    */
   public function search_alias($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0, $deref = LDAP_DEREF_ALWAYS) {
@@ -1159,10 +1214,10 @@ class Ldap {
   }
   /**
    * Recherche dans le LDAP
-   * 
+   *
    * Effectue une recherche avec le filtre filter dans le dossier base_dn avec la configuration LDAP_SCOPE_BASE.
    * C'est équivalent à lire une entrée dans un dossier.
-   * 
+   *
    * @param string $base_dn
    *          Base DN de recherche
    * @param string $filter
@@ -1183,7 +1238,7 @@ class Ldap {
   }
   /**
    * Recherche dans le LDAP avec les Alias
-   * 
+   *
    * Effectue une recherche avec le filtre filter dans le dossier base_dn avec la configuration LDAP_SCOPE_BASE.
    * C'est équivalent à lire une entrée dans un dossier.
    *
@@ -1198,7 +1253,7 @@ class Ldap {
    * @param int $sizelimit
    *          Vous permet de limiter le nombre d'entrées à récupérer. Le fait de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.
    * @param int $deref
-   *          Spécifie le nombre d'alias qui doivent être gérés pendant la recherche. Il peut être un parmi les suivants :    
+   *          Spécifie le nombre d'alias qui doivent être gérés pendant la recherche. Il peut être un parmi les suivants :
    *             - LDAP_DEREF_NEVER - les alias ne sont jamais déréférencés.
    *             - LDAP_DEREF_SEARCHING - les alias doivent être déréférencés pendant la recherche mais pas lors de la localisation de l'objet de base de la recherche.
    *             - LDAP_DEREF_FINDING - les alias doivent être déréférencés lors de la localisation de l'objet de base mais pas durant la recherche.
@@ -1217,7 +1272,7 @@ class Ldap {
    * Effectue une recherche avec le filtre filter dans le dossier base_dn avec l'option LDAP_SCOPE_ONELEVEL.
    * LDAP_SCOPE_ONELEVEL signifie que la recherche ne peut retourner des entrées que dans le niveau qui est immédiatement sous le niveau base_dn
    * (c'est l'équivalent de la commande ls, pour obtenir la liste des fichiers et dossiers du dossier courant).
-   * 
+   *
    * @param string $base_dn
    *          Base DN de recherche
    * @param string $filter
@@ -1238,7 +1293,7 @@ class Ldap {
   }
   /**
    * Recherche dans le LDAP avec les Alias
-   * 
+   *
    * Effectue une recherche avec le filtre filter dans le dossier base_dn avec l'option LDAP_SCOPE_ONELEVEL.
    * LDAP_SCOPE_ONELEVEL signifie que la recherche ne peut retourner des entrées que dans le niveau qui est immédiatement sous le niveau base_dn
    * (c'est l'équivalent de la commande ls, pour obtenir la liste des fichiers et dossiers du dossier courant).
@@ -1254,12 +1309,12 @@ class Ldap {
    * @param int $sizelimit
    *          Vous permet de limiter le nombre d'entrées à récupérer. Le fait de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.
    * @param int $deref
-   *          Spécifie le nombre d'alias qui doivent être gérés pendant la recherche. Il peut être un parmi les suivants :    
+   *          Spécifie le nombre d'alias qui doivent être gérés pendant la recherche. Il peut être un parmi les suivants :
    *             - LDAP_DEREF_NEVER - les alias ne sont jamais déréférencés.
    *             - LDAP_DEREF_SEARCHING - les alias doivent être déréférencés pendant la recherche mais pas lors de la localisation de l'objet de base de la recherche.
    *             - LDAP_DEREF_FINDING - les alias doivent être déréférencés lors de la localisation de l'objet de base mais pas durant la recherche.
    *             - LDAP_DEREF_ALWAYS - (défaut) les alias doivent toujours être déréférencés.
-   * 
+   *
    * @return resource a search result identifier or false on error.
    */
   public function list_alias($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0, $deref = LDAP_DEREF_ALWAYS) {
@@ -1270,7 +1325,7 @@ class Ldap {
   }
   /**
    * Retourne les entrées trouvées via le Ldap search
-   * 
+   *
    * @param resource $search
    *          Resource retournée par le search
    * @return array a complete result information in a multi-dimensional array on success and false on error.
@@ -1280,7 +1335,7 @@ class Ldap {
   }
   /**
    * Retourne le nombre d'entrées trouvé via le Ldap search
-   * 
+   *
    * @param resource $search
    *          Resource retournée par le search
    * @return int number of entries in the result or false on error.
@@ -1290,7 +1345,7 @@ class Ldap {
   }
   /**
    * Retourne la premiere entrée trouvée
-   * 
+   *
    * @param resource $search
    *          Resource retournée par le search
    * @return resource the result entry identifier for the first entry on success and false on error.
@@ -1303,7 +1358,7 @@ class Ldap {
   }
   /**
    * Retourne les entrées suivantes de la recherche
-   * 
+   *
    * @param resource $search
    *          Resource retournée par le search
    * @return resource entry identifier for the next entry in the result whose entries are being read starting with ldap_first_entry. If there are no more entries in the result then it returns false.
@@ -1316,7 +1371,7 @@ class Ldap {
   }
   /**
    * Retourne le dn associé à une entrée de l'annuaire
-   * 
+   *
    * @param resource $entry
    *          l'entrée dans laquelle on récupère les infos
    * @return string the DN of the result entry and false on error.
@@ -1331,7 +1386,7 @@ class Ldap {
    * Ajoute l'attribut entry à l'entrée dn.
    * Elle effectue la modification au niveau attribut, par opposition au niveau objet.
    * Les additions au niveau objet sont réalisées par ldap_add().
-   * 
+   *
    * @param string $dn
    *          Le nom DN de l'entrée LDAP.
    * @param array $entry
@@ -1348,7 +1403,7 @@ class Ldap {
    * Remplace l'attribut entry de l'entrée dn.
    * Elle effectue le remplacement au niveau attribut, par opposition au niveau objet.
    * Les additions au niveau objet sont réalisées par ldap_modify().
-   * 
+   *
    * @param string $dn
    *          Le nom DN de l'entrée LDAP.
    * @param array $entry
@@ -1365,7 +1420,7 @@ class Ldap {
    * Efface l'attribut entry de l'entrée dn.
    * Elle effectue la modification au niveau attribut, par opposition au niveau objet.
    * Les additions au niveau objet sont réalisées par ldap_delete().
-   * 
+   *
    * @param string $dn
    *          Le nom DN de l'entrée LDAP.
    * @param array $entry
@@ -1380,7 +1435,7 @@ class Ldap {
   }
   /**
    * Ajoute une entrée dans un dossier LDAP.
-   * 
+   *
    * @param string $dn
    *          Le nom DN de l'entrée LDAP.
    * @param array $entry
@@ -1396,7 +1451,7 @@ class Ldap {
   /**
    * Modifie l'entrée identifiée par dn, avec les valeurs fournies dans entry.
    * La structure de entry est la même que détaillée dans ldap_add().
-   * 
+   *
    * @param string $dn
    *          Le nom DN de l'entrée LDAP.
    * @param array $entry
@@ -1411,7 +1466,7 @@ class Ldap {
   }
   /**
    * Efface une entrée spécifique d'un dossier LDAP.
-   * 
+   *
    * @param string $dn
    *          Le nom DN de l'entrée LDAP.
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
@@ -1424,7 +1479,7 @@ class Ldap {
   }
   /**
    * Renomme une entrée pour déplacer l'objet dans l'annuaire
-   * 
+   *
    * @param string $dn
    *          Le nom DN de l'entrée LDAP.
    * @param string $newrdn
@@ -1443,20 +1498,20 @@ class Ldap {
   }
   /**
    * Retourne la précédente erreur pour la commande LDAP
-   * 
+   *
    * @return string Errno: Errmsg
    */
   public function getError() {
     $errno = ldap_errno($this->connection);
     return "$errno: " . ldap_err2str($errno);
   }
-  
+
   /**
    * **************** CONFIGURATION ***
    */
   /**
    * Retourne la configuration associée
-   * 
+   *
    * @param string $name
    *          Nom de la propriété à retourner
    * @return string|array Retourne la valeur
@@ -1469,7 +1524,7 @@ class Ldap {
   }
   /**
    * Modifie ou ajoute la configuration associée
-   * 
+   *
    * @param string $name
    *          Nom de la propriété à modifier
    * @param string|array $value
@@ -1480,7 +1535,7 @@ class Ldap {
   }
   /**
    * Retourne si la configuration associée existe
-   * 
+   *
    * @param string $name
    *          Nom de la propriété à retourner
    * @return bool True si la valeur existe, false sinon
@@ -1490,7 +1545,7 @@ class Ldap {
   }
   /**
    * Retourne si un mapping du champ existe pour le serveur LDAP
-   * 
+   *
    * @param string $name
    * @return boolean
    */
@@ -1499,7 +1554,7 @@ class Ldap {
   }
   /**
    * Retourne le nom du champ mappé configuré pour le serveur LDAP
-   * 
+   *
    * @param string $name
    * @param string $defaultValue
    * @return NULL|string Nom du champ mappé
@@ -1517,7 +1572,7 @@ class Ldap {
   }
   /**
    * Retourne les champs mappés
-   * 
+   *
    * @param array $attributes
    * @return NULL|array
    */

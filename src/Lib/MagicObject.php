@@ -298,18 +298,22 @@ abstract class MagicObject implements Serializable {
                     if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap])) {
                       $_prefix = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap];
                       $_found = false;
-                      $_value = $this->data[$lname];
+                      $_value = isset($this->data[$lname]) ? $this->data[$lname] : [];
                       foreach ($_value as $k => $val) {
                         if (strpos($val, $_prefix) === 0) {
                           // Modification de la valeur prefixee
                           $_found = true;
-                          $_value[$k] = $_prefix . $val;
+                          $_value[$k] = $_prefix . $value;
                           break;
                         }
                       }
                       if (!$_found) {
-                        // Ajoute la nouvelle valeur prefixee
-                        $_value[] = $_prefix . $val;
+                        // Gérer le cas ou la valeur n'existe pas mais n'a pas besoin d'être ajoutée
+                        if (!isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::emptyLdapValue])
+                            || MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::emptyLdapValue] != $value) {
+                          // Ajoute la nouvelle valeur prefixee
+                          $_value[] = $_prefix . $value;
+                        }
                       }
                       $value = $_value;
                     }
@@ -337,7 +341,7 @@ abstract class MagicObject implements Serializable {
                 // BOOLEAN LDAP
                 case MappingMce::booleanLdap:
                   if (is_array($value)) {
-                    $value = $value[0] ?: null;
+                    $value = isset($value[0]) ? $value[0] : null;
                   }
                   if ($value) {
                     $value = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue] ?: '1';
@@ -345,7 +349,33 @@ abstract class MagicObject implements Serializable {
                   else {
                     $value = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::falseLdapValue] ?: '0';
                   }
-                  $value = [$value];
+                  // Gestion d'un prefix ?
+                  if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap])) {
+                    $_prefix = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap];
+                    $_found = false;
+                    $_value = isset($this->data[$lname]) ? $this->data[$lname] : [];
+                    foreach ($_value as $k => $val) {
+                      if (strpos($val, $_prefix) === 0) {
+                        // Modification de la valeur prefixee
+                        $_found = true;
+                        $_value[$k] = $_prefix . $value;
+                        break;
+                      }
+                    }
+                    if (!$_found) {
+                      // Gérer le cas ou la valeur n'existe pas mais n'a pas besoin d'être ajoutée
+                      if (!isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::emptyLdapValue])
+                          || MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::emptyLdapValue] != $value) {
+                        // Ajoute la nouvelle valeur prefixee
+                        $_value[] = $_prefix . $value;
+                      }
+                    }
+                    $value = $_value;
+                  }
+                  else {
+                    
+                    $value = [$value];
+                  }
                   break;
                 // STRING
                 case MappingMce::string:
@@ -471,14 +501,35 @@ abstract class MagicObject implements Serializable {
             break;
           // BOOLEAN LDAP
           case MappingMce::booleanLdap:
-		        if (is_array($value)) {
+            // Gestion d'un prefix
+            if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap])) {
+              $_prefix = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap];
+              $_found = false;
+              foreach ($value as $val) {
+                if (strpos($val, $_prefix) === 0) {
+                  $value = trim(str_replace($_prefix, '', $val));
+                  $_found = true;
+                  break;
+                }
+              }
+              // Valeur par défaut
+              if (!$_found) {
+                if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut])) {
+                  $value = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut];
+                }
+                else {
+                  $value = false;
+                }
+              }
+            }
+            if (is_array($value)) {
               $value = $value[0] ?: null;              
-		        }
-		        if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue])) {
+            }
+            if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue])) {
               $value = $value === MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue];
             }
             else {
-              $value = $value == '1' ? true : false;
+              $value = $value == '1' || $value == 'oui' ? true : false;
             }
 		        break;
 		    }

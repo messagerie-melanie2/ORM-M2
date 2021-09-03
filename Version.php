@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace LibMelanie;
+
 /**
  * Cette classe permet d'avoir le numéro de version de l'ORM
  *
@@ -31,16 +32,16 @@ class Version {
     /**
      * Numéro de version
      */
-    const VERSION = '0.6.1.14';
+    const VERSION = '0.6.1.17';
 
     /**
      * Numéro de version normalisé
      */
-    const NORMALIZED_VERSION = '0.6.1.14';
+    const NORMALIZED_VERSION = '0.6.1.17';
 
     /**
      * Build
      */
-    const BUILD = '20210623170652';
+    const BUILD = '20210813113252';
 
 }

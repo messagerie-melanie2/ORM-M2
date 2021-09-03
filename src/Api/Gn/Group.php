@@ -29,7 +29,7 @@ use LibMelanie\Config\Ldap as LdapConfig;
  * Classe groupe LDAP pour GN
  *
  * @author Groupe Messagerie/MTE - Apitech
- * @author mohamed-ali.ben_ouaness@open-groupe.com
+ * @author Groupe Messagerie/GN
  * @package LibMCE
  * @subpackage API/GN
  * @api
@@ -48,11 +48,16 @@ use LibMelanie\Config\Ldap as LdapConfig;
 class Group extends Defaut\Group {
 
     const MAPPING = [
-        "cn" => [MappingMce::name=> "cn", MappingMce::type => MappingMce::stringLdap],
         "description" => [MappingMce::name=> "description", MappingMce::type => MappingMce::stringLdap],
-        "gidnumber" => [MappingMce::name=> "gidnumber", MappingMce::type => MappingMce::stringLdap],
-        "codeunite" => [MappingMce::name=> "codeunite", MappingMce::type => MappingMce::stringLdap]
+        "gidnumber" => [MappingMce::name=> "gidnumber", MappingMce::type => MappingMce::stringLdap]
     ];
+
+    /**
+     * Attributs par défauts pour la méthode load()
+     *
+     * @ignore
+     */
+    const LOAD_ATTRIBUTES = ['dn', 'fullname', 'email', 'owners', 'description', 'gidnumber'];
 
     /**
      * TODO le cn devrait être récupérable directement
@@ -61,7 +66,7 @@ class Group extends Defaut\Group {
      * @throws \Safe\Exceptions\PcreException
      */
     public function getMapCn() {
-        if(\Safe\preg_match("#(cn=)(.*)(,dmd*)#",$this->dn, $matches)) {
+        if (\Safe\preg_match("#(cn=)(.*)(,dmd*)#",$this->dn, $matches)) {
             return $matches[2];
         } else {
             return null;

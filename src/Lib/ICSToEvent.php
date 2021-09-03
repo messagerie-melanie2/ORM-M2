@@ -88,7 +88,8 @@ class ICSToEvent {
    * @return Event
    */
   public static function Convert($ics, $event, $calendar = null, $user = null, $useattachments = true) {
-    $vcalendar = VObject\Reader::read($ics);
+    // Ajouter les options FORGIVING et IGNORE_INVALID_LINES au parser ICS
+    $vcalendar = VObject\Reader::read($ics, VObject\Reader::OPTION_FORGIVING + VObject\Reader::OPTION_IGNORE_INVALID_LINES);
     $exceptions = [];
     // 0005907: [ICS] Prendre en compte le X-WR-TIMEZONE
     $x_wr_timezone = $vcalendar->{ICS::X_WR_TIMEZONE};

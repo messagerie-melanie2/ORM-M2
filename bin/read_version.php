@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use LibMelanie\Version;
-echo Version::VERSION . '_' . Version::BUILD;
+include __DIR__ . '/../Version.php';
+
+echo \LibMelanie\Version::VERSION . '_' . \LibMelanie\Version::BUILD;
 exit;

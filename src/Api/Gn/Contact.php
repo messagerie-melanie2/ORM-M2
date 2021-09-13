@@ -1,12 +1,12 @@
 <?php
 /**
  * Ce fichier est développé pour la gestion de la lib MCE
- * 
+ *
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * 
+ *
  * ORM Mél Copyright © 2021 Groupe Messagerie/MTE
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,20 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace LibMelanie\Api\Gn;
 
 use LibMelanie\Api\Defaut;
+use LibMelanie\Config\MappingMce;
+use LibMelanie\Exceptions\UndefinedMappingException;
+use LibMelanie\Log\M2Log;
+use LibMelanie\Sql;
 
 /**
  * Classe contact pour GN,
  * implémente les API de la librairie pour aller chercher les données dans la base de données
  * Certains champs sont mappés directement ou passe par des classes externes
- * 
+ *
  * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/GN
  * @api
- * 
+ *
  * @property string $id Identifiant unique du contact
  * @property string $addressbook Identifiant de la liste de contacts associée
  * @property string $uid UID du contact
@@ -89,4 +94,75 @@ use LibMelanie\Api\Defaut;
  * @method bool save() Sauvegarde le contact et l'historique dans la base de données
  * @method bool delete() Supprime le contact et met à jour l'historique dans la base de données
  */
-class Contact extends Defaut\Contact {}
+class Contact extends Defaut\Contact
+{
+    /**
+     * Nom de la table SQL liée à l'objet
+     * @var string $tableName
+     */
+    public string $tableName;
+    private string $objectType;
+
+    /**
+     * @throws UndefinedMappingException
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->objectType = 'ContactMelanie';
+
+        // Intialisation du nom de la table
+        if (!isset(MappingMce::$Table_Name[$this->objectType])) {
+            throw new UndefinedMappingException($this->objectType . ":TableName");
+        }
+        $this->tableName = MappingMce::$Table_Name[$this->objectType];
+    }
+
+    /**
+     * Charge l'objet
+     */
+    public function loadContactById(): bool
+    {
+        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "\\" . $this->objectType . "->load()");
+        $primaryKeys = ['id'];
+        // Paramètres de la requête
+        $params = [];
+        $whereClause = "";
+        // Test si les clés primaires sont bien instanciées et les ajoute en paramètres
+        foreach ($primaryKeys as $key) {
+            if (!isset($this->$key)) return false;
+            // Récupèration des données de mapping
+            if (isset(MappingMce::$Data_Mapping[$this->objectType])
+                && isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+                $mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
+            } else {
+                $mapKey = $key;
+            }
+            $params[$mapKey] = $this->$key;
+            if ($whereClause != "") $whereClause .= " AND ";
+            $whereClause .= "$mapKey = :$mapKey";
+        }
+
+        // Test si l'objet existe, pas besoin de load
+        if ($this->exists()) {
+            return true;
+        }
+
+        // Chargement de la requête
+        $query = Sql\SqlObjectRequests::getObject;
+
+        // Liste des champs
+        $query = str_replace("{fields_list}", "*", $query);
+        // Nom de la table
+        $query = str_replace("{table_name}", $this->tableName, $query);
+        // Clause where
+        $query = str_replace("{where_clause}", ' WHERE ' . $whereClause, $query);
+
+        // Récupération
+        $existe = Sql\Sql::GetInstance()->executeQueryToObject($query, $params, $this);
+
+        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->load() isExist: " . $existe);
+
+        return $existe;
+    }
+}

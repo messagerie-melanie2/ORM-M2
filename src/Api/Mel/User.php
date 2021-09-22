@@ -255,7 +255,6 @@ class User extends Defaut\User {
     "synchronisation_profile"       => 'mineqmelaccessynchrou',       // Retourne le profil de synchronisation
     "cerbere"                  => [MappingMce::name => 'info', MappingMce::prefixLdap => 'AUTH.Cerbere:', MappingMce::type => MappingMce::stringLdap],
     "double_authentification"  => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => 'DoubleAuth.Obligatoire: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'oui', MappingMce::falseLdapValue => 'non'],
-    "reponse"                  => [MappingMce::name => 'info', MappingMce::prefixLdap => 'REPONSE:', MappingMce::type => MappingMce::stringLdap],
   ];
 
   /**

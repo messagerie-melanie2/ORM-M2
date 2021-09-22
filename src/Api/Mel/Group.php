@@ -88,6 +88,7 @@ class Group extends Defaut\Group {
         "unique_identifier"       => 'uniqueidentifier',              // Identifier unique pour le groupe
         "mdrive"                  => [MappingMce::name => 'info', MappingMce::prefixLdap => 'MDRIVE: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'oui', MappingMce::falseLdapValue => 'non', MappingMce::emptyLdapValue => 'non'],
         "gestion"                 => [MappingMce::name => 'info', MappingMce::prefixLdap => 'GESTION: ', MappingMce::type => MappingMce::stringLdap],
+        "reponse"                 => [MappingMce::name => 'info', MappingMce::prefixLdap => 'REPONSE:', MappingMce::type => MappingMce::stringLdap],
     ];
 
     /**

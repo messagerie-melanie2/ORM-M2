@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.19
+------
+- 0006229: [User Mél] Gérer le info=REPONSE:<adresse de reply-to> pour les listes
+
 ORM M2 - 0.6.1.18
 ------
 - 0006225: [En attente] Un participant décliné ne doit pas avoir l'événement recréé

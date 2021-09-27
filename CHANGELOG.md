@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.21
+------
+- Mise à jour de l'API MI pour les shares et vacation
+
 ORM M2 - 0.6.1.20
 ------
 - Fix 0006229: [User Mél] Gérer le info=REPONSE:<adresse de reply-to> pour les listes

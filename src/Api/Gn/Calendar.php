@@ -40,7 +40,6 @@ use LibMelanie\Sql\Sql;
  * @property string $ctag CTag du calendrier
  * @property int $synctoken SyncToken du calendrier
  * @property-read string $caldavurl URL CalDAV pour le calendrier
- * @method bool load() Charge les données du calendrier depuis la base de données
  * @method bool exists() Non implémentée
  * @method bool save() Non implémentée
  * @method bool delete() Non implémentée

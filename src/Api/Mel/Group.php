@@ -1,12 +1,12 @@
 <?php
 /**
  * Ce fichier est développé pour la gestion de la lib MCE
- * 
+ *
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * 
+ *
  * ORM Mél Copyright © 2021 Groupe Messagerie/MTE
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -26,13 +26,13 @@ use LibMelanie\Config\MappingMce;
 
 /**
  * Classe groupe LDAP pour Mel
- * 
+ *
  * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/Mel
  * @api
- * 
- * @property string $dn DN du groupe l'annuaire 
+ *
+ * @property string $dn DN du groupe l'annuaire
  * @property string $fullname Nom complet du groupe LDAP
  * @property string $type Type de groupe (voir Mce\Users\Type::*)
  * @property string $email Adresse email principale de l'utilisateur
@@ -46,20 +46,20 @@ use LibMelanie\Config\MappingMce;
 class Group extends Defaut\Group {
     /**
 	 * Configuration du délimiteur pour le server host
-	 * 
+	 *
 	 * @var string
 	 */
     const SERVER_HOST_DELIMITER = '%';
 
     /**
      * Filtre pour la méthode load()
-     * 
+     *
      * @ignore
      */
     const LOAD_FILTER = null;
     /**
      * Attributs par défauts pour la méthode load()
-     * 
+     *
      * @ignore
      */
     const LOAD_ATTRIBUTES = ['dn', 'fullname', 'email', 'members'];
@@ -88,11 +88,12 @@ class Group extends Defaut\Group {
         "unique_identifier"       => 'uniqueidentifier',              // Identifier unique pour le groupe
         "mdrive"                  => [MappingMce::name => 'info', MappingMce::prefixLdap => 'MDRIVE: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'oui', MappingMce::falseLdapValue => 'non', MappingMce::emptyLdapValue => 'non'],
         "gestion"                 => [MappingMce::name => 'info', MappingMce::prefixLdap => 'GESTION: ', MappingMce::type => MappingMce::stringLdap],
+        "reponse"                 => [MappingMce::name => 'info', MappingMce::prefixLdap => 'REPONSE:', MappingMce::type => MappingMce::stringLdap],
     ];
 
     /**
      * Récupération du champ server_host
-     * 
+     *
      * @return mixed|NULL Valeur du serveur host, null si non trouvé
      */
     protected function getMapServer_host() {
@@ -108,7 +109,7 @@ class Group extends Defaut\Group {
 
     /**
      * Récupération du champ server_user
-     * 
+     *
      * @return mixed|NULL Valeur du serveur user, null si non trouvé
      */
     protected function getMapServer_user() {
@@ -124,18 +125,18 @@ class Group extends Defaut\Group {
 
     /**
      * Mapping is_dynamic field
-     * 
+     *
      * @return boolean Est-ce qu'il s'agit d'une liste dynamique ?
      */
     protected function getMapIs_dynamic() {
-        return is_array($this->objectmelanie->objectclass) 
+        return is_array($this->objectmelanie->objectclass)
                 && in_array('labeledURIObject', $this->objectmelanie->objectclass);
     }
     /**
      * Mapping is_dynamic field
-     * 
+     *
      * @param boolean $is_dynamic Est-ce qu'il s'agit d'une liste dynamique ?
-     * 
+     *
      * @return boolean false non supporté
      */
     protected function setMapIs_dynamic($is_dynamic) {

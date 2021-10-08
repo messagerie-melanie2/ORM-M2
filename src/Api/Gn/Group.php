@@ -58,7 +58,7 @@ class Group extends Defaut\Group {
      * @throws \Safe\Exceptions\PcreException
      */
     public function getMapCn() {
-        if(\Safe\preg_match("#(cn=)(.*)(,dmd*)#",$this->dn, $matches)) {
+        if (\Safe\preg_match("#(cn=)(.*)(,dmd*)#",$this->dn, $matches)) {
             return $matches[2];
         } else {
             return null;

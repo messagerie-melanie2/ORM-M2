@@ -24,6 +24,7 @@ use LibMelanie\Api\Mce;
 use LibMelanie\Api\Mi\Users\Outofoffice;
 use LibMelanie\Api\Mi\Users\Share;
 use LibMelanie\Log\M2Log;
+use LibMelanie\Config\MappingMce;
 
 /**
  * Classe utilisateur pour MI
@@ -66,9 +67,97 @@ use LibMelanie\Log\M2Log;
  */
 class User extends Mce\User {
   /**
+   * Configuration du mapping qui surcharge la conf
+   */
+  const MAPPING = [
+    "dn"                      => 'dn',                            // DN de l'utilisateur
+    "uid"                     => 'uid',                          // Identifiant de l'utilisateur
+    "fullname"                => 'cn',                            // Nom complet de l'utilisateur
+    "name"                    => 'cn',                            // Nom court de l'utilisateur
+    "email"                   => 'mail',                          // Adresse e-mail principale de l'utilisateur en reception
+    "email_list"              => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
+    "email_send"              => 'mail',                          // Adresse e-mail principale de l'utilisateur en emission
+    "email_send_list"         => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
+    "shares"                  => [MappingMce::name => 'mcedelegation', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
+    "server_routage"          => [MappingMce::name => 'mailhost', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
+    "type"                    => 'mcetypecompte',                 // Type d'entrée (boite individuelle, partagée, ressource, ...)
+    "street"                  => 'street',                        // Rue
+    "postalcode"              => 'postalcode',                    // Code postal
+    "locality"                => 'l',                             // Ville
+    "title"                   => 'title',                         // Titre
+    "outofoffices"            => [MappingMce::name => 'mcevacation', MappingMce::type => MappingMce::arrayLdap], // Affichage du message d'absence de l'utilisateur
+  ];
+
+  /**
    * ***************************************************
    * DATA MAPPING
    */
+  /**
+   * Mapping shares field
+   *
+   * @param Share[] $shares
+   */
+  protected function setMapShares($shares) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapShares()");
+    if (!isset($this->objectmelanie)) {
+      throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
+    }
+    $this->_shares = $shares;
+    $_shares = [];
+    foreach ($shares as $share) {
+      $right = '';
+      switch ($share->type) {
+        case Share::TYPE_ADMIN:
+          $right = 'G';
+          break;
+        case Share::TYPE_SEND:
+          $right = 'C';
+          break;
+        case Share::TYPE_WRITE:
+          $right = 'E';
+          break;
+        case Share::TYPE_READ:
+          $right = 'L';
+          break;
+      }
+      $_shares[] = $share->user . ':' . $right;
+    }
+    $this->objectmelanie->shares = $_shares;
+  }
+
+  /**
+   * Mapping shares field
+   * 
+   * @return Share[] Liste des partages positionnés sur cette boite
+   */
+  protected function getMapShares() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapShares()");
+    if (!isset($this->_shares)) {
+      $_shares = $this->objectmelanie->shares;
+      $this->_shares = [];
+      foreach ($_shares as $_share) {
+        $share = new Share();
+        list($share->user, $right) = \explode(':', $_share, 2);
+        switch (\strtoupper($right)) {
+          case 'G':
+            $share->type = Share::TYPE_ADMIN;
+            break;
+          case 'C':
+            $share->type = Share::TYPE_SEND;
+            break;
+          case 'E':
+            $share->type = Share::TYPE_WRITE;
+            break;
+          case 'L':
+            $share->type = Share::TYPE_READ;
+            break;
+        }
+        $this->_shares[$share->user] = $share;
+      }
+    }
+    return $this->_shares;
+  }
+
   /**
    * Récupération du champ out of offices
    * 

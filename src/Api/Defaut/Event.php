@@ -996,6 +996,22 @@ class Event extends MceObject {
       }
     }
     else {
+      // MANTIS 0006225: [En attente] Un participant décliné ne doit pas avoir l'événement recréé
+      if ($attendees[$attendee_key]->response == Attendee::RESPONSE_DECLINED) {
+        // Rechercher si un champ majeur (date, lieu) a changé
+        $saveAndNeedAction = false;
+        foreach ($copyFieldsList as $field) {
+          if (in_array($field, $needActionFieldsList) 
+              && $event->getObjectMelanie()->fieldHasChanged($field)) {
+            M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->copyEventNeedAction() [" . $event->realuid . "] DECLINED needActionField: " . $field);
+            $saveAndNeedAction = true;
+          }
+        }
+        // Si aucun champ majeur n'a changé on n'enregistre pas l'événement
+        if (!$saveAndNeedAction) {
+          return false;
+        }
+      }
       // Si l'événement n'existe pas, on le génére a partir de la liste des champs de l'événement
       if ($isException
           && $event->location == $event->getEventParent()->location) {

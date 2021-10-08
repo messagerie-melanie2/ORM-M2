@@ -29,23 +29,12 @@ use LibMelanie\Sql\Sql;
  * Classe calendrier pour GN
  *
  * @author Groupe Messagerie/MTE - Apitech
+ * @author Groupe Messagerie/GN - OpenGroupe
+ * @author patrick.bassoukissa_sounda@open-groupe.com
  * @package LibMCE
  * @subpackage API/GN
  * @api
  *
- * @property string $id Identifiant unique du calendrier
- * @property string $owner Identifiant du propriétaire du calendrier
- * @property string $name Nom complet du calendrier
- * @property int $perm Permission associée, utiliser asRight()
- * @property string $ctag CTag du calendrier
- * @property int $synctoken SyncToken du calendrier
- * @property-read string $caldavurl URL CalDAV pour le calendrier
- * @method bool exists() Non implémentée
- * @method bool save() Non implémentée
- * @method bool delete() Non implémentée
- * @method void getCTag() Charge la propriété ctag avec l'identifiant de modification du calendrier
- * @method void getTimezone() Charge la propriété timezone avec le timezone du calendrier
- * @method bool asRight($action) Retourne un boolean pour savoir si les droits sont présents
  */
 class Calendar extends CalendarMelanie {
 

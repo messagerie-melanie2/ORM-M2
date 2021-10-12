@@ -1,3 +1,9 @@
+ORM M2 - 0.6.1.22
+------
+- 0006244: Problème dans le calcul de la date de fin à partir du count pour une modification
+- 0006245: Optimisation du calcul de la date de fin à partir du count de la recurrence
+- 0006232: [En attente] Gérer les catégories des espaces de travail du BNum
+
 ORM M2 - 0.6.1.21
 ------
 - Mise à jour de l'API MI pour les shares et vacation

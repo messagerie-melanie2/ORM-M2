@@ -410,10 +410,11 @@ class Recurrence extends MceObject {
     
     if (isset($rdata[ICS::FREQ])) {
       // Always default the recurInterval to 1.
-      $this->objectmelanie->interval = isset($rdata[ICS::INTERVAL]) ? $rdata[ICS::INTERVAL] : 1;
+      $this->objectmelanie->interval = isset($rdata[ICS::INTERVAL]) ? intval($rdata[ICS::INTERVAL]) : 1;
       $recurrence->days = array();
       // MANTIS 4103: Calculer une date de fin approximative pour un count
-      $nbdays = $this->objectmelanie->interval;
+      $count = isset($rdata[ICS::COUNT]) ? intval($rdata[ICS::COUNT]) : 1;
+      $nbdays = $count * $this->objectmelanie->interval;
       
       switch (strtoupper($rdata[ICS::FREQ])) {
         case ICS::FREQ_DAILY:
@@ -522,7 +523,6 @@ class Recurrence extends MceObject {
       } elseif (isset($rdata[ICS::COUNT])) {
         $recurrence->count = intval($rdata[ICS::COUNT]);
         // MANTIS 4103: Calculer une date de fin approximative pour un count
-        $nbdays = $nbdays * $recurrence->count;
         $enddate = new \DateTime($this->event->end);
         $enddate->add(new \DateInterval("P" . $nbdays . "D"));
         $this->objectmelanie->enddate = $enddate->format('Y-m-d H:i:s');

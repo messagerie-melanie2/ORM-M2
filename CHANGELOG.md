@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.23
+------
+- Mise à jour du schéma de base de données initial
+
 ORM M2 - 0.6.1.22
 ------
 - 0006244: Problème dans le calcul de la date de fin à partir du count pour une modification

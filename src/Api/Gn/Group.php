@@ -54,11 +54,11 @@ class Group extends Defaut\Group {
     /**
      * TODO le cn devrait être récupérable directement
      * renvoi le cn
+     *
      * @return mixed|null
-     * @throws \Safe\Exceptions\PcreException
      */
     public function getMapCn() {
-        if (\Safe\preg_match("#(cn=)(.*)(,dmd*)#",$this->dn, $matches)) {
+        if (preg_match("#(cn=)(.*)(,dmd*)#",$this->dn, $matches)) {
             return $matches[2];
         } else {
             return null;

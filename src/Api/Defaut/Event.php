@@ -436,7 +436,10 @@ class Event extends MceObject {
             $organizer_event = $this;
             $organizer_calendar_id = $this->calendar;
           }
-          else if ($_event->hasattendees && $_event->getMapOrganizer()->calendar == $_event->calendar) {
+          else if ($_event->hasattendees 
+              // MANTIS 0006289: Dans le IF pour savoir si l'événement est l'événement de l'organisateur ajouter le test s'il est externe
+              && !$_event->getMapOrganizer()->extern 
+              && $_event->getMapOrganizer()->calendar == $_event->calendar) {
             $organizer_calendar_id = $_event->calendar;
             if (strpos($this->get_class, '\Exception') !== false) {
               $Exception = $this->__getNamespace() . '\\Exception';

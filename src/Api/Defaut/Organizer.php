@@ -321,7 +321,7 @@ class Organizer extends MceObject {
       $User = $this->__getNamespace() . '\\User';
       $user = new $User();
       $user->email = $email;
-      if ($user->load(['uid', 'fullname'])) {
+      if ($user->load(['uid', 'fullname', 'is_mailbox'])) {
         if ($user->is_objectshare) {
           $this->objectmelanie->organizer_uid = $user->objectshare->uid;
           $name = $user->objectshare->mailbox->fullname;
@@ -330,7 +330,8 @@ class Organizer extends MceObject {
           $this->objectmelanie->organizer_uid = $user->uid;
           $name = $user->fullname;
         }
-        $this->extern = false;
+        // MANTIS 0006288: Lorsqu'on recherche si l'organisateur est externe, valider l'objectClass mineqMelBoite
+        $this->extern = !$user->is_mailbox;
         if (isset($name)) {
           $this->setMapName($name);
         }

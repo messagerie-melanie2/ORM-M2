@@ -1,3 +1,10 @@
+ORM M2 - 0.6.1.24
+------
+- 0006289: Dans le IF pour savoir si l'événement est l'événement de l'organisateur ajouter le test s'il est externe
+- 0006291: Permettre un type booleanLdap sur une entrée multivaluée
+- 0006292: Ajouter une propriété is_mailbox dans l'objet User
+- 0006288: Lorsqu'on recherche si l'organisateur est externe, valider l'objectClass mineqMelBoite
+
 ORM M2 - 0.6.1.23
 ------
 - Mise à jour du schéma de base de données initial

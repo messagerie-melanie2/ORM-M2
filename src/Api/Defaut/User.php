@@ -1837,4 +1837,13 @@ abstract class User extends MceObject {
   protected function getMapIs_listab() {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_LISTAB);
   }
+
+  /**
+   * Mapping is_mailbox field
+   * 
+   * @return boolean true s'il s'agit bien d'une boite (valeur par défaut pour la MCE)
+   */
+  protected function getMapIs_mailbox() {
+    return true;
+  }
 }

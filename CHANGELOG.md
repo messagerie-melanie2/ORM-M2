@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.25
+------
+- 0006294: Ajouter l'information dans un participant quand il a été enregistré en attente
+
 ORM M2 - 0.6.1.24
 ------
 - 0006289: Dans le IF pour savoir si l'événement est l'événement de l'organisateur ajouter le test s'il est externe

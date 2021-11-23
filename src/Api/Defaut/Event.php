@@ -812,7 +812,7 @@ class Event extends MceObject {
         $Event = $this->__getNamespace() . '\\Exception';
       }
       if (is_array($attendees) && count($attendees) > 0) {
-        foreach ($attendees as $attendee_key => $attendee) {
+        foreach ($attendees as $attendee_key => $attendee) { 
           // MANTIS 0006052: [En attente] Problème avec les non participants
           if ($attendee->role == Attendee::ROLE_NON_PARTICIPANT) {
             continue;
@@ -867,10 +867,15 @@ class Event extends MceObject {
                 $attendee_event->modified = time();
                 // Enregistre l'événement dans l'agenda du participant
                 $attendee_event->save(false);
+                $attendees[$attendee_key]->is_saved = true;
               }
             }
           }
+          else {
+            $attendees[$attendee_key]->is_saved = null;
+          }
         }
+        $this->attendees = $attendees;
       }
       // MANTIS 0005053: [En attente] Lors de la suppression d'un participant, passer son événement en annulé
       if ($this->exists()) {

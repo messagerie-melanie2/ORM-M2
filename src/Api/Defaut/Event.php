@@ -436,7 +436,10 @@ class Event extends MceObject {
             $organizer_event = $this;
             $organizer_calendar_id = $this->calendar;
           }
-          else if ($_event->hasattendees && $_event->getMapOrganizer()->calendar == $_event->calendar) {
+          else if ($_event->hasattendees 
+              // MANTIS 0006289: Dans le IF pour savoir si l'événement est l'événement de l'organisateur ajouter le test s'il est externe
+              && !$_event->getMapOrganizer()->extern 
+              && $_event->getMapOrganizer()->calendar == $_event->calendar) {
             $organizer_calendar_id = $_event->calendar;
             if (strpos($this->get_class, '\Exception') !== false) {
               $Exception = $this->__getNamespace() . '\\Exception';
@@ -978,6 +981,14 @@ class Event extends MceObject {
         $attendee_event->getObjectMelanie()->setFieldHasChanged('attendees');
         $save = true;
       }
+      // MANTIS 0006232: [En attente] Gérer les catégories des espaces de travail du BNum
+      $field = 'category';
+      if ($event->getObjectMelanie()->getFieldValueFromData($field) != $attendee_event->getObjectMelanie()->getFieldValueFromData($field)
+          && strpos($event->getObjectMelanie()->getFieldValueFromData($field), 'ws#') === 0) {
+        $value = $event->getObjectMelanie()->getFieldValueFromData($field);
+        $attendee_event->getObjectMelanie()->setFieldValueToData($field, $value);
+        $attendee_event->getObjectMelanie()->setFieldHasChanged($field);
+      }
       // Gestion des exceptions
       if (!$isException) {
         $save = $save || $event->getObjectMelanie()->fieldHasChanged('exceptions');
@@ -1049,6 +1060,11 @@ class Event extends MceObject {
       $attendee_event->created = time();      
       $attendee_event->owner = $attendee_uid;
       $attendee_event->alarm = 0;
+
+      // MANTIS 0006232: [En attente] Gérer les catégories des espaces de travail du BNum
+      if (strpos($event->category, 'ws#') === 0) {
+        $attendee_event->category = $event->category;
+      }
       
       // copier la liste des champs
       foreach ($copyFieldsList as $field) {

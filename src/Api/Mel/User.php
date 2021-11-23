@@ -253,8 +253,9 @@ class User extends Defaut\User {
     "acces_synchro_user_datetime"   => 'mineqmelaccessynchrou',       // Profil de synchro administrateur
     "is_synchronisation_enable"     => 'mineqmelaccessynchrou',       // Est-ce que la synchronisation de l'utilisateur est activée ?
     "synchronisation_profile"       => 'mineqmelaccessynchrou',       // Retourne le profil de synchronisation
-    "cerbere"                  => [MappingMce::name => 'info', MappingMce::prefixLdap => 'AUTH.Cerbere:', MappingMce::type => MappingMce::stringLdap],
-    "double_authentification"  => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => 'DoubleAuth.Obligatoire: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'oui', MappingMce::falseLdapValue => 'non'],
+    "cerbere"                   => [MappingMce::name => 'info', MappingMce::prefixLdap => 'AUTH.Cerbere:', MappingMce::type => MappingMce::stringLdap],
+    "double_authentification"   => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => 'DoubleAuth.Obligatoire: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'oui', MappingMce::falseLdapValue => 'non'],
+    "is_mailbox"                => [MappingMce::name => 'objectclass', MappingMce::trueLdapValue => 'mineqMelBoite', MappingMce::type => MappingMce::booleanLdap],             // Est-ce qu'il s'agit bien d'une boite Mél ?
   ];
 
   /**
@@ -902,5 +903,14 @@ class User extends Defaut\User {
         || $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_RESSOURCE)
         || $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_UNITE)
         || $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_SERVICE);
+  }
+
+  /**
+   * Mapping is_mailbox field
+   * 
+   * @return boolean true s'il s'agit bien d'une boite (valeur par défaut pour la MCE)
+   */
+  protected function getMapIs_mailbox() {
+    return $this->objectmelanie->is_mailbox;
   }
 }

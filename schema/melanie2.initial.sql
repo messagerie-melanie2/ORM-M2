@@ -1,4 +1,4 @@
--- Schema du 20180924
+-- Schema du 20210408
 
 --
 -- Name: update_addressbook_ctag(); Type: FUNCTION
@@ -767,8 +767,6 @@ CREATE TABLE public.dwp_workspaces
 	workspace_settings text
 );
 
-CREATE INDEX dwp_workspaces_uid_idx ON public.dwp_workspaces (workspace_uid);
-
 --
 -- Table "dwp_shares"
 -- Name: dwp_shares; Type: TABLE; Schema: public; Owner: horde
@@ -783,8 +781,6 @@ CREATE TABLE public.dwp_shares
 	user_uid varchar(255) NOT NULL,
 	rights varchar(1) NOT NULL
 );
-
-CREATE INDEX dwp_shares_user_idx ON public.dwp_shares (user_uid);
 
 --
 -- Sequence "hashtags_seq"
@@ -813,9 +809,6 @@ CREATE TABLE public.dwp_hashtags
 	hashtag varchar(255) NOT NULL
 );
 
-CREATE INDEX dwp_hashtags_hashtag_idx ON public.dwp_hashtags (hashtag);
-
-
 --
 -- Table "dwp_hashtags_workspaces"
 -- Name: dwp_hashtags_workspaces; Type: TABLE; Schema: public; Owner: horde
@@ -832,3 +825,23 @@ CREATE TABLE public.dwp_hashtags_workspaces
 );
 
 -- Index pour les LIKE sur les hashtags : https://www.cybertec-postgresql.com/en/postgresql-more-performance-for-like-and-ilike-statements/
+
+--
+-- Name: dwp_hashtags_hashtag_idx; Type: INDEX
+--
+CREATE INDEX dwp_hashtags_hashtag_idx ON public.dwp_hashtags (hashtag);
+
+--
+-- Name: dwp_shares_user_idx; Type: INDEX
+--
+CREATE INDEX dwp_shares_user_idx ON public.dwp_shares (user_uid);
+
+--
+-- Name: dwp_workspaces_modified_idx; Type: INDEX
+--
+CREATE INDEX dwp_workspaces_modified_idx ON public.dwp_workspaces (modified DESC);
+
+--
+-- Name: dwp_workspaces_uid_idx; Type: INDEX
+--
+CREATE INDEX dwp_workspaces_uid_idx ON public.dwp_workspaces (workspace_uid);

@@ -522,14 +522,23 @@ abstract class MagicObject implements Serializable {
                 }
               }
             }
-            if (is_array($value)) {
-              $value = $value[0] ?: null;              
+            // MANTIS 0006291: Permettre un type booleanLdap sur une entrée multivaluée
+            if (is_array($value) && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue])) {
+              $value = in_array(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue], $value);
             }
-            if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue])) {
-              $value = $value === MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue];
+            else if (is_array($value) && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::falseLdapValue])) {
+              $value = !in_array(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::falseLdapValue], $value);
             }
             else {
-              $value = $value == '1' || $value == 'oui' ? true : false;
+              if (is_array($value)) {
+                $value = $value[0] ?: null;
+              }
+              if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue])) {
+                $value = $value === MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::trueLdapValue];
+              }
+              else {
+                $value = $value == '1' || $value == 'oui' ? true : false;
+              }
             }
 		        break;
 		    }

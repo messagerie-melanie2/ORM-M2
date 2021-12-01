@@ -702,4 +702,13 @@ abstract class MagicObject implements Serializable {
 			return true;
 		}
 	}
+
+  /**
+	 * Méthode toString pour afficher le contenu des données de la classe
+	 * 
+	 * @return string
+	 */
+  public function __toString() {
+    return $this->get_class . ": {\r\n\tobjectType: ".$this->objectType.",\r\n\tisExist: ".$this->isExist.",\r\n\tisLoaded: ".$this->isLoaded.",\r\n\tdata: " . str_replace("\n", "\n\t", var_export($this->data, true)) . ",\r\n\thaschanged: " . str_replace("\n", "\n\t", var_export($this->haschanged, true)) . "\r\n}";
+  }
 }

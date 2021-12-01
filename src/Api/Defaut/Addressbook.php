@@ -60,7 +60,7 @@ class Addressbook extends MceObject {
   /**
    * Constructeur de l'objet
    * 
-   * @param User $user          
+   * @param User|string $user ou $id
    */
   function __construct($user = null) {
     // Défini la classe courante
@@ -71,8 +71,13 @@ class Addressbook extends MceObject {
     $this->objectmelanie = new AddressbookMelanie();
     // Définition des objets associés
     if (isset($user)) {
-      $this->user = $user;
-      $this->objectmelanie->user_uid = $this->user->uid;
+      if (is_object($user)) {
+        $this->user = $user;
+        $this->objectmelanie->user_uid = $this->user->uid;
+      }
+      else {
+        $this->objectmelanie->id = $user;
+      }
     }
   }
   

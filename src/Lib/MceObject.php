@@ -212,6 +212,15 @@ abstract class MceObject implements Serializable {
 	}
 
 	/**
+	 * Méthode toString pour afficher le contenu des données de la classe
+	 * 
+	 * @return string
+	 */
+	public function __toString() {
+		return $this->get_class . ": {\r\n\tobjectmelanie: " . str_replace("\n", "\n\t", $this->objectmelanie) . "\r\n}\r\n";
+	}
+
+	/**
 	 * String representation of object
 	 *
 	 * @return string

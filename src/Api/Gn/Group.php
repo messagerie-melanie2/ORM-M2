@@ -21,6 +21,8 @@
 namespace LibMelanie\Api\Gn;
 
 use LibMelanie\Api\Defaut;
+use LibMelanie\Ldap\Ldap;
+use LibMelanie\Config\Ldap as LdapConfig;
 
 /**
  * Classe groupe LDAP pour GN
@@ -39,7 +41,10 @@ use LibMelanie\Api\Defaut;
  * @property array $members_email Liste des adresses e-mail de la liste
  * @property array $owners Liste des propriétaires du groupe LDAP
  * @property string $service Service du groupe dans l'annuaire
- * @property-read boolean $is_dynamic Est-ce qu'il s'agit d'une liste dynamique ?
+ * @property string $cn CN
+ * @property string $description Description
+ * @property string $gidnumber GidNumber
+ * @property string $codeunite CodeUnite
  */
 class Group extends Defaut\Group {
     /**
@@ -61,5 +66,43 @@ class Group extends Defaut\Group {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Récupère la liste des membres d'un groupe
+     * On ne "load" pas les membres, car certains groupes sont trop grand => trop de requêtes
+     * 
+     * @return array|Defaut\User[]
+     */
+    public function getMapMembers() {
+        if (!isset($this->_members)) {
+            $this->_members = [];
+
+            $ldap = Ldap::GetInstance(LdapConfig::$SEARCH_LDAP);
+            $filter = $ldap->getConfig("get_users_by_group");
+            $filter = str_replace("%%memberOf%%", $this->dn, $filter);
+            $search = $ldap->search($ldap->getConfig("base_dn"), $filter);
+            $entries = $ldap->get_entries($search);
+
+            $attributesMember = $ldap->getConfig('get_user_infos_attributes');
+
+            if ($entries
+                    && is_array($entries)
+                    && $entries['count'] > 0) {
+                array_shift($entries);
+                foreach ($entries as $i => $entry) {
+                    $member = new Member();
+                    foreach ($attributesMember as $k) {
+                        if (isset($entry[$k])) {
+                            $member->$k = $entry[$k][0];
+                        } else {
+                            $member->$k = null;
+                        }
+                    }
+                    $this->_members[] = $member;
+                }
+            }
+        }
+        return $this->_members;
     }
 }

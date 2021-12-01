@@ -133,7 +133,6 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 		// Params
 		$params = [
 		    "group_uid" => DefaultConfig::TASKSLIST_GROUP_UID,
-			"user_uid" => $this->user_uid,
 			"datatree_name" => $this->id,
 		    "attribute_name" => DefaultConfig::ATTRIBUTE_NAME_NAME,
 		    "attribute_perm" => DefaultConfig::ATTRIBUTE_NAME_PERM,

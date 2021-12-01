@@ -356,7 +356,7 @@ class Event extends MceObject {
         
         $eventproperty->key = $name;
         $eventproperty->value = $value;
-        $eventproperty->setIsLoaded(true);
+        $eventproperty->setIsLoaded();
         $eventproperty->setIsExist(false);
         $this->attributes[$name] = $eventproperty;
       }
@@ -1275,6 +1275,8 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->loadExceptions()");
     $event = new static($this->user, $this->calendarmce);
     $event->realuid = $this->uid;
+    // 0006301: La méthode loadExceptions charge toutes les exceptions de tous les agendas
+    $event->calendar = $this->calendar;
     $events = $event->getList();
     if (isset($events[$this->uid . $this->calendar])) {
       $this->modified = isset($events[$this->uid . $this->calendar]->modified) ? $events[$this->uid . $this->calendar]->modified : 0;
@@ -1512,6 +1514,8 @@ class Event extends MceObject {
     // Traitement de la liste des évènements
     foreach ($_events as $_event) {
       try {
+        $_event->setIsExist();
+        $_event->setIsLoaded();
         if (isset($this->calendarmce) && $this->calendarmce->id == $_event->calendar) {
           $calendar = $this->calendarmce;
         } else {

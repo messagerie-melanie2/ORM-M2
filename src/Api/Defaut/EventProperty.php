@@ -132,6 +132,8 @@ class EventProperty extends MceObject {
       return null;
     $eventproperties = [];
     foreach ($_eventproperties as $_eventproperty) {
+      $_eventproperty->setIsExist();
+      $_eventproperty->setIsLoaded();
       $eventproperty = new static();
       $eventproperty->setObjectMelanie($_eventproperty);
       $eventproperties[] = $eventproperty;

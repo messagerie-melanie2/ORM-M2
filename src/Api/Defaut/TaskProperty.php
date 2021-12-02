@@ -130,6 +130,8 @@ class TaskProperty extends MceObject {
       return null;
     $taskproperties = [];
     foreach ($_taskproperties as $_taskproperty) {
+      $_taskproperty->setIsExist();
+      $_taskproperty->setIsLoaded();
       $taskproperty = new static();
       $taskproperty->setObjectMelanie($_taskproperty);
       $taskproperties[] = $taskproperty;

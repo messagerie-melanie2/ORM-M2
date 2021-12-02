@@ -524,6 +524,10 @@ class EventToICS {
           if (!empty($attendee_name)) {
             $params[ICS::CN] = self::cleanUTF8String($attendee_name);
           }
+          // 0006294: Ajouter l'information dans un participant quand il a été enregistré en attente
+          if (is_bool($attendee->is_saved)) {
+            $params[ICS::X_MEL_EVENT_SAVED] = $attendee->is_saved;
+          }
           // Add attendee
           $vevent->add(ICS::ATTENDEE, 'mailto:' . $attendee->email, $params);
         }

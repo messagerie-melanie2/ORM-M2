@@ -623,6 +623,11 @@ class ICS {
 	 */
 	const X_M2_ORG_MAIL = 'X-M2-ORG-MAIL';
 
+	/**
+	 * 0006294: Ajouter l'information dans un participant quand il a été enregistré en attente
+	 */
+	const X_MEL_EVENT_SAVED = 'X-MEL-EVENT-SAVED';
+
 	// CALDAV X
 	/**
 	 * Calendar Owner

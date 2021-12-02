@@ -63,7 +63,7 @@ class Calendar extends MceObject {
   /**
    * Constructeur de l'objet
    * 
-   * @param User $user          
+   * @param User|string $user ou $id
    */
   function __construct($user = null) {
     // Défini la classe courante
@@ -75,8 +75,13 @@ class Calendar extends MceObject {
     
     // Définition des objets associés
     if (isset($user)) {
-      $this->user = $user;
-      $this->objectmelanie->user_uid = $this->user->uid;
+      if (is_object($user)) {
+        $this->user = $user;
+        $this->objectmelanie->user_uid = $this->user->uid;
+      }
+      else {
+        $this->objectmelanie->id = $user;
+      }
     }
   }
   
@@ -143,6 +148,8 @@ class Calendar extends MceObject {
     $Exception = $this->__getNamespace() . '\\Exception';
     foreach ($_events as $_event) {
       try {
+        $_event->setIsExist();
+        $_event->setIsLoaded();
         if (strpos($_event->uid, $Exception::RECURRENCE_ID) === false) {
           $event = new $Event($this->user, $this);
           $event->setObjectMelanie($_event);
@@ -228,6 +235,8 @@ class Calendar extends MceObject {
     $Exception = $this->__getNamespace() . '\\Exception';
     foreach ($_events as $_event) {
       try {
+        $_event->setIsExist();
+        $_event->setIsLoaded();
         if (strpos($_event->uid, $Exception::RECURRENCE_ID) === false) {
           $event = new $Event($this->user, $this);
           $event->setObjectMelanie($_event);

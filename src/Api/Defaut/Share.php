@@ -149,6 +149,8 @@ class Share extends MceObject {
       return null;
     $shares = [];
     foreach ($_shares as $_share) {
+      $_share->setIsExist();
+      $_share->setIsLoaded();
       $share = new static();
       $share->setObjectMelanie($_share);
       $shares[] = $share;

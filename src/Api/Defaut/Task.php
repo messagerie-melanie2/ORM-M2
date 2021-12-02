@@ -341,6 +341,8 @@ class Task extends MceObject {
       return null;
     $tasks = [];
     foreach ($_tasks as $_task) {
+      $_task->setIsExist();
+      $_task->setIsLoaded();
       $task = new static($this->user, $this->taskslistmce);
       $task->setObjectMelanie($_task);
       $tasks[$_task->uid] = $task;

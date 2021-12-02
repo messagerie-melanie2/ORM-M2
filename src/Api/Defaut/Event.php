@@ -356,7 +356,7 @@ class Event extends MceObject {
         
         $eventproperty->key = $name;
         $eventproperty->value = $value;
-        $eventproperty->setIsLoaded(true);
+        $eventproperty->setIsLoaded();
         $eventproperty->setIsExist(false);
         $this->attributes[$name] = $eventproperty;
       }
@@ -812,7 +812,7 @@ class Event extends MceObject {
         $Event = $this->__getNamespace() . '\\Exception';
       }
       if (is_array($attendees) && count($attendees) > 0) {
-        foreach ($attendees as $attendee_key => $attendee) {
+        foreach ($attendees as $attendee_key => $attendee) { 
           // MANTIS 0006052: [En attente] Problème avec les non participants
           if ($attendee->role == Attendee::ROLE_NON_PARTICIPANT) {
             continue;
@@ -867,10 +867,15 @@ class Event extends MceObject {
                 $attendee_event->modified = time();
                 // Enregistre l'événement dans l'agenda du participant
                 $attendee_event->save(false);
+                $attendees[$attendee_key]->is_saved = true;
               }
             }
           }
+          else {
+            $attendees[$attendee_key]->is_saved = null;
+          }
         }
+        $this->attendees = $attendees;
       }
       // MANTIS 0005053: [En attente] Lors de la suppression d'un participant, passer son événement en annulé
       if ($this->exists()) {
@@ -1270,6 +1275,8 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->loadExceptions()");
     $event = new static($this->user, $this->calendarmce);
     $event->realuid = $this->uid;
+    // 0006301: La méthode loadExceptions charge toutes les exceptions de tous les agendas
+    $event->calendar = $this->calendar;
     $events = $event->getList();
     if (isset($events[$this->uid . $this->calendar])) {
       $this->modified = isset($events[$this->uid . $this->calendar]->modified) ? $events[$this->uid . $this->calendar]->modified : 0;
@@ -1507,6 +1514,8 @@ class Event extends MceObject {
     // Traitement de la liste des évènements
     foreach ($_events as $_event) {
       try {
+        $_event->setIsExist();
+        $_event->setIsLoaded();
         if (isset($this->calendarmce) && $this->calendarmce->id == $_event->calendar) {
           $calendar = $this->calendarmce;
         } else {

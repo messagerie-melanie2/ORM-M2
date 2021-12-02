@@ -206,6 +206,7 @@ class DefaultConfig {
   const DECLINED = "declined";
   const IN_PROCESS = "in_process";
   const SELF_INVITE_ATTENDEE = "self_invite";
+  const IS_SAVED_ATTENDEE = "is_saved";
   // const TENTATIVE = "tentative"; // -> see Status
   
   /* Attendee role */

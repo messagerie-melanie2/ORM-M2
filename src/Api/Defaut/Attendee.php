@@ -38,6 +38,7 @@ use LibMelanie\Config\DefaultConfig;
  * @property string $name Nom du participant
  * @property string $uid Uid du participant
  * @property boolean $self_invite Est-ce que ce participant s'est lui même invité
+ * @property boolean $is_saved Est-ce que l'événement a été enregistré dans son agenda en attente ?
  * @property-read boolean $need_action Est-ce que le mode En attente est activé pour ce participant
  * @property Attendee::RESPONSE_* $response Réponse du participant
  * @property Attendee::ROLE_* $role Role du participant
@@ -74,6 +75,12 @@ class Attendee extends MceObject {
    * @ignore
    */
   private $need_action;
+  /**
+   * Est-ce que l'évenement a éte enregistré pour le participant via le en attente
+   * @var boolean
+   * @ignore
+   */
+  private $is_saved;
   /**
    * Réponse du participant
    * 
@@ -142,6 +149,9 @@ class Attendee extends MceObject {
     if ($this->self_invite) {
       $attendee[Config::get(Config::SELF_INVITE_ATTENDEE)] = $this->self_invite;
     }
+    if (isset($this->is_saved)) {
+      $attendee[Config::get(Config::IS_SAVED_ATTENDEE)] = $this->is_saved;
+    }
     return $attendee;
   }
   
@@ -162,6 +172,7 @@ class Attendee extends MceObject {
     $this->role = isset($attendee[Config::get(Config::ROLE)]) ? $attendee[Config::get(Config::ROLE)] : MappingMce::REQ_PARTICIPANT;
     $this->response = isset($attendee[Config::get(Config::RESPONSE)]) ? $attendee[Config::get(Config::RESPONSE)] : MappingMce::ATT_NEED_ACTION;
     $this->self_invite = isset($attendee[Config::get(Config::SELF_INVITE_ATTENDEE)]) ? $attendee[Config::get(Config::SELF_INVITE_ATTENDEE)] : false;
+    $this->is_saved = isset($attendee[Config::get(Config::IS_SAVED_ATTENDEE)]) ? $attendee[Config::get(Config::IS_SAVED_ATTENDEE)] : null;
   }
   
   /**
@@ -222,6 +233,26 @@ class Attendee extends MceObject {
   protected function getMapName() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapName()");
     return $this->name;
+  }
+
+  /**
+   * Set is_saved property
+   * 
+   * @param string $is_saved          
+   * @ignore
+   */
+  protected function setMapIs_saved($is_saved) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapIs_saved($is_saved)");
+    $this->is_saved = $is_saved;
+  }
+  /**
+   * Get is_saved property
+   * 
+   * @ignore
+   */
+  protected function getMapIs_saved() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapIs_saved()");
+    return $this->is_saved;
   }
   
   /**

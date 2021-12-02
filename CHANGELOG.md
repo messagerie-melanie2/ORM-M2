@@ -1,3 +1,16 @@
+ORM M2 - 0.6.1.26
+------
+- 0006302: [Api/Gn] Pour les groupes les membres doivent se récupérer différemment
+- 0006306: Problème de chargement d'une liste de tâches basé uniquement sur l'id
+- 0006305: Après un getList le isLoaded n'est pas initialisé pour l'objet récupéré
+- 0006303: Si le paramètre du constructeur de Calendar, Addressbook et Taskslist est un string, positionner l'id
+- 0006304: Ajouter un __toString() dans MagicObject et MceObject
+- 0006301: La méthode loadExceptions charge toutes les exceptions de tous les agendas
+
+ORM M2 - 0.6.1.25
+------
+- 0006294: Ajouter l'information dans un participant quand il a été enregistré en attente
+
 ORM M2 - 0.6.1.24
 ------
 - 0006289: Dans le IF pour savoir si l'événement est l'événement de l'organisateur ajouter le test s'il est externe

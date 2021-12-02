@@ -272,6 +272,8 @@ class Contact extends MceObject {
       return null;
     $contacts = [];
     foreach ($_contacts as $_contact) {
+      $_contact->setIsExist();
+      $_contact->setIsLoaded();
       $contact = new static($this->user, $this->addressbookmce);
       $contact->setObjectMelanie($_contact);
       $contacts[$_contact->id] = $contact;

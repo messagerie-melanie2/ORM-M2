@@ -112,6 +112,8 @@ class UserPrefs extends MceObject {
       return null;
     $userprefs = [];
     foreach ($_userprefs as $_userpref) {
+      $_userpref->setIsExist();
+      $_userpref->setIsLoaded();
       $userpref = new static();
       $userpref->setObjectMelanie($_userpref);
       $userprefs[] = $userpref;

@@ -210,10 +210,13 @@ abstract class Group extends MceObject {
     if (!isset($this->_members)) {
       $this->_members = [];
       $classUser = $this->__getNamespace() . '\\User';
-      foreach ($this->objectmelanie->members as $member) {
-        $_member = new $classUser();
-        $_member->uid = $member;
-        $this->_members[$member] = $_member;
+      $members = $this->objectmelanie->members;
+      if (is_array($members)) {
+        foreach ($members as $member) {
+          $_member = new $classUser();
+          $_member->uid = $member;
+          $this->_members[$member] = $_member;
+        }
       }
     }
     return $this->_members;

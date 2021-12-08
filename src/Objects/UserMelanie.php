@@ -28,7 +28,7 @@ use LibMelanie\Config\DefaultConfig;
 
 /**
  * Gestion de l'utilisateur Melanie2
- * 
+ *
  * @author PNE Messagerie/Apitech
  * @package Librairie Mélanie2
  * @subpackage ORM
@@ -36,25 +36,25 @@ use LibMelanie\Config\DefaultConfig;
 class UserMelanie extends MagicObject implements IObjectMelanie {
   /**
    * Timezone de l'utilisateur
-   * 
+   *
    * @var string
    */
   public $timezone;
   /**
    * Quel serveur LDAP utiliser pour la lecture des données
-   * 
+   *
    * @var string
    */
   private $server;
   /**
    * Mapping des données
-   * 
+   *
    * @var array
    */
   private $mapping;
   /**
    * Liste des propriétés qui ne peuvent pas être modifiées
-   * 
+   *
    * @var array Valeur static
    */
   private static $unchangeableProperties = [
@@ -63,34 +63,34 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   ];
   /**
    * Liste des propriétés qui ne peuvent pas être modifiées
-   * 
+   *
    * @var array Valeur non static
    */
   private $_unchangeableProperties;
   /**
    * Est-ce que l'objet a déjà été initialisé
-   * 
+   *
    * @var boolean
    */
   private static $isInit = false;
 
   /**
    * Supporter la création d'un objet ?
-   * 
+   *
    * @var boolean
    */
   private $_supportCreation = false;
 
   /**
    * Configuration de l'objet dans le ldap
-   * 
+   *
    * @var array
    */
   private $_itemConfiguration;
-  
+
   /**
    * Constructeur de la class
-   * 
+   *
    * @param string $server Serveur d'annuaire a utiliser en fonction de la configuration
    * @param array $unchangeableProperties Liste des propriétés qui ne peut pas être modifiées
    * @param array $mapping Données de mapping
@@ -99,9 +99,9 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   public function __construct($server = null, $unchangeableProperties = null, $mapping = null, $itemName = null) {
     // Défini la classe courante
     $this->get_class = get_class($this);
-    
+
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
-    
+
     // Récupération du type d'objet en fonction de la class
     $this->objectType = explode('\\', $this->get_class);
     $this->objectType = $this->objectType[count($this->objectType) - 1];
@@ -124,7 +124,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
-    
+
     // Gestion du mapping des clés primaires
     if (isset(MappingMce::$Primary_Keys[$this->objectType])) {
       if (is_array(MappingMce::$Primary_Keys[$this->objectType]))
@@ -185,13 +185,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Appel l'initialisation du mapping
-   * 
+   *
    * @param array $mapping Données de mapping
    * @return boolean
    */
   protected static function Init($mapping = [], $server = null) {
     if (!self::$isInit) {
       if (isset($server) && isset(Config\Ldap::$SERVERS[$server]['mapping'])) {
+
         $mapping = array_merge($mapping, Config\Ldap::$SERVERS[$server]['mapping']);
       }
       else if (isset(Config\Ldap::$SERVERS[Config\Ldap::$SEARCH_LDAP]['mapping'])) {
@@ -216,17 +217,17 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     }
     return self::$isInit;
   }
-  
+
   /**
    * Chargement de l'objet UserMelanie
    * need: $this->dn
    * need: $this->uid
    * need: $this->email
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    * @param string $filter [Optionnal] Filter to load data
    * @param string $filterFromEmail [Optionnal] Filter to load data
-   * 
+   *
    * @see IObjectMelanie::load()
    *
    * @return boolean isExist
@@ -281,22 +282,22 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (isset($data)) {
       $this->setData($data);
     } else {
-      $this->isExist = false;      
+      $this->isExist = false;
     }
     $this->isLoaded = true;
     return $this->isExist;
   }
-  
+
   /**
    * Détermine si l'objet existe dans Melanie2
    * need: $this->dn
    * need: $this->uid
    * need: $this->email
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    * @param string $filter [Optionnal] Filter to load data
    * @param string $filterFromEmail [Optionnal] Filter to load data
-   * 
+   *
    * @see IObjectMelanie::exists()
    */
   public function exists($attributes = null, $filter = null, $filterFromEmail = null) {
@@ -327,10 +328,10 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     $this->isExist = isset($data);
     return $this->isExist;
   }
-  
+
   /**
    * Enregistrement de l'utilisateur modifié dans l'annuaire
-   * 
+   *
    * @see IObjectMelanie::save()
    * @ignore
    */
@@ -368,10 +369,10 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     }
     return $ret;
   }
-  
+
   /**
    * Not implemented
-   * 
+   *
    * @see IObjectMelanie::delete()
    * @ignore
    */
@@ -381,10 +382,10 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     static::Init($this->mapping, $this->server);
     throw new \Exception('Not implemented');
   }
-  
+
   /**
    * Positionne les data pour le UserMelanie
-   * 
+   *
    * @param array $data
    */
   public function setData($data) {
@@ -407,7 +408,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Récupère l'entrée générée suite au changement de valeur
-   * 
+   *
    * @return array
    */
   private function getEntry() {
@@ -424,7 +425,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Récupère l'entrée à créer à partir de toutes les données
-   * 
+   *
    * @return array
    */
   private function getCreationEntry() {
@@ -446,9 +447,9 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Génération du filtre ldap en fonction des attributs du user
-   * 
+   *
    * @param string $filter Filtre à traiter
-   * 
+   *
    * @return string Filtre généré
    */
   private function generateFilter($filter) {
@@ -457,7 +458,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (strpos($filter, '%%username%%') !== false) {
       $filter = str_replace('%%username%%', $this->uid, $filter);
     }
-    if (strpos($filter, '%%') !== false 
+    if (strpos($filter, '%%') !== false
         && preg_match_all('/%%([\w]+)%%/', $filter, $matches, PREG_PATTERN_ORDER) !== false) {
       foreach ($matches[1] as $attr) {
         $filter = str_replace('%%'.$attr.'%%', $this->$attr, $filter);
@@ -465,7 +466,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     }
     return $filter;
   }
-  
+
   // -- LDAP
   /**
    * Authentification sur le serveur LDAP
@@ -475,7 +476,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @param string $user_dn DN de l'utilisateur si ce n'est pas le courant a utiliser
    * @param boolean $gssapi Utiliser une authentification GSSAPI sans mot de passe
    * @param string $itemName Nom de l'objet associé dans la configuration LDAP
-   * 
+   *
    * @return boolean
    */
   public function authentification($password, $master = false, $user_dn = null, $gssapi = false, $itemName = null) {
@@ -509,10 +510,10 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Récupère la liste des BALP accessibles à l'utilisateur
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    * @param string $filter [Optionnal] Filter to load data
-   * 
+   *
    * @return UserMelanie[] Liste d'objet UserMelanie
    */
   public function getBalp($attributes = null, $filter = null) {
@@ -545,7 +546,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Récupère la liste des BALP accessibles au moins en émission à l'utilisateur
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    * @param string $filter [Optionnal] Filter to load data
    *
@@ -581,7 +582,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Récupère la liste des BALP accessibles en gestionnaire à l'utilisateur
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    * @param string $filter [Optionnal] Filter to load data
    *
@@ -617,7 +618,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Récupère la liste des groupes dont l'utilisateur est propriétaire
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    * @param string $filter [Optionnal] Filter to load data
    *
@@ -653,7 +654,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Récupère la liste des groupes dont l'utilisateur est membre
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    * @param string $filter [Optionnal] Filter to load data
    *
@@ -689,7 +690,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Récupère la liste des listes de diffusion dont l'utilisateur est membre
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    * @param string $filter [Optionnal] Filter to load data
    *
@@ -722,12 +723,12 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Récupère la liste des workspaces dont l'utilisateur est owner
-   * 
+   *
    * @param string $orderby [Optionnel] nom du champ a trier
    * @param boolean $asc [Optionnel] tri ascendant ?
    * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
    * @param integer $offset [Optionnel] offset pour la pagination
-   * 
+   *
    * @return WorkspaceMelanie[]
    */
   public function getUserWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
@@ -750,12 +751,12 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Récupère la liste des workspaces auxquels l'utilisateur accède
-   * 
+   *
    * @param string $orderby [Optionnel] nom du champ a trier
    * @param boolean $asc [Optionnel] tri ascendant ?
    * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
    * @param integer $offset [Optionnel] offset pour la pagination
-   * 
+   *
    * @return WorkspaceMelanie[]
    */
   public function getSharedWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
@@ -775,11 +776,11 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Liste les calendriers de l'utilisateur
     return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\WorkspaceMelanie', 'Workspace');
   }
-  
+
   // -- CALENDAR
   /**
    * Retour le calendrier par défaut
-   * 
+   *
    * @return CalendarMelanie
    */
   public function getDefaultCalendar() {
@@ -819,10 +820,10 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     }
     return null;
   }
-  
+
   /**
    * Récupère la liste des calendriers appartenant à l'utilisateur
-   * 
+   *
    * @return CalendarMelanie[]
    */
   public function getUserCalendars() {
@@ -850,11 +851,11 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Liste les calendriers de l'utilisateur
     return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
   }
-  
+
   /**
    * Récupère la liste des calendriers appartenant à l'utilisateur
    * ainsi que ceux qui lui sont partagés
-   * 
+   *
    * @return CalendarMelanie[]
    */
   public function getSharedCalendars() {
@@ -884,11 +885,11 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Liste les calendriers de l'utilisateur
     return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\CalendarMelanie');
   }
-  
+
   // -- TASKSLIST
   /**
    * Retour la liste de tâches par défaut
-   * 
+   *
    * @return TaskslistMelanie
    */
   public function getDefaultTaskslist() {
@@ -928,10 +929,10 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     }
     return null;
   }
-  
+
   /**
    * Récupère la liste des listes de tâches appartenant à l'utilisateur
-   * 
+   *
    * @return TaskslistMelanie[]
    */
   public function getUserTaskslists() {
@@ -959,11 +960,11 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Liste les listes de tâches de l'utilisateur
     return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
   }
-  
+
   /**
    * Récupère la liste des listes de tâches appartenant à l'utilisateur
    * ainsi que ceux qui lui sont partagés
-   * 
+   *
    * @return TaskslistMelanie[]
    */
   public function getSharedTaskslists() {
@@ -993,11 +994,11 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Liste les listes de tâches de l'utilisateur
     return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\TaskslistMelanie');
   }
-  
+
   // -- ADDRESSBOOK
   /**
    * Retour la liste de contacts par défaut
-   * 
+   *
    * @return AddressbookMelanie
    */
   public function getDefaultAddressbook() {
@@ -1037,10 +1038,10 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     }
     return null;
   }
-  
+
   /**
    * Récupère la liste des listes de contacts appartenant à l'utilisateur
-   * 
+   *
    * @return AddressbookMelanie[]
    */
   public function getUserAddressbooks() {
@@ -1068,11 +1069,11 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Liste les listes de contacts de l'utilisateur
     return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
   }
-  
+
   /**
    * Récupère la liste des listes de contacts appartenant à l'utilisateur
    * ainsi que ceux qui lui sont partagés
-   * 
+   *
    * @return AddressbookMelanie[]
    */
   public function getSharedAddressbooks() {
@@ -1102,11 +1103,11 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Liste les listes de contacts de l'utilisateur
     return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\AddressbookMelanie');
   }
-  
+
   /**
    * Recupère le timezone par défaut pour le
    * need: $this->uid
-   * 
+   *
    * @deprecated
    */
   public function getTimezone() {
@@ -1141,9 +1142,9 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 
   /**
    * Génère un tableau d'attribut mappés
-   * 
+   *
    * @param array $attributes Liste des attributs a mapper
-   * 
+   *
    * @return array $attributesmapping
    */
   private function _get_mapping_attributes($attributes) {
@@ -1173,7 +1174,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   /**
    * Lire la configuration LDAP de l'item si elle existe
    * supporte également des configurations par partie : objet.item.name
-   * 
+   *
    * @param string $itemName Nom de l'objet dans la configuration
    * @param string $server Serveur ou chercher la configuration
    */

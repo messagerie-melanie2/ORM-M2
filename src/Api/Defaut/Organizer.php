@@ -325,13 +325,15 @@ class Organizer extends MceObject {
         if ($user->is_objectshare) {
           $this->objectmelanie->organizer_uid = $user->objectshare->uid;
           $name = $user->objectshare->mailbox->fullname;
+          // MANTIS 0006314: Le en attente ne fonctionne pas lorsque l'invitation part d'une BALP
+          $this->extern = false;
         }
         else {
           $this->objectmelanie->organizer_uid = $user->uid;
           $name = $user->fullname;
+          // MANTIS 0006288: Lorsqu'on recherche si l'organisateur est externe, valider l'objectClass mineqMelBoite
+          $this->extern = !$user->is_mailbox;
         }
-        // MANTIS 0006288: Lorsqu'on recherche si l'organisateur est externe, valider l'objectClass mineqMelBoite
-        $this->extern = !$user->is_mailbox;
         if (isset($name)) {
           $this->setMapName($name);
         }

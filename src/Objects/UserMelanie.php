@@ -140,10 +140,6 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (isset($itemName)) {
       $this->readItemConfiguration($itemName, $server);
     }
-
-    if ($server === Config\Ldap::$MASTER_LDAP && !$itemName) {
-        $this->_itemConfiguration = Config\Ldap::$SERVERS[Config\Ldap::$MASTER_LDAP];
-    }
   }
 
   /**

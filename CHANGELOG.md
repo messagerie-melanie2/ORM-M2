@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.27
+------
+- HOTFIX 0006314: Le en attente ne fonctionne pas lorsque l'invitation part d'une BALP
+
 ORM M2 - 0.6.1.26
 ------
 - 0006302: [Api/Gn] Pour les groupes les membres doivent se récupérer différemment

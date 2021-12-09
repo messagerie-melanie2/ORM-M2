@@ -23,6 +23,8 @@ namespace LibMelanie\Api\Gn;
 use LibMelanie\Api\Mce;
 use LibMelanie\Api\Gn\Users\Outofoffice;
 use LibMelanie\Api\Gn\Users\Share;
+use LibMelanie\Config\Ldap as LdapConfig;
+use LibMelanie\Ldap\Ldap;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\MappingMce;
 
@@ -68,11 +70,13 @@ use LibMelanie\Config\MappingMce;
  */
 class User extends Mce\User {
 
+    private array $_itemConfiguration;
+
     public function __construct($server = null, $itemName = null)
     {
         parent::__construct($server, $itemName);
-        if ($server === Ldap::$MASTER_LDAP && !$itemName) {
-            $this->_itemConfiguration = Ldap::$SERVERS[Ldap::$MASTER_LDAP];
+        if ($server === LdapConfig::$MASTER_LDAP && !$itemName) {
+            $this->_itemConfiguration = LdapConfig::$SERVERS[LdapConfig::$MASTER_LDAP];
         }
     }
 

@@ -69,11 +69,13 @@ use LibMelanie\Objects\UserMelanie;
  */
 class User extends Mce\User {
 
+    private array $_itemConfiguration;
+
     public function __construct($server = null, $itemName = null)
     {
         parent::__construct($server, $itemName);
-        if ($server === Ldap::$MASTER_LDAP && !$itemName) {
-            $this->_itemConfiguration = Ldap::$SERVERS[Ldap::$MASTER_LDAP];
+        if ($server === LdapConfig::$MASTER_LDAP && !$itemName) {
+            $this->_itemConfiguration = LdapConfig::$SERVERS[LdapConfig::$MASTER_LDAP];
         }
     }
 

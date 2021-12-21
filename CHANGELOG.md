@@ -1,3 +1,10 @@
+ORM M2 - 0.6.1.28
+------
+- 0006328: Ajouter une lib pour genérer des UUID
+- 0006329: Indexes manquant sur les tables *_sync
+- 0006319: Schéma de base de données pour s'informer dans le Bnum
+- 0006320: Ajouter les objets News, Rss et NewsShare
+
 ORM M2 - 0.6.1.27
 ------
 - HOTFIX 0006314: Le en attente ne fonctionne pas lorsque l'invitation part d'une BALP

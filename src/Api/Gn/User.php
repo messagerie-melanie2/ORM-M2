@@ -23,10 +23,10 @@ namespace LibMelanie\Api\Gn;
 use LibMelanie\Api\Mce;
 use LibMelanie\Api\Gn\Users\Outofoffice;
 use LibMelanie\Api\Gn\Users\Share;
-use LibMelanie\Config\Ldap as LdapConfig;
-use LibMelanie\Ldap\Ldap;
+use LibMelanie\Config\Ldap;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\MappingMce;
+use LibMelanie\Objects\UserMelanie;
 
 /**
  * Classe utilisateur pour GN
@@ -64,7 +64,6 @@ use LibMelanie\Config\MappingMce;
  *
  * @method string getTimezone() [OSOLETE] Chargement du timezone de l'utilisateur
  * @method bool authentification($password, $master = false) Authentification de l'utilisateur sur l'annuaire Mélanie2
- * @method bool save() Enregistrement de l'utilisateur dans l'annuaire
  * @method bool load() Charge les données de l'utilisateur depuis l'annuaire Mélanie2 (en fonction de l'uid ou l'email)
  * @method bool exists() Est-ce que l'utilisateur existe dans l'annuaire Mélanie2 (en fonction de l'uid ou l'email)
  */
@@ -80,168 +79,203 @@ class User extends Mce\User {
         }
     }
 
+
     /**
-   * Configuration du mapping qui surcharge la conf
-   */
-  const MAPPING = [
-    "dn"                      => 'dn',                            // DN de l'utilisateur
-    "uid"                     => 'mail',                          // Identifiant de l'utilisateur
-    "fullname"                => 'cn',                            // Nom complet de l'utilisateur
-    "name"                    => 'cn',                            // Nom court de l'utilisateur
-    "email"                   => 'mail',                          // Adresse e-mail principale de l'utilisateur en reception
-    "email_list"              => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
-    "email_send"              => 'mail',                          // Adresse e-mail principale de l'utilisateur en emission
-    "email_send_list"         => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
-    "shares"                  => [MappingMce::name => 'mcedelegation', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
-    "server_routage"          => [MappingMce::name => 'mailhost', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
-    "type"                    => 'mcetypecompte',                 // Type d'entrée (boite individuelle, partagée, ressource, ...)
-    "street"                  => 'street',                        // Rue
-    "postalcode"              => 'postalcode',                    // Code postal
-    "locality"                => 'l',                             // Ville
-    "title"                   => 'title',                         // Titre
-    "outofoffices"            => [MappingMce::name => 'mcevacation', MappingMce::type => MappingMce::arrayLdap], // Affichage du message d'absence de l'utilisateur
-  ];
+     * Configuration du mapping qui surcharge la conf
+     */
+    const MAPPING = [
+        "dn"                      => 'dn',                            // DN de l'utilisateur
+        "uid"                     => 'mail',                          // Identifiant de l'utilisateur
+        "fullname"                => 'cn',                            // Nom complet de l'utilisateur
+        "name"                    => 'cn',                            // Nom court de l'utilisateur
+        "email"                   => 'mail',                          // Adresse e-mail principale de l'utilisateur en reception
+        "email_list"              => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
+        "email_send"              => 'mail',                          // Adresse e-mail principale de l'utilisateur en emission
+        "email_send_list"         => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
+        "shares"                  => [MappingMce::name => 'mcedelegation', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
+        "server_routage"          => [MappingMce::name => 'mailhost', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
+        "type"                    => 'mcetypecompte',                 // Type d'entrée (boite individuelle, partagée, ressource, ...)
+        "street"                  => 'street',                        // Rue
+        "postalcode"              => 'postalcode',                    // Code postal
+        "locality"                => 'l',                             // Ville
+        "title"                   => 'title',                         // Titre
+        "outofoffices"            => [MappingMce::name => 'mcevacation', MappingMce::type => MappingMce::arrayLdap], // Affichage du message d'absence de l'utilisateur
+    ];
 
-  /**
-   * ***************************************************
-   * DATA MAPPING
-   */
-  /**
-   * Mapping uid field
-   *
-   * @param string $uid
-   */
-  protected function setMapUid($uid) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapUid(" . (is_string($uid) ? $uid : "") . ")");
-    if (!isset($this->objectmelanie)) {
-      throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
-    }
-    if (strpos($uid, 'uid=') === 0) {
-      // C'est un dn utilisateur
-      $this->objectmelanie->dn = $uid;
-    }
-    else if (strpos($uid, '@') !== false) {
-      // C'est une adresse e-mail et l'uid GN
-      $this->objectmelanie->email = $uid;
-      $this->objectmelanie->uid = $uid;
-    }
-    else {
-      $this->objectmelanie->uid = $uid;
-    }
-  }
-
-  /**
-   * Mapping shares field
-   *
-   * @param Share[] $shares
-   */
-  protected function setMapShares($shares) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapShares()");
-    if (!isset($this->objectmelanie)) {
-      throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
-    }
-    $this->_shares = $shares;
-    $_shares = [];
-    foreach ($shares as $share) {
-      $right = '';
-      switch ($share->type) {
-        case Share::TYPE_ADMIN:
-          $right = 'G';
-          break;
-        case Share::TYPE_SEND:
-          $right = 'C';
-          break;
-        case Share::TYPE_WRITE:
-          $right = 'E';
-          break;
-        case Share::TYPE_READ:
-          $right = 'L';
-          break;
-      }
-      $_shares[] = $share->user . ':' . $right;
-    }
-    $this->objectmelanie->shares = $_shares;
-  }
-
-  /**
-   * Mapping shares field
-   *
-   * @return Share[] Liste des partages positionnés sur cette boite
-   */
-  protected function getMapShares() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapShares()");
-    if (!isset($this->_shares)) {
-      $_shares = $this->objectmelanie->shares;
-      $this->_shares = [];
-      foreach ($_shares as $_share) {
-        $share = new Share();
-        list($share->user, $right) = \explode(':', $_share, 2);
-        switch (\strtoupper($right)) {
-          case 'G':
-            $share->type = Share::TYPE_ADMIN;
-            break;
-          case 'C':
-            $share->type = Share::TYPE_SEND;
-            break;
-          case 'E':
-            $share->type = Share::TYPE_WRITE;
-            break;
-          case 'L':
-            $share->type = Share::TYPE_READ;
-            break;
+    /**
+     * ***************************************************
+     * DATA MAPPING
+     */
+    /**
+     * Mapping uid field
+     *
+     * @param string $uid
+     */
+    protected function setMapUid($uid) {
+        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapUid(" . (is_string($uid) ? $uid : "") . ")");
+        if (!isset($this->objectmelanie)) {
+            throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
         }
-        $this->_shares[$share->user] = $share;
-      }
-    }
-    return $this->_shares;
-  }
-
-  /**
-   * Mapping shares field
-   *
-   * @return array Liste des partages supportés par cette boite ([Share::TYPE_*])
-   */
-  protected function getMapSupported_shares() {
-    return [Share::TYPE_ADMIN, Share::TYPE_SEND, Share::TYPE_WRITE, Share::TYPE_READ];
-  }
-
-  /**
-   * Récupération du champ out of offices
-   *
-   * @return Outofoffice[] Tableau de d'objets Outofoffice
-   */
-  protected function getMapOutofoffices() {
-		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOutofoffices()");
-    $objects = [];
-    if (is_array($this->objectmelanie->outofoffices)) {
-      $i = 0;
-      foreach ($this->objectmelanie->outofoffices as $oof) {
-        $object = new Outofoffice($oof);
-        if ($object->type == Outofoffice::TYPE_ALL) {
-          $key = $object->type.$i++;
+        if (strpos($uid, 'uid=') === 0) {
+            // C'est un dn utilisateur
+            $this->objectmelanie->dn = $uid;
+        }
+        else if (strpos($uid, '@') !== false) {
+            // C'est une adresse e-mail et l'uid GN
+            $this->objectmelanie->email = $uid;
+            $this->objectmelanie->uid = $uid;
         }
         else {
-          $key = $object->type;
+            $this->objectmelanie->uid = $uid;
         }
-        $objects[$key] = $object;
-      }
     }
-    return $objects;
-	}
 
-  /**
-   * Positionnement du champ out of offices
-   *
-   * @param Outofoffice[] $OofObjects
-   */
-  protected function setMapOutofoffices($OofObjects) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapOutofoffices()");
-    $reponses = [];
-    if (is_array($OofObjects)) {
-      foreach ($OofObjects as $OofObject) {
-        $reponses[] = $OofObject->render();
-      }
+    /**
+     * Mapping shares field
+     *
+     * @param Share[] $shares
+     */
+    protected function setMapShares($shares) {
+        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapShares()");
+        if (!isset($this->objectmelanie)) {
+            throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
+        }
+        $this->_shares = $shares;
+        $_shares = [];
+        foreach ($shares as $share) {
+            $right = '';
+            switch ($share->type) {
+                case Share::TYPE_ADMIN:
+                    $right = 'G';
+                    break;
+                case Share::TYPE_SEND:
+                    $right = 'C';
+                    break;
+                case Share::TYPE_WRITE:
+                    $right = 'E';
+                    break;
+                case Share::TYPE_READ:
+                    $right = 'L';
+                    break;
+            }
+            $_shares[] = $share->user . ':' . $right;
+        }
+        $this->objectmelanie->shares = $_shares;
     }
-    $this->objectmelanie->outofoffices = array_unique($reponses);
-	}
+
+    /**
+     * Mapping shares field
+     *
+     * @return Share[] Liste des partages positionnés sur cette boite
+     */
+    protected function getMapShares() {
+        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapShares()");
+        if (!isset($this->_shares)) {
+            $_shares = $this->objectmelanie->shares;
+            $this->_shares = [];
+            foreach ($_shares as $_share) {
+                $share = new Share();
+                list($share->user, $right) = \explode(':', $_share, 2);
+                switch (\strtoupper($right)) {
+                    case 'G':
+                        $share->type = Share::TYPE_ADMIN;
+                        break;
+                    case 'C':
+                        $share->type = Share::TYPE_SEND;
+                        break;
+                    case 'E':
+                        $share->type = Share::TYPE_WRITE;
+                        break;
+                    case 'L':
+                        $share->type = Share::TYPE_READ;
+                        break;
+                }
+                $this->_shares[$share->user] = $share;
+            }
+        }
+        return $this->_shares;
+    }
+
+    /**
+     * Mapping shares field
+     *
+     * @return array Liste des partages supportés par cette boite ([Share::TYPE_*])
+     */
+    protected function getMapSupported_shares() {
+        return [Share::TYPE_ADMIN, Share::TYPE_SEND, Share::TYPE_WRITE, Share::TYPE_READ];
+    }
+
+    /**
+     * Récupération du champ out of offices
+     *
+     * @return Outofoffice[] Tableau de d'objets Outofoffice
+     */
+    protected function getMapOutofoffices() {
+        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOutofoffices()");
+        $objects = [];
+        if (is_array($this->objectmelanie->outofoffices)) {
+            $i = 0;
+            foreach ($this->objectmelanie->outofoffices as $oof) {
+                $object = new Outofoffice($oof);
+                if ($object->type == Outofoffice::TYPE_ALL) {
+                    $key = $object->type.$i++;
+                }
+                else {
+                    $key = $object->type;
+                }
+                $objects[$key] = $object;
+            }
+        }
+        return $objects;
+    }
+
+    /**
+     * Positionnement du champ out of offices
+     *
+     * @param Outofoffice[] $OofObjects
+     */
+    protected function setMapOutofoffices($OofObjects) {
+        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapOutofoffices()");
+        $reponses = [];
+        if (is_array($OofObjects)) {
+            foreach ($OofObjects as $OofObject) {
+                $reponses[] = $OofObject->render();
+            }
+        }
+        $this->objectmelanie->outofoffices = array_unique($reponses);
+    }
+
+    /**
+     * Enregistrement de l'utilisateur modifié dans l'annuaire
+     *
+     * @ignore
+     */
+    public function save() {
+        parent::save();
+        $ret = true;
+        // Est-ce que le dn est bien défini ?
+        if (!isset($this->dn)) {
+            return false;
+        }
+
+        if (!$this->_supportCreation && $this->exists()) {
+            // On reproduit la logique de la fonction getEntry() de la classe parente UserMelanie
+            $entry = [];
+            foreach ($this->objectmelanie->getHaschanged() as $key => $changed) {
+                if ($changed) {
+                    // Idéalement avant la ligne suivante vérifier la condition if (!in_array($key, $this->_unchangeableProperties))
+                    $entry[$key] = ($this->objectmelanie->getData())[$key];
+                }
+            }
+            if (!empty($entry)) {
+                $ldap = \LibMelanie\Ldap\Ldap::GetInstance(\LibMelanie\Config\Ldap::$MASTER_LDAP);
+                // Gérer une authentification externe
+                if (isset($this->_itemConfiguration['bind_dn'])) {
+                    $ret = $ldap->authenticate($this->_itemConfiguration['bind_dn'], $this->_itemConfiguration['bind_password']);
+                }
+                return $ret && $ldap->modify($this->dn, $entry);
+            }
+        }
+        return $ret;
+    }
 }

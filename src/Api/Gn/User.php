@@ -23,7 +23,7 @@ namespace LibMelanie\Api\Gn;
 use LibMelanie\Api\Mce;
 use LibMelanie\Api\Gn\Users\Outofoffice;
 use LibMelanie\Api\Gn\Users\Share;
-use LibMelanie\Config\Ldap;
+use LibMelanie\Config\Ldap as LdapConfig;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\MappingMce;
 use LibMelanie\Objects\UserMelanie;

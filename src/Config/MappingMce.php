@@ -76,6 +76,9 @@ class MappingMce {
 		  "WorkspaceShare"		=> "dwp_shares",
 		  "WorkspaceHashtag"	=> "dwp_hashtags",
 		  "WorkspaceHashtagRef"	=> "dwp_hashtags_workspaces",
+		  "News"				=> "dwp_news",
+		  "Rss"					=> "dwp_rss",
+		  "NewsShare"			=> "dwp_news_share",
 	  ];
 	  // Init Primary Keys
 	  self::$Primary_Keys = [
@@ -99,6 +102,9 @@ class MappingMce {
 		  "WorkspaceShare"		=> ['workspace', 'user'],
 		  "WorkspaceHashtag"	=> ['label'],
 		  "WorkspaceHashtagRef"	=> ['hashtag', 'workspace'],
+		  "News"				=> ["uid"],
+		  "Rss"					=> ["uid"],
+		  "NewsShare"			=> ["user", "service"],
 	  ];
 	  // Init Data Mapping
 	  self::$Data_Mapping = [
@@ -397,6 +403,33 @@ class MappingMce {
 		  "WorkspaceHashtagRef" => [
 				"hashtag"	=> [self::name => "hashtag_id", self::type => self::integer],
 				"workspace"	=> [self::name => "workspace_id", self::type => self::integer],
+		  ],
+		  // Gestion des news dans le bureau numérique
+		  "News" => [
+				"id" 			=> [self::name => "news_id", self::type => self::integer],
+				"uid" 			=> [self::name => "news_uid"],
+				"title" 		=> [self::name => "news_title"],
+				"description" 	=> [self::name => "news_description"],
+				"created" 		=> [self::name => "news_created", self::type => self::date],
+				"modified"		=> [self::name => "news_modified", self::type => self::date],
+				"service" 		=> [self::name => "news_service"],
+				"service_name" 	=> [self::name => "news_service_name"],
+				"creator" 		=> [self::name => "news_creator_id"],
+		  ],
+		  "Rss"	=> [
+				"id" 		=> [self::name => "rss_id", self::type => self::integer],
+				"uid" 		=> [self::name => "rss_uid"],
+				"title" 	=> [self::name => "rss_title"],
+				"url" 		=> [self::name => "rss_url"],
+				"source" 	=> [self::name => "rss_source", self::type => self::string, self::size => 20],
+				"service" 	=> [self::name => "rss_service"],
+				"creator" 	=> [self::name => "rss_creator_id"],
+		  ],
+		  "NewsShare" => [
+				"id" 		=> [self::name => "news_share_id", self::type => self::integer],
+				"service" 	=> [self::name => "news_share_service"],
+				"user" 		=> [self::name => "news_share_user_id"],
+				"right" 	=> [self::name => "news_share_right", self::type => self::string, self::size => 1], // 'a' or 'p'
 		  ],
 	  ];
 	}

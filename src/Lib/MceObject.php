@@ -21,6 +21,7 @@
 namespace LibMelanie\Lib;
 
 use LibMelanie\Exceptions;
+use LibMelanie\Log\M2Log;
 use Serializable;
 
 /**
@@ -274,5 +275,53 @@ abstract class MceObject implements Serializable {
 				call_user_func($callback);
 			}
 		}
+	}
+
+	/**
+	 * Permet de récupérer la liste d'objet en utilisant les données passées
+	 * (la clause where s'adapte aux données)
+	 * Il faut donc peut être sauvegarder l'objet avant d'appeler cette méthode
+	 * pour réinitialiser les données modifiées (propriété haschanged)
+	 * 
+	 * @param String[] $fields
+	 *          Liste les champs à récupérer depuis les données
+	 * @param String $filter
+	 *          Filtre pour la lecture des données en fonction des valeurs déjà passé, exemple de filtre : "((#description# OR #title#) AND #start#)"
+	 * @param String[] $operators
+	 *          Liste les propriétés par operateur (MappingMce::like, MappingMce::supp, MappingMce::inf, MappingMce::diff)
+	 * @param String $orderby
+	 *          Tri par le champ
+	 * @param bool $asc
+	 *          Tri ascendant ou non
+	 * @param int $limit
+	 *          Limite le nombre de résultat (utile pour la pagination)
+	 * @param int $offset
+	 *          Offset de début pour les résultats (utile pour la pagination)
+	 * @param String[] $case_unsensitive_fields
+	 *          Liste des champs pour lesquels on ne sera pas sensible à la casse
+	 * @return Contact[] Array
+	 */
+	function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
+		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getList()");
+		$_objects = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields);
+		if (!isset($_objects)) {
+			return null;
+		}
+
+		$objects = [];
+		foreach ($_objects as $_object) {
+			$_object->setIsExist();
+			$_object->setIsLoaded();
+			$object = new static();
+			$object->setObjectMelanie($_object);
+			
+			if (isset($_object->id)) {
+				$objects[$_object->id] = $object;
+			}
+			else {
+				$objects[] = $object;
+			}
+		}
+		return $objects;
 	}
 }

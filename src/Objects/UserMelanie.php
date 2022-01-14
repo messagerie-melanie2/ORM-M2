@@ -192,7 +192,6 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   protected static function Init($mapping = [], $server = null) {
     if (!self::$isInit) {
       if (isset($server) && isset(Config\Ldap::$SERVERS[$server]['mapping'])) {
-
         $mapping = array_merge($mapping, Config\Ldap::$SERVERS[$server]['mapping']);
       }
       else if (isset(Config\Ldap::$SERVERS[Config\Ldap::$SEARCH_LDAP]['mapping'])) {

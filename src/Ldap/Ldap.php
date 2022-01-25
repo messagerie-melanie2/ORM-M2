@@ -623,7 +623,64 @@ class Ldap {
     return $infos;
   }
 
-  /**
+    /**
+     * Retourne les groupes suivant le filter passé en parametre
+     *
+     * @param string $filter
+     *          Filtre ldap à utiliser pour la recherche
+     * @param array $ldap_attr
+     *          [Optionnel] Liste des attributs ldap à retourner
+     * @param int $sizelimit
+     *          Vous permet de limiter le nombre d'entrées à récupérer. Le fait de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.
+     * @param string $server
+     *          [Optionnel] Server LDAP utilisé pour la requête
+     * @return array
+     */
+    public static function GetGroups($filter, $ldap_attr = null, $sizelimit = 0, $server = null) {
+        M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetGroups($filter)");
+        if (!isset($server)) {
+            $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+        }
+        // Récupération de l'instance LDAP en fonction du serveur
+        $ldap = self::GetInstance($server);
+        // Filtre ldap
+        if (!isset($filter)) {
+            return [];
+        }
+
+        // Liste des attributes
+        if (!isset($ldap_attr)) {
+            $ldap_attr = $ldap->getConfig("get_groups_user_member_attributes");
+        }
+        else {
+            $ldap_attr = self::GetMaps($ldap_attr, $server);
+        }
+        // Récupération des données en cache
+        $keycache = "GetGroups:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr));
+        $infos = $ldap->getCache($keycache);
+        if (!isset($infos)) {
+            // Connexion anonymous pour lire les données
+            if ($ldap->anonymous()) {
+                // Lancement de la recherche
+                $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr,0, $sizelimit);
+                if ($sr && $ldap->count_entries($sr) > 0) {
+                    $infos = $ldap->get_entries($sr);
+                    $ldap->setCache($keycache, $infos);
+                } else {
+                    $ldap->deleteCache($keycache);
+                }
+            }
+            else {
+                throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+            }
+        }
+        // Retourne les données, null si vide
+        return $infos;
+    }
+
+
+
+    /**
    * Retourne les groupes dont l'utilisateur est propriétaire
    *
    * @param string $username

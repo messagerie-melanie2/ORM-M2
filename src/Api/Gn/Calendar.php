@@ -36,62 +36,62 @@ use LibMelanie\Sql\Sql;
  * @api
  *
  */
-class Calendar extends CalendarMelanie {
+class Calendar extends \LibMelanie\Api\Defaut\Calendar {
 
 
-    public int $id;
+//    public int $id;
 
 
-    /**
-     * Calendar constructor.
-     * @param null $user
-     */
-    public function __construct($user = null)
-    {
-        $this->objectType = "CalendarMelanie";
-    }
-
-    /**
-     * La classe Mel\Calendar ne permet pas la récupération par l'id seul
-     * on le fait ici
-     * @return bool|null
-     */
-    public function load() {
-
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
-        if (!isset($this->id)) return false;
-
-        // Test si l'objet existe, pas besoin de load
-        if (is_bool($this->isExist) && $this->isLoaded) {
-            return $this->isExist;
-        }
-        $maps = MappingMce::$Data_Mapping[$this->objectType];
-        $n = MappingMce::name;
-        $query = SqlGnRequests::listObjectsById;
-
-
-        $query = str_replace('{user_uid}',  $maps['owner'][$n], $query);
-        $query = str_replace('{datatree_name}', $maps['name'][$n], $query);
-        $query = str_replace('{datatree_ctag}', $maps['ctag'][$n], $query);
-        $query = str_replace('{datatree_synctoken}', $maps['synctoken'][$n], $query);
-        $query = str_replace('{datatree_id}', $maps['id'][$n], $query);
-
-
-        // Params
-        $params = [
-            "datatree_id" => $this->id
-        ];
-
-        $sql = Sql::GetInstance();
-        // Liste les calendriers de l'utilisateur
-        $r = $sql->executeQueryToObject($query, $params, $this);
-
-        if ($this->isExist) {
-            $this->initializeHasChanged();
-        }
-        return ($this->name);
-//        return $this->isExist;
-    }
+//    /**
+//     * Calendar constructor.
+//     * @param null $user
+//     */
+//    public function __construct($user = null)
+//    {
+//        $this->objectType = "CalendarMelanie";
+//    }
+//
+//    /**
+//     * La classe Mel\Calendar ne permet pas la récupération par l'id seul
+//     * on le fait ici
+//     * @return bool|null
+//     */
+//    public function load() {
+//
+//        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->load()");
+//        if (!isset($this->id)) return false;
+//
+//        // Test si l'objet existe, pas besoin de load
+//        if (is_bool($this->isExist) && $this->isLoaded) {
+//            return $this->isExist;
+//        }
+//        $maps = MappingMce::$Data_Mapping[$this->objectType];
+//        $n = MappingMce::name;
+//        $query = SqlGnRequests::listObjectsById;
+//
+//
+//        $query = str_replace('{user_uid}',  $maps['owner'][$n], $query);
+//        $query = str_replace('{datatree_name}', $maps['name'][$n], $query);
+//        $query = str_replace('{datatree_ctag}', $maps['ctag'][$n], $query);
+//        $query = str_replace('{datatree_synctoken}', $maps['synctoken'][$n], $query);
+//        $query = str_replace('{datatree_id}', $maps['id'][$n], $query);
+//
+//
+//        // Params
+//        $params = [
+//            "datatree_id" => $this->id
+//        ];
+//
+//        $sql = Sql::GetInstance();
+//        // Liste les calendriers de l'utilisateur
+//        $r = $sql->executeQueryToObject($query, $params, $this);
+//
+//        if ($this->isExist) {
+//            $this->initializeHasChanged();
+//        }
+//        return ($this->name);
+////        return $this->isExist;
+//    }
 
 
 }

@@ -774,6 +774,7 @@ class Event extends MceObject {
         'modified',
         'modified_json',
         'description',
+        'sequence',
         'recurrence_json',
         'organizer_json',
         'organizer_calendar_id',

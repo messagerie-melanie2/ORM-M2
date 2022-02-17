@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.30
+------
+- 0006512: Ajouter le support de la sequence dans le en attente
+
 ORM M2 - 0.6.1.29
 ------
 - Fix getUserRss method pour les News/Rss

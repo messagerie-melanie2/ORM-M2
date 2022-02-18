@@ -31,73 +31,72 @@ namespace LibMelanie\Sql;
  */
 class SqlCalendarRequests {
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param REPLACE {event_range}
 	 * @param PDO :calendar_id
 	 */
 	const listAllEvents = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2 ON k1.event_uid = k2.event_uid AND char_length(k2.event_attendees) > 10 WHERE k1.calendar_id = :calendar_id{event_range};";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param REPLACE {event_range}
 	 * @param PDO :calendar_id
 	 */
 	const listAllEventsFreebusy = "SELECT k1.* FROM kronolith_events k1 WHERE k1.calendar_id = :calendar_id{event_range};";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param PDO :calendar_id, :event_uid
 	 */
 	const getEvent = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2	ON k1.event_uid = k2.event_uid AND char_length(k2.event_attendees) > 10 WHERE k1.calendar_id = :calendar_id AND k1.event_uid = :event_uid;";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param REPLACE {fields_list}
 	 * @param PDO :calendar_id, :event_uid
 	 */
 	const getListEvents = "SELECT {fields_list}, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2 ON k1.event_uid = k2.event_uid AND char_length(k2.event_attendees) > 10 WHERE {where_clause};";
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param REPLACE {fields_list}
 	 * @param PDO :calendar_id, :event_uid
 	 */
 	const getOptiListEvents = "SELECT {fields_list} FROM kronolith_events k1 WHERE {where_clause};";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param REPLACE {where_clause}
 	 */
 	const getCountEvents = "SELECT count(*) as events_count FROM kronolith_events k1 WHERE {where_clause};";
 
 	/**
-	 * @var UPDATE
+	 * @var string UPDATE
 	 * @param REPLACE {event_set}
 	 * @param PDO :calendar_id, :event_uid
 	 */
 	const updateEvent = "UPDATE kronolith_events SET {event_set} WHERE calendar_id = :calendar_id AND event_uid = :event_uid;";
 
 	/**
-	 * @var UPDATE
+	 * @var string UPDATE
 	 * @param PDO :event_uid
 	 */
 	const updateMeetingEtag = "UPDATE kronolith_events SET event_modified = event_modified + 1,  event_modified_json = event_modified_json + 1 WHERE event_uid = :event_uid;";
 
 	/**
-	 * @var INSERT
+	 * @var string INSERT
 	 * @param REPLACE {data_fields}, {data_values}
 	 */
 	const insertEvent = "INSERT INTO kronolith_events ({data_fields}) VALUES ({data_values});";
 
 	/**
-	 * @var DELETE
+	 * @var string DELETE
 	 * @param PDO :calendar_id, :event_uid
 	 */
 	const deleteEvent = "DELETE FROM kronolith_events WHERE calendar_id = :calendar_id AND event_uid = :event_uid;";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param :calendar_id
 	 */
-	//const getCTag = "SELECT md5(CAST(sum(event_modified) AS varchar)) as ctag FROM kronolith_events WHERE calendar_id = :calendar_id;";
 	const getCTag = "SELECT datatree_ctag as ctag FROM horde_datatree WHERE datatree_name = :calendar_id AND group_uid = 'horde.shares.kronolith'";
 }

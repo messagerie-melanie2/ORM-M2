@@ -31,21 +31,23 @@ namespace LibMelanie\Sql;
  */
 class SqlObjectPropertyRequests {
 	/**
-	 * @var INSERT
+	 * @var string INSERT
 	 * @param PDO :datatree_id, :attribute_name, :attribute_key, :attribute_value
 	 */
 	const insertProperty = "INSERT INTO horde_datatree_attributes (datatree_id, attribute_name, attribute_key, attribute_value) VALUES (:datatree_id, :attribute_name, :attribute_key, :attribute_value);";
 
 	/**
 	 * Mise à jour d'une propriété Mélanie2
-	 * @var UPDATE
+	 * 
+	 * @var string UPDATE
 	 * @param PDO :datatree_id, :attribute_value, :attribute_name
 	 */
 	const updateProperty = "UPDATE horde_datatree_attributes SET attribute_value = :attribute_value WHERE datatree_id = :datatree_id AND attribute_name = :attribute_name;";
 
 	/**
 	 * Suppression d'une propriété Mélanie2
-	 * @var DELETE
+	 * 
+	 * @var string DELETE
 	 * @param Replace {where_clause}
 	 */
 	const deleteProperty = "DELETE FROM horde_datatree_attributes WHERE {where_clause};";

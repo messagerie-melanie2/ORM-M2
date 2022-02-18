@@ -31,41 +31,41 @@ namespace LibMelanie\Sql;
  */
 class SqlWorkspaceRequests {
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param REPLACE {order_by}, {limit}
 	 */
 	const listPublicsWorkspaces = "SELECT dwp_workspaces.* FROM dwp_workspaces WHERE workspace_ispublic = 1{order_by}{limit};";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param REPLACE {order_by}, {limit}
 	 * @param PDO :user_id
 	 */
 	const listUserWorkspaces = "SELECT dwp_workspaces.* FROM dwp_workspaces INNER JOIN dwp_shares USING (workspace_id) WHERE user_uid = :user_uid AND rights = 'o'{order_by}{limit};";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param REPLACE {order_by}, {limit}
 	 * @param PDO :user_id
 	 */
 	const listSharedWorkspaces = "SELECT dwp_workspaces.* FROM dwp_workspaces INNER JOIN dwp_shares USING (workspace_id) WHERE user_uid = :user_uid{order_by}{limit};";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param REPLACE {order_by}, {limit}
 	 * @param PDO :hashtag
 	 */
 	const listWorkspacesByHashtag = "SELECT dwp_workspaces.* FROM dwp_workspaces INNER JOIN dwp_hashtags_workspaces USING (workspace_id) INNER JOIN dwp_hashtags USING (hashtag_id) WHERE hashtag = :hashtag{order_by}{limit};";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param REPLACE {order_by}, {limit}
 	 * @param PDO :workspace_id
 	 */
 	const listWorkspaceHashtags = "SELECT dwp_hashtags.* FROM dwp_hashtags INNER JOIN dwp_hashtags_workspaces USING (hashtag_id) WHERE workspace_id = :workspace_id{order_by}{limit};";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param REPLACE {order_by}, {limit}
 	 * @param PDO :workspace_id
 	 */

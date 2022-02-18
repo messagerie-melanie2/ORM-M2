@@ -1204,6 +1204,30 @@ abstract class User extends MceObject {
   }
 
   /**
+   * Permet de définir si l'utilisateur courant en est un publisher de la news
+   * 
+   * @param News\News|News\Rss [in/out]
+   */
+  public function isNewsPublisher(&$news) {
+    // Ajouter une informations pour les news publisher
+    $shares = $this->getUserNewsShares();
+    $publisherServices = [];
+    foreach ($shares as $share) {
+      if (in_array($share->right, [News\NewsShare::RIGHT_ADMIN_PUBLISHER, News\NewsShare::RIGHT_PUBLISHER])) {
+        $publisherServices[] = $share->service;
+      }
+    }
+
+    // Si le service de la news fait parti des services publisher du User
+    if (in_array($news->service, $publisherServices)) {
+      $news->publisher = true;
+    }
+    else {
+      $news->publisher = false;
+    }
+  }
+
+  /**
    * Retourne toutes les news de l'utilisateur liées à son service ou à ses droits
    * 
    * @return News\News
@@ -1287,7 +1311,7 @@ abstract class User extends MceObject {
       return null;
     }
     if (!isset($this->_userRss)) {
-      $rss = new News\News();
+      $rss = new News\Rss();
       $rss->service = $this->_get_user_services();
       $this->_userRss = $rss->getList();
 

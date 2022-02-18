@@ -32,28 +32,28 @@ namespace LibMelanie\Sql;
 class SqlObjectRequests {
 	/**
 	 * Récupère un objet générique de Mélanie2
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param Replace {fields_list}, {table_name}, {where_clause}
 	 */
 	const getObject = "SELECT {fields_list} FROM {table_name}{where_clause};";
 
 	/**
 	 * Insertion d'un objet générique dans la table Mélanie2
-	 * @var INSERT
+	 * @var string INSERT
 	 * @param REPLACE {table_name}, {data_fields}, {data_values}
 	 */
 	const insertObject = "INSERT INTO {table_name} ({data_fields}) VALUES ({data_values});";
 
 	/**
 	 * Mise à jour d'un objet Mélanie2
-	 * @var UPDATE
+	 * @var string UPDATE
 	 * @param REPLACE {table_name}, {object_set}, {where_clause}
 	 */
 	const updateObject = "UPDATE {table_name} SET {object_set} WHERE {where_clause};";
 
 	/**
 	 * Suppression d'un objet Mélanie2
-	 * @var DELETE
+	 * @var string DELETE
 	 * @param REPLACE {table_name}, {where_clause}
 	 */
 	const deleteObject = "DELETE FROM {table_name} WHERE {where_clause};";

@@ -1,3 +1,13 @@
+ORM M2 - 0.6.1.30
+------
+- 0006512: Ajouter le support de la sequence dans le en attente
+
+ORM M2 - 0.6.1.29
+------
+- Fix getUserRss method pour les News/Rss
+- Fixing queries comment header
+- Ajout du support isNewsPublisher pendant un load
+
 ORM M2 - 0.6.1.28
 ------
 - 0006328: Ajouter une lib pour genérer des UUID

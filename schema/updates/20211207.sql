@@ -5,7 +5,7 @@
 
 -- DROP SEQUENCE dwp_rss_seq;
 
-CREATE SEQUENCE dwp_rss_seq
+CREATE SEQUENCE public.dwp_rss_seq
     START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
@@ -19,7 +19,7 @@ CREATE SEQUENCE dwp_rss_seq
 --
 -- DROP TABLE dwp_rss;
 
-CREATE TABLE dwp_rss
+CREATE TABLE public.dwp_rss
 (
 	rss_id bigint DEFAULT nextval('dwp_rss_seq'::text) PRIMARY KEY,
 	rss_uid text NOT NULL UNIQUE,
@@ -39,7 +39,7 @@ CREATE INDEX dwp_rss_service_idx ON dwp_rss (rss_service);
 
 -- DROP SEQUENCE dwp_news_seq;
 
-CREATE SEQUENCE dwp_news_seq
+CREATE SEQUENCE public.dwp_news_seq
     START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
@@ -53,7 +53,7 @@ CREATE SEQUENCE dwp_news_seq
 --
 -- DROP TABLE dwp_news;
 
-CREATE TABLE dwp_news
+CREATE TABLE public.dwp_news
 (
 	news_id bigint DEFAULT nextval('dwp_news_seq'::text) PRIMARY KEY,
 	news_uid text NOT NULL UNIQUE,
@@ -75,7 +75,7 @@ CREATE INDEX dwp_news_service_idx ON dwp_news (news_service);
 
 -- DROP SEQUENCE dwp_news_share_seq;
 
-CREATE SEQUENCE dwp_news_share_seq
+CREATE SEQUENCE public.dwp_news_share_seq
     START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
@@ -89,7 +89,7 @@ CREATE SEQUENCE dwp_news_share_seq
 --
 -- DROP TABLE dwp_news_share;
 
-CREATE TABLE dwp_news_share
+CREATE TABLE public.dwp_news_share
 (
 	news_share_id bigint DEFAULT nextval('dwp_news_share_seq'::text) PRIMARY KEY,
 	news_share_service text NOT NULL,

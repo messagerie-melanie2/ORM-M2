@@ -1194,7 +1194,7 @@ abstract class User extends MceObject {
 
     // Si l'utilisateur est publisher d'une news on ajoute une info
     foreach ($news as $k => $n) {
-      if (in_array($n->service, $publisherServices)) {
+      if ($this->_is_in_services($n->service, $publisherServices)) {
         $news[$k]->publisher = true;
       }
       else {
@@ -1219,12 +1219,30 @@ abstract class User extends MceObject {
     }
 
     // Si le service de la news fait parti des services publisher du User
-    if (in_array($news->service, $publisherServices)) {
+    if ($this->_is_in_services($news->service, $publisherServices)) {
       $news->publisher = true;
     }
     else {
       $news->publisher = false;
     }
+  }
+
+  /**
+   * Parcours la liste des services pour déterminer si le service en fait parti
+   * Il peut également être un sous service d'un service de la liste et donc en faire partie
+   * 
+   * @param string $service
+   * @param array $servicesList
+   * 
+   * @return boolean
+   */
+  protected function _is_in_services($service, $servicesList) {
+    foreach ($servicesList as $s) {
+      if (strpos($service, $s) !== false) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**

@@ -1,3 +1,8 @@
+ORM M2 - 0.6.1.31
+------
+- Correctif sur le calcul du isPublisher d'une news s'il s'agit d'un sous service
+- Mise à jour des init et update SQL pour mieux gérer les schémas
+
 ORM M2 - 0.6.1.30
 ------
 - 0006512: Ajouter le support de la sequence dans le en attente

@@ -53,7 +53,7 @@ class News extends MceObject {
    * Accès aux objets associés
    * Utilisateur associé à l'objet
    * 
-   * @var User
+   * @var \LibMelanie\Api\Defaut\User
    * @ignore
    */
   protected $_user;
@@ -69,7 +69,7 @@ class News extends MceObject {
   /**
    * Constructeur de l'objet
    * 
-   * @param User $user Utilisateur
+   * @param \LibMelanie\Api\Defaut\User $user Utilisateur
    */
   public function __construct($user = null) {
     // Défini la classe courante
@@ -88,6 +88,21 @@ class News extends MceObject {
    * ***************************************************
    * METHOD MAPPING
    */
+  /**
+   * Chargement de l'objet
+   */
+  public function load() {
+    // Load l'objet
+    $ret = $this->objectmelanie->load();
+
+    // Test si le user est un publisher
+    if ($ret && isset($this->_user)) {
+      $this->_user->isNewsPublisher($this);
+    }
+
+    return $ret;
+  }
+
   /**
    * Enregistrement de l'objet
    * Nettoie le cache du user

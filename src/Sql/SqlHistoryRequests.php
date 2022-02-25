@@ -31,25 +31,25 @@ namespace LibMelanie\Sql;
  */
 class SqlHistoryRequests {
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * Recupère la nextval de la séquence 'horde_histories_seq'
 	 */
 	const getNextHistory = "SELECT nextval('horde_histories_seq') as history_id;";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param :object_uid, :history_action
 	 */
 	const getHistory = "SELECT * FROM horde_histories WHERE object_uid = :object_uid AND history_action = :history_action;";
 
 	/**
-	 * @var INSERT
+	 * @var string INSERT
 	 * @param REPLACE {data_fields}, {data_values}
 	 */
 	const insertHistory = "INSERT INTO horde_histories ({data_fields}) 	VALUES ({data_values});";
 
 	/**
-	 * @var UPDATE
+	 * @var string UPDATE
 	 * @param REPLACE {event_set}
 	 * @param :object_uid, :history_action
 	 */

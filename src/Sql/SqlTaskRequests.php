@@ -31,15 +31,14 @@ namespace LibMelanie\Sql;
  */
 class SqlTaskRequests {
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param :task_owner
 	 */
 	const listAllTasks = "SELECT * FROM nag_tasks WHERE task_owner = :task_owner;";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param :task_owner
 	 */
-	//const getCTag = "SELECT md5(CAST(sum(task_ts) AS varchar)) as ctag FROM nag_tasks WHERE task_owner = :task_owner;";
 	const getCTag = "SELECT datatree_ctag as ctag FROM horde_datatree WHERE datatree_name = :task_owner AND group_uid = 'horde.shares.nag'";
 }

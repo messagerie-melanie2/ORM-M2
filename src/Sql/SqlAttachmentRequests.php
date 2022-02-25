@@ -31,38 +31,39 @@ namespace LibMelanie\Sql;
  */
 class SqlAttachmentRequests {
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * Recupère la nextval de la séquence 'horde_vfs_seq'
 	 */
 	const getNextAttachment = "SELECT nextval('horde_vfs_seq') as vfs_id;";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param Replace {fields_list}, {where_clause}
 	 */
 	const getAttachmentsList = "SELECT {fields_list} FROM horde_vfs WHERE {where_clause};";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param Replace {where_clause}
 	 */
 	const getAttachmentData = "SELECT vfs_id, vfs_name, vfs_type, vfs_modified, vfs_owner, vfs_path, vfs_data FROM horde_vfs WHERE {where_clause};";
 
 	/**
-	 * @var INSERT
+	 * @var string INSERT
 	 * @param Replace {data_fields}, {data_values}
 	 */
 	const insertAttachment = "INSERT INTO horde_vfs ({data_fields}) VALUES ({data_values});";
 
 	/**
-	 * @var UPDATE
+	 * @var string UPDATE
 	 * @param Replace {attachment_set}, {where_clause}
 	 */
 	const updateAttachment = "UPDATE horde_vfs SET {attachment_set} WHERE {where_clause};";
 
 	/**
 	 * Suppression d'un objet Mélanie2
-	 * @var DELETE
+	 * 
+	 * @var string DELETE
 	 * @param Replace {where_clause}
 	 */
 	const deleteAttachment = "DELETE FROM horde_vfs WHERE {where_clause};";

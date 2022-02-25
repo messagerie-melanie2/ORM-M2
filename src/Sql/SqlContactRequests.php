@@ -31,15 +31,14 @@ namespace LibMelanie\Sql;
  */
 class SqlContactRequests {
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param :owner_id
 	 */
 	const listAllContacts = "SELECT * FROM turba_objects WHERE owner_id = :owner_id AND object_type = 'Object';";
 
 	/**
-	 * @var SELECT
+	 * @var string SELECT
 	 * @param :owner_id
 	 */
-	//const getCTag = "SELECT md5(CAST(sum(object_ts) AS varchar)) as ctag FROM turba_objects WHERE owner_id = :owner_id;";
 	const getCTag = "SELECT datatree_ctag as ctag FROM horde_datatree WHERE datatree_name = :owner_id AND group_uid = 'horde.shares.turba'";
 }

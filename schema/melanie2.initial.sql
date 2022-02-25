@@ -1,4 +1,4 @@
--- Schema du 20210408
+-- Schema du 20220224
 
 --
 -- Name: update_addressbook_ctag(); Type: FUNCTION
@@ -546,6 +546,39 @@ CREATE TABLE dwp_news_share
 	news_share_user_id text NOT NULL
 );
 
+--
+-- Sequence "dwp_notifications_seq"
+-- Name: dwp_notifications_seq; Type: SEQUENCE;
+--
+
+CREATE SEQUENCE dwp_notifications_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Table "dwp_notifications"
+-- Name: dwp_notifications; Type: TABLE;
+--
+
+CREATE TABLE dwp_notifications
+(
+	notification_id bigint DEFAULT nextval('dwp_notifications_seq'::text) PRIMARY KEY,
+	notification_uid text NOT NULL,
+	notification_owner text NOT NULL,
+	notification_from text,
+	notification_title text NOT NULL,
+	notification_content text NOT NULL,
+	notification_category text NOT NULL,
+	notification_action text,
+	notification_modified integer NOT NULL,
+	notification_isread boolean NOT NULL,
+	notification_isdeleted boolean NOT NULL
+);
+
 
 --
 -- Name: horde_datatree_pkey; Type: CONSTRAINT
@@ -840,6 +873,19 @@ CREATE INDEX dwp_news_service_idx ON dwp_news (news_service);
 
 CREATE INDEX dwp_news_share_user_id_idx ON dwp_news_share (news_share_user_id);
 
+
+--
+-- Name: dwp_notifications_owner_uid_idx; Type: INDEX
+--
+
+CREATE INDEX dwp_notifications_owner_uid_idx ON dwp_notifications (notification_owner, notification_uid);
+
+
+--
+-- Name: dwp_notifications_owner_idx; Type: INDEX
+--
+
+CREATE INDEX dwp_notifications_owner_idx ON dwp_notifications (notification_owner);
 
 --
 -- Name: trigger_addressbook_ctag; Type: TRIGGER;

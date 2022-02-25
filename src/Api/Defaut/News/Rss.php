@@ -31,7 +31,6 @@ use LibMelanie\Objects\ObjectMelanie;
  * @subpackage API/Defaut
  * @api
  * 
- * @property integer $id Identifiant du flux rss
  * @property string $uid Identifiant unique du flux rss
  * @property string $title Titre donné au flux rss
  * @property string $url URL vers le flux rss
@@ -40,10 +39,10 @@ use LibMelanie\Objects\ObjectMelanie;
  * @property string $creator Identifiant du créateur
  * @property boolean $publisher Est-ce que l'utilisateur est un publisher de cette news ?
  * 
- * @method bool load() Charge les données du hashtag depuis la base de données
- * @method bool exists() Est-ce que le hashtag existe dans la base de données ?
- * @method bool save() Enregistre le hashtag dans la base de données
- * @method bool delete() Supprime le hashtag de la base de données
+ * @method bool load() Charge les données du flux rss depuis la base de données
+ * @method bool exists() Est-ce que le flux rss existe dans la base de données ?
+ * @method bool save() Enregistre le flux rss dans la base de données
+ * @method bool delete() Supprime le flux rss de la base de données
  */
 class Rss extends News {
   /**

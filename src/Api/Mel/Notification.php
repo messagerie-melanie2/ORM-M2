@@ -18,29 +18,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-namespace LibMelanie\Api\Mel\News;
+namespace LibMelanie\Api\Mel;
 
 use LibMelanie\Api\Defaut;
 
 /**
- * Classe de gestion des partages pour les News
+ * Classe de gestion des notifications pour le Bnum
  * 
  * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/Mel
  * @api
  * 
- * @property string $uid Identifiant unique du flux rss
- * @property string $title Titre donné au flux rss
- * @property string $url URL vers le flux rss
- * @property string $source Nom de la source
- * @property string $service Service associé au flux rss
- * @property string $creator Identifiant du créateur
- * @property boolean $publisher Est-ce que l'utilisateur est un publisher de cette news ?
+ * @property string $uid Identifiant unique de la notification
+ * @property string $owner Propriétaire de la notification (uid utilisateur ou service)
+ * @property string $from Origine de la notification
+ * @property string $title Titre de la notification
+ * @property string $content Contenu de la notification
+ * @property integer $modified timestamp de création/modification de la notification
+ * @property string $category Catégorie de la notification
+ * @property string $action Bouton d'action pour la notification
+ * @property boolean $isread Est-ce que la notification a été lue ?
+ * @property boolean $isdeleted Est-ce que la notification est supprimée ?
  * 
  * @method bool load() Charge les données du hashtag depuis la base de données
  * @method bool exists() Est-ce que le hashtag existe dans la base de données ?
  * @method bool save() Enregistre le hashtag dans la base de données
  * @method bool delete() Supprime le hashtag de la base de données
  */
-class Rss extends Defaut\News\Rss {}
+class Notification extends Defaut\Notification {}

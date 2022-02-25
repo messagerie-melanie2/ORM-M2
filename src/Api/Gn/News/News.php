@@ -30,7 +30,6 @@ use LibMelanie\Api\Defaut;
  * @subpackage API/Gn
  * @api
  * 
- * @property integer $id Identifiant de la news
  * @property string $uid Identifiant unique de la news
  * @property string $title Titre donné à la news
  * @property string $description Description donnée à la news

@@ -1,3 +1,10 @@
+ORM M2 - 0.6.1.32
+------
+- 0006528: Mise à jour du schéma LDAP pour les groupes dans Api\Mce\Group
+- 0006525: Création de la table pour le stockage des notifications du Bnum
+- 0006526: Création d'un nouvel objet Notification
+- 0006527: Création des méthodes pour gérer les notifications dans l'objet User
+
 ORM M2 - 0.6.1.31
 ------
 - Correctif sur le calcul du isPublisher d'une news s'il s'agit d'un sous service

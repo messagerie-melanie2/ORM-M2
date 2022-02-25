@@ -29,6 +29,7 @@ use LibMelanie\Api\Defaut\Calendar;
 use LibMelanie\Api\Defaut\Taskslist;
 use LibMelanie\Api\Defaut\Users\Share;
 use LibMelanie\Config\Config;
+use LibMelanie\Config\MappingMce;
 
 /**
  * Classe utilisateur par defaut
@@ -1346,6 +1347,114 @@ abstract class User extends MceObject {
   public function cleanRss() {
     $this->_userRss = null;
     $this->executeCache();
+  }
+
+  /**
+   * Récupération des notifications de l'utilisateur
+   * Si $last est positionné, récupère les notifications depuis le dernier timestamp
+   * 
+   * @param integer $last [Optionnel] Dernier timestamp de récupération des notifications
+   * 
+   * @return Notification[] Liste des notifications de l'utilisateur
+   */
+  public function getNotifications($last = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getNotifications($last)");
+
+    // Initialisation de l'objet pour récupérer les notifications
+    $_notif = new Notification($this);
+    $_operators = [];
+
+    // Un last est positionné
+    if (isset($last)) {
+      $_notif->modified = $last;
+      $_operators['modified'] = MappingMce::supeq;
+    }
+    
+    return $_notif->getList(null, null, $_operators);
+  }
+
+  /**
+   * Passe la notification de l'utilisateur en read (ou non si $read = false)
+   * 
+   * @param string|Notification $notification Notification ou uid de la notification
+   * @param boolean $read Passer en lu ?
+   * 
+   * @return boolean
+   */
+  public function readNotification($notification, $read = true) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->readNotification()");
+
+    // La notification est un uid
+    if (is_string($notification)) {
+      $uid = $notification;
+      $notification = new Notification($this);
+      $notification->uid = $uid;
+    }
+
+    // On load puis on modifie
+    if ($notification->load()) {
+      $notification->isread = $read;
+
+      $ret = $notification->save();
+
+      return !is_null($ret);
+    }
+    return false;
+  }
+
+  /**
+   * Supprime la notification de l'utilisateur
+   * 
+   * @param string|Notification $notification Notification ou uid de la notification
+   * 
+   * @return boolean
+   */
+  public function deleteNotification($notification) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->deleteNotification()");
+
+    // La notification est un uid
+    if (is_string($notification)) {
+      $uid = $notification;
+      $notification = new Notification($this);
+      $notification->uid = $uid;
+    }
+
+    return $notification->delete();
+  }
+
+  /**
+   * Ajoute la notification pour l'utilisateur
+   * 
+   * @param Notification $notification Notification
+   * 
+   * @return string|boolean Uid de la nouvelle notification si Ok, false sinon
+   */
+  public function addNotification($notification) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->addNotification()");
+
+    // Positionne le owner de la notification
+    if (!isset($notification->owner)) {
+      $notification->owner = $this->uid;
+    }
+
+    // Positionne l'uid de la notification
+    if (!isset($notification->uid)) {
+      $notification->uid = \LibMelanie\Lib\UUID::v4();
+    }
+
+    // Position le modified de la notification
+    $notification->modified = time();
+    $notification->isdeleted = false;
+    $notification->isread = false;
+
+    // Sauvegarde la notification
+    $ret = $notification->save();
+
+    // Gestion du retour
+    if (!is_null($ret)) {
+      return $notification->uid;
+    }
+    return false;
   }
 
   /**

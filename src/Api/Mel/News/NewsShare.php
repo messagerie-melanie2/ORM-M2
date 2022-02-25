@@ -30,7 +30,6 @@ use LibMelanie\Api\Defaut;
  * @subpackage API/Mel
  * @api
  * 
- * @property integer $id Identifiant du partage
  * @property string $service Service sur lequel l'utilisateur a des droits
  * @property string $user Identifiant de l'utilisateur qui a les droits
  * @property string $right NewsShare::RIGHT_* Niveau de droit pour l'utilisateur

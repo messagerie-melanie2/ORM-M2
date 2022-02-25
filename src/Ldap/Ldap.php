@@ -1448,7 +1448,8 @@ class Ldap {
     M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->add($dn)");
     self::$last_request = "ldap_add($dn)";
     $this->emptyCache();
-    return @ldap_add($this->connection, $dn, $entry);
+//    dd($entry);
+    return ldap_add($this->connection, $dn, $entry);
   }
   /**
    * Modifie l'entrée identifiée par dn, avec les valeurs fournies dans entry.

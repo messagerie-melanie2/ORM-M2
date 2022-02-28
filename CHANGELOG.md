@@ -1,3 +1,8 @@
+ORM M2 - 0.6.1.33
+------
+- Mise au propre des configurations défaut
+- Ajout du script de traitement des droits sur les groupes
+
 ORM M2 - 0.6.1.32
 ------
 - 0006528: Mise à jour du schéma LDAP pour les groupes dans Api\Mce\Group

@@ -4,7 +4,7 @@
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
  *
- * ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
+ * ORM M2 Copyright © 2022  PNE Annuaire et Messagerie/MEDDE
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,53 +29,68 @@ namespace LibMelanie\Config;
  * @subpackage Config
  */
 class Ldap {
-    /**
-     * Configuration du choix de serveur utilisé pour l'authentification
-     * @var string
-     */
-    public static $AUTH_LDAP = "ldap.test";
-    /**
-     * Configuration du choix de serveur utilisé pour la recherche dans l'annuaire
-     * @var string
-     */
-    public static $SEARCH_LDAP = "ldap.test";
-    /**
-     * Configuration du choix de serveur utilisé pour l'autocomplétion
-     * @var string
-     */
-    public static $AUTOCOMPLETE_LDAP = "ldap.test";
-    /**
-     * Configuration du choix de serveur maitre, utilisé pour l'écriture
-     * @var string
-     */
-    public static $MASTER_LDAP = "ldap.test";
+        /**
+         * Configuration du choix de serveur utilisé pour l'authentification
+         * @var string
+         */
+        public static $AUTH_LDAP = "ldap.test";
+        /**
+         * Configuration du choix de serveur utilisé pour la recherche dans l'annuaire
+         * @var string
+         */
+        public static $SEARCH_LDAP = "ldap.test";
+        /**
+         * Configuration du choix de serveur utilisé pour l'autocomplétion
+         * @var string
+         */
+        public static $AUTOCOMPLETE_LDAP = "ldap.test";
+        /**
+         * Configuration du choix de serveur maitre, utilisé pour l'écriture
+         * @var string
+         */
+        public static $MASTER_LDAP = "ldap.test";
 
-    /**
-     * Configuration des serveurs LDAP
-     * Chaque clé indique le nom du serveur ldap et sa configuration de connexion
-     * hostname, port, dn
-     * informations
-     */
-    public static $SERVERS = array(
-            /* Serveur LDAP IDA de test */
-            "ldap.test" => array(
-                    /* Host vers le serveur d'annuaire, précédé par ldaps:// si connexion SSL */
-                    "hostname" => "ldaps://ldap.test",
-                    /* Port de connexion au LDAP */
-                    "port" => 636,
-                    /* Base DN de recherche */
-                    "base_dn" => "dc=example,dc=com",
-                    /* Base DN de recherche pour les boites partagées */
-                    "shared_base_dn" => "dc=example,dc=com",
-                    /* Version du protocole LDAP */
-                    "version" => 3,
-                    /* Connexion TLS */
-                    "tls" => false,
-                    // Configuration des attributs et filtres de recherche
-                    // Filtre de recherche pour la méthode get user infos
-                    "get_user_infos_filter" => "(uid=%%username%%)",
-                    // Liste des attributs à récupérer pour la méthode get user infos
-                    "get_user_infos_attributes" => array('cn','mail','uid','departmentnumber','info'),
-            ),
-    );
+        /**
+         * Configuration des serveurs LDAP
+         * Chaque clé indique le nom du serveur ldap et sa configuration de connexion
+         * hostname, port, dn
+         * informations
+         */
+        public static $SERVERS = array(
+                /* Serveur LDAP IDA de test */
+                "ldap.test" => array(
+                        /* [Obligatoire] Host vers le serveur d'annuaire, précédé par ldaps:// si connexion SSL */
+                        "hostname" => "ldaps://ldap.test",
+
+                        /* [Obligatoire] Port de connexion au LDAP */
+                        "port" => 636,
+
+                        /* [Obligatoire] Base DN de recherche */
+                        "base_dn" => "dc=example,dc=com",
+
+                        /* [Optionnel pour les BALP] Base DN de recherche pour les boites partagées */
+                        "shared_base_dn" => "dc=example,dc=com",
+
+                        /* [Obligatoire] Version du protocole LDAP */
+                        "version" => 3,
+
+                        /* [Obligatoire] Connexion TLS */
+                        "tls" => false,
+
+                        // -- Configuration des attributs et filtres de recherche
+                        // -- Pour plus d'informations merci de lire la documentation
+
+                        /* [Optionnel] Filtre de recherche pour la méthode get user infos */
+                        "get_user_infos_filter" => "(uid=%%username%%)",
+
+                        /* [Optionnel] Liste des attributs à récupérer pour la méthode get user infos */
+                        "get_user_infos_attributes" => ['cn','mail','uid','departmentnumber','info'],
+
+                        /* [Optionnel] Gestion du mapping */
+                        "mapping" => [],
+
+                        /* [Optionnel] Gestion des items */
+                        "items" => [],
+                ),
+        );
 }

@@ -18,8 +18,10 @@
 namespace LibMelanie\Ldap;
 
 use LibMelanie;
+use LibMelanie\Exceptions\Melanie2LdapException;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Exceptions;
+use multitype;
 
 /**
  * Gestion de la connexion LDAP
@@ -257,7 +259,7 @@ class Ldap {
         }
       }
       else {
-        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+        throw new Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Authentification
@@ -361,7 +363,7 @@ class Ldap {
         }
       }
       else {
-        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+        throw new Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -414,12 +416,66 @@ class Ldap {
         }
       }
       else {
-        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+        throw new Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
     return $infos;
   }
+
+    /**
+     * Retourne une liste user
+     *
+     * @param $filter
+     *         DN de l'utilisateur recherché
+     * @param $ldap_attr
+     *         [Optionnel] Liste des attributs ldap à retourner
+     * @param $server
+     *        [Optionnel] Server LDAP utilisé pour la requête
+     * @return array|null
+     * @throws Melanie2LdapException
+     */
+    public static function GetUsersList($filter , $ldap_attr = null, $server = null)
+    {
+        M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUsersList($filter)");
+        if (!isset($server)) {
+            $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+        }
+        // Récupération de l'instance LDAP en fonction du serveur
+        $ldap = self::GetInstance($server);
+
+        // Liste des attributes
+        if (!isset($ldap_attr)) {
+            $ldap_attr = $ldap->getConfig("get_user_infos_from_email_cn_attributes");
+        } else {
+            $ldap_attr = self::GetMaps($ldap_attr, $server);
+        }
+        // Récupération des données en cache
+        $keycache = "GetUsersList:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$filter";
+        $infos = $ldap->getCache($keycache);
+        if (!isset($infos)) {
+            // Connexion anonymous pour lire les données
+            if ($ldap->anonymous()) {
+                // Base de recherche ?
+                $base_dn = $ldap->getConfig("personne_base_dn");
+                if (!isset($base_dn)) {
+                    $base_dn = $ldap->getConfig("base_dn");
+                }
+                // Lancement de la recherche
+                $sr = $ldap->search($base_dn, $filter, $ldap_attr, 0,100);
+                if ($sr && $ldap->count_entries($sr) > 0) {
+                    $infos = $ldap->get_entries($sr);
+                    $ldap->setCache($keycache, $infos);
+                } else {
+                    $ldap->deleteCache($keycache);
+                }
+            } else {
+                throw new Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+            }
+        }
+        // Retourne les données, null si vide
+        return $infos;
+    }
 
   /**
    * Retourne les boites partagées accessible pour un utilisateur depuis le LDAP
@@ -482,7 +538,7 @@ class Ldap {
         }
       }
       else {
-        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+        throw new Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -549,7 +605,7 @@ class Ldap {
         }
       }
       else {
-        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+        throw new Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -616,7 +672,7 @@ class Ldap {
         }
       }
       else {
-        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+        throw new Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -671,7 +727,7 @@ class Ldap {
                 }
             }
             else {
-                throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+                throw new Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
             }
         }
         // Retourne les données, null si vide
@@ -736,7 +792,7 @@ class Ldap {
         }
       }
       else {
-        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+        throw new Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -799,7 +855,7 @@ class Ldap {
         }
       }
       else {
-        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+        throw new Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -861,7 +917,7 @@ class Ldap {
         }
       }
       else {
-        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+        throw new Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -925,7 +981,7 @@ class Ldap {
         }
       }
       else {
-        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+        throw new Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
     }
     // Retourne les données, null si vide
@@ -1092,7 +1148,7 @@ class Ldap {
    * Mise en cache des données
    *
    * @param string $key
-   * @param \multitype $value
+   * @param multitype $value
    */
   public function setCache($key, $value) {
     // Création du stockage en cache
@@ -1105,7 +1161,7 @@ class Ldap {
    * Récupération des données depuis le cache
    *
    * @param string $key
-   * @return \multitype:
+   * @return multitype:
    */
   public function getCache($key) {
     // test si les données existes

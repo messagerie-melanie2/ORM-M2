@@ -574,6 +574,7 @@ CREATE TABLE dwp_notifications
 	notification_content text NOT NULL,
 	notification_category text NOT NULL,
 	notification_action text,
+    notification_created integer NOT NULL,
 	notification_modified integer NOT NULL,
 	notification_isread boolean NOT NULL,
 	notification_isdeleted boolean NOT NULL
@@ -873,19 +874,19 @@ CREATE INDEX dwp_news_service_idx ON dwp_news (news_service);
 
 CREATE INDEX dwp_news_share_user_id_idx ON dwp_news_share (news_share_user_id);
 
-
---
--- Name: dwp_notifications_owner_uid_idx; Type: INDEX
---
-
-CREATE INDEX dwp_notifications_owner_uid_idx ON dwp_notifications (notification_owner, notification_uid);
-
-
 --
 -- Name: dwp_notifications_owner_idx; Type: INDEX
 --
 
 CREATE INDEX dwp_notifications_owner_idx ON dwp_notifications (notification_owner);
+
+
+--
+-- Name: dwp_notifications_created_modified_owner_idx; Type: INDEX
+--
+
+CREATE INDEX dwp_notifications_created_modified_owner_idx ON dwp_notifications (notification_created DESC, notification_modified DESC, notification_owner);
+
 
 --
 -- Name: trigger_addressbook_ctag; Type: TRIGGER;

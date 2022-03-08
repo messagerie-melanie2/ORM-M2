@@ -443,6 +443,7 @@ class MappingMce {
 				"content" 		=> [self::name => "notification_content"],
 				"category" 		=> [self::name => "notification_category"],
 				"action" 		=> [self::name => "notification_action"],
+				"created" 	    => [self::name => "notification_created", self::type => self::timestamp],
 				"modified" 	    => [self::name => "notification_modified", self::type => self::timestamp],
 				"isread"		=> [self::name => "notification_isread", self::type => self::integer],
 				"isdeleted"		=> [self::name => "notification_isdeleted", self::type => self::integer],

@@ -20,7 +20,7 @@
  */
 namespace LibMelanie\Api\Mi;
 
-use LibMelanie\Api\Defaut;
+use LibMelanie\Api\Mce;
 
 /**
  * Classe groupe LDAP pour MI
@@ -41,4 +41,4 @@ use LibMelanie\Api\Defaut;
  * @property string $service Service du groupe dans l'annuaire
  * @property-read boolean $is_dynamic Est-ce qu'il s'agit d'une liste dynamique ?
  */
-class Group extends Defaut\Group {}
+class Group extends Mce\Group {}

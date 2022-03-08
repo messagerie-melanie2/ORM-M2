@@ -29,10 +29,11 @@ CREATE TABLE public.dwp_notifications
 	notification_content text NOT NULL,
 	notification_category text NOT NULL,
 	notification_action text,
+	notification_created integer NOT NULL,
 	notification_modified integer NOT NULL,
 	notification_isread boolean NOT NULL,
 	notification_isdeleted boolean NOT NULL
 );
 
-CREATE INDEX dwp_notifications_owner_uid_idx ON dwp_notifications (notification_owner, notification_uid);
 CREATE INDEX dwp_notifications_owner_idx ON dwp_notifications (notification_owner);
+CREATE INDEX dwp_notifications_created_modified_owner_idx ON dwp_notifications (notification_created DESC, notification_modified DESC, notification_owner);

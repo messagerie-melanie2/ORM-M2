@@ -1370,7 +1370,7 @@ abstract class User extends MceObject {
       $_operators['modified'] = MappingMce::supeq;
     }
     
-    return $_notif->getList(null, null, $_operators);
+    return $_notif->getList(null, null, $_operators, 'created', false);
   }
 
   /**
@@ -1394,6 +1394,7 @@ abstract class User extends MceObject {
     // On load puis on modifie
     if ($notification->load()) {
       $notification->isread = $read;
+      $notification->modified = time();
 
       $ret = $notification->save();
 
@@ -1443,7 +1444,8 @@ abstract class User extends MceObject {
     }
 
     // Position le modified de la notification
-    $notification->modified = time();
+    $notification->created = time();
+    $notification->modified = $notification->created;
     $notification->isdeleted = false;
     $notification->isread = false;
 

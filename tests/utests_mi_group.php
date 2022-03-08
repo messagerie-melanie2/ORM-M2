@@ -47,7 +47,8 @@ set_include_path(__DIR__.'/..');
 include_once 'includes/libm2.php';
 
 use LibMelanie\Log\M2Log;
-
+use LibMelanie\Api\Mi\User;
+use LibMelanie\Api\Mi\Group;
 
 $log = function ($message) {
 	echo "[LibM2] $message \r\n";
@@ -57,42 +58,40 @@ M2Log::InitErrorLog($log);
 
 echo "########################\r\n";
 
-//ConfigSQL::setCurrentBackend(ConfigSQL::$HORDE_1);
-
 // Définition de l'utilisateur
-$user = new LibMelanie\Api\Mce\User();
-$user->uid = 'thomas.payen';
+$user = new User();
+$user->uid = '<uid>';
 
-// Créer une notification
-$notification = new LibMelanie\Api\Mce\Notification($user);
+echo "\r\nUtilisateur '".get_class($user)."' : $user->uid \r\n\r\n";
 
-$notification->category = "webconf";
-$notification->title = "Thomas Payen vient de lancer une webconférence";
-$notification->content = "Vous pouvez rejoindre directement la webconférence en cours via le lien disponible ci-dessous";
-$notification->action = serialize([
-	['href' => "/bureau/?_task=workspace&_action=workspace&_uid=gmcd-1",
-	'text' => "Rejoindre",
-	'title' => "Cliquez pour rejoindre la webconférence",]
-]);
+if ($user->load()) {
+    echo "\r\nUtilisateur chargé \r\n\r\n";
 
-// Ajouter la notification au User
-$user->addNotification($notification);
+    $group = new Group();
+    $group->dn = "<dn>";
 
-// // Supprimer une notification du User
-// $user->deleteNotification('1c12646f-e3f3-4a53-b3c7-4411f21036a5');
+    echo "\r\nGroupe '".get_class($group)."' : $group->dn \r\n\r\n";
 
-// // Passer la notification du User en lu
-// $user->readNotification("8cbf99e0-be9f-4305-b4ca-e5eff97ccfdd");
-
-// // Récupérer toutes les notifications du User
-// $notifications = $user->getNotifications();
-
-// // Récupérer les dernières notifications du User
-// $notifications = $user->getNotifications(1645786914);
-
-// foreach ($notifications as $n) {
-//   echo "$n\r\n";
-// }
+    if ($group->load(['owners', 'members_email', 'is_dynamic'])) {
+        echo "\r\nGroupe chargé \r\n\r\n";
+        if ($group->isOwner($user)) {
+            echo "\r\nUtilisateur owner du groupe \r\n\r\n";
+        }
+        else {
+            echo "\r\nUtilisateur pas owner du groupe \r\n\r\n";
+        }
+        echo "\r\nGroupe owners = " . var_export($group->owners, 1) . " \r\n\r\n";
+        echo "\r\nGroupe members = " . var_export($group->members_email, 1) . " \r\n\r\n";
+        echo "\r\nGroupe is_dynamic = " . var_export($group->is_dynamic, 1) . " \r\n\r\n";
+        echo "\r\nGroupe = $group \r\n\r\n";
+    }
+    else {
+        echo "\r\nErreur de chargement du groupe \r\n\r\n";
+    }
+}
+else {
+    echo "\r\nErreur de chargement de l'utilisateur \r\n\r\n";
+}
 
 echo "\r\n\r\n";
 echo "#### 1: ".(memory_get_usage()/1024/1024) . ' MiB'." ######\r\n";

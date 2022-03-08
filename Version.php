@@ -32,16 +32,16 @@ class Version {
     /**
      * Numéro de version
      */
-    const VERSION = '0.6.1.33';
+    const VERSION = '0.6.1.34';
 
     /**
      * Numéro de version normalisé
      */
-    const NORMALIZED_VERSION = '0.6.1.33';
+    const NORMALIZED_VERSION = '0.6.1.34';
 
     /**
      * Build
      */
-    const BUILD = '20220228122252';
+    const BUILD = '20220308142552';
 
 }

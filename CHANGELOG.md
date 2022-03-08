@@ -1,3 +1,9 @@
+ORM M2 - 0.6.1.34
+------
+- Correctifs sur les index pour les notifications
+- Correctifs dans le Driver MI pour les groupes
+- Pour les notifications se baser sur created
+
 ORM M2 - 0.6.1.33
 ------
 - Mise au propre des configurations défaut

@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.35
+------
+- 0006578: Problème d'optimisation du load() des pièces jointes
+
 ORM M2 - 0.6.1.34
 ------
 - Correctifs sur les index pour les notifications

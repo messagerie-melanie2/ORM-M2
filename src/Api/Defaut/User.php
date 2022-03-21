@@ -190,6 +190,26 @@ abstract class User extends MceObject {
    * @var ObjectShare[]
    */
   protected $_objectsSharedGestionnaire;
+
+  /**
+   * Liste des boites partagées accessibles à l'utilisateur
+   * 
+   * @var User[]
+   */
+  protected $_shared;
+  /**
+   * Liste des boites partagées accessibles en emission à l'utilisateur
+   * 
+   * @var User[]
+   */
+  protected $_sharedEmission;
+  /**
+   * Liste des boites partagées accessibles en gestionnaire à l'utilisateur
+   * 
+   * @var User[]
+   */
+  protected $_sharedGestionnaire;
+
   /**
    * Liste des partages pour l'objet courant
    * 
@@ -555,7 +575,7 @@ abstract class User extends MceObject {
    */
   public function getShared($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getShared() [" . $this->_server . "]");
-    if (!isset($this->_objectsShared)) {
+    if (!isset($this->_shared)) {
       if (isset($attributes) && is_string($attributes)) {
         $attributes = [$attributes];
       }
@@ -568,14 +588,14 @@ abstract class User extends MceObject {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_partagees_filter'];
       }
       $list = $this->objectmelanie->getBalp($attributes, $filter);
-      $this->_objectsShared = [];
+      $this->_shared = [];
       foreach ($list as $key => $object) {
-        $this->_objectsShared[$key] = new static($this->_server);
-        $this->_objectsShared[$key]->setObjectMelanie($object);
+        $this->_shared[$key] = new static($this->_server);
+        $this->_shared[$key]->setObjectMelanie($object);
       }
       $this->executeCache();
     }
-    return $this->_objectsShared;
+    return $this->_shared;
   }
 
   /**
@@ -620,7 +640,7 @@ abstract class User extends MceObject {
    */
   public function getSharedEmission($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedEmission() [" . $this->_server . "]");
-    if (!isset($this->_objectsSharedEmission)) {
+    if (!isset($this->_sharedEmission)) {
       if (isset($attributes) && is_string($attributes)) {
         $attributes = [$attributes];
       }
@@ -633,14 +653,14 @@ abstract class User extends MceObject {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_emission_filter'];
       }
       $list = $this->objectmelanie->getBalpEmission($attributes, $filter);
-      $this->_objectsSharedEmission = [];
+      $this->_sharedEmission = [];
       foreach ($list as $key => $object) {
-        $this->_objectsSharedEmission[$key] = new static($this->_server);
-        $this->_objectsSharedEmission[$key]->setObjectMelanie($object);
+        $this->_sharedEmission[$key] = new static($this->_server);
+        $this->_sharedEmission[$key]->setObjectMelanie($object);
       }
       $this->executeCache();
     }
-    return $this->_objectsSharedEmission;
+    return $this->_sharedEmission;
   }
 
   /**
@@ -685,7 +705,7 @@ abstract class User extends MceObject {
    */
   public function getSharedGestionnaire($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedGestionnaire() [" . $this->_server . "]");
-    if (!isset($this->_objectsSharedGestionnaire)) {
+    if (!isset($this->_sharedGestionnaire)) {
       if (isset($attributes) && is_string($attributes)) {
         $attributes = [$attributes];
       }
@@ -698,14 +718,14 @@ abstract class User extends MceObject {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_gestionnaire_filter'];
       }
       $list = $this->objectmelanie->getBalpGestionnaire($attributes, $filter);
-      $this->_objectsSharedGestionnaire = [];
+      $this->_sharedGestionnaire = [];
       foreach ($list as $key => $object) {
-        $this->_objectsSharedGestionnaire[$key] = new static($this->_server);
-        $this->_objectsSharedGestionnaire[$key]->setObjectMelanie($object);
+        $this->_sharedGestionnaire[$key] = new static($this->_server);
+        $this->_sharedGestionnaire[$key]->setObjectMelanie($object);
       }
       $this->executeCache();
     }
-    return $this->_objectsSharedGestionnaire;
+    return $this->_sharedGestionnaire;
   }
 
   /**

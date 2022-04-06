@@ -1,3 +1,7 @@
+ORM M2 - 0.6.1.37
+------
+- Fix sur les caractères non supportés par Lightning
+
 ORM M2 - 0.6.1.36
 ------
 - API DGFIP dédiée

@@ -57,6 +57,14 @@ class Group extends Defaut\Group {
      * @ignore
      */
     const LOAD_FILTER = null;
+
+    /**
+     * Filtre pour la méthode load() avec un email
+     * 
+     * @ignore
+     */
+    const LOAD_FROM_EMAIL_FILTER = "(mail=%%email%%)";
+
     /**
      * Attributs par défauts pour la méthode load()
      * 

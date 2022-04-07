@@ -124,6 +124,12 @@ class Event extends MceObject {
    */
   protected $deleted;
   /**
+   * Tableau des participants
+   * 
+   * @var Attendee[]
+   */
+  protected $attendees;
+  /**
    * Tableau d'exceptions pour la récurrence
    * 
    * @var Exception[]
@@ -398,7 +404,7 @@ class Event extends MceObject {
    /**
     * Nouvelle version de l'enregistrement des participants
     */
-  protected function newSaveAttendees() {
+  protected function saveAttendees() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->saveAttendees()");
     // Détecter les attendees pour tous les évènements et exceptions
     $hasAttendees = $this->getMapHasAttendees();
@@ -509,7 +515,7 @@ class Event extends MceObject {
       if (!$this->deleted && isset($this->objectmelanie->attendees)) {
         // Recupération de la réponse du participant
         $response = $Attendee::RESPONSE_NEED_ACTION;
-        foreach ($this->attendees as $attendee) {
+        foreach ($this->getMapAttendees() as $attendee) {
           // 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur
           if (strtolower($attendee->uid) == strtolower($this->calendarmce->owner)) {
             $response = $attendee->response;
@@ -541,6 +547,9 @@ class Event extends MceObject {
                     break;
                 }
                 $attendee->response = $response;
+                if (empty($attendee->name) && isset($att_name)) {
+                  $attendee->name = $att_name;
+                }
                 $organizer_event->setMapAttendees($organizer_attendees);
                 // Sauvegarde de l'evenement de l'organisateur
                 $save = true;
@@ -619,16 +628,16 @@ class Event extends MceObject {
             // Si ce participant s'est lui même invité on vérifie qu'il n'a pas été supprimé entre temps
             $found = false;
             // Parcours les participants de l'événement courant pour trouver le participant
-            foreach ($this->attendees as $attendee) {
+            foreach ($this->getMapAttendees() as $attendee) {
               if (strtolower($attendee->email) == strtolower($organizer_attendee->email)) {
                 $found = true;
                 break;
               }
             }
             if (!$found) {
-              $attendees = $this->attendees;
+              $attendees = $this->getMapAttendees();
               $attendees[] = $organizer_attendee;
-              $this->attendees = $attendees;
+              $this->setMapAttendees($attendees);
             }
           }
         }
@@ -798,12 +807,15 @@ class Event extends MceObject {
       // L'événement n'existe pas, il faut faire du en attente
       $saveNeedAction = true;
     }
+
+    $Attendee = $this->__getNamespace() . '\\Attendee';
     // Si la sauvegarde en attente doit se faire
     if ($saveNeedAction) {
       $attendees_uid = [];
       $clean_deleted_attendees = true;
       // Parcours la liste des participant
-      $attendees = $this->attendees;
+      $attendees = $this->getMapAttendees();
+      
       $User = $this->__getNamespace() . '\\User';
       $Calendar = $this->__getNamespace() . '\\Calendar';
       if (strpos($this->get_class, '\Exception') === false) {
@@ -812,72 +824,51 @@ class Event extends MceObject {
       else {
         $Event = $this->__getNamespace() . '\\Exception';
       }
+
       if (is_array($attendees) && count($attendees) > 0) {
-        foreach ($attendees as $attendee_key => $attendee) { 
+        foreach ($attendees as $attendee_key => $attendee) {
           // MANTIS 0006052: [En attente] Problème avec les non participants
           if ($attendee->role == Attendee::ROLE_NON_PARTICIPANT) {
             continue;
           }
-          $attendee_uid = $attendee->uid;
-          // Récupérer la liste des participants
-          if (isset($attendee_uid)) {
-            $attendees_uid[] = $attendee_uid;
-          }
           // Si ce n'est pas une boite individuelle il ne faut pas gérer les suppressions de participants
           if (!$attendee->is_individuelle) {
             $clean_deleted_attendees = false;
-          }
-          // Si c'est un participant Mélanie2
-          if (isset($attendee_uid)
-              // 0005097: [En attente] Vérifier que le participant n'est pas aussi l'organisateur
-              && $attendee_uid != $this->calendarmce->owner
-              && $attendee->need_action) {
-            // Creation du user melanie
-            $attendee_user = new $User();
-            $attendee_user->uid = $attendee_uid;
-            // Création du calendar melanie
-            $attendee_calendar = new $Calendar($attendee_user);
-            $attendee_calendar->id = $attendee_uid;
-            if ($attendee_calendar->load()) {            
-              // Creation de l'evenement melanie
-              if (strpos($this->get_class, '\Exception') === false) {
-                $attendee_event = new $Event($attendee_user, $attendee_calendar);
-              }
-              else {
-                $attendee_event = new $Event(null, $attendee_user, $attendee_calendar);
-              }
-              // Enregistrement de la recurrence
-              if (strpos($this->get_class, '\Exception') === false) {
-                $recurrence = $this->getMapRecurrence();
-                if (isset($recurrence)) {
-                  $attendee_recurrence = $attendee_event->getMapRecurrence();
-                  $attendee_recurrence->type = $recurrence->type;
-                  $attendee_recurrence->count = $recurrence->count;
-                  $attendee_recurrence->days = $recurrence->days;
-                  $attendee_recurrence->enddate = $recurrence->enddate;
-                  $attendee_recurrence->interval = $recurrence->interval;
-                  $attendee_event->setMapRecurrence($attendee_recurrence);
-                }
-              }
-              else {
-                $attendee_event->recurrence_id = $this->recurrence_id;
-              }
-              $attendee_event->uid = $this->uid;
-              $save = $this->copyEventNeedAction($this, $attendee_event, $attendee_uid, $copyFieldsList, $needActionFieldsList, $attendees, $attendee_key, strpos($this->get_class, '\Exception') !== false, $attendee_event->load());
-              if ($save) {
-                $attendee_event->modified = time();
-                // Enregistre l'événement dans l'agenda du participant
-                $attendee_event->save(false);
-                $attendees[$attendee_key]->is_saved = true;
-              }
+
+            // Gére le cas d'une liste
+            if ($attendee->is_list) {
+              $this->attendeeList($attendee, $attendees_uid, $Attendee, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, $attendees, $attendee_key, $is_list_saved);
+
+              // Gérer le is_saved pour toute la liste
+              $attendees[$attendee_key]->is_saved = $is_list_saved ? true : null;
+            }
+            else {
+              $attendees[$attendee_key]->is_saved = null;
             }
           }
           else {
-            $attendees[$attendee_key]->is_saved = null;
+            $attendee_uid = $attendee->uid;
+            // Récupérer la liste des participants
+            if (isset($attendee_uid)) {
+              $attendees_uid[] = $attendee_uid;
+              // 0005097: [En attente] Vérifier que le participant n'est pas aussi l'organisateur
+              if ($attendee_uid != $this->calendarmce->owner
+                  && $attendee->need_action) {
+                // Gestion du participant
+                $this->attendeeEventNeedAction($attendee_uid, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, $attendees, $attendee_key, $is_saved);
+
+                // Gérer le is_saved pour le participant
+                $attendees[$attendee_key]->is_saved = $is_saved ? true : null;
+              }
+            }
+            else {
+              $attendees[$attendee_key]->is_saved = null;
+            }
           }
         }
-        $this->attendees = $attendees;
+        $this->setMapAttendees($attendees);
       }
+
       // MANTIS 0005053: [En attente] Lors de la suppression d'un participant, passer son événement en annulé
       if ($this->exists()) {
         $attendees_uid[] = $this->calendar;
@@ -896,43 +887,10 @@ class Event extends MceObject {
         // Lister les événements pour les passer en annulé
         foreach ($event->getList(null, $filter, $operators) as $_e) {
           // Vérifier que le mode en attente est activé pour cet utilisateur
-          $need_action = Config::get(Config::NEED_ACTION_ENABLE);
-          if ($need_action) {
-            $filter = Config::get(Config::NEED_ACTION_DISABLE_FILTER);
-          }
-          else {
-            $filter = Config::get(Config::NEED_ACTION_ENABLE_FILTER);
-          }
-          if (isset($filter)) {
-            $User = $this->__getNamespace() . '\\User';
-            $user = new $User();
-            $user->uid = $_e->calendar;
-            $fields = [];
-            foreach ($filter as $field => $f) {
-              $fields[] = $field;
-            }
-            if ($user->load($fields) && ($user->is_individuelle || $user->is_applicative)) {
-              foreach ($fields as $field) {
-                $match = false;
-                if (is_array($user->$field)) {
-                  if (in_array($filter[$field], $user->$field)) {
-                    $match = true;
-                  }
-                }
-                else if ($user->$field == $filter[$field]) {
-                  $match = true;
-                }
-                if ($match) {
-                  $need_action = !$need_action;
-                  break;
-                }
-              }
-            }
-            else {
-              $need_action = false;
-            }
-          }
-          if ($need_action) {
+          $listAttendee = new $Attendee();
+          $listAttendee->uid = $_e->calendar;
+
+          if ($listAttendee->need_action) {
             // Copier l'événement même pour une annulation
             $this->copyEventNeedAction($this, $_e, null, $copyFieldsList, $needActionFieldsList, null, null, strpos($this->get_class, '\Exception') !== false, true);
             // Doit on annuler l'événement pour le participant ?
@@ -945,6 +903,131 @@ class Event extends MceObject {
         }
       }
     }      
+  }
+
+  /**
+   * Gérer les participants d'une liste pour le en attendee
+   * Méthode récursive pour les listes de listes
+   * 
+   * @param Attendee $attendee
+   * @param array $attendees_uid [In/Out]
+   * @param string $Attendee
+   * @param string $User
+   * @param string $Calendar
+   * @param string $Event
+   * @param array $copyFieldsList
+   * @param array $needActionFieldsList
+   * @param array $attendees
+   * @param string $attendee_key
+   * @param boolean $is_list_saved
+   */
+  protected function attendeeList($attendee, &$attendees_uid, $Attendee, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, $attendees, $attendee_key, &$is_list_saved) {
+    $is_list_saved = true;
+    foreach ($attendee->members as $member) {
+      // L'utilisateur existe bien dans l'annuaire
+      $listAttendee = new $Attendee();
+
+      // Gérer le cas où le participant est dans la liste mais aussi dans les participants
+      if ($this->isAttendee($member, $attendees)) {
+        continue;
+      }
+      $listAttendee->email = $member;
+
+      $attendeeUid = $listAttendee->uid;
+
+      if ($listAttendee->is_list) {
+        // Gérer les listes imbriquées
+        $this->attendeeList($listAttendee, $attendees_uid, $Attendee, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, $attendees, null, $is_saved);
+        $is_list_saved &= $is_saved;
+      }
+      else if (isset($attendeeUid) && $listAttendee->is_individuelle) {
+        $attendees_uid[] = $listAttendee->uid;
+        // 0005097: [En attente] Vérifier que le participant n'est pas aussi l'organisateur
+        if ($listAttendee->uid != $this->calendarmce->owner) {
+          if ($listAttendee->need_action) {
+            // Parcours les members et traite ceux qui ont le need_action activé
+            // Gestion du participant
+            $this->attendeeEventNeedAction($listAttendee->uid, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, $attendees, null, $is_saved);
+            $is_list_saved &= $is_saved;
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Est-ce que cette adresse email fait déjà partie de la liste des participants
+   * 
+   * @param string $email
+   * @param Attendee[] $attendees
+   * 
+   * @return boolean
+   */
+  private function isAttendee($email, $attendees) {
+    $isAttendee = false;
+    foreach ($attendees as $attendee) {
+      if (strtolower($email) == strtolower($attendee->email)) {
+        $isAttendee = true;
+        break;
+      }
+    }
+    return $isAttendee;
+  }
+
+  /**
+   * Enregistre l'événement dans l'agenda du participant
+   * 
+   * @param string $attendee_uid Uid du participant
+   * @param string $User Classe User
+   * @param string $Calendar Classe Calendar
+   * @param string $Event Classe Event
+   * @param array $copyFieldsList
+   * @param array $needActionFieldsList
+   * @param array $attendees
+   * @param int $attendee_key
+   * @param boolean $is_saved
+   */
+  protected function attendeeEventNeedAction($attendee_uid, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, &$attendees, $attendee_key, &$is_saved) {
+    $is_saved = false;
+    // Creation du user melanie
+    $attendee_user = new $User();
+    $attendee_user->uid = $attendee_uid;
+    // Création du calendar melanie
+    $attendee_calendar = new $Calendar($attendee_user);
+    $attendee_calendar->id = $attendee_uid;
+    if ($attendee_calendar->load()) {            
+      // Creation de l'evenement melanie
+      if (strpos($this->get_class, '\Exception') === false) {
+        $attendee_event = new $Event($attendee_user, $attendee_calendar);
+      }
+      else {
+        $attendee_event = new $Event(null, $attendee_user, $attendee_calendar);
+      }
+      // Enregistrement de la recurrence
+      if (strpos($this->get_class, '\Exception') === false) {
+        $recurrence = $this->getMapRecurrence();
+        if (isset($recurrence)) {
+          $attendee_recurrence = $attendee_event->getMapRecurrence();
+          $attendee_recurrence->type = $recurrence->type;
+          $attendee_recurrence->count = $recurrence->count;
+          $attendee_recurrence->days = $recurrence->days;
+          $attendee_recurrence->enddate = $recurrence->enddate;
+          $attendee_recurrence->interval = $recurrence->interval;
+          $attendee_event->setMapRecurrence($attendee_recurrence);
+        }
+      }
+      else {
+        $attendee_event->recurrence_id = $this->recurrence_id;
+      }
+      $attendee_event->uid = $this->uid;
+      $save = $this->copyEventNeedAction($this, $attendee_event, $attendee_uid, $copyFieldsList, $needActionFieldsList, $attendees, $attendee_key, strpos($this->get_class, '\Exception') !== false, $attendee_event->load());
+      if ($save) {
+        $attendee_event->modified = time();
+        // Enregistre l'événement dans l'agenda du participant
+        $attendee_event->save(false);
+        $is_saved = true;
+      }
+    }
   }
   
   /**
@@ -1014,7 +1097,7 @@ class Event extends MceObject {
     }
     else {
       // MANTIS 0006225: [En attente] Un participant décliné ne doit pas avoir l'événement recréé
-      if ($attendees[$attendee_key]->response == Attendee::RESPONSE_DECLINED) {
+      if (isset($attendee_key) && $attendees[$attendee_key]->response == Attendee::RESPONSE_DECLINED) {
         // Rechercher si un champ majeur (date, lieu) a changé
         $saveAndNeedAction = false;
         foreach ($copyFieldsList as $field) {
@@ -1050,16 +1133,20 @@ class Event extends MceObject {
         }
         else {
           $attendee_event->status = self::STATUS_TENTATIVE;
-          // Passage en Need Action
-          $attendees[$attendee_key]->response = Attendee::RESPONSE_NEED_ACTION;
-          $event->attendees = $attendees;
+          if (isset($attendee_key)) {
+            // Passage en Need Action
+            $attendees[$attendee_key]->response = Attendee::RESPONSE_NEED_ACTION;
+            $event->attendees = $attendees;
+          }
         }
       }
       else {
         $attendee_event->status = self::STATUS_TENTATIVE;
-        // Passage en Need Action
-        $attendees[$attendee_key]->response = Attendee::RESPONSE_NEED_ACTION;
-        $event->attendees = $attendees;
+        if (isset($attendee_key)) {
+          // Passage en Need Action
+          $attendees[$attendee_key]->response = Attendee::RESPONSE_NEED_ACTION;
+          $event->attendees = $attendees;
+        }
       }
       $attendee_event->class = self::CLASS_PUBLIC;
       $attendee_event->transparency = self::TRANS_OPAQUE;
@@ -1088,7 +1175,7 @@ class Event extends MceObject {
   protected function deleteNeedAction() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->deleteNeedAction()");
     // Parcours la liste des participant
-    $attendees = $this->attendees;
+    $attendees = $this->getMapAttendees();
     if (isset($attendees)) {
       $User = $this->__getNamespace() . '\\User';
       $Calendar = $this->__getNamespace() . '\\Calendar';
@@ -1276,8 +1363,6 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->loadExceptions()");
     $event = new static($this->user, $this->calendarmce);
     $event->realuid = $this->uid;
-    // 0006301: La méthode loadExceptions charge toutes les exceptions de tous les agendas
-    $event->calendar = $this->calendar;
     $events = $event->getList();
     if (isset($events[$this->uid . $this->calendar])) {
       $this->modified = isset($events[$this->uid . $this->calendar]->modified) ? $events[$this->uid . $this->calendar]->modified : 0;
@@ -1355,7 +1440,7 @@ class Event extends MceObject {
     }
     // Sauvegarde des participants
     if ($saveAttendees) {
-      $this->newSaveAttendees();
+      $this->saveAttendees();
     }
     // Supprimer les exceptions
     if (isset($this->deleted_exceptions) && is_array($this->deleted_exceptions) && count($this->deleted_exceptions) > 0) {
@@ -1963,6 +2048,7 @@ class Event extends MceObject {
       }
     }
     $this->objectmelanie->attendees = serialize($_attendees);
+    $this->attendees = $attendees;
   }
   /**
    * Mapping attendees field
@@ -1970,32 +2056,104 @@ class Event extends MceObject {
   protected function getMapAttendees() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapAttendees()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    // Récupération des participants
-    $object_attendees = null;
-    // Participants directement dans l'objet
-    // TODO: Corriger le problème lorsque la variable isset mais vide (ou a:{})
-    if (isset($this->objectmelanie->attendees) && $this->objectmelanie->attendees != "" && $this->objectmelanie->attendees != "a:0:{}")
-      $object_attendees = $this->objectmelanie->attendees;
-    // Participants appartenant à l'organisateur
-    elseif (isset($this->objectmelanie->organizer_attendees) && $this->objectmelanie->organizer_attendees != "" && $this->objectmelanie->organizer_attendees != "a:0:{}")
-      $object_attendees = $this->objectmelanie->organizer_attendees;
-    else
-      return [];
-    if ($object_attendees == "")
-      return [];
-    $_attendees = unserialize($object_attendees);
-    $attendees = [];
-    if (is_array($_attendees) && count($_attendees) > 0) {
-      $Attendee = $this->__getNamespace() . '\\Attendee';
-      foreach ($_attendees as $key => $_attendee) {
-        $attendee = new $Attendee($this);
-        $attendee->setEmail($key);
-        $attendee->define($_attendee);
-        $attendees[] = $attendee;
+
+    if (!isset($this->attendees)) {
+      // Récupération des participants
+      $object_attendees = null;
+
+      // Participants directement dans l'objet
+      // TODO: Corriger le problème lorsque la variable isset mais vide (ou a:{})
+      if (isset($this->objectmelanie->attendees) && $this->objectmelanie->attendees != "" && $this->objectmelanie->attendees != "a:0:{}")
+        $object_attendees = $this->objectmelanie->attendees;
+      // Participants appartenant à l'organisateur
+      elseif (isset($this->objectmelanie->organizer_attendees) && $this->objectmelanie->organizer_attendees != "" && $this->objectmelanie->organizer_attendees != "a:0:{}")
+        $object_attendees = $this->objectmelanie->organizer_attendees;
+      else
+        return [];
+
+      if ($object_attendees == "")
+        return [];
+
+      $_attendees = unserialize($object_attendees);
+      $this->attendees = [];
+      $newAttendees = [];
+      if (is_array($_attendees) && count($_attendees) > 0) {
+        $Attendee = $this->__getNamespace() . '\\Attendee';
+        foreach ($_attendees as $key => $_attendee) {
+          $attendee = new $Attendee($this);
+          $attendee->setEmail($key);
+          $attendee->define($_attendee);
+
+          // MANTIS 0006191: Mode en attente lorsque le participant est une liste
+          if ($this->getMapOrganizer()->owner_uid != $this->user->uid 
+              && $attendee->is_list) {
+            $this->attendeeIsList($attendee, $newAttendees, $Attendee);
+          }
+
+          $this->attendees[] = $attendee;
+        }
+        // Ajouter les nouveaux participants
+        $this->attendees = $this->mergeAttendees($this->attendees, $newAttendees);
+      }
+    }
+    return $this->attendees;
+  }
+
+  /**
+   * Traiter la liste des participants pour sortir l'utilisateur courant s'il est présent
+   * 
+   * @param Attendee $attendee
+   * @param Attendee[] $attendees [In/Out]
+   * @param string $Attendee
+   */
+  protected function attendeeIsList($attendee, &$attendees, $Attendee) {
+    $members = $attendee->members;
+    if (is_array($members)) {
+      foreach ($members as $member) {
+        // L'utilisateur existe bien dans l'annuaire
+        $listAttendee = new $Attendee();
+        $listAttendee->email = $member;
+
+        if ($listAttendee->is_list) {
+          $this->attendeeIsList($listAttendee, $attendees, $Attendee);
+        }
+        else if ($listAttendee->uid == $this->user->uid) {
+          $listAttendee->response = Attendee::RESPONSE_NEED_ACTION;
+          $listAttendee->role = $attendee->role;
+
+          $attendees[] = $listAttendee;
+        }
+      }
+    }
+  }
+
+  /**
+   * Merge les nouveaux attendees avec les attendees existants
+   * Ne prend pas en compte les participants déjà présents
+   * 
+   * @param Attendee[] $attendees
+   * @param Attendee[] $newAttendees
+   * 
+   * @return Attendee[]
+   */
+  protected function mergeAttendees($attendees, $newAttendees) {
+    foreach ($newAttendees as $newAttendee) {
+      // L'ajouter s'il n'est pas déjà présent
+      $found = false;
+      foreach ($attendees as $attendee) {
+        if (strtolower($newAttendee->email) == strtolower($attendee->email)) {
+          $found = true;
+          break;
+        }
+      }
+      // Si pas trouvé on l'ajoute
+      if (!$found) {
+        $attendees[] = $newAttendee;
       }
     }
     return $attendees;
   }
+
   /**
    * Mapping hasattendees field
    * @return boolean

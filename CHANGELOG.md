@@ -1,3 +1,7 @@
+ORM M2 - 0.6.2
+------
+- 0006191: Mode en attente lorsque le participant est une liste
+
 ORM M2 - 0.6.1.37
 ------
 - Fix sur les caractères non supportés par Lightning

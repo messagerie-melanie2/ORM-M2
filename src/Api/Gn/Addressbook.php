@@ -1,12 +1,12 @@
 <?php
 /**
  * Ce fichier est développé pour la gestion de la lib MCE
- * 
+ *
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * 
+ *
  * ORM Mél Copyright © 2021 Groupe Messagerie/MTE
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,18 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace LibMelanie\Api\Gn;
 
 use LibMelanie\Api\Defaut;
+use LibMelanie\Sql;
 
 /**
  * Classe de carnet d'adresses pour GN
- * 
+ *
  * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/GN
  * @api
- * 
+ *
  * @property string $id Identifiant unique du carnet d'adresses
  * @property string $owner Identifiant du propriétaire du carnet d'adresses
  * @property string $name Nom complet du carnet d'adresses
@@ -44,4 +46,18 @@ use LibMelanie\Api\Defaut;
  * @method void getCTag() Charge la propriété ctag avec l'identifiant de modification du carnet d'adresses
  * @method bool asRight($action) Retourne un boolean pour savoir si les droits sont présents
  */
-class Addressbook extends Defaut\Addressbook {}
+class Addressbook extends Defaut\Addressbook
+{
+
+    /**
+     * @return mixed
+     */
+    public function getNextDatatreeId()
+    {
+        Sql\Sql::GetInstance()->beginTransaction();
+        $result = Sql\Sql::GetInstance()->executeQuery(Sql\SqlMelanieRequests::getNextObject);
+        Sql\Sql::GetInstance()->commit();
+
+        return $result[0][0];
+    }
+}

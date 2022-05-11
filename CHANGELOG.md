@@ -1,3 +1,12 @@
+ORM M2 - 0.6.2.1
+------
+- 0006686: Problème de sequence en ICS
+- 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
+- 0006730: [VCard] Gestion des membres par uid
+- 0006750: [VCard] Problème lorsque la propriété TYPE n'est pas présente
+- 0006729: Ajouter des méthodes getAllGroups et getAllGroupsAndContacts dans Addressbook
+- 0006721: Lors de la création de l'occurence chez l'organisateur, ne pas récupérer les dates du participants
+
 ORM M2 - 0.6.2
 ------
 - 0006191: Mode en attente lorsque le participant est une liste

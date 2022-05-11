@@ -144,7 +144,7 @@ class Event extends MceObject {
   /**
    * Tableau d'attributs pour l'évènement
    * 
-   * @var string[$attribute]
+   * @var array[$attribute]
    */
   protected $attributes;
   /**
@@ -428,13 +428,15 @@ class Event extends MceObject {
           return true;
         }
         else {
+          // XXX: Gérer ici le MANTIS 0006687 ?
+          
           // L'évènement n'existe pas, mais l'organisateur est différent du créateur
           // On considère alors que c'est un organisateur externe (même s'il est interne au ministère)
           return $this->setExternalOrganizer($organizer);
         }
       }
       else {
-        // XXX on doit arriver ici quand le load ne retourne rien car l'évènement n'existe pas
+        // XXX: on doit arriver ici quand le load ne retourne rien car l'évènement n'existe pas
         // On arrive également ici quand l'évenement a d'abord été créé sans participant
         // Parcourir les évènements trouvés pour chercher l'évènement de l'organisateur
         foreach ($events as $_event) {
@@ -463,6 +465,8 @@ class Event extends MceObject {
       }
       // Si l'organisateur n'est toujours pas trouvé
       if (!isset($organizer_calendar_id)) {
+        // XXX: Gérer ici le MANTIS 0006687 ?
+
         // On considère également que c'est un organisateur externe
         return $this->setExternalOrganizer($organizer);
       }
@@ -662,7 +666,7 @@ class Event extends MceObject {
     $organizer_event_exception->attendees = $organizer_event->getMapAttendees();
     $organizer_event_exception->recurrence_id = $this->recurrence_id;
     // Récupération des champs de l'événement maitre
-    foreach (['uid', 'owner', 'class', 'status', 'title', 'description', 'location', 'category', 'alarm', 'transparency'] as $field) {
+    foreach (['uid', 'owner', 'class', 'status', 'title', 'description', 'location', 'category', 'alarm', 'transparency', 'all_day', 'timezone'] as $field) {
       $organizer_event_exception->$field = $organizer_event->$field;
     }
     // Gestion de l'organizer json
@@ -672,10 +676,12 @@ class Event extends MceObject {
     $this->objectmelanie->setFieldValueToData('organizer_json', $organizer_json);
     $this->objectmelanie->setFieldHasChanged('organizer_json');
     // Dates de l'occurrence
-    $organizer_event_exception->start = $this->start;
-    $organizer_event_exception->end = $this->end;
-    $organizer_event_exception->all_day = $this->all_day;
-    $organizer_event_exception->timezone = $this->timezone;
+    $start = new \DateTime($this->recurrence_id, new \DateTimeZone($organizer_event->timezone));
+    $end = clone $start;
+    $interval = $organizer_event->getMapDtstart()->diff($organizer_event->getMapDtend());
+    $end->add($interval);
+    $organizer_event_exception->setMapDtstart($start);
+    $organizer_event_exception->setMapDtend($end);
     $organizer_event_exception->created = time();
     $organizer_event_exception->modified = time();
     // Récupérer les attributs sur la notification des participants
@@ -896,6 +902,14 @@ class Event extends MceObject {
             // Doit on annuler l'événement pour le participant ?
             if ($clean_deleted_attendees) {
               $_e->status = self::STATUS_CANCELLED;
+
+              // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
+              if (!empty($_e->sequence)) {
+                $_e->sequence = $_e->sequence + 1;
+              }
+              else {
+                $_e->sequence = 1;
+              }
             }
             $_e->modified = time();
             $_e->save(false);
@@ -1221,6 +1235,14 @@ class Event extends MceObject {
                 // Modification en annulé
                 $attendee_event->status = self::STATUS_CANCELLED;
                 $save = true;
+
+                // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
+                if (!empty($attendee_event->sequence)) {
+                  $attendee_event->sequence = $attendee_event->sequence + 1;
+                }
+                else {
+                  $attendee_event->sequence = 1;
+                }
               }
               if ($save) {
                 $attendee_event->modified = time();

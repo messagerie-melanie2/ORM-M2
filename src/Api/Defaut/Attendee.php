@@ -436,7 +436,7 @@ class Attendee extends MceObject {
       $Group = $this->__getNamespace() . '\\Group';
       $group = new $Group();
       $group->email = $this->email;
-      if ($group->load('members_email')) {
+      if ($group->load(['members_email'])) {
         return $group->members_email;
       }
     }

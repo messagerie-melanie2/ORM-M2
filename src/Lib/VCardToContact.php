@@ -108,7 +108,7 @@ class VCardToContact {
       if (isset($vcontact->TEL)) {
         foreach($vcontact->TEL as $vcontact_tel) {
           $parameters = $vcontact_tel->parameters;
-          $type = strtolower($parameters['TYPE']);
+          $type = isset($parameters['TYPE']) ? strtolower($parameters['TYPE']) : "";
           if (strpos($type, 'cell') !== false) {
             $contact->cellphone = $vcontact_tel->getValue();
           }
@@ -134,7 +134,7 @@ class VCardToContact {
       if (isset($vcontact->EMAIL)) {
         foreach($vcontact->EMAIL as $vcontact_email) {
           $parameters = $vcontact_email->parameters;
-          $type = strtolower($parameters['TYPE']);
+          $type = isset($parameters['TYPE']) ? strtolower($parameters['TYPE']) : "";
           if (strpos($type, 'other') !== false) {
             $contact->email2 = $vcontact_email->getValue();
           }
@@ -151,7 +151,7 @@ class VCardToContact {
       if (isset($vcontact->ADR)) {
         foreach($vcontact->ADR as $vcontact_adr) {
           $parameters = $vcontact_adr->parameters;
-          $type = strtolower($parameters['TYPE']);
+          $type = isset($parameters['TYPE']) ? strtolower($parameters['TYPE']) : "";
           $values = explode(';', $vcontact_adr->getValue());
           if (strpos($type, 'work') !== false) {
             $contact->workaddress = isset($parameters['LABEL']) ? $parameters['LABEL'] : "";

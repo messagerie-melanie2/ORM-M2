@@ -543,9 +543,15 @@ class EventToICS {
         }
       }
       // Sequence
-      $sequence = $event->getAttribute(ICS::SEQUENCE);
-      if (isset($sequence))
+      $sequence = $event->sequence;
+      if (isset($sequence)) {
         $vevent->SEQUENCE = $sequence;
+      }
+      else {
+        $sequence = $event->getAttribute(ICS::SEQUENCE);
+        if (isset($sequence))
+          $vevent->SEQUENCE = $sequence;
+      }
       // RECEIVED-SEQUENCE
       $received_sequence = $event->getAttribute(ICS::X_MOZ_RECEIVED_SEQUENCE);
       if (isset($received_sequence))

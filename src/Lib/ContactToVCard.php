@@ -103,8 +103,19 @@ class ContactToVCard {
       $vcontact->FN = $contact->lastname;
       // Members list
       $members = unserialize($contact->members);
-      foreach ($members as $member) {
-        $vcontact->add(VCard::MEMBER, $member);
+      if (is_array($members) && count($members)) {
+        // Récupère les contacts membres du groupe
+        $class = get_class($contact);
+        $_contact = new $class([$contact->getUserMelanie(), $contact->getAddressbookMelanie()]);
+        $_contact->type = \LibMelanie\Api\Defaut\Contact::TYPE_CONTACT;
+        $_contact->id = $members;
+        $_contacts = $_contact->getList('uid');
+        if (is_array($_contacts) && count($_contacts)) {
+          foreach ($_contacts as $_c) {
+            $vcontact->add(VCard::MEMBER, 'urn:uuid:' . $_c->uid);
+          }
+          
+        }
       }
     }
     else {

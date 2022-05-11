@@ -170,7 +170,7 @@ class Organizer extends MceObject {
         $User = $this->__getNamespace() . '\\User';
         $user = new $User();
         $user->email = $owner_email;
-        if ($user->load('uid')) {
+        if ($user->load(['uid'])) {
           $this->owner_uid = $user->uid;
         }
       }
@@ -370,7 +370,7 @@ class Organizer extends MceObject {
           $User = $this->__getNamespace() . '\\User';
           $user = new $User();
           $user->uid = $this->objectmelanie->organizer_uid;
-          if ($user->load('email')) {
+          if ($user->load(['email'])) {
             $this->organizer_email = $user->email;
             $this->extern = false;
           }
@@ -422,7 +422,7 @@ class Organizer extends MceObject {
           $User = $this->__getNamespace() . '\\User';
           $user = new $User();
           $user->uid = $this->objectmelanie->organizer_uid;
-          if ($user->load('fullname')) {
+          if ($user->load(['fullname'])) {
             $this->organizer_name = $user->fullname;
             $this->extern = false;
           }

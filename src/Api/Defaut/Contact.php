@@ -123,7 +123,7 @@ class Contact extends MceObject {
    * @param User $user          
    * @param Addressbook $addressbook          
    */
-  function __construct($user = null, $addressbook = null) {
+  public function __construct($user = null, $addressbook = null) {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
@@ -147,9 +147,20 @@ class Contact extends MceObject {
    * @ignore
    *
    */
-  function setUserMelanie($user) {
+  public function setUserMelanie($user) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
     $this->user = $user;
+  }
+
+  /**
+   * Retourne l'utilisateur MCE
+   * 
+   * @return User
+   * @ignore
+   */
+  public function getUserMelanie() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserMelanie()");
+    return $this->user;
   }
   
   /**
@@ -159,10 +170,22 @@ class Contact extends MceObject {
    * @ignore
    *
    */
-  function setAddressbookMelanie($addressbook) {
+  public function setAddressbookMelanie($addressbook) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setAddressbookMelanie()");
     $this->addressbookmce = $addressbook;
     $this->objectmelanie->addressbook = $this->addressbookmce->id;
+  }
+
+  /**
+   * Récupère la liste de contacts Melanie
+   * 
+   * @return Addressbook         
+   * @ignore
+   *
+   */
+  public function getAddressbookMelanie() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getAddressbookMelanie()");
+    return $this->addressbookmce;
   }
   
   /**

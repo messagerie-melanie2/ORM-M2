@@ -71,6 +71,11 @@ class Ldap {
                         /* [Optionnel pour les BALP] Base DN de recherche pour les boites partagées */
                         "shared_base_dn" => "dc=example,dc=com",
 
+                        /* Authentification recherche. Les binds anonymes sont-ils interdits sur cet annuaire ? */
+                        "noAnonymousBind" => false,
+                        //"bind_dn" => "cn=admin",
+                        //"bind_pw" => "password",
+
                         /* [Obligatoire] Version du protocole LDAP */
                         "version" => 3,
 

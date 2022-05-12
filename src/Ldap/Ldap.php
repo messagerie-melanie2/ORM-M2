@@ -38,7 +38,7 @@ class Ldap {
   /**
    * Connexion vers le serveur LDAP
    * 
-   * @var resource
+   * @var \LDAP\Connection
    */
   private $connection = null;
   /**
@@ -200,6 +200,22 @@ class Ldap {
     $this->isAuthenticate = false;
     return $this->isAnonymous;
   }
+
+  /**
+   * Se connecte pour un lookup de dn sur la connexion LDAP. Vérifie si les binds anonymes sont autorisés
+   *
+   * @return boolean
+   */
+  public function bind4lookup()
+  {
+      M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->bind4lookup()");
+      if (isset($this->config['noAnonymousBind']) && $this->config['noAnonymousBind']) {
+          return $this->authenticate($this->config['bind_dn'], $this->config['bind_pw']);
+      } else {
+          return $this->anonymous();
+      }
+  }
+
   
   /**
    * ************* Statics methods **
@@ -227,8 +243,8 @@ class Ldap {
     if (isset($infos)) {
       $dn = $infos['dn'];
     } else {
-      // Connexion anonymous pour lire les données
-      if ($ldap->anonymous()) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
         // Génération du filtre
         $filter = $ldap->getConfig("authentification_filter");
         if (isset($filter)) {
@@ -348,8 +364,8 @@ class Ldap {
     $keycache = "GetUserInfos:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$username";
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
-      // Connexion anonymous pour lire les données
-      if ($ldap->anonymous()) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
         // Lancement de la recherche
         $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr, 0, 1);
         if ($sr && $ldap->count_entries($sr) == 1) {
@@ -401,8 +417,8 @@ class Ldap {
     $keycache = "GetUserInfosFromDn:$server:" . md5(serialize($ldap_attr)) . ":$user_dn";
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
-      // Connexion anonymous pour lire les données
-      if ($ldap->anonymous()) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
         // Lancement de la recherche
         $sr = $ldap->read($user_dn, $filter, $ldap_attr, 0, 1);
         if ($sr && $ldap->count_entries($sr) == 1) {
@@ -465,8 +481,8 @@ class Ldap {
     $keycache = "GetUserBalPartagees:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$username";
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
-      // Connexion anonymous pour lire les données
-      if ($ldap->anonymous()) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
         // Base de recherche ?
         $base_dn = $ldap->getConfig("shared_base_dn");
         if (!isset($base_dn)) {
@@ -532,8 +548,8 @@ class Ldap {
     $keycache = "GetUserBalEmission:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$username";
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
-      // Connexion anonymous pour lire les données
-      if ($ldap->anonymous()) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
         // Base de recherche ?
         $base_dn = $ldap->getConfig("shared_base_dn");
         if (!isset($base_dn)) {
@@ -599,8 +615,8 @@ class Ldap {
     $keycache = "GetUserBalGestionnaire:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$username";
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
-      // Connexion anonymous pour lire les données
-      if ($ldap->anonymous()) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
         // Base de recherche ?
         $base_dn = $ldap->getConfig("shared_base_dn");
         if (!isset($base_dn)) {
@@ -667,8 +683,8 @@ class Ldap {
     $keycache = "GetUserGroups:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$username";
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
-      // Connexion anonymous pour lire les données
-      if ($ldap->anonymous()) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
         // Lancement de la recherche
         $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr);
         if ($sr && $ldap->count_entries($sr) > 0) {
@@ -730,8 +746,8 @@ class Ldap {
     $keycache = "GetGroupsUserIsMember:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$username";
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
-      // Connexion anonymous pour lire les données
-      if ($ldap->anonymous()) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
         // Lancement de la recherche
         $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr);
         if ($sr && $ldap->count_entries($sr) > 0) {
@@ -792,8 +808,8 @@ class Ldap {
     $keycache = "GetListsUserIsMember:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$email";
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
-      // Connexion anonymous pour lire les données
-      if ($ldap->anonymous()) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
         // Lancement de la recherche
         $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr);
         if ($sr && $ldap->count_entries($sr) > 0) {
@@ -855,8 +871,8 @@ class Ldap {
     $keycache = "GetUserInfosFromEmail:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$server:$email";
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
-      // Connexion anonymous pour lire les données
-      if ($ldap->anonymous()) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
         // Lancement de la recherche
         $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr, 0, 1);
         if ($sr && $ldap->count_entries($sr) == 1) {

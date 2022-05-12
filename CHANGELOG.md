@@ -1,3 +1,9 @@
+ORM M2 - 0.6.2.2
+------
+- 0006295: [En attente] Identifier des changements de lieu non majeur
+- 0006752: Lors du saveAttendees, forcer la date de l'événement de l'organisateur
+- 0006751: MR MCE 0000007 Allow ldap servers that forbid anonymous binds
+
 ORM M2 - 0.6.2.1
 ------
 - 0006686: Problème de sequence en ICS

@@ -581,6 +581,10 @@ class Event extends MceObject {
         }
         unset($this->objectmelanie->attendees);
       }
+      // MANTIS 0006752: Lors du saveAttendees, forcer la date de l'événement de l'organisateur
+      foreach (['start', 'end', 'all_day', 'timezone'] as $field) {
+        $this->getObjectMelanie()->setFieldValueToData($field, $organizer_event->getObjectMelanie()->getFieldValueFromData($field));
+      }
       // Sauvegarde de l'evenement si besoin
       if ($save) {
         $organizer_event->modified = time();
@@ -1068,12 +1072,23 @@ class Event extends MceObject {
       foreach ($copyFieldsList as $field) {
         if ($event->getObjectMelanie()->getFieldValueFromData($field) != $attendee_event->getObjectMelanie()->getFieldValueFromData($field)) {
           $save = true;
-          $value = $event->getObjectMelanie()->getFieldValueFromData($field);
-          $attendee_event->getObjectMelanie()->setFieldValueToData($field, $value);
+          $newvalue = $event->getObjectMelanie()->getFieldValueFromData($field);
+          $oldvalue = $attendee_event->getObjectMelanie()->getFieldValueFromData($field);
+          $attendee_event->getObjectMelanie()->setFieldValueToData($field, $newvalue);
           $attendee_event->getObjectMelanie()->setFieldHasChanged($field);
           if (in_array($field, $needActionFieldsList)) {
             M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->copyEventNeedAction() [" . $event->realuid . "] needActionField: " . $field);
-            $saveAndNeedAction = true;
+            // MANTIS 0006295: [En attente] Identifier des changements de lieu non majeur
+            if ($field == 'location') {
+              if (!(strpos($oldvalue, 'http') === 0 && strpos($newvalue, 'http') === 0
+                  || strpos($oldvalue, 'http') === 0 && empty($newvalue)
+                  || empty($oldvalue) && strpos($newvalue, 'http') === 0)) {
+                $saveAndNeedAction = true;
+              }
+            }
+            else {
+              $saveAndNeedAction = true;
+            }
           }
         }
       }

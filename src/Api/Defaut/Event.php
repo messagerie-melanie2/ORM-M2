@@ -128,7 +128,7 @@ class Event extends MceObject {
    * 
    * @var Attendee[]
    */
-  protected $attendees;
+  protected $_attendees;
   /**
    * Tableau d'exceptions pour la récurrence
    * 
@@ -2085,7 +2085,7 @@ class Event extends MceObject {
       }
     }
     $this->objectmelanie->attendees = serialize($_attendees);
-    $this->attendees = $attendees;
+    $this->_attendees = $attendees;
   }
   /**
    * Mapping attendees field
@@ -2094,7 +2094,7 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapAttendees()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
 
-    if (!isset($this->attendees)) {
+    if (!isset($this->_attendees)) {
       // Récupération des participants
       $object_attendees = null;
 
@@ -2112,7 +2112,7 @@ class Event extends MceObject {
         return [];
 
       $_attendees = unserialize($object_attendees);
-      $this->attendees = [];
+      $this->_attendees = [];
       $newAttendees = [];
       if (is_array($_attendees) && count($_attendees) > 0) {
         $Attendee = $this->__getNamespace() . '\\Attendee';
@@ -2127,13 +2127,13 @@ class Event extends MceObject {
             $this->attendeeIsList($attendee, $newAttendees, $Attendee);
           }
 
-          $this->attendees[] = $attendee;
+          $this->_attendees[] = $attendee;
         }
         // Ajouter les nouveaux participants
-        $this->attendees = $this->mergeAttendees($this->attendees, $newAttendees);
+        $this->_attendees = $this->mergeAttendees($this->_attendees, $newAttendees);
       }
     }
-    return $this->attendees;
+    return $this->_attendees;
   }
 
   /**

@@ -1,3 +1,7 @@
+ORM M2 - 0.6.2.3
+------
+- Fix sur la fonctionnalité de s'inviter pour un participant
+
 ORM M2 - 0.6.2.2
 ------
 - 0006295: [En attente] Identifier des changements de lieu non majeur

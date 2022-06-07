@@ -29,6 +29,7 @@ use LibMelanie\Api\Defaut\Calendar;
 use LibMelanie\Api\Defaut\Taskslist;
 use LibMelanie\Api\Defaut\Users\Share;
 use LibMelanie\Config\Config;
+use LibMelanie\Config\MappingMce;
 
 /**
  * Classe utilisateur par defaut
@@ -189,6 +190,26 @@ abstract class User extends MceObject {
    * @var ObjectShare[]
    */
   protected $_objectsSharedGestionnaire;
+
+  /**
+   * Liste des boites partagées accessibles à l'utilisateur
+   * 
+   * @var User[]
+   */
+  protected $_shared;
+  /**
+   * Liste des boites partagées accessibles en emission à l'utilisateur
+   * 
+   * @var User[]
+   */
+  protected $_sharedEmission;
+  /**
+   * Liste des boites partagées accessibles en gestionnaire à l'utilisateur
+   * 
+   * @var User[]
+   */
+  protected $_sharedGestionnaire;
+
   /**
    * Liste des partages pour l'objet courant
    * 
@@ -554,7 +575,7 @@ abstract class User extends MceObject {
    */
   public function getShared($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getShared() [" . $this->_server . "]");
-    if (!isset($this->_objectsShared)) {
+    if (!isset($this->_shared)) {
       if (isset($attributes) && is_string($attributes)) {
         $attributes = [$attributes];
       }
@@ -567,14 +588,14 @@ abstract class User extends MceObject {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_partagees_filter'];
       }
       $list = $this->objectmelanie->getBalp($attributes, $filter);
-      $this->_objectsShared = [];
+      $this->_shared = [];
       foreach ($list as $key => $object) {
-        $this->_objectsShared[$key] = new static($this->_server);
-        $this->_objectsShared[$key]->setObjectMelanie($object);
+        $this->_shared[$key] = new static($this->_server);
+        $this->_shared[$key]->setObjectMelanie($object);
       }
       $this->executeCache();
     }
-    return $this->_objectsShared;
+    return $this->_shared;
   }
 
   /**
@@ -619,7 +640,7 @@ abstract class User extends MceObject {
    */
   public function getSharedEmission($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedEmission() [" . $this->_server . "]");
-    if (!isset($this->_objectsSharedEmission)) {
+    if (!isset($this->_sharedEmission)) {
       if (isset($attributes) && is_string($attributes)) {
         $attributes = [$attributes];
       }
@@ -632,14 +653,14 @@ abstract class User extends MceObject {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_emission_filter'];
       }
       $list = $this->objectmelanie->getBalpEmission($attributes, $filter);
-      $this->_objectsSharedEmission = [];
+      $this->_sharedEmission = [];
       foreach ($list as $key => $object) {
-        $this->_objectsSharedEmission[$key] = new static($this->_server);
-        $this->_objectsSharedEmission[$key]->setObjectMelanie($object);
+        $this->_sharedEmission[$key] = new static($this->_server);
+        $this->_sharedEmission[$key]->setObjectMelanie($object);
       }
       $this->executeCache();
     }
-    return $this->_objectsSharedEmission;
+    return $this->_sharedEmission;
   }
 
   /**
@@ -684,7 +705,7 @@ abstract class User extends MceObject {
    */
   public function getSharedGestionnaire($attributes = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedGestionnaire() [" . $this->_server . "]");
-    if (!isset($this->_objectsSharedGestionnaire)) {
+    if (!isset($this->_sharedGestionnaire)) {
       if (isset($attributes) && is_string($attributes)) {
         $attributes = [$attributes];
       }
@@ -697,14 +718,14 @@ abstract class User extends MceObject {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_gestionnaire_filter'];
       }
       $list = $this->objectmelanie->getBalpGestionnaire($attributes, $filter);
-      $this->_objectsSharedGestionnaire = [];
+      $this->_sharedGestionnaire = [];
       foreach ($list as $key => $object) {
-        $this->_objectsSharedGestionnaire[$key] = new static($this->_server);
-        $this->_objectsSharedGestionnaire[$key]->setObjectMelanie($object);
+        $this->_sharedGestionnaire[$key] = new static($this->_server);
+        $this->_sharedGestionnaire[$key]->setObjectMelanie($object);
       }
       $this->executeCache();
     }
-    return $this->_objectsSharedGestionnaire;
+    return $this->_sharedGestionnaire;
   }
 
   /**
@@ -1194,7 +1215,7 @@ abstract class User extends MceObject {
 
     // Si l'utilisateur est publisher d'une news on ajoute une info
     foreach ($news as $k => $n) {
-      if (in_array($n->service, $publisherServices)) {
+      if ($this->_is_in_services($n->service, $publisherServices)) {
         $news[$k]->publisher = true;
       }
       else {
@@ -1219,12 +1240,30 @@ abstract class User extends MceObject {
     }
 
     // Si le service de la news fait parti des services publisher du User
-    if (in_array($news->service, $publisherServices)) {
+    if ($this->_is_in_services($news->service, $publisherServices)) {
       $news->publisher = true;
     }
     else {
       $news->publisher = false;
     }
+  }
+
+  /**
+   * Parcours la liste des services pour déterminer si le service en fait parti
+   * Il peut également être un sous service d'un service de la liste et donc en faire partie
+   * 
+   * @param string $service
+   * @param array $servicesList
+   * 
+   * @return boolean
+   */
+  protected function _is_in_services($service, $servicesList) {
+    foreach ($servicesList as $s) {
+      if (strpos($service, $s) !== false) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -1328,6 +1367,116 @@ abstract class User extends MceObject {
   public function cleanRss() {
     $this->_userRss = null;
     $this->executeCache();
+  }
+
+  /**
+   * Récupération des notifications de l'utilisateur
+   * Si $last est positionné, récupère les notifications depuis le dernier timestamp
+   * 
+   * @param integer $last [Optionnel] Dernier timestamp de récupération des notifications
+   * 
+   * @return Notification[] Liste des notifications de l'utilisateur
+   */
+  public function getNotifications($last = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getNotifications($last)");
+
+    // Initialisation de l'objet pour récupérer les notifications
+    $_notif = new Notification($this);
+    $_operators = [];
+
+    // Un last est positionné
+    if (isset($last)) {
+      $_notif->modified = $last;
+      $_operators['modified'] = MappingMce::supeq;
+    }
+    
+    return $_notif->getList(null, null, $_operators, 'created', false);
+  }
+
+  /**
+   * Passe la notification de l'utilisateur en read (ou non si $read = false)
+   * 
+   * @param string|Notification $notification Notification ou uid de la notification
+   * @param boolean $read Passer en lu ?
+   * 
+   * @return boolean
+   */
+  public function readNotification($notification, $read = true) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->readNotification()");
+
+    // La notification est un uid
+    if (is_string($notification)) {
+      $uid = $notification;
+      $notification = new Notification($this);
+      $notification->uid = $uid;
+    }
+
+    // On load puis on modifie
+    if ($notification->load()) {
+      $notification->isread = $read;
+      $notification->modified = time();
+
+      $ret = $notification->save();
+
+      return !is_null($ret);
+    }
+    return false;
+  }
+
+  /**
+   * Supprime la notification de l'utilisateur
+   * 
+   * @param string|Notification $notification Notification ou uid de la notification
+   * 
+   * @return boolean
+   */
+  public function deleteNotification($notification) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->deleteNotification()");
+
+    // La notification est un uid
+    if (is_string($notification)) {
+      $uid = $notification;
+      $notification = new Notification($this);
+      $notification->uid = $uid;
+    }
+
+    return $notification->delete();
+  }
+
+  /**
+   * Ajoute la notification pour l'utilisateur
+   * 
+   * @param Notification $notification Notification
+   * 
+   * @return string|boolean Uid de la nouvelle notification si Ok, false sinon
+   */
+  public function addNotification($notification) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->addNotification()");
+
+    // Positionne le owner de la notification
+    if (!isset($notification->owner)) {
+      $notification->owner = $this->uid;
+    }
+
+    // Positionne l'uid de la notification
+    if (!isset($notification->uid)) {
+      $notification->uid = \LibMelanie\Lib\UUID::v4();
+    }
+
+    // Position le modified de la notification
+    $notification->created = time();
+    $notification->modified = $notification->created;
+    $notification->isdeleted = false;
+    $notification->isread = false;
+
+    // Sauvegarde la notification
+    $ret = $notification->save();
+
+    // Gestion du retour
+    if (!is_null($ret)) {
+      return $notification->uid;
+    }
+    return false;
   }
 
   /**

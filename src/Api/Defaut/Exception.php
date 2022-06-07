@@ -142,13 +142,6 @@ class Exception extends Event {
   protected function loadExceptions() {
     return false;
   }
-  /**
-   * Pas de sauvegarde des participants dans une exception
-   * les participants sont sauvegardé directement depuis l'évènement maitre
-   */
-  protected function saveAttendees() {
-    return false;
-  }
   
   /**
    * ***************************************************
@@ -198,7 +191,7 @@ class Exception extends Event {
     }
     // Sauvegarde des participants
     if ($saveAttendees) {
-      $this->newSaveAttendees();
+      $this->saveAttendees();
     }
     // Sauvegarde l'objet
     $insert = $this->objectmelanie->save();

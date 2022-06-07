@@ -225,8 +225,11 @@ class Attachment extends MceObject {
       return null;
     $attachments = [];
     foreach ($_attachments as $_attachment) {
-      $_attachment->setIsExist();
-      $_attachment->setIsLoaded();
+      // Ne considérer l'attachment loadé que si les data sont chargées
+      if (empty($fields) || in_array('data', $fields)) {
+        $_attachment->setIsExist();
+        $_attachment->setIsLoaded();
+      }
       $attachment = new static();
       $attachment->setObjectMelanie($_attachment);
       $attachments[$_attachment->id] = $attachment;

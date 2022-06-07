@@ -32,7 +32,6 @@ use LibMelanie\Objects\ObjectMelanie;
  * @subpackage API/Defaut
  * @api
  * 
- * @property integer $id Identifiant de la news
  * @property string $uid Identifiant unique de la news
  * @property string $title Titre donné à la news
  * @property string $description Description donnée à la news
@@ -43,10 +42,10 @@ use LibMelanie\Objects\ObjectMelanie;
  * @property string $creator Identifiant du créateur
  * @property boolean $publisher Est-ce que l'utilisateur est un publisher de cette news ?
  * 
- * @method bool load() Charge les données du hashtag depuis la base de données
- * @method bool exists() Est-ce que le hashtag existe dans la base de données ?
- * @method bool save() Enregistre le hashtag dans la base de données
- * @method bool delete() Supprime le hashtag de la base de données
+ * @method bool load() Charge les données de la news depuis la base de données
+ * @method bool exists() Est-ce que la news existe dans la base de données ?
+ * @method bool save() Enregistre la news dans la base de données
+ * @method bool delete() Supprime la news de la base de données
  */
 class News extends MceObject {
   /**

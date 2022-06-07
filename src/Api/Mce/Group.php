@@ -54,15 +54,20 @@ class Group extends Defaut\Group {
      * Configuration du mapping qui surcharge la conf
      */
     const MAPPING = [
-        "dn"                      => 'dn',                            // DN de l'utilisateur
-        "uid"                     => 'uid',                           // Identifiant de l'utilisateur
-        "fullname"                => 'cn',                            // Nom complet de l'utilisateur
-        "email"                   => 'mailpr',                        // Adresse e-mail principale de l'utilisateur en reception
-        "email_list"              => [MappingMce::name => 'mail', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
-        "service"                 => 'departmentnumber',              // Department Number
-        "type"                    => 'mineqtypeentree',               // Type d'entrée (boite individuelle, partagée, ressource, ...)
-        "members"                 => [MappingMce::name => 'memberUid', MappingMce::type => MappingMce::arrayLdap], // Liste des membres du groupes
+        "dn"                      => 'dn',                              // DN de la liste
+        "rdn"                     => 'mcerdn',                          // RDN de la liste
+        "gid"                     => 'gidnumber',                       // Group ID
+        "fullname"                => 'cn',                              // Nom complet de la liste
+        "name"                    => 'displayname',                     // Nom de la liste
+        "lastname"                => 'sn',                              // Last name de la liste
+        "email"                   => 'mail',                          // Adresse e-mail principale de la liste en reception
+        "email_list"              => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
+        "service"                 => 'departmentnumber',                // Department Number
+        "type"                    => 'mcetypeentree',                   // Type d'entrée (boite individuelle, partagée, ressource, ...)
+        "members"                 => [MappingMce::name => 'memberuid', MappingMce::type => MappingMce::arrayLdap], // Liste des membres du groupes
+        "members_email"           => [MappingMce::name => 'mcemelmembres', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses mails de la liste
         "owners"                  => [MappingMce::name => 'owner', MappingMce::type => MappingMce::arrayLdap], // Liste des propriétaires du groupes
+        "unique_identifier"       => 'uniqueidentifier',              // Identifier unique pour le groupe
         "is_dynamic"              => [MappingMce::name => 'objectclass', MappingMce::type => MappingMce::arrayLdap], // Est-ce qu'il s'agit d'une liste dynamique ?
     ];
 

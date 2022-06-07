@@ -42,8 +42,12 @@ use LibMelanie\Config\DefaultConfig;
  * @property-read boolean $need_action Est-ce que le mode En attente est activé pour ce participant
  * @property Attendee::RESPONSE_* $response Réponse du participant
  * @property Attendee::ROLE_* $role Role du participant
+ * @property-read boolean $is_individuelle Est-ce qu'il s'agit d'une boite individuelle
+ * @property-read boolean $is_list Est-ce qu'il s'agit d'une liste
+ * @property-read User[] $members Liste des membres appartenant au groupe
  */
 class Attendee extends MceObject {
+
   // Propriétés private
   /**
    * Email du participant
@@ -53,6 +57,7 @@ class Attendee extends MceObject {
    *
    */
   private $email;
+
   /**
    * Nom du participant
    * 
@@ -61,6 +66,7 @@ class Attendee extends MceObject {
    *
    */
   private $name;
+
   /**
    * Uid du participant
    * 
@@ -69,18 +75,21 @@ class Attendee extends MceObject {
    *
    */
   private $uid;
+
   /**
    * Est-ce que le mode En attente est activé pour ce participant
    * @var boolean
    * @ignore
    */
   private $need_action;
+
   /**
    * Est-ce que l'évenement a éte enregistré pour le participant via le en attente
    * @var boolean
    * @ignore
    */
   private $is_saved;
+
   /**
    * Réponse du participant
    * 
@@ -89,6 +98,7 @@ class Attendee extends MceObject {
    *
    */
   private $response;
+
   /**
    * Role du participant
    * 
@@ -97,6 +107,7 @@ class Attendee extends MceObject {
    *
    */
   private $role;
+
   /**
    * Est-ce que le participant s'est invité
    * 
@@ -104,6 +115,13 @@ class Attendee extends MceObject {
    * @ignore
    */
   private $self_invite;
+
+  /**
+   * Utilisateur associé a l'attendee
+   * 
+   * @var User
+   */
+  private $user;
   
   // Attendee Response Fields
   const RESPONSE_NEED_ACTION = DefaultConfig::NEED_ACTION;
@@ -123,14 +141,21 @@ class Attendee extends MceObject {
    * 
    * @param Event $event          
    */
-  function __construct($event = null) {
+  function __construct($event = null, $user = null) {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
-    // Définition de l'évènement melanie2 associé
-    if (isset($event))
+
+    // Définition de l'évènement Mél associé
+    if (isset($event)) {
       $this->objectmelanie = $event->getObjectMelanie();
+    }
+    
+    // Définition de l'utilisateur Mél associé
+    if (isset($user)) {
+      $this->user = $user;
+    }
   }
   
   /**
@@ -210,6 +235,9 @@ class Attendee extends MceObject {
    */
   protected function getMapEmail() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapEmail()");
+    if (empty($this->email) && isset($this->user)) {
+      $this->email = $this->user->email;
+    }
     return $this->email;
   }
   
@@ -232,6 +260,9 @@ class Attendee extends MceObject {
    */
   protected function getMapName() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapName()");
+    if (empty($this->name) && isset($this->user)) {
+      $this->name = $this->user->fullname;
+    }
     return $this->name;
   }
 
@@ -344,11 +375,13 @@ class Attendee extends MceObject {
   protected function getMapUid() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUid()");
     if (!isset($this->uid) && isset($this->email)) {
-      $User = $this->__getNamespace() . '\\User';
-      $user = new $User();
-      $user->email = $this->email;
-      if ($user->load('uid')) {
-        $this->uid = $user->uid;
+      if (!isset($this->user)) {
+        $User = $this->__getNamespace() . '\\User';
+        $this->user = new $User();
+        $this->user->email = $this->email;
+      }
+      if ($this->user->load()) {
+        $this->uid = $this->user->uid;
       }
     }      
     return $this->uid;
@@ -360,24 +393,54 @@ class Attendee extends MceObject {
    * @return boolean true si la boite est individuelle
    */
   protected function getMapIs_individuelle() {
-    if (isset($this->uid) || isset($this->email)) {
-      $User = $this->__getNamespace() . '\\User';
-      $user = new $User();
-      if (isset($this->uid)) {
-        $user->uid = $this->uid;
+    if (isset($this->email)) {
+      if (!isset($this->user)) {
+        $User = $this->__getNamespace() . '\\User';
+        $this->user = new $User();
+        $this->user->email = $this->email;
       }
-      else {
-        $user->email = $this->email;
-      }
-      if ($user->load()) {
-        return $user->is_individuelle || $user->is_applicative;
-      }
-      else {
-        // C'est un participant externe, donc on le traite comme une boite individuelle
-        return true;
+      if ($this->user->load()) {
+        return $this->user->is_individuelle || $this->user->is_applicative;
       }
     }
     return true;
+  }
+
+  /**
+   * Mapping is_list field
+   * 
+   * @return boolean true si la boite est une liste
+   */
+  protected function getMapIs_list() {
+    if (isset($this->email)) {
+      if (!isset($this->user)) {
+        $User = $this->__getNamespace() . '\\User';
+        $this->user = new $User();
+        $this->user->email = $this->email;
+      }
+      if ($this->user->load()) {
+        return $this->user->is_list;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Mapping members field
+   * 
+   * @return array] Liste d'adresses email
+   */
+  protected function getMapMembers() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapMembers()");
+    if (isset($this->email)) {
+      $Group = $this->__getNamespace() . '\\Group';
+      $group = new $Group();
+      $group->email = $this->email;
+      if ($group->load(['members_email'])) {
+        return $group->members_email;
+      }
+    }
+    return [];
   }
   
   /**
@@ -386,7 +449,7 @@ class Attendee extends MceObject {
   protected function getMapNeed_action() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapNeed_action()");
     if (!isset($this->need_action) 
-        && isset($this->email)) {
+        && (isset($this->email) || isset($this->uid))) {
       $need_action = Config::get(Config::NEED_ACTION_ENABLE);
       if ($need_action) {
         $filter = Config::get(Config::NEED_ACTION_DISABLE_FILTER);
@@ -395,22 +458,29 @@ class Attendee extends MceObject {
         $filter = Config::get(Config::NEED_ACTION_ENABLE_FILTER);
       }
       if (isset($filter)) {
-        $User = $this->__getNamespace() . '\\User';
-        $user = new $User();
-        $user->email = $this->email;
+        if (!isset($this->user)) {
+          $User = $this->__getNamespace() . '\\User';
+          $this->user = new $User();
+          if (isset($this->email)) {
+            $this->user->email = $this->email;
+          }
+          else {
+            $this->user->uid = $this->uid;
+          }
+        }
         $fields = [];
         foreach ($filter as $field => $f) {
           $fields[] = $field;
         }
-        if ($user->load($fields) && ($user->is_individuelle || $user->is_applicative)) {
+        if ($this->user->load($fields) && ($this->user->is_individuelle || $this->user->is_applicative)) {
           foreach ($fields as $field) {
             $match = false;
-            if (is_array($user->$field)) {
-              if (in_array($filter[$field], $user->$field)) {
+            if (is_array($this->user->$field)) {
+              if (in_array($filter[$field], $this->user->$field)) {
                 $match = true;
               }
             }
-            else if ($user->$field == $filter[$field]) {
+            else if ($this->user->$field == $filter[$field]) {
               $match = true;
             }
             if ($match) {

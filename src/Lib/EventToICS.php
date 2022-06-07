@@ -543,9 +543,15 @@ class EventToICS {
         }
       }
       // Sequence
-      $sequence = $event->getAttribute(ICS::SEQUENCE);
-      if (isset($sequence))
+      $sequence = $event->sequence;
+      if (isset($sequence)) {
         $vevent->SEQUENCE = $sequence;
+      }
+      else {
+        $sequence = $event->getAttribute(ICS::SEQUENCE);
+        if (isset($sequence))
+          $vevent->SEQUENCE = $sequence;
+      }
       // RECEIVED-SEQUENCE
       $received_sequence = $event->getAttribute(ICS::X_MOZ_RECEIVED_SEQUENCE);
       if (isset($received_sequence))
@@ -686,7 +692,7 @@ class EventToICS {
    * @return mixed
    */
   private static function cleanUTF8String($string) {
-    return preg_replace('/[\x01\x02\x03\x04\x05\x08\x0B\x0E\x11\x12\x13\x14\x17\x19\x1A\x1E\x1C\x1B\x1D\x1F]/', '', $string);
+    return preg_replace('/[\x01\x02\x03\x04\x05\x06\x07\x08\x0B\x0E\x11\x12\x13\x14\x17\x19\x1A\x1E\x1C\x1B\x1D\x1F]/', '', $string);
   }
 
   /**
@@ -700,7 +706,7 @@ class EventToICS {
         'confirmed' => 'Confirmé',
         'tentative' => 'Provisoire',
         'cancelled' => 'Annulé',
-        'default' => 'Libre'
+        'default'   => 'Libre'
     );
     if (isset($convert[$status])) {
       return $convert[$status];

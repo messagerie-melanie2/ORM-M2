@@ -1,4 +1,4 @@
--- Schema du 20210408
+-- Schema du 20220224
 
 --
 -- Name: update_addressbook_ctag(); Type: FUNCTION
@@ -546,6 +546,40 @@ CREATE TABLE dwp_news_share
 	news_share_user_id text NOT NULL
 );
 
+--
+-- Sequence "dwp_notifications_seq"
+-- Name: dwp_notifications_seq; Type: SEQUENCE;
+--
+
+CREATE SEQUENCE dwp_notifications_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+--
+-- Table "dwp_notifications"
+-- Name: dwp_notifications; Type: TABLE;
+--
+
+CREATE TABLE dwp_notifications
+(
+	notification_id bigint DEFAULT nextval('dwp_notifications_seq'::text) PRIMARY KEY,
+	notification_uid text NOT NULL,
+	notification_owner text NOT NULL,
+	notification_from text,
+	notification_title text NOT NULL,
+	notification_content text NOT NULL,
+	notification_category text NOT NULL,
+	notification_action text,
+    notification_created integer NOT NULL,
+	notification_modified integer NOT NULL,
+	notification_isread boolean NOT NULL,
+	notification_isdeleted boolean NOT NULL
+);
+
 
 --
 -- Name: horde_datatree_pkey; Type: CONSTRAINT
@@ -840,6 +874,19 @@ CREATE INDEX dwp_news_service_idx ON dwp_news (news_service);
 
 CREATE INDEX dwp_news_share_user_id_idx ON dwp_news_share (news_share_user_id);
 
+--
+-- Name: dwp_notifications_owner_idx; Type: INDEX
+--
+
+CREATE INDEX dwp_notifications_owner_idx ON dwp_notifications (notification_owner);
+
+
+--
+-- Name: dwp_notifications_created_modified_owner_idx; Type: INDEX
+--
+
+CREATE INDEX dwp_notifications_created_modified_owner_idx ON dwp_notifications (notification_created DESC, notification_modified DESC, notification_owner);
+
 
 --
 -- Name: trigger_addressbook_ctag; Type: TRIGGER;
@@ -868,7 +915,7 @@ CREATE TRIGGER trigger_taskslist_ctag AFTER INSERT OR DELETE OR UPDATE ON nag_ta
 
 -- DROP SEQUENCE workspaces_seq;
 
-CREATE SEQUENCE public.workspaces_seq
+CREATE SEQUENCE workspaces_seq
     START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
@@ -881,7 +928,7 @@ CREATE SEQUENCE public.workspaces_seq
 --
 -- DROP TABLE dwp_workspaces;
 
-CREATE TABLE public.dwp_workspaces
+CREATE TABLE dwp_workspaces
 (
 	workspace_id bigint DEFAULT nextval('workspaces_seq'::text) PRIMARY KEY,
 	workspace_uid varchar(40) NOT NULL,
@@ -906,10 +953,10 @@ CREATE TABLE public.dwp_workspaces
 
 -- DROP TABLE dwp_shares;
 
-CREATE TABLE public.dwp_shares
+CREATE TABLE dwp_shares
 (
 	workspace_id bigint NOT NULL
-		REFERENCES public.dwp_workspaces (workspace_id) ON UPDATE CASCADE ON DELETE CASCADE,
+		REFERENCES dwp_workspaces (workspace_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	user_uid varchar(255) NOT NULL,
 	rights varchar(1) NOT NULL
 );
@@ -921,7 +968,7 @@ CREATE TABLE public.dwp_shares
 
 -- DROP SEQUENCE hashtags_seq;
 
-CREATE SEQUENCE public.hashtags_seq
+CREATE SEQUENCE hashtags_seq
     START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
@@ -935,7 +982,7 @@ CREATE SEQUENCE public.hashtags_seq
 
 -- DROP TABLE dwp_hashtags;
 
-CREATE TABLE public.dwp_hashtags
+CREATE TABLE dwp_hashtags
 (
 	hashtag_id bigint DEFAULT nextval('hashtags_seq'::text) PRIMARY KEY,
 	hashtag varchar(255) NOT NULL
@@ -948,12 +995,12 @@ CREATE TABLE public.dwp_hashtags
 
 -- DROP TABLE dwp_hashtags_workspaces;
 
-CREATE TABLE public.dwp_hashtags_workspaces
+CREATE TABLE dwp_hashtags_workspaces
 (
 	hashtag_id bigint NOT NULL
-		REFERENCES public.dwp_hashtags (hashtag_id) ON UPDATE CASCADE ON DELETE CASCADE,
+		REFERENCES dwp_hashtags (hashtag_id) ON UPDATE CASCADE ON DELETE CASCADE,
 	workspace_id bigint NOT NULL
-		REFERENCES public.dwp_workspaces (workspace_id) ON UPDATE CASCADE ON DELETE CASCADE
+		REFERENCES dwp_workspaces (workspace_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- Index pour les LIKE sur les hashtags : https://www.cybertec-postgresql.com/en/postgresql-more-performance-for-like-and-ilike-statements/
@@ -961,19 +1008,19 @@ CREATE TABLE public.dwp_hashtags_workspaces
 --
 -- Name: dwp_hashtags_hashtag_idx; Type: INDEX
 --
-CREATE INDEX dwp_hashtags_hashtag_idx ON public.dwp_hashtags (hashtag);
+CREATE INDEX dwp_hashtags_hashtag_idx ON dwp_hashtags (hashtag);
 
 --
 -- Name: dwp_shares_user_idx; Type: INDEX
 --
-CREATE INDEX dwp_shares_user_idx ON public.dwp_shares (user_uid);
+CREATE INDEX dwp_shares_user_idx ON dwp_shares (user_uid);
 
 --
 -- Name: dwp_workspaces_modified_idx; Type: INDEX
 --
-CREATE INDEX dwp_workspaces_modified_idx ON public.dwp_workspaces (modified DESC);
+CREATE INDEX dwp_workspaces_modified_idx ON dwp_workspaces (modified DESC);
 
 --
 -- Name: dwp_workspaces_uid_idx; Type: INDEX
 --
-CREATE INDEX dwp_workspaces_uid_idx ON public.dwp_workspaces (workspace_uid);
+CREATE INDEX dwp_workspaces_uid_idx ON dwp_workspaces (workspace_uid);

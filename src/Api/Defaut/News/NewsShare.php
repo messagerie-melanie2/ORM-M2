@@ -32,15 +32,14 @@ use LibMelanie\Objects\ObjectMelanie;
  * @subpackage API/Defaut
  * @api
  * 
- * @property integer $id Identifiant du partage
  * @property string $service Service sur lequel l'utilisateur a des droits
  * @property string $user Identifiant de l'utilisateur qui a les droits
  * @property string $right NewsShare::RIGHT_* Niveau de droit pour l'utilisateur
  * 
- * @method bool load() Charge les données du hashtag depuis la base de données
- * @method bool exists() Est-ce que le hashtag existe dans la base de données ?
- * @method bool save() Enregistre le hashtag dans la base de données
- * @method bool delete() Supprime le hashtag de la base de données
+ * @method bool load() Charge les données du newsshare depuis la base de données
+ * @method bool exists() Est-ce que le newsshare existe dans la base de données ?
+ * @method bool save() Enregistre le newsshare dans la base de données
+ * @method bool delete() Supprime le newsshare de la base de données
  */
 class NewsShare extends MceObject {
   const RIGHT_PUBLISHER = 'p';

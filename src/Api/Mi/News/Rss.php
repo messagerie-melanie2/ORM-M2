@@ -30,7 +30,6 @@ use LibMelanie\Api\Defaut;
  * @subpackage API/Mi
  * @api
  * 
- * @property integer $id Identifiant du flux rss
  * @property string $uid Identifiant unique du flux rss
  * @property string $title Titre donné au flux rss
  * @property string $url URL vers le flux rss

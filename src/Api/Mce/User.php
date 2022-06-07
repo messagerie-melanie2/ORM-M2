@@ -254,7 +254,7 @@ class User extends Defaut\User {
   /**
    * Mapping shares field
    * 
-   * @return boolean true si l'access internet de l'utilisateur est activé, false sinon
+   * @return Share[] Liste des partages de l'objet
    */
   protected function getMapShares() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapShares()");

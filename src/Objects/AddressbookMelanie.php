@@ -371,6 +371,36 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	}
 
 	/**
+	 * Récupère la liste de tous les groupes
+	 * need: $this->id
+	 * @return boolean
+	 */
+	public function getAllGroups() {
+		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getAllGroups()");
+		if (!isset($this->id)) return false;
+
+		// Params
+		$params = [MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name] => $this->id];
+		// Liste les contacts de la liste
+		return Sql\Sql::GetInstance()->executeQuery(Sql\SqlContactRequests::listAllGroups, $params, 'LibMelanie\Objects\ObjectMelanie', 'ContactMelanie');
+	}
+
+	/**
+	 * Récupère la liste de tous les groupes et contacts
+	 * need: $this->id
+	 * @return boolean
+	 */
+	public function getAllGroupsAndContacts() {
+		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getAllGroupsAndContacts()");
+		if (!isset($this->id)) return false;
+
+		// Params
+		$params = [MappingMce::$Data_Mapping[$this->objectType]['id'][MappingMce::name] => $this->id];
+		// Liste les contacts de la liste
+		return Sql\Sql::GetInstance()->executeQuery(Sql\SqlContactRequests::listAllGroupsAndContacts, $params, 'LibMelanie\Objects\ObjectMelanie', 'ContactMelanie');
+	}
+
+	/**
 	 * Recupère le Tag associé à la liste de contacts
 	 * need: $this->id
 	 * @return bool

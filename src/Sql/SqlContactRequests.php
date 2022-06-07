@@ -40,5 +40,17 @@ class SqlContactRequests {
 	 * @var string SELECT
 	 * @param :owner_id
 	 */
+	const listAllGroups = "SELECT * FROM turba_objects WHERE owner_id = :owner_id AND object_type = 'Group';";
+
+	/**
+	 * @var string SELECT
+	 * @param :owner_id
+	 */
+	const listAllGroupsAndContacts = "SELECT * FROM turba_objects WHERE owner_id = :owner_id;";
+
+	/**
+	 * @var string SELECT
+	 * @param :owner_id
+	 */
 	const getCTag = "SELECT datatree_ctag as ctag FROM horde_datatree WHERE datatree_name = :owner_id AND group_uid = 'horde.shares.turba'";
 }

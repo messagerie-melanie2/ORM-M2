@@ -524,6 +524,24 @@ class EventToICS {
           if (!empty($attendee_name)) {
             $params[ICS::CN] = self::cleanUTF8String($attendee_name);
           }
+          // Type
+          if (isset($attendee->type) && $attendee->type != Attendee::TYPE_INDIVIDUAL) {
+            // Individual est le type par défaut, pas besoin de le définir
+            switch ($attendee->type) {
+              case Attendee::TYPE_GROUP:
+                $params[ICS::CUTYPE] = ICS::CUTYPE_GROUP;
+                break;
+              case Attendee::TYPE_RESOURCE:
+                $params[ICS::CUTYPE] = ICS::CUTYPE_RESOURCE;
+                break;
+              case Attendee::TYPE_ROOM:
+                $params[ICS::CUTYPE] = ICS::CUTYPE_ROOM;
+                break;
+              case Attendee::TYPE_UNKNOWN:
+                $params[ICS::CUTYPE] = ICS::CUTYPE_UNKNOWN;
+                break;
+            }
+          }
           // 0006294: Ajouter l'information dans un participant quand il a été enregistré en attente
           if (is_bool($attendee->is_saved)) {
             $params[ICS::X_MEL_EVENT_SAVED] = $attendee->is_saved;

@@ -198,6 +198,14 @@ class DefaultConfig {
   const MONTHLY_BYDAY = "monthly_by_day";
   const YEARLY = "yearly";
   const YEARLY_BYDAY = "yearly_by_day";
+
+  /* Cutypes */
+  const CUTYPE = "cutype";
+  const INDIVIDUAL = 'individual';
+	const GROUP = 'group';
+	const RESOURCE = 'resource';
+	const ROOM = 'room';
+	const UNKNOWN = 'unknown';
   
   /* Attendee status */
   const RESPONSE = "response";

@@ -37,12 +37,14 @@ use LibMelanie\Config\DefaultConfig;
  * @property string $email Email du participant
  * @property string $name Nom du participant
  * @property string $uid Uid du participant
+ * @property string $type Type du participant (individuel, ressource, ...)
  * @property boolean $self_invite Est-ce que ce participant s'est lui même invité
  * @property boolean $is_saved Est-ce que l'événement a été enregistré dans son agenda en attente ?
  * @property-read boolean $need_action Est-ce que le mode En attente est activé pour ce participant
  * @property Attendee::RESPONSE_* $response Réponse du participant
  * @property Attendee::ROLE_* $role Role du participant
  * @property-read boolean $is_individuelle Est-ce qu'il s'agit d'une boite individuelle
+ * @property-read boolean $is_ressource Est-ce qu'il s'agit d'une boite de ressource
  * @property-read boolean $is_list Est-ce qu'il s'agit d'une liste
  * @property-read User[] $members Liste des membres appartenant au groupe
  */
@@ -109,6 +111,15 @@ class Attendee extends MceObject {
   private $role;
 
   /**
+   * Type du participant
+   * 
+   * @var string $type Attendee::ROLE_*
+   * @ignore
+   *
+   */
+  private $type;
+
+  /**
    * Est-ce que le participant s'est invité
    * 
    * @var boolean
@@ -135,6 +146,13 @@ class Attendee extends MceObject {
   const ROLE_REQ_PARTICIPANT = DefaultConfig::REQ_PARTICIPANT;
   const ROLE_OPT_PARTICIPANT = DefaultConfig::OPT_PARTICIPANT;
   const ROLE_NON_PARTICIPANT = DefaultConfig::NON_PARTICIPANT;
+
+  // Attendee Type Fields
+  const TYPE_INDIVIDUAL = DefaultConfig::INDIVIDUAL;
+	const TYPE_GROUP = DefaultConfig::GROUP;
+	const TYPE_RESOURCE = DefaultConfig::RESOURCE;
+	const TYPE_ROOM = DefaultConfig::ROOM;
+	const TYPE_UNKNOWN = DefaultConfig::UNKNOWN;
   
   /**
    * Constructeur de l'objet
@@ -171,6 +189,9 @@ class Attendee extends MceObject {
     $attendee[Config::get(Config::NAME)] = $this->name;
     $attendee[Config::get(Config::ROLE)] = $this->role;
     $attendee[Config::get(Config::RESPONSE)] = $this->response;
+    if (isset($this->type)) {
+      $attendee[Config::get(Config::CUTYPE)] = $this->type;
+    }
     if ($this->self_invite) {
       $attendee[Config::get(Config::SELF_INVITE_ATTENDEE)] = $this->self_invite;
     }
@@ -196,6 +217,7 @@ class Attendee extends MceObject {
     $this->name = isset($attendee[Config::get(Config::NAME)]) ? $attendee[Config::get(Config::NAME)] : "";
     $this->role = isset($attendee[Config::get(Config::ROLE)]) ? $attendee[Config::get(Config::ROLE)] : MappingMce::REQ_PARTICIPANT;
     $this->response = isset($attendee[Config::get(Config::RESPONSE)]) ? $attendee[Config::get(Config::RESPONSE)] : MappingMce::ATT_NEED_ACTION;
+    $this->type = isset($attendee[Config::get(Config::CUTYPE)]) ? $attendee[Config::get(Config::CUTYPE)] : MappingMce::ATT_TYPE_INDIVIDUAL;
     $this->self_invite = isset($attendee[Config::get(Config::SELF_INVITE_ATTENDEE)]) ? $attendee[Config::get(Config::SELF_INVITE_ATTENDEE)] : false;
     $this->is_saved = isset($attendee[Config::get(Config::IS_SAVED_ATTENDEE)]) ? $attendee[Config::get(Config::IS_SAVED_ATTENDEE)] : null;
   }
@@ -307,6 +329,32 @@ class Attendee extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapSelf_invite()");
     return $this->self_invite;
   }
+
+  /**
+   * Set type property
+   * 
+   * @param Attendee::TYPE $type          
+   * @ignore
+   *
+   */
+  protected function setMapType($type) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapType($type)");
+    if (isset(MappingMce::$MapAttendeeTypeObjectMelanie[$type]))
+      $this->type = MappingMce::$MapAttendeeTypeObjectMelanie[$type];
+  }
+  /**
+   * Get type property
+   * 
+   * @ignore
+   *
+   */
+  protected function getMapType() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapType()");
+    if (isset(MappingMce::$MapAttendeeTypeObjectMelanie[$this->type]))
+      return MappingMce::$MapAttendeeTypeObjectMelanie[$this->type];
+    else
+      return self::TYPE_INDIVIDUAL;
+  }
   
   /**
    * Set response property
@@ -401,6 +449,25 @@ class Attendee extends MceObject {
       }
       if ($this->user->load()) {
         return $this->user->is_individuelle || $this->user->is_applicative;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Mapping is_ressource field
+   * 
+   * @return boolean true si la boite est une ressource
+   */
+  protected function getMapIs_ressource() {
+    if (isset($this->email)) {
+      if (!isset($this->user)) {
+        $User = $this->__getNamespace() . '\\User';
+        $this->user = new $User();
+        $this->user->email = $this->email;
+      }
+      if ($this->user->load()) {
+        return $this->user->is_ressource;
       }
     }
     return true;

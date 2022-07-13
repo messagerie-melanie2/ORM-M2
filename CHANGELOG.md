@@ -1,3 +1,7 @@
+ORM M2 - 0.6.2.5
+------
+- 0006864: [Attendee] Problème de valeur de retour en cas d'erreur
+
 ORM M2 - 0.6.2.4
 ------
 - 0006800: Pour une invitation interne, un participant ne peut pas modifier l'horaire

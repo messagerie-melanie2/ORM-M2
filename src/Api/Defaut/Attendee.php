@@ -379,7 +379,7 @@ class Attendee extends MceObject {
     if (isset(MappingMce::$MapAttendeeResponseObjectMelanie[$this->response]))
       return MappingMce::$MapAttendeeResponseObjectMelanie[$this->response];
     else
-      return MappingMce::$MapAttendeeResponseObjectMelanie[self::RESPONSE_NEED_ACTION];
+      return self::RESPONSE_NEED_ACTION;
   }
   
   /**
@@ -405,7 +405,7 @@ class Attendee extends MceObject {
     if (isset(MappingMce::$MapAttendeeRoleObjectMelanie[$this->role]))
       return MappingMce::$MapAttendeeRoleObjectMelanie[$this->role];
     else
-      return MappingMce::$MapAttendeeRoleObjectMelanie[self::ROLE_REQ_PARTICIPANT];
+      return self::ROLE_REQ_PARTICIPANT;
   }
   
   /**

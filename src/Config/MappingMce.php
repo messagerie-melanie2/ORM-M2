@@ -194,6 +194,7 @@ class MappingMce {
 	          "id" 				=> [self::name => "event_id", self::type => self::string, self::size => 64],
 	          "owner" 			=> [self::name => "event_creator_id", self::type => self::string, self::size => 255, self::defaut => ''],
 	          "keywords" 		=> [self::name => "event_keywords"],
+			  "version" 		=> [self::name => "event_version", self::type => self::integer, self::defaut => 1],
 	          
 	          // DATA
 	          "title" 			=> [self::name => "event_title", self::type => self::string, self::size => 255, self::defaut => ''],
@@ -589,6 +590,28 @@ class MappingMce {
 	    self::MONTHLY_BYDAY => DefaultConfig::MONTHLY_BYDAY,
 	    self::YEARLY => DefaultConfig::YEARLY,
 	    self::YEARLY_BYDAY => DefaultConfig::YEARLY_BYDAY
+	];
+
+	// Attendee type
+	const ATT_TYPE_INDIVIDUAL = 1;
+	const ATT_TYPE_GROUP = 2;
+	const ATT_TYPE_RESOURCE = 3;
+	const ATT_TYPE_ROOM = 4;
+	const ATT_TYPE_UNKNOWN = 5;
+	/**
+	 * Attendee type mapping
+	 */
+	public static $MapAttendeeTypeObjectMelanie = [
+	    DefaultConfig::INDIVIDUAL => self::ATT_TYPE_INDIVIDUAL,
+	    DefaultConfig::GROUP => self::ATT_TYPE_GROUP,
+	    DefaultConfig::RESOURCE => self::ATT_TYPE_RESOURCE,
+	    DefaultConfig::ROOM => self::ATT_TYPE_ROOM,
+	    DefaultConfig::UNKNOWN => self::ATT_TYPE_UNKNOWN,
+	    self::ATT_TYPE_INDIVIDUAL => DefaultConfig::INDIVIDUAL,
+	    self::ATT_TYPE_GROUP => DefaultConfig::GROUP,
+	    self::ATT_TYPE_RESOURCE => DefaultConfig::RESOURCE,
+	    self::ATT_TYPE_ROOM => DefaultConfig::ROOM,
+		self::ATT_TYPE_UNKNOWN => DefaultConfig::UNKNOWN,
 	];
 
 	// Attendee status

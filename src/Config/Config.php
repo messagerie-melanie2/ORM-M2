@@ -192,6 +192,8 @@ class Config {
 	const NON_PARTICIPANT = "NON_PARTICIPANT";
 	const NAME = "NAME";
 
+	const CUTYPE = "CUTYPE";
+
 	const NO_PRIORITY = "NO_PRIORITY";
 	const VERY_HIGH = "VERY_HIGH";
 	const HIGH = "HIGH";

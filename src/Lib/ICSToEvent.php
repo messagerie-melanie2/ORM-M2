@@ -483,7 +483,28 @@ class ICSToEvent {
             }
           } else {
             $_attendee->role = $Attendee::ROLE_REQ_PARTICIPANT;
-          }            
+          }
+          // Gestion du TYPE
+          if (isset($attendee[ICS::CUTYPE])) {
+            switch ($attendee[ICS::CUTYPE]->getValue()) {
+              case ICS::CUTYPE_GROUP:
+                $_attendee->type = $Attendee::TYPE_GROUP;
+                break;
+              case ICS::CUTYPE_INDIVIDUAL:
+                $_attendee->type = $Attendee::TYPE_INDIVIDUAL;
+                break;
+              case ICS::CUTYPE_RESOURCE:
+                $_attendee->type = $Attendee::TYPE_RESOURCE;
+                break;
+              case ICS::CUTYPE_ROOM:
+                $_attendee->type = $Attendee::TYPE_ROOM;
+                break;
+              case ICS::CUTYPE_UNKNOWN:
+              default:
+                $_attendee->type = $Attendee::TYPE_UNKNOWN;
+                break;
+            }
+          }
           // Ajout de l'attendee
           $_attendees[] = $_attendee;
         }

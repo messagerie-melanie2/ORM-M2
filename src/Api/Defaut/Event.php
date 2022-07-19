@@ -75,7 +75,8 @@ use LibMelanie\Config\DefaultConfig;
  * @property-read string $realuid UID réellement stocké dans la base de données (utilisé pour les exceptions) (Lecture seule)
  * @property string $ics ICS associé à l'évènement courant, calculé à la volée en attendant la mise en base de données
  * @property-read VObject\Component\VCalendar $vcalendar Object VCalendar associé à l'évènement, peut permettre des manipulations sur les récurrences
- * @property $move Il s'ajout d'un MOVE, les participants sont conservés
+ * @property boolean $move Il s'ajout d'un MOVE, les participants sont conservés
+ * @property integer $version Version de schéma pour l'événement
  * 
  * @method bool load() Chargement l'évènement, en fonction du calendar et de l'uid
  * @method bool exists() Test si l'évènement existe, en fonction du calendar et de l'uid
@@ -515,6 +516,10 @@ class Event extends MceObject {
             return $this->setExternalOrganizer($organizer);
           }
         }
+        else {
+          // MANTIS 0006800: Pour une invitation interne, un participant ne peut pas modifier l'horaire
+          $this->keepNeedActionFieldsEvent($this, $organizer_event);
+        }
       }
       if (!$this->deleted && isset($this->objectmelanie->attendees)) {
         // Recupération de la réponse du participant
@@ -626,6 +631,10 @@ class Event extends MceObject {
             // L'événement n'existe pas donc on passe la variable a null
             $organizer_event = null;
           }
+          else {
+            // MANTIS 0006800: Pour une invitation interne, un participant ne peut pas modifier l'horaire
+            $this->keepNeedActionFieldsEvent($this, $organizer_event);
+          }
         }
       }
       // Si l'événement existe et qu'il a changé il y a moins de 10 minutes, on va comparer les participants
@@ -698,6 +707,35 @@ class Event extends MceObject {
     $organizer_event->save(false);
 
     return $organizer_event_exception;
+  }
+
+  /**
+   * Conserver les champs de l'organisateur pour les champs déterminants du en attente
+   */
+  public function keepNeedActionFieldsEvent($event, $organizer_event) {
+    // Liste des champs qui sont déterminants
+    $needActionFieldsList = [
+      'start',
+      'end',
+      'all_day',
+      'title',
+      'description',
+      'timezone',
+      'location',
+      'enddate',
+      'count',
+      'interval',
+      'type',
+      'days',
+      'recurrence_json',
+    ];
+    // Copier la liste des champs importants qui ont changés
+    foreach ($needActionFieldsList as $field) {
+      if ($event->getObjectMelanie()->getFieldValueFromData($field) != $organizer_event->getObjectMelanie()->getFieldValueFromData($field)) {
+        $event->getObjectMelanie()->setFieldValueToData($field, $organizer_event->getObjectMelanie()->getFieldValueFromData($field));
+        $event->getObjectMelanie()->setFieldHasChanged($field);
+      }
+    }
   }
 
   /**
@@ -841,22 +879,18 @@ class Event extends MceObject {
           if ($attendee->role == Attendee::ROLE_NON_PARTICIPANT) {
             continue;
           }
-          // Si ce n'est pas une boite individuelle il ne faut pas gérer les suppressions de participants
-          if (!$attendee->is_individuelle) {
-            $clean_deleted_attendees = false;
+          // Gére le cas d'une liste
+          if ($attendee->is_list) {
+            $this->attendeeList($attendee, $attendees_uid, $Attendee, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, $attendees, $attendee_key, $is_list_saved);
 
-            // Gére le cas d'une liste
-            if ($attendee->is_list) {
-              $this->attendeeList($attendee, $attendees_uid, $Attendee, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, $attendees, $attendee_key, $is_list_saved);
-
-              // Gérer le is_saved pour toute la liste
-              $attendees[$attendee_key]->is_saved = $is_list_saved ? true : null;
-            }
-            else {
-              $attendees[$attendee_key]->is_saved = null;
-            }
+            // Gérer le is_saved pour toute la liste
+            $attendees[$attendee_key]->is_saved = $is_list_saved ? true : null;
           }
           else {
+            // MANTIS 0006801: [En attente] Gestion des boites partagées
+            if (!$attendee->is_individuelle) {
+              $clean_deleted_attendees = false;
+            }
             $attendee_uid = $attendee->uid;
             // Récupérer la liste des participants
             if (isset($attendee_uid)) {
@@ -1116,8 +1150,19 @@ class Event extends MceObject {
           // Modification en tentative
           $attendee_event->status = self::STATUS_TENTATIVE;
           if (isset($attendee_key)) {
-            // Passage en Need Action
-            $attendees[$attendee_key]->response = Attendee::RESPONSE_NEED_ACTION;
+            // MANTIS 0006801: [En attente] Gestion des boites partagées
+            if ($attendees[$attendee_key]->is_ressource) {
+              // Gestion des boites ressources
+              $attendees[$attendee_key]->response = Attendee::RESPONSE_ACCEPTED;
+              $attendee_event->status = self::STATUS_CONFIRMED;
+              if (!isset($attendees[$attendee_key]->type) || $attendees[$attendee_key]->type == Attendee::TYPE_INDIVIDUAL) {
+                $attendees[$attendee_key]->type = Attendee::TYPE_RESOURCE;
+              }
+            }
+            else {
+              // Passage en Need Action
+              $attendees[$attendee_key]->response = Attendee::RESPONSE_NEED_ACTION;
+            }
             $event->attendees = $attendees;
           }          
         }
@@ -1163,8 +1208,19 @@ class Event extends MceObject {
         else {
           $attendee_event->status = self::STATUS_TENTATIVE;
           if (isset($attendee_key)) {
-            // Passage en Need Action
-            $attendees[$attendee_key]->response = Attendee::RESPONSE_NEED_ACTION;
+            // MANTIS 0006801: [En attente] Gestion des boites partagées
+            if ($attendees[$attendee_key]->is_ressource) {
+              // Gestion des boites ressources
+              $attendees[$attendee_key]->response = Attendee::RESPONSE_ACCEPTED;
+              $attendee_event->status = self::STATUS_CONFIRMED;
+              if (!isset($attendees[$attendee_key]->type) || $attendees[$attendee_key]->type == Attendee::TYPE_INDIVIDUAL) {
+                $attendees[$attendee_key]->type = Attendee::TYPE_RESOURCE;
+              }
+            }
+            else {
+              // Passage en Need Action
+              $attendees[$attendee_key]->response = Attendee::RESPONSE_NEED_ACTION;
+            }
             $event->attendees = $attendees;
           }
         }
@@ -1172,8 +1228,19 @@ class Event extends MceObject {
       else {
         $attendee_event->status = self::STATUS_TENTATIVE;
         if (isset($attendee_key)) {
-          // Passage en Need Action
-          $attendees[$attendee_key]->response = Attendee::RESPONSE_NEED_ACTION;
+          // MANTIS 0006801: [En attente] Gestion des boites partagées
+          if ($attendees[$attendee_key]->is_ressource) {
+            // Gestion des boites ressources
+            $attendees[$attendee_key]->response = Attendee::RESPONSE_ACCEPTED;
+            $attendee_event->status = self::STATUS_CONFIRMED;
+            if (!isset($attendees[$attendee_key]->type) || $attendees[$attendee_key]->type == Attendee::TYPE_INDIVIDUAL) {
+              $attendees[$attendee_key]->type = Attendee::TYPE_RESOURCE;
+            }
+          }
+          else {
+            // Passage en Need Action
+            $attendees[$attendee_key]->response = Attendee::RESPONSE_NEED_ACTION;
+          }
           $event->attendees = $attendees;
         }
       }
@@ -1507,6 +1574,8 @@ class Event extends MceObject {
     if (!isset($this->owner)) {
       $this->owner = $this->user->uid;
     }
+    // Version du schéma par défaut
+    $this->version = 1;
     // Sauvegarde l'objet
     $insert = $this->objectmelanie->save();
     if (!is_null($insert)) {
@@ -2197,7 +2266,8 @@ class Event extends MceObject {
    */
   protected function getMapHasAttendees() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapHasAttendees() : " . ((isset($this->objectmelanie->attendees) && $this->objectmelanie->attendees != "" && $this->objectmelanie->attendees != "a:0:{}") ? "true" : "false"));
-    return (isset($this->objectmelanie->attendees) && $this->objectmelanie->attendees != "" && $this->objectmelanie->attendees != "a:0:{}");
+    return (isset($this->objectmelanie->attendees) && $this->objectmelanie->attendees != "" && $this->objectmelanie->attendees != "a:0:{}") 
+        || (isset($this->objectmelanie->organizer_attendees) && $this->objectmelanie->organizer_attendees != "" && $this->objectmelanie->organizer_attendees != "a:0:{}");
   }
   /**
    * Mapping real uid field

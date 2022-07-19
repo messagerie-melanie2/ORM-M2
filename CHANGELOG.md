@@ -1,3 +1,15 @@
+ORM M2 - 0.6.2.5
+------
+- 0006864: [Attendee] Problème de valeur de retour en cas d'erreur
+
+ORM M2 - 0.6.2.4
+------
+- 0006800: Pour une invitation interne, un participant ne peut pas modifier l'horaire
+- 0006759: [Event] Ajouter un champ version pour les évolutions de schéma
+- 0006803: [Attendee] Support du CUTYPE
+- 0006802: [Attendee] Ajoute une méthode is_ressource
+- 0006801: [En attente] Gestion des boites partagées
+
 ORM M2 - 0.6.2.3
 ------
 - Fix sur la fonctionnalité de s'inviter pour un participant

@@ -429,8 +429,19 @@ class ICS {
 	const CN = 'CN';
 	/**
 	 * Calendar User Type (http://tools.ietf.org/html/rfc2445#section-4.2.3)
+	 * 
+	                     / "INDIVIDUAL"   ; An individual
+                         / "GROUP"        ; A group of individuals
+                         / "RESOURCE"     ; A physical resource
+                         / "ROOM"         ; A room resource
+                         / "UNKNOWN"      ; Otherwise not known
 	 */
 	const CUTYPE = 'CUTYPE';
+	const CUTYPE_INDIVIDUAL = 'INDIVIDUAL';
+	const CUTYPE_GROUP = 'GROUP';
+	const CUTYPE_RESOURCE = 'RESOURCE';
+	const CUTYPE_ROOM = 'ROOM';
+	const CUTYPE_UNKNOWN = 'UNKNOWN';
 	/**
 	 * Delegators (http://tools.ietf.org/html/rfc2445#section-4.2.3)
 	 */

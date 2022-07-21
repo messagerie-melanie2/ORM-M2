@@ -1,3 +1,8 @@
+ORM M2 - 0.6.2.6
+------
+- 0006889: [Recurrence] Problème de BYDAY vide retourné en ICS
+- 0006890: Amélioration du mapping des champs de type énumération
+
 ORM M2 - 0.6.2.5
 ------
 - 0006864: [Attendee] Problème de valeur de retour en cas d'erreur

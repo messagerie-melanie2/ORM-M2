@@ -2004,8 +2004,8 @@ class Event extends MceObject {
   protected function setMapClass($class) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapClass($class)");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    if (isset(MappingMce::$MapClassObjectMelanie[$class]))
-      $this->objectmelanie->class = MappingMce::$MapClassObjectMelanie[$class];
+    if (isset(MappingMce::$MapClassObjectToMce[$class]))
+      $this->objectmelanie->class = MappingMce::$MapClassObjectToMce[$class];
   }
   /**
    * Mapping class field
@@ -2013,8 +2013,8 @@ class Event extends MceObject {
   protected function getMapClass() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapClass()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    if (isset(MappingMce::$MapClassObjectMelanie[$this->objectmelanie->class]))
-      return MappingMce::$MapClassObjectMelanie[$this->objectmelanie->class];
+    if (isset(MappingMce::$MapClassMceToObject[$this->objectmelanie->class]))
+      return MappingMce::$MapClassMceToObject[$this->objectmelanie->class];
     else
       return self::CLASS_PUBLIC;
   }
@@ -2027,8 +2027,8 @@ class Event extends MceObject {
   protected function setMapStatus($status) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapStatus($status)");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    if (isset(MappingMce::$MapStatusObjectMelanie[$status]))
-      $this->objectmelanie->status = MappingMce::$MapStatusObjectMelanie[$status];
+    if (isset(MappingMce::$MapStatusObjectToMce[$status]))
+      $this->objectmelanie->status = MappingMce::$MapStatusObjectToMce[$status];
   }
   /**
    * Mapping status field
@@ -2036,8 +2036,8 @@ class Event extends MceObject {
   protected function getMapStatus() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapStatus()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    if (isset(MappingMce::$MapStatusObjectMelanie[$this->objectmelanie->status]))
-      return MappingMce::$MapStatusObjectMelanie[$this->objectmelanie->status];
+    if (isset(MappingMce::$MapStatusMceToObject[$this->objectmelanie->status]))
+      return MappingMce::$MapStatusMceToObject[$this->objectmelanie->status];
     else
       return self::STATUS_CONFIRMED;
   }

@@ -503,13 +503,19 @@ class MappingMce {
 	// Class
 	const PRIV = 1;
 	const PUB = 0;
+	const CONF = 2;
 	/**
-	 * Class mapping
+	 * Class mapping object to MCE
 	 */
-	public static $MapClassObjectMelanie = [
+	public static $MapClassObjectToMce = [
 	    DefaultConfig::PRIV => self::PRIV,
 	    DefaultConfig::PUB => self::PUB,
 	    DefaultConfig::CONFIDENTIAL => self::PRIV,
+	];
+	/**
+	 * Class mapping MCE to object
+	 */
+	public static $MapClassMceToObject = [
 	    self::PRIV => DefaultConfig::PRIV,
 	    self::PUB => DefaultConfig::PUB
 	];
@@ -520,13 +526,18 @@ class MappingMce {
 	const CONFIRMED = 2;
 	const CANCELLED = 3;
 	/**
-	 * Status mapping
+	 * Status mapping object to MCE
 	 */
-	public static $MapStatusObjectMelanie = [
+	public static $MapStatusObjectToMce = [
 	    DefaultConfig::TENTATIVE => self::TENTATIVE,
 	    DefaultConfig::NONE => self::NONE,
 	    DefaultConfig::CONFIRMED => self::CONFIRMED,
 	    DefaultConfig::CANCELLED => self::CANCELLED,
+	];
+	/**
+	 * Status mapping MCE to object
+	 */
+	public static $MapStatusMceToObject = [
 	    self::TENTATIVE => DefaultConfig::TENTATIVE,
 	    self::CONFIRMED => DefaultConfig::CONFIRMED,
 	    self::NONE => DefaultConfig::NONE,
@@ -543,9 +554,9 @@ class MappingMce {
 	const FRIDAY = 32;
 	const SATURDAY = 64;
 	/**
-	 * Recurdays mapping
+	 * Recurdays mapping object to MCE
 	 */
-	public static $MapRecurdaysObjectMelanie = [
+	public static $MapRecurdaysObjectToMce = [
 	    DefaultConfig::NODAY => self::NODAY,
 	    DefaultConfig::SUNDAY => self::SUNDAY,
 	    DefaultConfig::MONDAY => self::MONDAY,
@@ -554,6 +565,11 @@ class MappingMce {
 	    DefaultConfig::THURSDAY => self::THURSDAY,
 	    DefaultConfig::FRIDAY => self::FRIDAY,
 	    DefaultConfig::SATURDAY => self::SATURDAY,
+	];
+	/**
+	 * Recurdays mapping MCE to object
+	 */
+	public static $MapRecurdaysMceToObject = [
 	    self::NODAY => DefaultConfig::NODAY,
 	    self::SUNDAY => DefaultConfig::SUNDAY,
 	    self::MONDAY => DefaultConfig::MONDAY,
@@ -573,9 +589,9 @@ class MappingMce {
 	const YEARLY = 5;
 	const YEARLY_BYDAY = 6;
 	/**
-	 * Recurtype mapping
+	 * Recurtype mapping object to MCE
 	 */
-	public static $MapRecurtypeObjectMelanie = [
+	public static $MapRecurtypeObjectToMce = [
 	    DefaultConfig::NORECUR => self::NORECUR,
 	    DefaultConfig::DAILY => self::DAILY,
 	    DefaultConfig::WEEKLY => self::WEEKLY,
@@ -583,6 +599,11 @@ class MappingMce {
 	    DefaultConfig::MONTHLY_BYDAY => self::MONTHLY_BYDAY,
 	    DefaultConfig::YEARLY => self::YEARLY,
 	    DefaultConfig::YEARLY_BYDAY => self::YEARLY_BYDAY,
+	];
+	/**
+	 * Recurtype mapping MCE to object
+	 */
+	public static $MapRecurtypeMceToObject = [
 	    self::NORECUR => DefaultConfig::NORECUR,
 	    self::DAILY => DefaultConfig::DAILY,
 	    self::WEEKLY => DefaultConfig::WEEKLY,
@@ -599,14 +620,19 @@ class MappingMce {
 	const ATT_TYPE_ROOM = 4;
 	const ATT_TYPE_UNKNOWN = 5;
 	/**
-	 * Attendee type mapping
+	 * Attendee type mapping object to MCE
 	 */
-	public static $MapAttendeeTypeObjectMelanie = [
+	public static $MapAttendeeTypeObjectToMce = [
 	    DefaultConfig::INDIVIDUAL => self::ATT_TYPE_INDIVIDUAL,
 	    DefaultConfig::GROUP => self::ATT_TYPE_GROUP,
 	    DefaultConfig::RESOURCE => self::ATT_TYPE_RESOURCE,
 	    DefaultConfig::ROOM => self::ATT_TYPE_ROOM,
 	    DefaultConfig::UNKNOWN => self::ATT_TYPE_UNKNOWN,
+	];
+	/**
+	 * Attendee type mapping MCE to object
+	 */
+	public static $MapAttendeeTypeMceToObject = [
 	    self::ATT_TYPE_INDIVIDUAL => DefaultConfig::INDIVIDUAL,
 	    self::ATT_TYPE_GROUP => DefaultConfig::GROUP,
 	    self::ATT_TYPE_RESOURCE => DefaultConfig::RESOURCE,
@@ -620,14 +646,19 @@ class MappingMce {
 	const ATT_DECLINED = 3;
 	const ATT_TENTATIVE = 4;
 	/**
-	 * Attendee response mapping
+	 * Attendee response mapping object to MCE
 	 */
-	public static $MapAttendeeResponseObjectMelanie = [
+	public static $MapAttendeeResponseObjectToMce = [
 	    DefaultConfig::NEED_ACTION => self::ATT_NEED_ACTION,
 	    DefaultConfig::ACCEPTED => self::ATT_ACCEPTED,
 	    DefaultConfig::DECLINED => self::ATT_DECLINED,
 	    DefaultConfig::IN_PROCESS => self::ATT_NEED_ACTION,
 	    DefaultConfig::TENTATIVE => self::ATT_TENTATIVE,
+	];
+	/**
+	 * Attendee response mapping MCE to object
+	 */
+	public static $MapAttendeeResponseMceToObject = [
 	    self::ATT_NEED_ACTION => DefaultConfig::NEED_ACTION,
 	    self::ATT_ACCEPTED => DefaultConfig::ACCEPTED,
 	    self::ATT_DECLINED => DefaultConfig::DECLINED,
@@ -640,13 +671,18 @@ class MappingMce {
 	const NON_PARTICIPANT = 3;
 	const CHAIR = 4;
 	/**
-	 * Attendee role mapping
+	 * Attendee role mapping object to MCE
 	 */
-	public static $MapAttendeeRoleObjectMelanie = [
+	public static $MapAttendeeRoleObjectToMce = [
 	    DefaultConfig::CHAIR => self::CHAIR,
 	    DefaultConfig::REQ_PARTICIPANT => self::REQ_PARTICIPANT,
 	    DefaultConfig::OPT_PARTICIPANT => self::OPT_PARTICIPANT,
 	    DefaultConfig::NON_PARTICIPANT => self::NON_PARTICIPANT,
+	];
+	/**
+	 * Attendee role mapping MCE to object
+	 */
+	public static $MapAttendeeRoleMceToObject = [
 	    self::CHAIR => DefaultConfig::CHAIR,
 	    self::REQ_PARTICIPANT => DefaultConfig::REQ_PARTICIPANT,
 	    self::OPT_PARTICIPANT => DefaultConfig::OPT_PARTICIPANT,
@@ -661,15 +697,20 @@ class MappingMce {
 	const LOW = 4;
 	const VERY_LOW = 5;
 	/**
-	 * Priority Mapping
+	 * Priority Mapping object to MCE
 	 */
-	public static $MapPriorityObjectMelanie = [
+	public static $MapPriorityObjectToMce = [
 	    DefaultConfig::NO_PRIORITY => self::NO_PRIORITY,
 	    DefaultConfig::VERY_HIGH => self::VERY_HIGH,
 	    DefaultConfig::HIGH => self::HIGH,
 	    DefaultConfig::NORMAL => self::NORMAL,
 	    DefaultConfig::LOW => self::LOW,
 	    DefaultConfig::VERY_LOW => self::VERY_LOW,
+	];
+	/**
+	 * Priority Mapping MCE to object
+	 */
+	public static $MapPriorityMceToObject = [
 	    self::NO_PRIORITY => DefaultConfig::NO_PRIORITY,
 	    self::VERY_HIGH => DefaultConfig::VERY_HIGH,
 	    self::HIGH => DefaultConfig::HIGH,
@@ -682,15 +723,20 @@ class MappingMce {
 	const COMPLETED = 1;
 	const NOTCOMPLETED = 0;
 	/**
-	 * Completed mapping
+	 * Completed mapping object to MCE
 	 */
-	public static $MapCompletedObjectMelanie = [
+	public static $MapCompletedObjectToMce = [
 	    DefaultConfig::COMPLETED => self::COMPLETED,
 	    DefaultConfig::NOTCOMPLETED => self::NOTCOMPLETED,
+	];
+	/**
+	 * Completed mapping MCE to object
+	 */
+	public static $MapCompletedMceToObject = [
 	    self::COMPLETED => DefaultConfig::COMPLETED,
 	    self::NOTCOMPLETED => DefaultConfig::NOTCOMPLETED
 	];
 }
 
 // Initialisation du mapping
-MappingMelanie::Init();
+MappingMce::Init();

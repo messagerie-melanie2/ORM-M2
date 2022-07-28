@@ -280,7 +280,7 @@ class Recurrence extends MceObject {
   protected function setMapType($type) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapType($type)");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    $this->objectmelanie->type = MappingMce::$MapRecurtypeObjectMelanie[$type];
+    $this->objectmelanie->type = MappingMce::$MapRecurtypeObjectToMce[$type];
     // Gérer la récurrence avancée
     switch ($type) {
       case self::RECURTYPE_DAILY:
@@ -310,7 +310,7 @@ class Recurrence extends MceObject {
   protected function getMapType() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRecurtype()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    return MappingMce::$MapRecurtypeObjectMelanie[$this->objectmelanie->type];
+    return MappingMce::$MapRecurtypeMceToObject[$this->objectmelanie->type];
   }
   
   /**
@@ -327,11 +327,11 @@ class Recurrence extends MceObject {
     $this->objectmelanie->days = MappingMce::NODAY;
     if (is_array($days)) {
       foreach ($days as $day) {
-        if (!isset(MappingMce::$MapRecurdaysObjectMelanie[$day])) {
+        if (!isset(MappingMce::$MapRecurdaysObjectToMce[$day])) {
           $day = substr($day, 1);
         }
-        if (isset(MappingMce::$MapRecurdaysObjectMelanie[$day])) {
-          $this->objectmelanie->days += intval(MappingMce::$MapRecurdaysObjectMelanie[$day]);
+        if (isset(MappingMce::$MapRecurdaysObjectToMce[$day])) {
+          $this->objectmelanie->days += intval(MappingMce::$MapRecurdaysObjectToMce[$day]);
         }
       }
       if (empty($days)) {
@@ -341,7 +341,7 @@ class Recurrence extends MceObject {
         $this->setRecurrenceParam(ICS::BYDAY, $days);
       }
     } else {
-      $this->objectmelanie->days += intval(MappingMce::$MapRecurdaysObjectMelanie[$days]);
+      $this->objectmelanie->days += intval(MappingMce::$MapRecurdaysObjectToMce[$days]);
       if (empty($days)) {
         $this->unsetRecurrenceParam(ICS::BYDAY);
       }
@@ -366,8 +366,8 @@ class Recurrence extends MceObject {
       }
       else {
         $days = [];
-        foreach (MappingMce::$MapRecurdaysObjectMelanie as $day) {
-          if (is_integer(MappingMce::$MapRecurdaysObjectMelanie[$day]) && MappingMce::$MapRecurdaysObjectMelanie[$day] & $this->objectmelanie->days)
+        foreach (MappingMce::$MapRecurdaysMceToObject as $day) {
+          if (is_integer(MappingMce::$MapRecurdaysMceToObject[$day]) && MappingMce::$MapRecurdaysMceToObject[$day] & $this->objectmelanie->days)
             $days[] = $day;
         }
       }
@@ -609,7 +609,12 @@ class Recurrence extends MceObject {
           }
         }
         if (isset($recurrence[ICS::BYDAY]) && is_array($recurrence[ICS::BYDAY])) {
-          $recurrence[ICS::BYDAY] = implode(',', $recurrence[ICS::BYDAY]);
+          // 0006889: [Recurrence] Problème de BYDAY vide retourné en ICS
+          $recurrence[ICS::BYDAY] = implode(',', array_filter($recurrence[ICS::BYDAY]));
+          // Ne pas mettre un BYDAY vide
+          if (empty($recurrence[ICS::BYDAY])) {
+            unset($recurrence[ICS::BYDAY]);
+          }
         }
         // Nettoyer la recurrence
         if (isset($recurrence[ICS::EXDATE])) unset($recurrence[ICS::EXDATE]);

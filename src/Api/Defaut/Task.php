@@ -418,7 +418,7 @@ class Task extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapClass($class)");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-    $this->objectmelanie->class = MappingMce::$MapClassObjectMelanie[$class];
+    $this->objectmelanie->class = MappingMce::$MapClassObjectToMce[$class];
   }
   /**
    * Mapping class field
@@ -427,7 +427,7 @@ class Task extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapClass()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-    return MappingMce::$MapClassObjectMelanie[$this->objectmelanie->class];
+    return MappingMce::$MapClassMceToObject[$this->objectmelanie->class];
   }
   
   /**
@@ -439,7 +439,7 @@ class Task extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapPriority($priority)");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-    $this->objectmelanie->priority = MappingMce::$MapPriorityObjectMelanie[$priority];
+    $this->objectmelanie->priority = MappingMce::$MapPriorityObjectToMce[$priority];
   }
   /**
    * Mapping priority field
@@ -450,7 +450,7 @@ class Task extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapPriority()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-    return MappingMce::$MapPriorityObjectMelanie[$this->objectmelanie->priority];
+    return MappingMce::$MapPriorityMceToObject[$this->objectmelanie->priority];
   }
   
   /**

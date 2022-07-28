@@ -339,8 +339,8 @@ class Attendee extends MceObject {
    */
   protected function setMapType($type) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapType($type)");
-    if (isset(MappingMce::$MapAttendeeTypeObjectMelanie[$type]))
-      $this->type = MappingMce::$MapAttendeeTypeObjectMelanie[$type];
+    if (isset(MappingMce::$MapAttendeeTypeObjectToMce[$type]))
+      $this->type = MappingMce::$MapAttendeeTypeObjectToMce[$type];
   }
   /**
    * Get type property
@@ -350,8 +350,8 @@ class Attendee extends MceObject {
    */
   protected function getMapType() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapType()");
-    if (isset(MappingMce::$MapAttendeeTypeObjectMelanie[$this->type]))
-      return MappingMce::$MapAttendeeTypeObjectMelanie[$this->type];
+    if (isset(MappingMce::$MapAttendeeTypeMceToObject[$this->type]))
+      return MappingMce::$MapAttendeeTypeMceToObject[$this->type];
     else
       return self::TYPE_INDIVIDUAL;
   }
@@ -365,8 +365,8 @@ class Attendee extends MceObject {
    */
   protected function setMapResponse($response) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapResponse($response)");
-    if (isset(MappingMce::$MapAttendeeResponseObjectMelanie[$response]))
-      $this->response = MappingMce::$MapAttendeeResponseObjectMelanie[$response];
+    if (isset(MappingMce::$MapAttendeeResponseObjectToMce[$response]))
+      $this->response = MappingMce::$MapAttendeeResponseObjectToMce[$response];
   }
   /**
    * Get response property
@@ -376,8 +376,8 @@ class Attendee extends MceObject {
    */
   protected function getMapResponse() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapResponse()");
-    if (isset(MappingMce::$MapAttendeeResponseObjectMelanie[$this->response]))
-      return MappingMce::$MapAttendeeResponseObjectMelanie[$this->response];
+    if (isset(MappingMce::$MapAttendeeResponseMceToObject[$this->response]))
+      return MappingMce::$MapAttendeeResponseMceToObject[$this->response];
     else
       return self::RESPONSE_NEED_ACTION;
   }
@@ -391,8 +391,8 @@ class Attendee extends MceObject {
    */
   protected function setMapRole($role) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRole($role)");
-    if (isset(MappingMce::$MapAttendeeRoleObjectMelanie[$role]))
-      $this->role = MappingMce::$MapAttendeeRoleObjectMelanie[$role];
+    if (isset(MappingMce::$MapAttendeeRoleObjectToMce[$role]))
+      $this->role = MappingMce::$MapAttendeeRoleObjectToMce[$role];
   }
   /**
    * Get role property
@@ -402,8 +402,8 @@ class Attendee extends MceObject {
    */
   protected function getMapRole() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRole()");
-    if (isset(MappingMce::$MapAttendeeRoleObjectMelanie[$this->role]))
-      return MappingMce::$MapAttendeeRoleObjectMelanie[$this->role];
+    if (isset(MappingMce::$MapAttendeeRoleMceToObject[$this->role]))
+      return MappingMce::$MapAttendeeRoleMceToObject[$this->role];
     else
       return self::ROLE_REQ_PARTICIPANT;
   }

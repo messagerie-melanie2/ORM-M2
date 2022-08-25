@@ -1,0 +1,2256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src').replace( /\\/g, '/');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/LibMelanie.html">\LibMelanie</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">36</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">35</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                                                                                                                                                                                    <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">2</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1900135602"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1900135602" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1668868868"></a>
+                                <a href="../namespaces/LibMelanie.html" style="margin-left: 30px; padding-left: 0">LibMelanie</a>
+            </div>
+            <div id="namespace-1668868868" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-894947592"></a>
+                                <a href="../namespaces/LibMelanie.Api.html" style="margin-left: 30px; padding-left: 0">Api</a>
+            </div>
+            <div id="namespace-894947592" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-194064056"></a>
+                                <a href="../namespaces/LibMelanie.Api.Defaut.html" style="margin-left: 30px; padding-left: 0">Defaut</a>
+            </div>
+            <div id="namespace-194064056" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-665650843"></a>
+                                <a href="../namespaces/LibMelanie.Api.Defaut.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-665650843" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.News.News.html">News</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.News.NewsShare.html">NewsShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.News.Rss.html">Rss</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-993598257"></a>
+                                <a href="../namespaces/LibMelanie.Api.Defaut.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-993598257" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html">Outofoffice</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Users.Share.html">Share</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2087466102"></a>
+                                <a href="../namespaces/LibMelanie.Api.Defaut.Workspaces.html" style="margin-left: 30px; padding-left: 0">Workspaces</a>
+            </div>
+            <div id="namespace-2087466102" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Workspaces.Hashtag.html">Hashtag</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Workspaces.HashtagWorkspaceRef.html">HashtagWorkspaceRef</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Workspaces.Share.html">Share</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Addressbook.html">Addressbook</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.AddressbookSync.html">AddressbookSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Attachment.html">Attachment</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Attendee.html">Attendee</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Calendar.html">Calendar</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.CalendarSync.html">CalendarSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Contact.html">Contact</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Event.html">Event</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.EventProperty.html">EventProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Group.html">Group</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Member.html">Member</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Notification.html">Notification</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.ObjectShare.html">ObjectShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Organizer.html">Organizer</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Recurrence.html">Recurrence</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Task.html">Task</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.TaskProperty.html">TaskProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Taskslist.html">Taskslist</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.TaskslistSync.html">TaskslistSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.User.html">User</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.UserPrefs.html">UserPrefs</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Workspace.html">Workspace</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-973654994"></a>
+                                <a href="../namespaces/LibMelanie.Api.Dgfip.html" style="margin-left: 30px; padding-left: 0">Dgfip</a>
+            </div>
+            <div id="namespace-973654994" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-700682567"></a>
+                                <a href="../namespaces/LibMelanie.Api.Dgfip.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-700682567" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.News.News.html">News</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.News.NewsShare.html">NewsShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.News.Rss.html">Rss</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-788491686"></a>
+                                <a href="../namespaces/LibMelanie.Api.Dgfip.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-788491686" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Users.Outofoffice.html">Outofoffice</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Users.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Users.Type.html">Type</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Addressbook.html">Addressbook</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.AddressbookSync.html">AddressbookSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Attachment.html">Attachment</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Attendee.html">Attendee</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Calendar.html">Calendar</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.CalendarSync.html">CalendarSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Contact.html">Contact</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Event.html">Event</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.EventProperty.html">EventProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Group.html">Group</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Member.html">Member</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Notification.html">Notification</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.ObjectShare.html">ObjectShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Organizer.html">Organizer</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Recurrence.html">Recurrence</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Task.html">Task</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.TaskProperty.html">TaskProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Taskslist.html">Taskslist</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.TaskslistSync.html">TaskslistSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.User.html">User</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.UserPrefs.html">UserPrefs</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-481558573"></a>
+                                <a href="../namespaces/LibMelanie.Api.Gn.html" style="margin-left: 30px; padding-left: 0">Gn</a>
+            </div>
+            <div id="namespace-481558573" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-926826788"></a>
+                                <a href="../namespaces/LibMelanie.Api.Gn.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-926826788" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.News.News.html">News</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.News.NewsShare.html">NewsShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.News.Rss.html">Rss</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-388424500"></a>
+                                <a href="../namespaces/LibMelanie.Api.Gn.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-388424500" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Users.Outofoffice.html">Outofoffice</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Users.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Users.Type.html">Type</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Addressbook.html">Addressbook</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.AddressbookSync.html">AddressbookSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Attachment.html">Attachment</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Attendee.html">Attendee</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Calendar.html">Calendar</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.CalendarSync.html">CalendarSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Contact.html">Contact</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Event.html">Event</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.EventProperty.html">EventProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Group.html">Group</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Member.html">Member</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Notification.html">Notification</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.ObjectShare.html">ObjectShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Organizer.html">Organizer</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Recurrence.html">Recurrence</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Task.html">Task</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.TaskProperty.html">TaskProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.Taskslist.html">Taskslist</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.TaskslistSync.html">TaskslistSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.User.html">User</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Gn.UserPrefs.html">UserPrefs</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1852992934"></a>
+                                <a href="../namespaces/LibMelanie.Api.Mce.html" style="margin-left: 30px; padding-left: 0">Mce</a>
+            </div>
+            <div id="namespace-1852992934" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-434464971"></a>
+                                <a href="../namespaces/LibMelanie.Api.Mce.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-434464971" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.News.News.html">News</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.News.NewsShare.html">NewsShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.News.Rss.html">Rss</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1340175232"></a>
+                                <a href="../namespaces/LibMelanie.Api.Mce.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-1340175232" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Users.Outofoffice.html">Outofoffice</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Users.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Users.Type.html">Type</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1725675306"></a>
+                                <a href="../namespaces/LibMelanie.Api.Mce.Workspaces.html" style="margin-left: 30px; padding-left: 0">Workspaces</a>
+            </div>
+            <div id="namespace-1725675306" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Workspaces.Hashtag.html">Hashtag</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Workspaces.HashtagWorkspaceRef.html">HashtagWorkspaceRef</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Workspaces.Share.html">Share</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Addressbook.html">Addressbook</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.AddressbookSync.html">AddressbookSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Attachment.html">Attachment</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Attendee.html">Attendee</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Calendar.html">Calendar</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.CalendarSync.html">CalendarSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Contact.html">Contact</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Event.html">Event</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.EventProperty.html">EventProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Group.html">Group</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Member.html">Member</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Notification.html">Notification</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.ObjectShare.html">ObjectShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Organizer.html">Organizer</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Recurrence.html">Recurrence</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Task.html">Task</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.TaskProperty.html">TaskProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Taskslist.html">Taskslist</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.TaskslistSync.html">TaskslistSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.User.html">User</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.UserPrefs.html">UserPrefs</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mce.Workspace.html">Workspace</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-823253433"></a>
+                                <a href="../namespaces/LibMelanie.Api.Mel.html" style="margin-left: 30px; padding-left: 0">Mel</a>
+            </div>
+            <div id="namespace-823253433" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-667615831"></a>
+                                <a href="../namespaces/LibMelanie.Api.Mel.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-667615831" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.News.News.html">News</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.News.NewsShare.html">NewsShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.News.Rss.html">Rss</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1335035069"></a>
+                                <a href="../namespaces/LibMelanie.Api.Mel.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-1335035069" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html">Outofoffice</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Users.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Users.Type.html">Type</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1148312979"></a>
+                                <a href="../namespaces/LibMelanie.Api.Mel.Workspaces.html" style="margin-left: 30px; padding-left: 0">Workspaces</a>
+            </div>
+            <div id="namespace-1148312979" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Workspaces.Hashtag.html">Hashtag</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Workspaces.HashtagWorkspaceRef.html">HashtagWorkspaceRef</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Workspaces.Share.html">Share</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Addressbook.html">Addressbook</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.AddressbookSync.html">AddressbookSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Attachment.html">Attachment</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Attendee.html">Attendee</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Calendar.html">Calendar</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.CalendarSync.html">CalendarSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Contact.html">Contact</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Event.html">Event</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.EventProperty.html">EventProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Group.html">Group</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Member.html">Member</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Notification.html">Notification</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.ObjectShare.html">ObjectShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Organizer.html">Organizer</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Recurrence.html">Recurrence</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Task.html">Task</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.TaskProperty.html">TaskProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Taskslist.html">Taskslist</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.TaskslistSync.html">TaskslistSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.User.html">User</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.UserPrefs.html">UserPrefs</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mel.Workspace.html">Workspace</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1638724084"></a>
+                                <a href="../namespaces/LibMelanie.Api.Melanie2.html" style="margin-left: 30px; padding-left: 0">Melanie2</a>
+            </div>
+            <div id="namespace-1638724084" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Addressbook.html">Addressbook</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.AddressbookSync.html">AddressbookSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Attachment.html">Attachment</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Attendee.html">Attendee</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Calendar.html">Calendar</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.CalendarSync.html">CalendarSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Contact.html">Contact</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Event.html">Event</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.EventProperty.html">EventProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.ObjectShare.html">ObjectShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Organizer.html">Organizer</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Recurrence.html">Recurrence</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Task.html">Task</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.TaskProperty.html">TaskProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Taskslist.html">Taskslist</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.TaskslistSync.html">TaskslistSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.User.html">User</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.UserPrefs.html">UserPrefs</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-227146577"></a>
+                                <a href="../namespaces/LibMelanie.Api.Mi.html" style="margin-left: 30px; padding-left: 0">Mi</a>
+            </div>
+            <div id="namespace-227146577" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1197154043"></a>
+                                <a href="../namespaces/LibMelanie.Api.Mi.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-1197154043" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.News.News.html">News</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.News.NewsShare.html">NewsShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.News.Rss.html">Rss</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1098667569"></a>
+                                <a href="../namespaces/LibMelanie.Api.Mi.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-1098667569" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Users.Outofoffice.html">Outofoffice</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Users.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Users.Type.html">Type</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Addressbook.html">Addressbook</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.AddressbookSync.html">AddressbookSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Attachment.html">Attachment</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Attendee.html">Attendee</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Calendar.html">Calendar</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.CalendarSync.html">CalendarSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Contact.html">Contact</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Event.html">Event</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.EventProperty.html">EventProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Exception.html">Exception</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Group.html">Group</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Member.html">Member</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Notification.html">Notification</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.ObjectShare.html">ObjectShare</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Organizer.html">Organizer</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Recurrence.html">Recurrence</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Share.html">Share</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Task.html">Task</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.TaskProperty.html">TaskProperty</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.Taskslist.html">Taskslist</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.TaskslistSync.html">TaskslistSync</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.User.html">User</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Api.Mi.UserPrefs.html">UserPrefs</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1611710242"></a>
+                                <a href="../namespaces/LibMelanie.Cache.html" style="margin-left: 30px; padding-left: 0">Cache</a>
+            </div>
+            <div id="namespace-1611710242" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Cache.Cache.html">Cache</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-465383301"></a>
+                                <a href="../namespaces/LibMelanie.Config.html" style="margin-left: 30px; padding-left: 0">Config</a>
+            </div>
+            <div id="namespace-465383301" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Config.Config.html">Config</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Config.DefaultConfig.html">DefaultConfig</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Config.MappingMce.html">MappingMce</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Config.MappingMelanie.html">MappingMelanie</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-482112063"></a>
+                                <a href="../namespaces/LibMelanie.Exceptions.html" style="margin-left: 30px; padding-left: 0">Exceptions</a>
+            </div>
+            <div id="namespace-482112063" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.Melanie2DatabaseException.html">Melanie2DatabaseException</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.Melanie2Exception.html">Melanie2Exception</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.Melanie2LdapException.html">Melanie2LdapException</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.ObjectMelanieUndefinedException.html">ObjectMelanieUndefinedException</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.PropertyDoesNotExistException.html">PropertyDoesNotExistException</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.UndefinedMappingException.html">UndefinedMappingException</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Exceptions.UndefinedPrimaryKeyException.html">UndefinedPrimaryKeyException</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-999842235"></a>
+                                <a href="../namespaces/LibMelanie.Interfaces.html" style="margin-left: 30px; padding-left: 0">Interfaces</a>
+            </div>
+            <div id="namespace-999842235" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                    <li class="interface"><a href="../classes/LibMelanie.Interfaces.IObjectMelanie.html">IObjectMelanie</a></li>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-767112766"></a>
+                                <a href="../namespaces/LibMelanie.Ldap.html" style="margin-left: 30px; padding-left: 0">Ldap</a>
+            </div>
+            <div id="namespace-767112766" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Ldap.Ldap.html">Ldap</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Ldap.LDAPMelanie.html">LDAPMelanie</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1277808539"></a>
+                                <a href="../namespaces/LibMelanie.Lib.html" style="margin-left: 30px; padding-left: 0">Lib</a>
+            </div>
+            <div id="namespace-1277808539" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Lib.ContactToVCard.html">ContactToVCard</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.EventToICS.html">EventToICS</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.ICS.html">ICS</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.ICSToEvent.html">ICSToEvent</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.ICSToTask.html">ICSToTask</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.MagicObject.html">MagicObject</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.MceObject.html">MceObject</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.Selaforme.html">Selaforme</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.TaskToICS.html">TaskToICS</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.UUID.html">UUID</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.VCard.html">VCard</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Lib.VCardToContact.html">VCardToContact</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2108262134"></a>
+                                <a href="../namespaces/LibMelanie.Log.html" style="margin-left: 30px; padding-left: 0">Log</a>
+            </div>
+            <div id="namespace-2108262134" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Log.Log.html">Log</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Log.M2Log.html">M2Log</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1819745182"></a>
+                                <a href="../namespaces/LibMelanie.Objects.html" style="margin-left: 30px; padding-left: 0">Objects</a>
+            </div>
+            <div id="namespace-1819745182" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Objects.AddressbookMelanie.html">AddressbookMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.AttachmentMelanie.html">AttachmentMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.CalendarMelanie.html">CalendarMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.EventMelanie.html">EventMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.GroupMelanie.html">GroupMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.HashtagMelanie.html">HashtagMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.HistoryMelanie.html">HistoryMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.ObjectMelanie.html">ObjectMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.TaskslistMelanie.html">TaskslistMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.UserMelanie.html">UserMelanie</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Objects.WorkspaceMelanie.html">WorkspaceMelanie</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1337329870"></a>
+                                <a href="../namespaces/LibMelanie.Sql.html" style="margin-left: 30px; padding-left: 0">Sql</a>
+            </div>
+            <div id="namespace-1337329870" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/LibMelanie.Sql.Sql.html">Sql</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlAttachmentRequests.html">SqlAttachmentRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlCalendarRequests.html">SqlCalendarRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlContactRequests.html">SqlContactRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlHistoryRequests.html">SqlHistoryRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlMelanieRequests.html">SqlMelanieRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlObjectPropertyRequests.html">SqlObjectPropertyRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlObjectRequests.html">SqlObjectRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlTaskRequests.html">SqlTaskRequests</a></li>
+                                                    <li class="class"><a href="../classes/LibMelanie.Sql.SqlWorkspaceRequests.html">SqlWorkspaceRequests</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/LibMelanie.Sql.html">\LibMelanie\Sql</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\LibMelanie\Sql</small>Sql</h1>
+                    <p><em>Gestion de la connexion Sql</em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_GetInstance" class="">GetInstance()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_ForceDisconnectAllInstances" class="">ForceDisconnectAllInstances()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_i" class="">i()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_databaseType" class="">databaseType()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_isDefault" class="">isDefault()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method___destruct" class="">__destruct()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_disconnect" class="">disconnect()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_getConnection" class="">getConnection()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_executeQuery" class="">executeQuery()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_executeQueryToObject" class="">executeQueryToObject()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_beginTransaction" class="">beginTransaction()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_commit" class="">commit()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_rollBack" class="">rollBack()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_getLastRequest" class="">getLastRequest()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_GetLimitClause" class="">GetLimitClause()</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_GetOrderByClause" class="">GetOrderByClause()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_get_class" class="">$get_class</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#method_connect" class="">connect()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_instances" class="">$instances</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_connection" class="">$connection</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_is_default" class="">$is_default</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_db_type" class="">$db_type</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_cnxstring" class="">$cnxstring</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_username" class="">$username</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_password" class="">$password</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_persistent" class="">$persistent</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_connection_read" class="">$connection_read</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_cnxstring_read" class="">$cnxstring_read</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_username_read" class="">$username_read</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_password_read" class="">$password_read</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_persistent_read" class="">$persistent_read</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_PreparedStatementCache" class="">$PreparedStatementCache</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_ret_sel" class="">$ret_sel</a><br />
+                                                                    <a href="../classes/LibMelanie.Sql.Sql.html#property_last_request" class="">$last_request</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/Sql.Sql.html"><div class="path-wrapper">Sql/Sql.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Librairie Mélanie2\SQL</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\LibMelanie\Sql\Sql</div>
+                            </dd>
+
+                        
+                        
+                        
+                                                
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                author
+                            </th>
+                            <td>
+                                                                                                        <p>PNE Messagerie/Apitech</p>
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_get_class" name="property_get_class" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$get_class</h3>
+                <pre class="signature">$get_class : string</pre>
+                <p><em>Classe courante</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_instances" name="property_instances" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$instances</h3>
+                <pre class="signature">$instances : \LibMelanie\Sql\Sql</pre>
+                <p><em>Instances LDAP</em></p>
+                
+
+                                <h4>Type</h4>
+                <a href="../classes/LibMelanie.Sql.Sql.html">\LibMelanie\Sql\Sql</a>
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_connection" name="property_connection" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$connection</h3>
+                <pre class="signature">$connection : \LibMelanie\Sql\PDO</pre>
+                <p><em>Connexion PDO en cours</em></p>
+                
+
+                                <h4>Type</h4>
+                \LibMelanie\Sql\PDO
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_is_default" name="property_is_default" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$is_default</h3>
+                <pre class="signature">$is_default : boolean</pre>
+                <p><em>Est-ce que la connexion courante est le serveur par défaut ?</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_db_type" name="property_db_type" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$db_type</h3>
+                <pre class="signature">$db_type : string</pre>
+                <p><em>Type de base de données utilisée</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_cnxstring" name="property_cnxstring" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$cnxstring</h3>
+                <pre class="signature">$cnxstring : string</pre>
+                <p><em>String de connexion</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_username" name="property_username" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$username</h3>
+                <pre class="signature">$username : string</pre>
+                <p><em>Utilisateur SQL</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_password" name="property_password" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$password</h3>
+                <pre class="signature">$password : string</pre>
+                <p><em>Mot de passe SQL</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_persistent" name="property_persistent" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$persistent</h3>
+                <pre class="signature">$persistent : boolean</pre>
+                <p><em>Connexion persistante</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_connection_read" name="property_connection_read" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$connection_read</h3>
+                <pre class="signature">$connection_read : \LibMelanie\Sql\PDO</pre>
+                <p><em>Connexion PDO en cours pour la lecture</em></p>
+                
+
+                                <h4>Type</h4>
+                \LibMelanie\Sql\PDO
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_cnxstring_read" name="property_cnxstring_read" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$cnxstring_read</h3>
+                <pre class="signature">$cnxstring_read : string</pre>
+                <p><em>String de connexion pour la lecture</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_username_read" name="property_username_read" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$username_read</h3>
+                <pre class="signature">$username_read : string</pre>
+                <p><em>Utilisateur SQL pour la lecture</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_password_read" name="property_password_read" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$password_read</h3>
+                <pre class="signature">$password_read : string</pre>
+                <p><em>Mot de passe SQL pour la lecture</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_persistent_read" name="property_persistent_read" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$persistent_read</h3>
+                <pre class="signature">$persistent_read : boolean</pre>
+                <p><em>Connexion persistante pour la lecture</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_PreparedStatementCache" name="property_PreparedStatementCache" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$PreparedStatementCache</h3>
+                <pre class="signature">$PreparedStatementCache : array</pre>
+                <p><em>Mise en cache des statements par requete SQL
+Voir MANTIS 3547: Réutiliser les prepare statements pour les requêtes identiques</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_ret_sel" name="property_ret_sel" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$ret_sel</h3>
+                <pre class="signature">$ret_sel : resource</pre>
+                <p><em>Resource vers les selaformes</em></p>
+                
+
+                                <h4>Type</h4>
+                resource
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_last_request" name="property_last_request" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$last_request</h3>
+                <pre class="signature">$last_request : string</pre>
+                <p><em>Derniere requete utilisee, sert pour les logs shutdown</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_GetInstance" name="method_GetInstance" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">GetInstance()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">GetInstance(string  <span class="argument">$server = null</span>) : \LibMelanie\Sql\Sql</pre>
+                <p><em>Récupèration de l&#039;instance lié au serveur</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$server </td>
+                                <td><p>Nom du serveur, l'instance sera liée à ce nom qui correspond à la configuration du serveur
+Optionnel, si non renseigné utilise la valeur de ConfigSQL::$SGBD_SERVER</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/LibMelanie.Sql.Sql.html">\LibMelanie\Sql\Sql</a>
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_ForceDisconnectAllInstances" name="method_ForceDisconnectAllInstances" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">ForceDisconnectAllInstances()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">ForceDisconnectAllInstances() </pre>
+                <p><em>Forcer la déconnexion de toutes les instances de base
+Méthode a utiliser dans z-push pour libérer les ressources
+Parcours toutes les instances existantes et les déconnectes</em></p>
+                
+
+                
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_i" name="method_i" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">i()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">i(string  <span class="argument">$server = null</span>) : \LibMelanie\Sql\Sql</pre>
+                <p><em>Raccourcis pour la méthode GetInstance</em></p>
+                <p>Récupèration de l'instance lié au serveur</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$server </td>
+                                <td><p>Nom du serveur, l'instance sera liée à ce nom qui correspond à la configuration du serveur
+Optionnel, si non renseigné utilise la valeur de ConfigSQL::$SGBD_SERVER</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/LibMelanie.Sql.Sql.html">\LibMelanie\Sql\Sql</a>
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct(boolean  <span class="argument">$is_default</span>, array  <span class="argument">$db</span>, array  <span class="argument">$db_read = null</span>) </pre>
+                <p><em>Constructor SQL</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$is_default </td>
+                                <td><p>Est-ce que cette connexion est celle par defaut ?</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$db </td>
+                                <td><p>configuration vers la base de données</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$db_read </td>
+                                <td><p>configuration vers la base de données en lecture</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_databaseType" name="method_databaseType" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">databaseType()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">databaseType() : string</pre>
+                <p><em>Getter for Database Type</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Type de base (pgsql, mysql, ...)</p>
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isDefault" name="method_isDefault" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isDefault()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isDefault() : boolean</pre>
+                <p><em>Getter for Is Default value</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___destruct" name="method___destruct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__destruct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__destruct() </pre>
+                <p><em>Destructor SQL</em></p>
+                
+
+                
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_disconnect" name="method_disconnect" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">disconnect()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">disconnect() </pre>
+                <p><em>Disconnect from SQL database</em></p>
+                
+
+                
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getConnection" name="method_getConnection" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getConnection()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getConnection() </pre>
+                <p><em>Get the active connection to the sql database</em></p>
+                
+
+                
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_executeQuery" name="method_executeQuery" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">executeQuery()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">executeQuery(string  <span class="argument">$query</span>, array  <span class="argument">$params = null</span>, string  <span class="argument">$class = null</span>, string  <span class="argument">$objectType = null</span>, boolean  <span class="argument">$cached_statement = true</span>) : mixed</pre>
+                <p><em>Execute a sql query to the active database connection in PDO
+If query start by SELECT
+return an array of array of data</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$query </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$params </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$class </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$objectType </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$cached_statement </td>
+                                <td><p>Utiliser le cache pour les statements</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\LibMelanie\Sql\Melanie2DatabaseException</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>array de resultat, true</p>
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_executeQueryToObject" name="method_executeQueryToObject" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">executeQueryToObject()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">executeQueryToObject(string  <span class="argument">$query</span>, array  <span class="argument">$params = null</span>, mixed  <span class="argument">$object</span>, boolean  <span class="argument">$cached_statement = true</span>) : boolean</pre>
+                <p><em>Execute a sql query to the active database connection in PDO
+If query start by SELECT</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$query </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$params </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$object </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$cached_statement </td>
+                                <td><p>Utiliser le cache pour les statements</p></td>
+                            </tr>
+                                            </table>
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\LibMelanie\Sql\Melanie2DatabaseException</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_beginTransaction" name="method_beginTransaction" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">beginTransaction()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">beginTransaction() </pre>
+                <p><em>Begin a PDO transaction</em></p>
+                
+
+                
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_commit" name="method_commit" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">commit()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">commit() </pre>
+                <p><em>Commit a PDO transaction</em></p>
+                
+
+                
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_rollBack" name="method_rollBack" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">rollBack()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">rollBack() </pre>
+                <p><em>Rollback a PDO transaction</em></p>
+                
+
+                
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLastRequest" name="method_getLastRequest" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLastRequest()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLastRequest() : string</pre>
+                <p><em>Retourne la derniere requete</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_GetLimitClause" name="method_GetLimitClause" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">GetLimitClause()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">GetLimitClause(integer  <span class="argument">$limit = null</span>, integer  <span class="argument">$offset = null</span>) : string</pre>
+                <p><em>Récupérer la clause de limit et de offset</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$limit </td>
+                                <td><p>[Optionnel] limite du nombre de résultats à retourner</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$offset </td>
+                                <td><p>[Optionnel] offset pour la pagination</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>$limit_clause</p>
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_GetOrderByClause" name="method_GetOrderByClause" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">GetOrderByClause()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">GetOrderByClause(string  <span class="argument">$objectType = null</span>, string  <span class="argument">$orderby = null</span>, boolean  <span class="argument">$asc = true</span>) : string</pre>
+                <p><em>Récupérer la clause de order by</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$objectType </td>
+                                <td><p>Type d'objet pour le mapping</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$orderby </td>
+                                <td><p>Nom du champ pour le tri</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$asc </td>
+                                <td><p>Tri ascendant ou non</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>$orderby_clause</p>
+                                    
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_connect" name="method_connect" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">connect()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">connect() </pre>
+                <p><em>Connect to sql database</em></p>
+                
+
+                
+                                    <h4>Throws</h4>
+                    <dl>
+                                                    <dt>\LibMelanie\Sql\Melanie2DatabaseException</dt>
+                            <dd></dd>
+                                                                    </dl>
+                
+                
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Sql.Sql.html"><div class="path-wrapper">\LibMelanie\Sql\Sql</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">Sql.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Sql/Sql.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/LibMelanie.html">\LibMelanie</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on August 25th, 2022 at 14:53.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

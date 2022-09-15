@@ -367,9 +367,10 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 	 * @param string $end Date de fin
 	 * @param int $modified Date de derniere modification des événements
 	 * @param boolean $is_freebusy Est-ce que l'on cherche des freebusy
+	 * @param string $category Catégorie des événements a récupérer
 	 * @return boolean
 	 */
-	public function getRangeEvents($event_start = null, $event_end = null, $modified = null, $is_freebusy = false) {
+	public function getRangeEvents($event_start = null, $event_end = null, $modified = null, $is_freebusy = false, $category = null) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getRangeEvents($event_start, $event_end)");
 		if (!isset($this->id)) return false;
 		// DateTime
@@ -402,6 +403,11 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 		if (isset($modified)) {
 		  $event_range .= " AND k1.event_modified >= :modified";
 		  $params['modified'] = $modified;
+		}
+		// MANTIS 0006899: [Event] pourvoir filtrer par catégorie dans getRangeEvent()
+		if (isset($category)) {
+		  $event_range .= " AND k1.event_category = :category";
+		  $params['category'] = $category;
 		}
 
 		// Gestion de la requête

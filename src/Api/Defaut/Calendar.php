@@ -222,11 +222,13 @@ class Calendar extends MceObject {
    *          Date de derniere modification des événements
    * @param boolean $is_freebusy
    *          Est-ce que l'on cherche des freebusy
+   * @param string $category 
+   *          Catégorie des événements a récupérer
    * @return Event[]
    */
-  public function getRangeEvents($start = null, $end = null, $modified = null, $is_freebusy = false) {
+  public function getRangeEvents($start = null, $end = null, $modified = null, $is_freebusy = false, $category = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getRangeEvents()");
-    $_events = $this->objectmelanie->getRangeEvents($start, $end, $modified, $is_freebusy);
+    $_events = $this->objectmelanie->getRangeEvents($start, $end, $modified, $is_freebusy, $category);
     if (!isset($_events) || $_events === false)
       return null;
     $events = [];

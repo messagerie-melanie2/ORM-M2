@@ -210,6 +210,7 @@ class MappingMce {
 	          "is_exception"  	=> [self::name => "event_is_exception", self::type => self::integer, self::defaut => 0],
 	          "transparency" 	=> [self::name => "event_transparency", self::type => self::string, self::size => 10, self::defaut => 'OPAQUE'],
 	          "properties" 	  	=> [self::name => "event_properties_json"],
+			  "attachments" 	=> [self::name => "event_attachments_json"],
 	          
 	          // ATTENDEES
 	          "attendees" 	           => [self::name => "event_attendees"],

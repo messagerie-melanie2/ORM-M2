@@ -1,6 +1,6 @@
 # Guide d'utilisation de l'ORM dans le code
 
-__TOC__
+[[_TOC_]]
 
 ## A/ Gestion des namespaces
 

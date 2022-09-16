@@ -20,7 +20,7 @@
  */
 namespace LibMelanie\Api\Gn\Users;
 
-use LibMelanie\Api\Mel;
+use LibMelanie\Api\Mce;
 
 /**
  * Classe utilisateur pour GN
@@ -39,4 +39,4 @@ use LibMelanie\Api\Mel;
  * @property int $order Ordre de tri du message d'absence
  * @property Outofoffice::TYPE_* $type Type d'absence (Interne, Externe)
  */
-class Outofoffice extends Mel\Users\Outofoffice {}
+class Outofoffice extends Mce\Users\Outofoffice {}

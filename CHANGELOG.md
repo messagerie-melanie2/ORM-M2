@@ -1,3 +1,14 @@
+ORM M2 - 0.6.3
+------
+- 0006920: Utiliser le champs event_attachments_json pour stocker les informations sur les pieces jointes
+- 0005093: Ne plus utiliser la table lightning_attributes
+- 0006850: Supporter la syntaxe MCE/DGFIP pour le gestionnaire d'absence
+- Ajout d'un Api/Ens
+
+ORM M2 - 0.6.2.7
+------
+- 0006899: [Event] pourvoir filtrer par catégorie dans getRangeEvent()
+
 ORM M2 - 0.6.2.6
 ------
 - 0006889: [Recurrence] Problème de BYDAY vide retourné en ICS

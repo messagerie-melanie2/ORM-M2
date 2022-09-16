@@ -65,7 +65,28 @@ class Attachment extends MceObject {
    * 
    * @var Attachment::TYPE_*
    */
-  private $type = self::TYPE_BINARY;
+  protected $type = self::TYPE_BINARY;
+
+  /**
+   * Taille de la pièce jointe
+   * 
+   * @var integer
+   */
+  protected $_size;
+
+  /**
+   * Hash des données
+   * 
+   * @var string
+   */
+  protected $_hash;
+
+  /**
+   * ContentType de la pièce jointe
+   * 
+   * @var string
+   */
+  protected $_contenttype;
   
   /**
    * ***************************************************
@@ -393,11 +414,20 @@ class Attachment extends MceObject {
    */
   protected function getMapSize() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapSize()");
-    if ($this->type == self::TYPE_URL)
+    if ($this->type == self::TYPE_URL) {
       return 0;
-    else {
-      return mb_strlen($this->getMapData());
     }
+    else if (!isset($this->_size)) {
+      $this->_size = mb_strlen($this->getMapData());
+    }
+    return $this->_size;
+  }
+
+  /**
+   * Mapping size field
+   */
+  protected function setMapSize($size) {
+    $this->_size = $size;
   }
   
   /**
@@ -405,7 +435,17 @@ class Attachment extends MceObject {
    */
   protected function getMapHash() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapHash()");
-    return hash('md5', $this->getMapData());
+    if (!isset($this->_hash)) {
+      $this->_hash = hash('md5', $this->getMapData());
+    }
+    return $this->_hash;
+  }
+
+  /**
+   * Mapping hash field
+   */
+  protected function setMapHash($hash) {
+    $this->_hash = $hash;
   }
   
   /**
@@ -413,20 +453,29 @@ class Attachment extends MceObject {
    */
   protected function getMapContenttype() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapContenttype()");
-    if ($this->type == self::TYPE_URL)
+    if ($this->type == self::TYPE_URL) {
       return null;
-    else {
+    }
+    else if (!isset($this->_contenttype)) {
+      // ContentType par défaut au cas ou on ne le trouve pas
+      $this->_contenttype = Config::get(Config::DEFAULT_ATTACHMENT_CONTENTTYPE);
       if (class_exists("finfo")) {
         // Utilisation de la classe finfo pour récupérer le contenttype
         $finfo = new \finfo(FILEINFO_MIME);
         $infos = $finfo->buffer($this->getMapData());
         if ($infos !== FALSE) {
           $infos = explode(';', $infos);
-          return $infos[0];
+          $this->_contenttype = $infos[0];
         }
       }
     }
-    // Retourne le contenttype par défaut
-    return Config::get(Config::DEFAULT_ATTACHMENT_CONTENTTYPE);
+    return $this->_contenttype;
+  }
+
+  /**
+   * Mapping content type field
+   */
+  protected function setMapContenttype($contenttype) {
+    $this->_contenttype = $contenttype;
   }
 }

@@ -561,31 +561,31 @@ class ICSToEvent {
                 $_attachments[] = $_attach;
               }
             } else {
-              $is_m2web_url = false;
+              $_found = false;
               $data = $prop->getValue();
               // Si pas de VALUE, on est peut être sur une URL melanie2web
               foreach ($attachments as $key => $attachment) {
-                if ($attachment->getDownloadURL() == $data) {
+                if ($attachment->type == $Attachment::TYPE_BINARY && $attachment->getDownloadURL() == $data) {
+                  $_attachments[] = $attachment;
                   unset($attachments[$key]);
-                  $is_m2web_url = true;
+                  $_found = true;
+                }
+                else if ($attachment->type == $Attachment::TYPE_URL && $attachment->url == $data) {
+                  $_attachments[] = $attachment;
+                  unset($attachments[$key]);
+                  $_found = true;
                 }
                 else if (isset($recurrence_id)) {
                   $attachment->path = $object->uid . '/' . $object->calendar;
                   if ($attachment->getDownloadURL() == $data) {
                     unset($attachments[$key]);
-                    $is_m2web_url = true;
+                    $_attachments[] = $attachment;
+                    $_found = true;
                   }
                 }
               }
               // Ce n'est pas une url M2Web, donc c'est une url classique
-              if (!$is_m2web_url) {
-                $attach_uri = $object->getAttribute('ATTACH-URI');
-                $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
-                if (!in_array($data, $attach_uri_array)) {
-                  $attach_uri_array[] = $data;
-                  $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
-                  $object->setAttribute('ATTACH-URI', $attach_uri);
-                }
+              if (!$_found) {
                 $_attach->type = $Attachment::TYPE_URL;
                 $_attach->url = $data;
                 $_attachments[] = $_attach;
@@ -593,44 +593,22 @@ class ICSToEvent {
             }
           }
           $object->attachments = $_attachments;
-          $attach_uri = $object->getAttribute('ATTACH-URI');
-          $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
-          $save_attach_uri = false;
           // Supprimer les pièces jointes qui ne sont plus nécessaire
           foreach ($attachments as $attachment) {
-            if ($attachment->type == $Attachment::TYPE_URL) {
-              if ($key = array_search($attachment->url, $attach_uri_array)) {
-                unset($attach_uri_array[$key]);
-                $save_attach_uri = true;
-              }
-            } else {
+            if ($attachment->type == $Attachment::TYPE_BINARY) {
               $attachment->delete();
             }
           }
-          if ($save_attach_uri) {
-            $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
-            $object->setAttribute('ATTACH-URI', $attach_uri);
-          }
-        } else {
-          $attach_uri = $object->getAttribute('ATTACH-URI');
-          $attach_uri_array = explode('%%URI-SEPARATOR%%', $attach_uri);
-          $save_attach_uri = false;
+        }
+        else {
           // Supprimer toutes les pièces jointes
           $attachments = $object->attachments;
           foreach ($attachments as $attachment) {
-            if ($attachment->type == $Attachment::TYPE_URL) {
-              if ($key = array_search($attachment->url, $attach_uri_array)) {
-                unset($attach_uri_array[$key]);
-                $save_attach_uri = true;
-              }
-            } else {
+            if ($attachment->type == $Attachment::TYPE_BINARY) {
               $attachment->delete();
             }
           }
-          if ($save_attach_uri) {
-            $attach_uri = implode('%%URI-SEPARATOR%%', $attach_uri_array);
-            $object->setAttribute('ATTACH-URI', $attach_uri);
-          }
+          $object->attachments = [];
         }
       }
 

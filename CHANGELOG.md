@@ -1,3 +1,7 @@
+ORM M2 - 0.6.3.1
+------
+- 0006964: Supporter un statut "Télétravail" dans les événements
+
 ORM M2 - 0.6.3
 ------
 - 0006920: Utiliser le champs event_attachments_json pour stocker les informations sur les pieces jointes

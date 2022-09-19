@@ -340,6 +340,7 @@ class EventToICS {
           $vevent->STATUS = ICS::STATUS_CONFIRMED;
           break;
         case Event::STATUS_NONE :
+        case Event::STATUS_TELEWORK :
           break;
         case Event::STATUS_CANCELLED :
           $vevent->STATUS = ICS::STATUS_CANCELLED;

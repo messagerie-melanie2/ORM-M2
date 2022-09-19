@@ -523,6 +523,7 @@ class MappingMce {
 
 	// Status
 	const NONE = 4;
+	const TELEWORK = 5;
 	const TENTATIVE = 1;
 	const CONFIRMED = 2;
 	const CANCELLED = 3;
@@ -532,6 +533,7 @@ class MappingMce {
 	public static $MapStatusObjectToMce = [
 	    DefaultConfig::TENTATIVE => self::TENTATIVE,
 	    DefaultConfig::NONE => self::NONE,
+		DefaultConfig::TELEWORK => self::TELEWORK,
 	    DefaultConfig::CONFIRMED => self::CONFIRMED,
 	    DefaultConfig::CANCELLED => self::CANCELLED,
 	];
@@ -542,6 +544,7 @@ class MappingMce {
 	    self::TENTATIVE => DefaultConfig::TENTATIVE,
 	    self::CONFIRMED => DefaultConfig::CONFIRMED,
 	    self::NONE => DefaultConfig::NONE,
+		self::TELEWORK => DefaultConfig::TELEWORK,
 	    self::CANCELLED => DefaultConfig::CANCELLED
 	];
 

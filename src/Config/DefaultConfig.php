@@ -179,6 +179,7 @@ class DefaultConfig {
   const CONFIRMED = "confirmed";
   const CANCELLED = "cancelled";
   const NONE = "none";
+  const TELEWORK = "telework";
   
   /* Recurrence days */
   const NODAY = "";

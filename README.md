@@ -34,6 +34,10 @@ CONFIGURATION
 
 La configuration de l'ORM est expliquée dans le fichier [CONFIGURATION.md](documentation/CONFIGURATION.md) disponible dans le dossier documentation.
 
+UTILISATION
+-----------
+
+Pour avoir des informations sur l'utilisation de la lib ORM dans votre projet, voir le fichier [USAGE.md](documentation/USAGE.md) disponible dans le dossier documentation.
 
 LICENCE
 -------

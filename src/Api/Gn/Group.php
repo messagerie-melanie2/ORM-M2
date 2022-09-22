@@ -52,21 +52,21 @@ class Group extends Defaut\Group {
      *
      * @ignore
      */
-    const LOAD_ATTRIBUTES = ['dn', 'fullname', 'email', 'owners'];
+    const LOAD_ATTRIBUTES = ['dn', 'fullname', 'email', 'owners', 'cn'];
 
-    /**
-     * TODO le cn devrait être récupérable directement
-     * renvoi le cn
-     * @return mixed|null
-     * @throws \Safe\Exceptions\PcreException
-     */
-    public function getMapCn() {
-        if (preg_match("#(cn=)(.*)(,dmd*)#",$this->dn, $matches)) {
-            return $matches[2];
-        } else {
-            return null;
-        }
-    }
+//    /**
+//     * TODO le cn devrait être récupérable directement
+//     * renvoi le cn
+//     * @return mixed|null
+//     * @throws \Safe\Exceptions\PcreException
+//     */
+//    public function getMapCn() {
+//        if (preg_match("#(cn=)(.*)(,dmd*)#",$this->dn, $matches)) {
+//            return $matches[2];
+//        } else {
+//            return null;
+//        }
+//    }
 
     /**
      * Récupère la liste des membres d'un groupe
@@ -89,7 +89,7 @@ class Group extends Defaut\Group {
             if ($entries
                     && is_array($entries)
                     && $entries['count'] > 0) {
-                array_shift($entries);
+                array_shift($entries);// <=le count
                 foreach ($entries as $i => $entry) {
                     $member = new Member();
                     foreach ($attributesMember as $k) {

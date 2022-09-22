@@ -1,15 +1,7 @@
 Librairie ORM Mélanie2
 ======================
 
-Développé par le PNE Annuaire et Messagerie/MEDDE
-
-ATTENTION
----------
-
-La version de l'ORM sur git est une version en développement, **elle ne doit pas être utilisée en production**.
-Pour récupérer les versions de production veuillez vous adresser au PNE Annuaire et Messagerie du MEDDE.
-Cette version peut être utilisée pour le développement d'applications en utilisant une base de données spécifique.
-
+Développé par le Groupe Messagerie et Conférences à Distance/MTE
 
 Définition ORM
 --------------
@@ -28,21 +20,31 @@ La base de données Mélanie2 (Horde) a un schema très spécifique qui n'a pas 
 des années. Or, de plus en plus d'applications de présentation et de synchronisation utilisent cette
 base de données. L'idée est donc de faciliter le développement de ces applications en proposant des
 méthodes de développement simple pour l'accès à ces données. De plus des API de type service
-Web peuvent être proposé afin d'implémenter cette librairie pour d'autres langages que le PHP.
+Web peuvent être proposé afin d'implémenter cette librairie pour d'autres langages que le PHP 
+(voir le projet [orm-api](https://github.com/messagerie-melanie2/orm-api)).
 
 
 INSTALLATION
 ------------
 
-L'installation de l'ORM est expliquée dans le fichier INSTALL.md disponible dans le même projet.
+L'installation de l'ORM est expliquée dans le fichier [INSTALL.md](INSTALL.md) disponible dans le même projet.
 
+CONFIGURATION
+-------------
+
+La configuration de l'ORM est expliquée dans le fichier [CONFIGURATION.md](documentation/CONFIGURATION.md) disponible dans le dossier documentation.
+
+UTILISATION
+-----------
+
+Pour avoir des informations sur l'utilisation de la lib ORM dans votre projet, voir le fichier [USAGE.md](documentation/USAGE.md) disponible dans le dossier documentation.
 
 LICENCE
 -------
 
 L'ORM Mélanie2 est distribuée sous licence GPLv3 (http://www.gnu.org/licenses/gpl.html)
 
-ORM M2 Copyright © 2017  PNE Annuaire et Messagerie/MEDDE
+ORM M2 Copyright © 2022 Groupe Messagerie et Conférences à Distance/MTE
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

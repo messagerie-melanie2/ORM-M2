@@ -279,6 +279,26 @@ abstract class User extends MceObject {
     '_preferences',
   ];
 
+  /**
+   * Droits de lecture sur la boite
+   */
+  protected static $_sharesRead = ['G', 'C', 'E', 'L'];
+
+  /**
+   * Droits d'écriture sur la boite
+   */
+  protected static $_sharesWrite = ['G', 'C', 'E'];
+
+  /**
+   * Droits d'envoi de messages sur la boite
+   */
+  protected static $_sharesSend = ['G', 'C']; 
+
+  /**
+   * Droits de niveau administrateur ou gestionnaire sur la boite
+   */
+  protected static $_sharesAdmin = ['G'];
+
   // **** Constantes pour les preferences
   /**
    * Scope de preference par defaut pour l'utilisateur
@@ -296,6 +316,23 @@ abstract class User extends MceObject {
    * Scope de preference pour les listes de taches de l'utilisateur
    */
   const PREF_SCOPE_TASKSLIST = \LibMelanie\Config\ConfigMelanie::TASKSLIST_PREF_SCOPE;
+
+  /**
+   * Droit de lecture
+   */
+  const RIGHT_READ = 'read';
+  /**
+   * Droit d'écriture
+   */
+  const RIGHT_WRITE = 'write';
+  /**
+   * Droit d'émission
+   */
+  const RIGHT_SEND = 'send';
+  /**
+   * Droit de gestion
+   */
+  const RIGHT_ADMIN = 'admin';
 
   // **** Configuration des filtres et des attributs par défaut
   /**
@@ -531,6 +568,36 @@ abstract class User extends MceObject {
       $this->_isExist = $this->objectmelanie->exists($attributes, $filter, $filterFromEmail);
     }
     return $this->_isExist;
+  }
+
+  /**
+   * Est-ce que l'utilisateur a les droits demandés sur cette boite
+   * 
+   * @param string $username
+   * @param string $right Voir User::RIGHT_*
+   * 
+   * @return boolean
+   */
+  public function asRight($username, $right) {
+    foreach ($this->getMapShares() as $share) {
+      if ($share->user == $username) {
+        switch ($right) {
+          case self::RIGHT_ADMIN:
+            return in_array($share->type, static::$_sharesAdmin);
+            break;
+          case self::RIGHT_SEND:
+            return in_array($share->type, static::$_sharesSend);
+            break;
+          case self::RIGHT_WRITE:
+            return in_array($share->type, static::$_sharesWrite);
+            break;
+          case self::RIGHT_READ:
+            return in_array($share->type, static::$_sharesRead);
+            break;
+        }
+      }
+    }
+    return false;
   }
 
   /**
@@ -2230,5 +2297,18 @@ abstract class User extends MceObject {
    */
   protected function getMapIs_mailbox() {
     return true;
+  }
+
+  /**
+   * Mapping shares field
+   * 
+   * @return Share[] Liste des partages de l'objet
+   */
+  protected function getMapShares() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapShares()");
+    if (!isset($this->_shares)) {
+      $this->_shares = [];
+    }
+    return $this->_shares;
   }
 }

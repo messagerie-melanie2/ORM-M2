@@ -1,3 +1,9 @@
+ORM M2 - 0.6.3.2
+------
+- 0006984: Ajouter une méthode asRight dans l'objet User
+- 0006971: [ICS] pour les tâches, une alarme de 2 jours est enregistrée sur 1 min
+- Mise à jour du mapping pour le MI
+
 ORM M2 - 0.6.3.1
 ------
 - 0006964: Supporter un statut "Télétravail" dans les événements

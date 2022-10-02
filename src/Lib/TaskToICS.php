@@ -223,7 +223,6 @@ class TaskToICS {
 			if (isset($task->alarm) && $task->alarm != 0) {
 				$valarm = $vtodo->add('VALARM');
 				$valarm->TRIGGER = self::formatAlarm($task->alarm);
-				$valarm->TRIGGER[ICS::VALUE] = ICS::VALUE_DURATION;
 				$valarm->ACTION = ICS::ACTION_DISPLAY;
 				// Attributs sur l'alarme
 				$x_moz_lastack = $task->getAttribute(ICS::X_MOZ_LASTACK);

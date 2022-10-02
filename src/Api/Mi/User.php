@@ -71,7 +71,7 @@ class User extends Mce\User {
    */
   const MAPPING = [
     "dn"                      => 'dn',                            // DN de l'utilisateur
-    "uid"                     => 'uid',                          // Identifiant de l'utilisateur
+    "uid"                     => 'uid',                           // Identifiant de l'utilisateur
     "fullname"                => 'cn',                            // Nom complet de l'utilisateur
     "name"                    => 'cn',                            // Nom court de l'utilisateur
     "email"                   => 'mail',                          // Adresse e-mail principale de l'utilisateur en reception
@@ -79,13 +79,37 @@ class User extends Mce\User {
     "email_send"              => 'mail',                          // Adresse e-mail principale de l'utilisateur en emission
     "email_send_list"         => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
     "shares"                  => [MappingMce::name => 'mcedelegation', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
-    "server_routage"          => [MappingMce::name => 'mailhost', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
+    "server_routage"          => 'mailhost',                      // Champ utilisé pour le routage des messages
     "type"                    => 'mcetypecompte',                 // Type d'entrée (boite individuelle, partagée, ressource, ...)
     "street"                  => 'street',                        // Rue
     "postalcode"              => 'postalcode',                    // Code postal
     "locality"                => 'l',                             // Ville
     "title"                   => 'title',                         // Titre
     "outofoffices"            => [MappingMce::name => 'mcevacation', MappingMce::type => MappingMce::arrayLdap], // Affichage du message d'absence de l'utilisateur
+
+    // Nouveaux champs
+    "lastname"                => 'sn',                            // Last name de l'utilisateur
+    "firstname"               => 'givenname',                     // First name de l'utilisateur
+    "phonenumber"             => 'telephonenumber',               // Numéro de téléphone
+    "faxnumber"               => 'facsimiletelephonenumber',      // Numéro de fax
+    "mobilephone"             => 'mobile',                        // Numéro de mobile
+    "personaltitle"           => 'personaltitle',                 // Genre
+    "postaladdress"           => 'postaladdress',                 // Adresse postale, différent de street ?
+
+    "mcevisibilite"           => [MappingMce::name => 'mcevisibilite', MappingMce::type => MappingMce::arrayLdap], // Gestion de l'affichage dans l'annuaire ministériel et interministériel
+
+    "email_routage"           => 'mcemailroutingaddress',         // Email pour le routage interne
+    "quota"                   => 'mailquotasize',                 // Taille de quota pour la boite
+    "delegation"              => 'delegation',                    // Delegation
+    "miaccess"                => 'miaccess',                      // Acces distant
+    "direction"               => 'direction',                     // Direction
+    "nomadeaccess"            => 'nomadeaccess',                  // Acces VPN
+
+    "ou"                      => 'ou',                            // OU associé à l'entrée
+    "gestionnaire"            => 'gestionnaire',                  // Gestionnaire de la boite
+    "mirio"                   => 'mirio',                         // Numéro RIO
+    "initials"                => 'initials',                      // Initials du compte
+    "matricule"               => 'matricule',                     // Matricule de l'utilisateur
   ];
 
   /**

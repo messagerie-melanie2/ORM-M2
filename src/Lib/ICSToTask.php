@@ -102,21 +102,35 @@ class ICSToTask {
 			else $task->category = '';
 			// VALARM
 			if (isset($vtodo->VALARM)) {
-				$triggerDuration = VObject\DateTimeParser::parseDuration($vtodo->VALARM->TRIGGER);
-				$task->alarm = $triggerDuration->format('%i') + $triggerDuration->format('%h') * 60;
-				if ($task->alarm === 0) {
-					$task->alarm = 1;
+				$alarmDate = $vtodo->VALARM->getEffectiveTriggerTime();
+				if (isset($startDate)) {
+					$task->alarm = ($startDate->format("U") - $alarmDate->format("U")) / 60;
+					if ($task->alarm === 0) {
+						$task->alarm = 1;
+					}
 				}
-        if (isset($vtodo->{ICS::X_MOZ_LASTACK})) $task->setAttribute(ICS::X_MOZ_LASTACK, $vtodo->{ICS::X_MOZ_LASTACK});
-        if (isset($vtodo->{ICS::X_MOZ_SNOOZE_TIME})) $task->setAttribute(ICS::X_MOZ_SNOOZE_TIME, $vtodo->{ICS::X_MOZ_SNOOZE_TIME});
-			} else $task->alarm = 0;
+				// X MOZ LASTACK
+				if (isset($vtodo->{ICS::X_MOZ_LASTACK})) {
+					$task->setAttribute(ICS::X_MOZ_LASTACK, $vtodo->{ICS::X_MOZ_LASTACK}->getValue());
+				} else {
+					$task->deleteAttribute(ICS::X_MOZ_LASTACK);
+				}
+				// X MOZ SNOOZE TIME
+				if (isset($vtodo->{ICS::X_MOZ_SNOOZE_TIME})) {
+					$task->setAttribute(ICS::X_MOZ_SNOOZE_TIME, $vtodo->{ICS::X_MOZ_SNOOZE_TIME}->getValue());
+				} else {
+					$task->deleteAttribute(ICS::X_MOZ_SNOOZE_TIME);
+				}
+			} else {
+				$task->alarm = 0;
+			}
 			// SEQUENCE
 			if (isset($vtodo->SEQUENCE)) {
-        $task->setAttribute(ICS::SEQUENCE, $vtodo->SEQUENCE->getValue());
+        		$task->setAttribute(ICS::SEQUENCE, $vtodo->SEQUENCE->getValue());
 			}
 			// X MOZ GENERATION
 			if (isset($vtodo->{ICS::X_MOZ_GENERATION})) {
-			  $task->setAttribute(ICS::X_MOZ_GENERATION, $vtodo->{ICS::X_MOZ_GENERATION}->getValue());
+			  	$task->setAttribute(ICS::X_MOZ_GENERATION, $vtodo->{ICS::X_MOZ_GENERATION}->getValue());
 			}
 			// DTSTAMP
 			if (isset($vtodo->DTSTAMP)) $task->modified = $vtodo->DTSTAMP->getDateTime()->format('U');

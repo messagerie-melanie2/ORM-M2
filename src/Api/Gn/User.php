@@ -86,6 +86,7 @@ class User extends Mce\User {
     "postalcode"              => 'postalcode',                    // Code postal
     "locality"                => 'l',                             // Ville
     "title"                   => 'title',                         // Titre
+    "memberof"                => [MappingMce::name => 'memberof', MappingMce::type => MappingMce::arrayLdap],
     "outofoffices"            => [MappingMce::name => 'mcevacation', MappingMce::type => MappingMce::arrayLdap], // Affichage du message d'absence de l'utilisateur
   ];
 

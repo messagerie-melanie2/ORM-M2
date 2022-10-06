@@ -149,18 +149,8 @@ class User extends Defaut\User {
     "email_list"              => [MappingMce::name => 'mailroutingaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
     "email_send"              => 'mailroutingaddress',        // Adresse e-mail principale de l'utilisateur en emission
     "email_send_list"         => [MappingMce::name => 'mailroutingaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
-    "service"                 => 'departmentnumber',              // Department Number
+    "service"                 => 'supannaffectation',              // Department Number
     "type"                    => 'supannentiteaffectationprincipale',               // Type d'entrée (boite individuelle, partagée, ressource, ...)
-    "street"                  => 'street',                        // Rue
-    "postalcode"              => 'postalcode',                    // Code postal
-    "locality"                => 'l',                             // Ville
-    "description"             => 'description',                   // Description
-    "phonenumber"             => 'telephonenumber',               // Numéro de téléphone
-    "faxnumber"               => 'facsimiletelephonenumber',      // Numéro de fax
-    "mobilephone"             => 'mobile',                        // Numéro de mobile
-    "roomnumber"              => 'roomnumber',                    // Numéro de bureau
-    "title"                   => 'title',                         // Titre
-    "gender"                  => 'gender',                        // Genre
     "outofoffices"            => [MappingMce::name => 'enslpersonm2absence', MappingMce::type => MappingMce::arrayLdap], // Affichage du message d'absence de l'utilisateur
   ];
 

@@ -85,7 +85,7 @@ class Cache {
    * @param array $results
    * @return boolean
    */
-  static function setSQLToCache($table_name = null, $fields, $query, $params, $results) {
+  static function setSQLToCache($table_name = null, $fields = [], $query = "", $params = [], $results = []) {
     // Le cache est il activé
     if (!Config::get(Config::CACHE_ENABLED))
       return false;
@@ -205,7 +205,7 @@ class Cache {
    * @param array $params
    * @return array|null Résultats cachés
    */
-  static function getFromSQLCache($table_name = null, $fields, $query, $params) {
+  static function getFromSQLCache($table_name = null, $fields = [], $query = "", $params = []) {
     // Le cache est il activé
     if (!Config::get(Config::CACHE_ENABLED))
       return null;

@@ -1,3 +1,9 @@
+ORM M2 - 0.6.3.3
+------
+- Adaptations API ENS
+- Fix sur l'objet User pour l'API MI
+- Prise en compte (partielle) de la PR #3
+
 ORM M2 - 0.6.3.2
 ------
 - 0006984: Ajouter une méthode asRight dans l'objet User

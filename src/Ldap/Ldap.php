@@ -436,6 +436,60 @@ class Ldap {
     // Retourne les données, null si vide
     return $infos;
   }
+
+  /**
+   * Retourne une liste user
+   *
+   * @param $filter
+   *         DN de l'utilisateur recherché
+   * @param $ldap_attr
+   *         [Optionnel] Liste des attributs ldap à retourner
+   * @param $server
+   *        [Optionnel] Server LDAP utilisé pour la requête
+   * @return array|null
+   * @throws Exceptions\Melanie2LdapException
+   */
+  public static function GetUsersList($filter , $ldap_attr = null, $server = null)
+  {
+      M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUsersList($filter)");
+      if (!isset($server)) {
+          $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+      }
+      // Récupération de l'instance LDAP en fonction du serveur
+      $ldap = self::GetInstance($server);
+
+      // Liste des attributes
+      if (!isset($ldap_attr)) {
+          $ldap_attr = $ldap->getConfig("get_user_infos_from_email_cn_attributes");
+      } else {
+          $ldap_attr = self::GetMaps($ldap_attr, $server);
+      }
+      // Récupération des données en cache
+      $keycache = "GetUsersList:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$filter";
+      $infos = $ldap->getCache($keycache);
+      if (!isset($infos)) {
+          // Connexion anonymous pour lire les données
+          if ($ldap->anonymous()) {
+              // Base de recherche ?
+              $base_dn = $ldap->getConfig("personne_base_dn");
+              if (!isset($base_dn)) {
+                  $base_dn = $ldap->getConfig("base_dn");
+              }
+              // Lancement de la recherche
+              $sr = $ldap->search($base_dn, $filter, $ldap_attr, 0,100);
+              if ($sr && $ldap->count_entries($sr) > 0) {
+                  $infos = $ldap->get_entries($sr);
+                  $ldap->setCache($keycache, $infos);
+              } else {
+                  $ldap->deleteCache($keycache);
+              }
+          } else {
+              throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+          }
+      }
+      // Retourne les données, null si vide
+      return $infos;
+  }
   
   /**
    * Retourne les boites partagées accessible pour un utilisateur depuis le LDAP
@@ -634,6 +688,61 @@ class Ldap {
       else {
         throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
       }
+    }
+    // Retourne les données, null si vide
+    return $infos;
+  }
+
+  /**
+   * Retourne les groupes suivant le filter passé en parametre
+   *
+   * @param string $filter
+   *          Filtre ldap à utiliser pour la recherche
+   * @param array $ldap_attr
+   *          [Optionnel] Liste des attributs ldap à retourner
+   * @param int $sizelimit
+   *          Vous permet de limiter le nombre d'entrées à récupérer. Le fait de définir ce paramètre à 0 signifie qu'il n'y aura aucune limite.
+   * @param string $server
+   *          [Optionnel] Server LDAP utilisé pour la requête
+   * @return array
+   */
+  public static function GetGroups($filter, $ldap_attr = null, $sizelimit = 0, $server = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetGroups($filter)");
+    if (!isset($server)) {
+        $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+    }
+    // Récupération de l'instance LDAP en fonction du serveur
+    $ldap = self::GetInstance($server);
+    // Filtre ldap
+    if (!isset($filter)) {
+        return [];
+    }
+
+    // Liste des attributes
+    if (!isset($ldap_attr)) {
+        $ldap_attr = $ldap->getConfig("get_groups_user_member_attributes");
+    }
+    else {
+        $ldap_attr = self::GetMaps($ldap_attr, $server);
+    }
+    // Récupération des données en cache
+    $keycache = "GetGroups:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr));
+    $infos = $ldap->getCache($keycache);
+    if (!isset($infos)) {
+        // Connexion anonymous pour lire les données
+        if ($ldap->anonymous()) {
+            // Lancement de la recherche
+            $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr,0, $sizelimit);
+            if ($sr && $ldap->count_entries($sr) > 0) {
+                $infos = $ldap->get_entries($sr);
+                $ldap->setCache($keycache, $infos);
+            } else {
+                $ldap->deleteCache($keycache);
+            }
+        }
+        else {
+            throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+        }
     }
     // Retourne les données, null si vide
     return $infos;
@@ -1287,7 +1396,7 @@ class Ldap {
   /**
    * Retourne les entrées trouvées via le Ldap search
    * 
-   * @param resource $search
+   * @param \LDAP\Result $search
    *          Resource retournée par le search
    * @return array a complete result information in a multi-dimensional array on success and false on error.
    */
@@ -1297,7 +1406,7 @@ class Ldap {
   /**
    * Retourne le nombre d'entrées trouvé via le Ldap search
    * 
-   * @param resource $search
+   * @param \LDAP\Result $search
    *          Resource retournée par le search
    * @return int number of entries in the result or false on error.
    */
@@ -1307,7 +1416,7 @@ class Ldap {
   /**
    * Retourne la premiere entrée trouvée
    * 
-   * @param resource $search
+   * @param \LDAP\Result $search
    *          Resource retournée par le search
    * @return resource the result entry identifier for the first entry on success and false on error.
    */
@@ -1320,7 +1429,7 @@ class Ldap {
   /**
    * Retourne les entrées suivantes de la recherche
    * 
-   * @param resource $search
+   * @param \LDAP\ResultEntry $search
    *          Resource retournée par le search
    * @return resource entry identifier for the next entry in the result whose entries are being read starting with ldap_first_entry. If there are no more entries in the result then it returns false.
    */
@@ -1333,7 +1442,7 @@ class Ldap {
   /**
    * Retourne le dn associé à une entrée de l'annuaire
    * 
-   * @param resource $entry
+   * @param \LDAP\ResultEntry $entry
    *          l'entrée dans laquelle on récupère les infos
    * @return string the DN of the result entry and false on error.
    */

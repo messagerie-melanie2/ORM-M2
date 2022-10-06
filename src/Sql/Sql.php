@@ -474,7 +474,7 @@ class Sql {
    *
    * @access public
    */
-  public function executeQueryToObject($query, $params = null, $object, $cached_statement = true) {
+  public function executeQueryToObject($query, $params = null, $object = null, $cached_statement = true) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->executeQueryToObject($query, " . get_class($object) . ")");
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->executeQueryToObject() params : " . print_r($params, true));
     // Sauvegarde de la derniere requete

@@ -52,21 +52,7 @@ class Group extends Defaut\Group {
      * 
      * @ignore
      */
-    const LOAD_ATTRIBUTES = ['dn', 'fullname', 'email', 'owners'];
-
-    /**
-     * TODO le cn devrait être récupérable directement
-     * renvoi le cn
-     * @return mixed|null
-     * @throws \Safe\Exceptions\PcreException
-     */
-    public function getMapCn() {
-        if (\Safe\preg_match("#(cn=)(.*)(,dmd*)#",$this->dn, $matches)) {
-            return $matches[2];
-        } else {
-            return null;
-        }
-    }
+    const LOAD_ATTRIBUTES = ['dn', 'fullname', 'email', 'owners', 'cn'];
 
     /**
      * Récupère la liste des membres d'un groupe
@@ -104,5 +90,13 @@ class Group extends Defaut\Group {
             }
         }
         return $this->_members;
+    }
+
+    public function getCsaMembers() {
+        $ldap = Ldap::GetInstance(LdapConfig::$SEARCH_LDAP);
+        $base_group = $ldap->getConfig("base_group_dn");
+        $this->dn = 'cn=csa_'.$this->uid.','.$base_group;
+
+        return $this->getMapMembers();
     }
 }

@@ -67,6 +67,19 @@ use LibMelanie\Config\MappingMce;
  */
 class User extends Mce\User {
   /**
+   * Filtre pour la méthode getBalpEmission()
+   * 
+   * @ignore
+   */
+  const GET_BALP_EMISSION_FILTER = "(|(mcedelegation=%%uid%%:C)(mcedelegation=%%uid%%:G))";
+  /**
+   * Filtre pour la méthode getBalpGestionnaire()
+   * 
+   * @ignore
+   */
+  const GET_BALP_GESTIONNAIRE_FILTER = "(mcedelegation=%%uid%%:G)";
+
+  /**
    * Configuration du mapping qui surcharge la conf
    */
   const MAPPING = [
@@ -101,9 +114,11 @@ class User extends Mce\User {
     "email_routage"           => 'mcemailroutingaddress',         // Email pour le routage interne
     "quota"                   => 'mailquotasize',                 // Taille de quota pour la boite
     "delegation"              => 'delegation',                    // Delegation
-    "miaccess"                => 'miaccess',                      // Acces distant
+    "mceaccess"               => 'mceaccess',                     // Acces distant
+    "mcedomain"               => 'mcedomain',                     // Domaine interne
     "direction"               => 'direction',                     // Direction
     "nomadeaccess"            => 'nomadeaccess',                  // Acces VPN
+    "password"                => 'userpassword',                  // Mot de passe
 
     "ou"                      => 'ou',                            // OU associé à l'entrée
     "gestionnaire"            => 'gestionnaire',                  // Gestionnaire de la boite
@@ -159,24 +174,26 @@ class User extends Mce\User {
     if (!isset($this->_shares)) {
       $_shares = $this->objectmelanie->shares;
       $this->_shares = [];
-      foreach ($_shares as $_share) {
-        $share = new Share();
-        list($share->user, $right) = \explode(':', $_share, 2);
-        switch (\strtoupper($right)) {
-          case 'G':
-            $share->type = Share::TYPE_ADMIN;
-            break;
-          case 'C':
-            $share->type = Share::TYPE_SEND;
-            break;
-          case 'E':
-            $share->type = Share::TYPE_WRITE;
-            break;
-          case 'L':
-            $share->type = Share::TYPE_READ;
-            break;
+      if (is_array($_shares)) {
+        foreach ($_shares as $_share) {
+          $share = new Share();
+          list($share->user, $right) = \explode(':', $_share, 2);
+          switch (\strtoupper($right)) {
+            case 'G':
+              $share->type = Share::TYPE_ADMIN;
+              break;
+            case 'C':
+              $share->type = Share::TYPE_SEND;
+              break;
+            case 'E':
+              $share->type = Share::TYPE_WRITE;
+              break;
+            case 'L':
+              $share->type = Share::TYPE_READ;
+              break;
+          }
+          $this->_shares[$share->user] = $share;
         }
-        $this->_shares[$share->user] = $share;
       }
     }
     return $this->_shares;

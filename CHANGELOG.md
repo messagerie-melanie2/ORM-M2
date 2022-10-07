@@ -1,3 +1,7 @@
+ORM M2 - 0.6.3.5
+------
+- 0006995: [User] Permettre un load() différent sur un objet de partage
+
 ORM M2 - 0.6.3.4
 ------
 - Type individuel pour l'ENS

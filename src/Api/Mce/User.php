@@ -81,6 +81,18 @@ class User extends Defaut\User {
    */
   const LOAD_FROM_EMAIL_FILTER = "(mail=%%email%%)";
   /**
+   * Filtre pour la méthode load() si c'est un objet de partage
+   * 
+   * @ignore
+   */
+  const LOAD_OBJECTSHARE_FILTER = self::LOAD_FILTER;
+  /**
+   * Filtre pour la méthode load() avec un email si c'est un object de partage
+   * 
+   * @ignore
+   */
+  const LOAD_OBJECTSHARE_FROM_EMAIL_FILTER = self::LOAD_FROM_EMAIL_FILTER;
+  /**
    * Filtre pour la méthode getBalp()
    * 
    * @ignore

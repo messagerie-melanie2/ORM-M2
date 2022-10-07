@@ -354,6 +354,24 @@ abstract class User extends MceObject {
    */
   const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_routage', 'shares', 'type'];
   /**
+   * Filtre pour la méthode load() si c'est un objet de partage
+   * 
+   * @ignore
+   */
+  const LOAD_OBJECTSHARE_FILTER = null;
+  /**
+   * Filtre pour la méthode load() avec un email si c'est un object de partage
+   * 
+   * @ignore
+   */
+  const LOAD_OBJECTSHARE_FROM_EMAIL_FILTER = null;
+  /**
+   * Attributs par défauts pour la méthode load() si c'est un objet de partage
+   * 
+   * @ignore
+   */
+  const LOAD_OBJECTSHARE_ATTRIBUTES = ['fullname', 'uid', 'email_send', 'email_send_list', 'shares'];
+  /**
    * Filtre pour la méthode getBalp()
    * 
    * @ignore
@@ -521,11 +539,21 @@ abstract class User extends MceObject {
       return $this->_isLoaded;
     }
     $useIsLoaded = !isset($attributes);
-    if (!isset($attributes)) {
-      $attributes = static::LOAD_ATTRIBUTES;
+    // MANTIS 0006995: [User] Permettre un load() différent sur un objet de partage
+    if ($this->getMapIs_objectshare()) {
+      if (!isset($attributes)) {
+        $attributes = static::LOAD_OBJECTSHARE_ATTRIBUTES;
+      }
+      $filter = static::LOAD_OBJECTSHARE_FILTER;
+      $filterFromEmail = static::LOAD_OBJECTSHARE_FROM_EMAIL_FILTER;
     }
-    $filter = static::LOAD_FILTER;
-    $filterFromEmail = static::LOAD_FROM_EMAIL_FILTER;
+    else {
+      if (!isset($attributes)) {
+        $attributes = static::LOAD_ATTRIBUTES;
+      }
+      $filter = static::LOAD_FILTER;
+      $filterFromEmail = static::LOAD_FROM_EMAIL_FILTER;
+    }
     if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])) {
       if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_infos_filter'])) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_infos_filter'];

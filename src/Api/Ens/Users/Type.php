@@ -28,4 +28,10 @@ use LibMelanie\Api\Defaut;
  * @subpackage API/Ens
  * @api
  */
-class Type extends Defaut\Users\Type {}
+class Type extends Defaut\Users\Type {
+    // *** Type de boite
+    /**
+     * Boite individuelle
+     */
+    const INDIVIDUELLE = 'ENSL';
+}

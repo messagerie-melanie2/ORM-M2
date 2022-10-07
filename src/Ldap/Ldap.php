@@ -468,8 +468,8 @@ class Ldap {
       $keycache = "GetUsersList:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$filter";
       $infos = $ldap->getCache($keycache);
       if (!isset($infos)) {
-          // Connexion anonymous pour lire les données
-          if ($ldap->anonymous()) {
+          // Connexion pour lire les données
+          if ($ldap->bind4lookup()) {
               // Base de recherche ?
               $base_dn = $ldap->getConfig("personne_base_dn");
               if (!isset($base_dn)) {
@@ -729,8 +729,8 @@ class Ldap {
     $keycache = "GetGroups:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr));
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
-        // Connexion anonymous pour lire les données
-        if ($ldap->anonymous()) {
+        // Connexion pour lire les données
+        if ($ldap->bind4lookup()) {
             // Lancement de la recherche
             $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr,0, $sizelimit);
             if ($sr && $ldap->count_entries($sr) > 0) {

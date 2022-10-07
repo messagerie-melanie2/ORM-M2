@@ -1,3 +1,8 @@
+ORM M2 - 0.6.3.4
+------
+- Type individuel pour l'ENS
+- Fix sur bind4lookup() dans les deux méthodes LDAP GetUsersList() et GetGroups()
+
 ORM M2 - 0.6.3.3
 ------
 - Adaptations API ENS

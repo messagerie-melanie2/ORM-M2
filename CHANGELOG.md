@@ -1,3 +1,8 @@
+ORM M2 - 0.6.3.6
+------
+- Nouveau mapping pour le User de Api/Mi
+- Permettre le set des champs other ldap dans le User de Api/Mce
+
 ORM M2 - 0.6.3.5
 ------
 - 0006995: [User] Permettre un load() différent sur un objet de partage

@@ -78,7 +78,7 @@ class User extends Mce\User {
    * @ignore
    */
   const GET_BALP_GESTIONNAIRE_FILTER = "(mcedelegation=%%uid%%:G)";
-
+  
   /**
    * Configuration du mapping qui surcharge la conf
    */
@@ -94,11 +94,12 @@ class User extends Mce\User {
     "shares"                  => [MappingMce::name => 'mcedelegation', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
     "server_routage"          => 'mailhost',                      // Champ utilisé pour le routage des messages
     "type"                    => 'mcetypecompte',                 // Type d'entrée (boite individuelle, partagée, ressource, ...)
-    "street"                  => 'street',                        // Rue
+    "street"                  => 'postaladdress',                        // Rue
     "postalcode"              => 'postalcode',                    // Code postal
     "locality"                => 'l',                             // Ville
     "title"                   => 'title',                         // Titre
     "outofoffices"            => [MappingMce::name => 'mcevacation', MappingMce::type => MappingMce::arrayLdap], // Affichage du message d'absence de l'utilisateur
+    "service"                 => 'departmentnumber',              // Department Number
 
     // Nouveaux champs
     "lastname"                => 'sn',                            // Last name de l'utilisateur
@@ -107,24 +108,25 @@ class User extends Mce\User {
     "faxnumber"               => 'facsimiletelephonenumber',      // Numéro de fax
     "mobilephone"             => 'mobile',                        // Numéro de mobile
     "personaltitle"           => 'personaltitle',                 // Genre
-    "postaladdress"           => 'postaladdress',                 // Adresse postale, différent de street ?
 
     "mcevisibilite"           => [MappingMce::name => 'mcevisibilite', MappingMce::type => MappingMce::arrayLdap], // Gestion de l'affichage dans l'annuaire ministériel et interministériel
 
-    "email_routage"           => 'mcemailroutingaddress',         // Email pour le routage interne
+    "email_routage"           => 'mailroutingaddress',         // Email pour le routage interne
     "quota"                   => 'mailquotasize',                 // Taille de quota pour la boite
-    "delegation"              => 'delegation',                    // Delegation
+    "delegation"              => 'mceportaildelegation',                    // Delegation
+    "delegationtarget"        => [MappingMce::name => 'mceportaildelegationtarget', MappingMce::type => MappingMce::arrayLdap],                    // Delegation
     "mceaccess"               => 'mceaccess',                     // Acces distant
     "mcedomain"               => 'mcedomain',                     // Domaine interne
-    "direction"               => 'direction',                     // Direction
     "nomadeaccess"            => 'nomadeaccess',                  // Acces VPN
     "password"                => 'userpassword',                  // Mot de passe
+    "mceportailpassworddelay" => 'mceportailpassworddelay',       // Délai d'expiration du mot de passe
+    "passwordexpirationtime"  => 'passwordexpirationtime',        // Date d'expiration du mot de passe
+    "mceportailmethodauth"    => 'mceportailmethodauth',          // Method d'authentification
 
     "ou"                      => 'ou',                            // OU associé à l'entrée
     "gestionnaire"            => 'gestionnaire',                  // Gestionnaire de la boite
-    "mirio"                   => 'mirio',                         // Numéro RIO
-    "initials"                => 'initials',                      // Initials du compte
     "matricule"               => 'matricule',                     // Matricule de l'utilisateur
+    "profil"                  => 'mceportailprofil',
   ];
 
   /**

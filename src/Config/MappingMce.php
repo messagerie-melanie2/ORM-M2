@@ -48,7 +48,7 @@ class MappingMce {
 	 * @var array
 	*/
 	public static $Data_Mapping = [];
-	
+
 	/**
 	 * Initialisation du mapping
 	 */
@@ -78,6 +78,7 @@ class MappingMce {
 		  "Rss"					=> "dwp_rss",
 		  "NewsShare"			=> "dwp_news_share",
 		  "Notification"		=> "dwp_notifications",
+          "ResourceMelanie"     => "horde_datatree",
 	  ];
 	  // Init Primary Keys
 	  self::$Primary_Keys = [
@@ -105,6 +106,7 @@ class MappingMce {
 		  "Rss"					=> ["uid"],
 		  "NewsShare"			=> ["user", "service"],
 		  "Notification"		=> ["uid", "owner"],
+		  "ResourceMelanie"		    => ["id"],
 	  ];
 	  // Init Data Mapping
 	  self::$Data_Mapping = [
@@ -195,7 +197,7 @@ class MappingMce {
 	          "owner" 			=> [self::name => "event_creator_id", self::type => self::string, self::size => 255, self::defaut => ''],
 	          "keywords" 		=> [self::name => "event_keywords"],
 			  "version" 		=> [self::name => "event_version", self::type => self::integer, self::defaut => 1],
-	          
+
 	          // DATA
 	          "title" 			=> [self::name => "event_title", self::type => self::string, self::size => 255, self::defaut => ''],
 	          "description"   	=> [self::name => "event_description", self::defaut => ''],
@@ -211,12 +213,12 @@ class MappingMce {
 	          "transparency" 	=> [self::name => "event_transparency", self::type => self::string, self::size => 10, self::defaut => 'OPAQUE'],
 	          "properties" 	  	=> [self::name => "event_properties_json"],
 			  "attachments" 	=> [self::name => "event_attachments_json"],
-	          
+
 	          // ATTENDEES
 	          "attendees" 	           => [self::name => "event_attendees"],
 	          "organizer_json" 	       => [self::name => "event_organizer_json"],
 	          "organizer_calendar_id"  => [self::name => "organizer_calendar_id"],
-	          
+
 	          // TIME
 	          "all_day"  	    => [self::name => "event_all_day", self::type => self::integer, self::defaut => 0],
 	          "start" 		    => [self::name => "event_start", self::type => self::date, self::format => "Y-m-d H:i:s"],
@@ -225,7 +227,7 @@ class MappingMce {
 	          "modified" 	    => [self::name => "event_modified", self::type => self::timestamp, self::defaut => 0],
 	          "modified_json" 	=> [self::name => "event_modified_json", self::type => self::timestamp, self::defaut => 0],
 	          "timezone"      	=> [self::name => "event_timezone", self::type => self::string, self::defaut => 'Europe/Paris'],
-	          
+
 	          // RECURRENCE
 	          "exceptions" 		=> [self::name => "event_exceptions"],
 	          "enddate" 		=> [self::name => "event_recurenddate",self::type => self::date, self::format => "Y-m-d H:i:s"],
@@ -289,7 +291,7 @@ class MappingMce {
 	          "taskslist" 	=> [self::name => "task_owner", self::type => self::string, self::size => 255],
 	          "uid" 		=> [self::name => "task_uid", self::type => self::string, self::size => 255],
 	          "owner" 		=> [self::name => "task_creator", self::type => self::string, self::size => 255],
-	          
+
 	          // DATA
 	          "name" 		=> [self::name => "task_name", self::type => self::string, self::size => 255],
 	          "description" => [self::name => "task_desc"],
@@ -301,7 +303,7 @@ class MappingMce {
 	          "assignee" 	=> [self::name => "task_assignee", self::type => self::string, self::size => 255],
 	          "estimate" 	=> [self::name => "task_estimate", self::type => self::double],
 	          "parent" 		=> [self::name => "task_parent", self::type => self::string, self::size => 32],
-	          
+
 	          // TIME
 	          "due" 			=> [self::name => "task_due", self::type => self::timestamp],
 	          "completed_date" 	=> [self::name => "task_completed_date", self::type => self::timestamp],
@@ -315,7 +317,7 @@ class MappingMce {
 	          "uid" 			=> [self::name => "object_uid", self::type => self::string, self::size => 255],
 	          "type" 			=> [self::name => "object_type", self::type => self::string, self::size => 255],
 	          "modified" 		=> [self::name => "object_ts", self::type => self::timestamp, self::defaut => 0],
-	          
+
 	          // DATA
 	          "members" 		=> [self::name => "object_members"],
 	          "name" 			=> [self::name => "object_name", self::type => self::string, self::size => 255],
@@ -327,18 +329,18 @@ class MappingMce {
 	          "nameprefix" 		=> [self::name => "object_nameprefix", self::type => self::string, self::size => 255],
 	          "namesuffix" 		=> [self::name => "object_namesuffix", self::type => self::string, self::size => 32],
 	          "birthday" 		=> [self::name => "object_bday", self::type => self::string, self::size => 10],
-	          
+
 	          "title" 	=> [self::name => "object_title", self::type => self::string, self::size => 255],
 	          "company" => [self::name => "object_company", self::type => self::string, self::size => 255],
 	          "notes" 	=> [self::name => "object_notes"],
-	          
+
 	          "email" 	=> [self::name => "object_email", self::type => self::string, self::size => 255],
 	          "email1" 	=> [self::name => "object_email1", self::type => self::string, self::size => 255],
 	          "email2" 	=> [self::name => "object_email2", self::type => self::string, self::size => 255],
-	          
+
 	          "cellphone" => [self::name => "object_cellphone", self::type => self::string, self::size => 25],
 	          "fax" 	  => [self::name => "object_fax", self::type => self::string, self::size => 25],
-	          
+
 	          "category" 		=> [self::name => "object_category", self::type => self::string, self::size => 80],
 	          "url" 			=> [self::name => "object_url", self::type => self::string, self::size => 255],
 	          // HOME
@@ -359,15 +361,15 @@ class MappingMce {
 	          "workprovince" 	=> [self::name => "object_workprovince", self::type => self::string, self::size => 255],
 	          "workpostalcode" 	=> [self::name => "object_workpostalcode", self::type => self::string, self::size => 255],
 	          "workcountry" 	=> [self::name => "object_workcountry", self::type => self::string, self::size => 255],
-	          
+
 	          "pgppublickey" 	=> [self::name => "object_pgppublickey"],
 	          "smimepublickey" 	=> [self::name => "object_smimepublickey"],
-	          
+
 	          "photo" 		=> [self::name => "object_photo"],
 	          "phototype" 	=> [self::name => "object_phototype", self::type => self::string, self::size => 10],
 	          "logo" 		=> [self::name => "object_logo"],
 	          "logotype" 	=> [self::name => "object_logotype", self::type => self::string, self::size => 10],
-	          
+
 	          "timezone" 	=> [self::name => "object_tz", self::type => self::string, self::size => 32],
 	          "geo" 		=> [self::name => "object_geo", self::type => self::string, self::size => 255],
 	          "pager" 		=> [self::name => "object_pager", self::type => self::string, self::size => 25],
@@ -450,16 +452,26 @@ class MappingMce {
 				"isread"		=> [self::name => "notification_isread", self::type => self::integer],
 				"isdeleted"		=> [self::name => "notification_isdeleted", self::type => self::integer],
 		  ],
+          // Gestion de la liste de contacts : objet AddressbookMelanie
+	      "ResourceMelanie" => [
+	          "id" 				=> [self::name => "datatree_id"],
+	          "type" 			=> [self::name => "group_uid"],
+	          "owner" 			=> [self::name => "user_uid"],
+	          "resource_name"	=> [self::name => "datatree_name"],
+	          "ctag" 			=> [self::name => "datatree_ctag"],
+	          "synctoken" 		=> [self::name => "datatree_synctoken"],
+	          "name" 			=> [self::name => "name"],
+	      ],
 	  ];
 	}
 
 	/**
 	 * Mise a jour du DataMapping depuis une application externe
 	 * Permet de faire le mapping de façon dynamique
-	 * 
+	 *
 	 * @param string $object Nom de l'objet (UserMelanie, CalendarMelanie, ...)
 	 * @param array $dataMapping Données à mettre à jour, effectue un array_merge
-	 * 
+	 *
 	 * @return boolean true si les valeurs sont OK, false sinon
 	 */
 	public static function UpdateDataMapping($object, $dataMapping) {
@@ -673,7 +685,7 @@ class MappingMce {
 		self::ATT_DELEGATED 	=> DefaultConfig::DELEGATED,
 	];
 
-	// Attendee role	
+	// Attendee role
 	const REQ_PARTICIPANT = 1;
 	const OPT_PARTICIPANT = 2;
 	const NON_PARTICIPANT = 3;

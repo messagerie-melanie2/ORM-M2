@@ -69,7 +69,7 @@ class Group extends Defaut\Group {
             $filter = str_replace("%%memberOf%%", $this->dn, $filter);
             $search = $ldap->search($ldap->getConfig("base_dn"), $filter);
             $entries = $ldap->get_entries($search);
-print_r($entries);die;
+
             $attributesMember = $ldap->getConfig('get_user_infos_attributes');
 
             if ($entries
@@ -98,5 +98,18 @@ print_r($entries);die;
         $this->dn = 'cn=csa_'.$this->uid.','.$base_group;
 
         return $this->getMapMembers();
+    }
+
+    /**
+     * le cn est le composant premier du dn
+     * pour la recherche sans conf particulière
+     *
+     * @param $cn
+     * @return void
+     */
+    public function setMapCn($cn) {
+        $ldap = Ldap::GetInstance(LdapConfig::$SEARCH_LDAP);
+        $base_group = $ldap->getConfig("base_group_dn");
+        $this->dn = 'cn='.$cn.','.$base_group;
     }
 }

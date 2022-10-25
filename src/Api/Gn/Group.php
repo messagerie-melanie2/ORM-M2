@@ -68,9 +68,8 @@ class Group extends Defaut\Group {
             $filter = $ldap->getConfig("get_users_by_group");
             $filter = str_replace("%%memberOf%%", $this->dn, $filter);
             $search = $ldap->search($ldap->getConfig("base_dn"), $filter);
+            $attributes = $ldap->getConfig("get_user_infos_attributes");
             $entries = $ldap->get_entries($search);
-
-            $attributesMember = $ldap->getConfig('get_user_infos_attributes');
 
             if ($entries
                     && is_array($entries)
@@ -78,13 +77,8 @@ class Group extends Defaut\Group {
                 array_shift($entries);
                 foreach ($entries as $i => $entry) {
                     $member = new Member();
-                    foreach ($attributesMember as $k) {
-                        if (isset($entry[$k])) {
-                            $member->$k = $entry[$k][0];
-                        } else {
-                            $member->$k = null;
-                        }
-                    }
+                    $member->dn = $entry['dn'];
+                    $member->load($attributes);
                     $this->_members[] = $member;
                 }
             }
@@ -101,15 +95,13 @@ class Group extends Defaut\Group {
     }
 
     /**
-     * le cn est le composant premier du dn
-     * pour la recherche sans conf particulière
+     * Mapping cn field
      *
-     * @param $cn
-     * @return void
+     * @param string $cn
      */
     public function setMapCn($cn) {
         $ldap = Ldap::GetInstance(LdapConfig::$SEARCH_LDAP);
         $base_group = $ldap->getConfig("base_group_dn");
-        $this->dn = 'cn='.$cn.','.$base_group;
+        $this->dn = "cn=$cn,$base_group";
     }
 }

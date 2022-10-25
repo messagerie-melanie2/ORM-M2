@@ -46,6 +46,16 @@ class SqlMelanieRequests {
 
     /**
 	 * @var string SELECT
+	 * @param Replace {datatree_id}, {user_uid}, {datatree_name}, {attribute_value}, {perm_object}
+    /**
+     * @var string SELECT
+     * @param Replace {datatree_id}, {user_uid}, {datatree_name}, {attribute_value}, {perm_object}
+     * @param PDO :group_uid, :user_uid, :attribute_name
+     */
+    const getObjectById = "SELECT hd.datatree_id as {datatree_id}, user_uid as {user_uid}, datatree_name as {datatree_name}, datatree_ctag as {datatree_ctag}, datatree_synctoken as {datatree_synctoken}, group_uid as {group_uid}, hda.attribute_value as {name} FROM horde_datatree hd INNER JOIN horde_datatree_attributes hda ON hd.datatree_id=hda.datatree_id AND hda.attribute_name='name' WHERE hd.datatree_id = :id;";
+
+    /**
+	 * @var string SELECT
 	 * @param Replace {datatree_id}, {user_uid}, {datatree_name}, {datatree_ctag}, {datatree_synctoken}, {attribute_value}, {perm_object}
 	 * @param PDO :group_uid, :user_uid, :attribute_name
 	 */

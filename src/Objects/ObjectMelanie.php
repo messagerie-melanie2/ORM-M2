@@ -408,7 +408,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 					}
 					if (isset($opmapping[$mapKey])) {
 						if (is_array($this->$mapKey)) {
-						  if ($opmapping[$mapKey] == MappingMce::in 
+						  if ($opmapping[$mapKey] == MappingMce::in
 						          || $opmapping[$mapKey] == MappingMce::notin) {
 						        // Filtre personnalisé, valeur multiple, pas de like, on utilise IN
 						        if ($is_case_unsensitive)
@@ -567,7 +567,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		}
 		// Tri
 		$whereClause .= Sql\Sql::GetOrderByClause($this->objectType, $orderby, $asc);
-		// Limit & offset 
+		// Limit & offset
 		$whereClause .= Sql\Sql::GetLimitClause($limit, $offset);
 		// Chargement de la requête
 		$query = Sql\SqlObjectRequests::getObject;

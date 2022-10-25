@@ -1,12 +1,12 @@
 <?php
 /**
  * Ce fichier est développé pour la gestion de la lib MCE
- * 
+ *
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * 
+ *
  * ORM Mél Copyright © 2021 Groupe Messagerie/MTE
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -21,6 +21,7 @@
 namespace LibMelanie\Lib;
 
 use LibMelanie\Exceptions;
+use LibMelanie\Interfaces\IMceObject;
 use LibMelanie\Log\M2Log;
 use Serializable;
 
@@ -31,12 +32,12 @@ use Serializable;
  * @package LibMCE
  * @subpackage Lib
  */
-abstract class MceObject implements Serializable {
+abstract class MceObject implements Serializable , IMceObject {
 	/**
 	 * Objet Mel
 	 */
 	protected $objectmelanie;
-	
+
 	/**
 	 * Classe courante
 	 * @var string
@@ -45,7 +46,7 @@ abstract class MceObject implements Serializable {
 
 	/**
 	 * Namespace de la classe courante
-	 * 
+	 *
 	 * @var string
 	 */
 	private $_namespace;
@@ -63,7 +64,7 @@ abstract class MceObject implements Serializable {
 	/**
 	 * Récupère le namespace de la classe courante en fonction du get_class
 	 * L'utilisateur de __NAMESPACE__ n'est pas possible pour un héritage
-	 * 
+	 *
 	 * @return string Namespace courant
 	 */
 	public function __getNamespace() {
@@ -78,9 +79,9 @@ abstract class MceObject implements Serializable {
 
 	/**
 	 * Défini l'objet Melanie
-	 * 
+	 *
 	 * @param ObjectMelanie $objectmelanie
-	 * 
+	 *
 	 * @ignore
 	 */
 	public function setObjectMelanie($objectmelanie) {
@@ -89,7 +90,7 @@ abstract class MceObject implements Serializable {
 
 	/**
 	 * Récupère l'objet Melanie
-	 * 
+	 *
 	 * @ignore
 	 */
 	public function getObjectMelanie() {
@@ -99,7 +100,7 @@ abstract class MceObject implements Serializable {
 
 	/**
 	 * Est-ce que l'object melanie est bien positionné ?
-	 * 
+	 *
 	 * @ignore
 	 */
 	public function issetObjectMelanie() {
@@ -108,7 +109,7 @@ abstract class MceObject implements Serializable {
 
 	/**
 	 * Détermine si l'objet a changé
-	 * 
+	 *
 	 * @return boolean true si au moins un champ de l'objet a changé, false sinon
 	 */
 	public function hasChanged() {
@@ -214,7 +215,7 @@ abstract class MceObject implements Serializable {
 
 	/**
 	 * Méthode toString pour afficher le contenu des données de la classe
-	 * 
+	 *
 	 * @return string
 	 */
 	public function __toString() {
@@ -241,7 +242,7 @@ abstract class MceObject implements Serializable {
 	 * Constructs the object
 	 *
 	 * @param string $serialized
-	 * 
+	 *
 	 * @return void
 	 */
 	public function unserialize($serialized) {
@@ -282,7 +283,7 @@ abstract class MceObject implements Serializable {
 	 * (la clause where s'adapte aux données)
 	 * Il faut donc peut être sauvegarder l'objet avant d'appeler cette méthode
 	 * pour réinitialiser les données modifiées (propriété haschanged)
-	 * 
+	 *
 	 * @param String[] $fields
 	 *          Liste les champs à récupérer depuis les données
 	 * @param String $filter
@@ -314,7 +315,7 @@ abstract class MceObject implements Serializable {
 			$_object->setIsLoaded();
 			$object = new static();
 			$object->setObjectMelanie($_object);
-			
+
 			if (isset($_object->id)) {
 				$objects[$_object->id] = $object;
 			}

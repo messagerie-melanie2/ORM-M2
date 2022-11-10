@@ -68,6 +68,7 @@ class Group extends Defaut\Group {
             $filter = $ldap->getConfig("get_users_by_group");
             $filter = str_replace("%%memberOf%%", $this->dn, $filter);
             $search = $ldap->search($ldap->getConfig("base_dn"), $filter);
+            $attributes = $ldap->getConfig("get_user_infos_attributes");
             $entries = $ldap->get_entries($search);
 
             if ($entries
@@ -77,7 +78,7 @@ class Group extends Defaut\Group {
                 foreach ($entries as $i => $entry) {
                     $member = new Member();
                     $member->dn = $entry['dn'];
-                    $member->load();//pour avoir le mail
+                    $member->load($attributes);
                     $this->_members[] = $member;
                 }
             }

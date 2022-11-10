@@ -200,7 +200,7 @@ class User extends Mce\User {
    */
   protected function setMapOutofoffices($OofObjects) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapOutofoffices()");
-    $reponses = is_array($this->getObjectMelanie()->outofoffices)?$this->getObjectMelanie()->outofoffices:[];
+    $reponses = $this->objectmelanie->outofoffices??[];
     if (is_array($OofObjects)) {
       foreach ($OofObjects as $OofObject) {
         $reponses[] = $OofObject->render();

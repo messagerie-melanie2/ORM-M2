@@ -1187,7 +1187,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       }
       else if (strpos($itemName, '.') !== false) {
         // Si c'est un itemName par partie on cherche chaque partie dans la conf
-        $parts = explode('.', $itemName);
+        //$parts = explode('.', $itemName);
+        // sam: en accord avec la doc, il faudrait ceci
+          $parts = [$itemName];
+          $pItem = $itemName;
+          while($p = strrchr($pItem, '.')) {
+              $pItem = str_replace($p, "", $pItem);
+              $parts[] = $pItem;
+          }
         foreach ($parts as $part) {
           if (isset($itemsConf[$part])) {
             // Si l'itemName est directement dans la configuration

@@ -99,4 +99,11 @@ class Group extends Defaut\Group {
 
         return $this->getMapMembers();
     }
+
+    public function setMapCn($cn)
+    {
+        $ldap = Ldap::GetInstance(LdapConfig::$SEARCH_LDAP);
+        $base_group = $ldap->getConfig("base_group_dn");
+        $this->dn = "cn=$cn,$base_group";
+    }
 }

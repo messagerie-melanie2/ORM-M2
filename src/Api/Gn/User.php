@@ -93,9 +93,9 @@ class User extends Mce\User {
     "mcemailroutingaddress"   => [MappingMce::name => 'mcemailroutingaddress', MappingMce::type => MappingMce::arrayLdap], // routegemceadrressmail host
     "deliverymode"   => [MappingMce::name => 'deliverymode', MappingMce::type => MappingMce::stringLdap],
     "codeunite"   => [MappingMce::name => 'codeunite'],
-    "displayname"   => 'displayname',
+    "displayname"   => 'displayname', //todo => usage name => displayname pour tester répercussion
     "employeenumber"   => 'employeenumber',
-    "givenname"   => 'givenname',
+    "givenname"   => 'givenname', //todo usage firstname => givenname, (lastname =>sn), tester usage , où en ai je eu besoin??
   ];
 
   /**
@@ -205,7 +205,7 @@ class User extends Mce\User {
    */
   protected function setMapOutofoffices($OofObjects) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapOutofoffices()");
-    $reponses = $this->objectmelanie->outofoffices??[];
+    $reponses = [];
     if (is_array($OofObjects)) {
       foreach ($OofObjects as $OofObject) {
         $reponses[] = $OofObject->render();

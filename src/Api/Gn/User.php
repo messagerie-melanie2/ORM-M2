@@ -1,12 +1,12 @@
 <?php
 /**
  * Ce fichier est développé pour la gestion de la lib MCE
- * 
+ *
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * 
+ *
  * ORM Mél Copyright © 2021 Groupe Messagerie/MTE
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -29,13 +29,13 @@ use LibMelanie\Config\MappingMce;
 /**
  * Classe utilisateur pour GN
  * basé sur le User MCE
- * 
+ *
  * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/GN
  * @api
- * 
- * @property string $dn DN de l'utilisateur dans l'annuaire            
+ *
+ * @property string $dn DN de l'utilisateur dans l'annuaire
  * @property string $uid Identifiant unique de l'utilisateur
  * @property string $fullname Nom complet de l'utilisateur
  * @property string $name Nom de l'utilisateur
@@ -53,13 +53,13 @@ use LibMelanie\Config\MappingMce;
  * @property array $server_routage Champ de routage pour le serveur de message de l'utilisateur
  * @property-read string $server_host Host du serveur de messagerie de l'utilisateur
  * @property-read string $server_user User du serveur de messagerie de l'utilisateur
- * 
+ *
  * @property-read boolean $is_objectshare Est-ce que cet utilisateur est en fait un objet de partage
  * @property-read ObjectShare $objectshare Retourne l'objet de partage lié à cet utilisateur si s'en est un
- * 
+ *
  * @property-read boolean $is_synchronisation_enable Est-ce que la synchronisation est activée pour l'utilisateur ?
  * @property-read string $synchronisation_profile Profil de synchronisation positionné pour l'utilisateur (STANDARD ou SENSIBLE)
- * 
+ *
  * @method string getTimezone() [OSOLETE] Chargement du timezone de l'utilisateur
  * @method bool authentification($password, $master = false) Authentification de l'utilisateur sur l'annuaire Mélanie2
  * @method bool save() Enregistrement de l'utilisateur dans l'annuaire
@@ -67,7 +67,9 @@ use LibMelanie\Config\MappingMce;
  * @method bool exists() Est-ce que l'utilisateur existe dans l'annuaire Mélanie2 (en fonction de l'uid ou l'email)
  */
 class User extends Mce\User {
-	/**
+    const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_routage', 'shares', 'type','mcemailroutingaddress','outofoffices'];
+
+    /**
    * Configuration du mapping qui surcharge la conf
    */
   const MAPPING = [
@@ -88,6 +90,12 @@ class User extends Mce\User {
     "title"                   => 'title',                         // Titre
     "memberof"                => [MappingMce::name => 'memberof', MappingMce::type => MappingMce::arrayLdap],
     "outofoffices"            => [MappingMce::name => 'mcevacation', MappingMce::type => MappingMce::arrayLdap], // Affichage du message d'absence de l'utilisateur
+    "mcemailroutingaddress"   => [MappingMce::name => 'mcemailroutingaddress', MappingMce::type => MappingMce::arrayLdap], // routegemceadrressmail host
+    "deliverymode"   => [MappingMce::name => 'deliverymode', MappingMce::type => MappingMce::stringLdap],
+    "codeunite"   => [MappingMce::name => 'codeunite'],
+    "displayname"   => 'displayname', //todo => usage name => displayname pour tester répercussion
+    "employeenumber"   => 'employeenumber',
+    "givenname"   => 'givenname', //todo usage firstname => givenname, (lastname =>sn), tester usage , où en ai je eu besoin??
   ];
 
   /**
@@ -131,29 +139,15 @@ class User extends Mce\User {
     $this->_shares = $shares;
     $_shares = [];
     foreach ($shares as $share) {
-      $right = '';
-      switch ($share->type) {
-        case Share::TYPE_ADMIN:
-          $right = 'G';
-          break;
-        case Share::TYPE_SEND:
-          $right = 'C';
-          break;
-        case Share::TYPE_WRITE:
-          $right = 'E';
-          break;
-        case Share::TYPE_READ:
-          $right = 'L';
-          break;
-      }
-      $_shares[] = $share->user . ':' . $right;
+        $right = $share->type;
+        $_shares[] = $share->user . ':' . $right;
     }
     $this->objectmelanie->shares = $_shares;
   }
 
   /**
    * Mapping shares field
-   * 
+   *
    * @return Share[] Liste des partages positionnés sur cette boite
    */
   protected function getMapShares() {
@@ -164,20 +158,7 @@ class User extends Mce\User {
       foreach ($_shares as $_share) {
         $share = new Share();
         list($share->user, $right) = \explode(':', $_share, 2);
-        switch (\strtoupper($right)) {
-          case 'G':
-            $share->type = Share::TYPE_ADMIN;
-            break;
-          case 'C':
-            $share->type = Share::TYPE_SEND;
-            break;
-          case 'E':
-            $share->type = Share::TYPE_WRITE;
-            break;
-          case 'L':
-            $share->type = Share::TYPE_READ;
-            break;
-        }
+        $share->type = \strtoupper($right);
         $this->_shares[$share->user] = $share;
       }
     }
@@ -186,7 +167,7 @@ class User extends Mce\User {
 
   /**
    * Mapping shares field
-   * 
+   *
    * @return array Liste des partages supportés par cette boite ([Share::TYPE_*])
    */
   protected function getMapSupported_shares() {
@@ -195,7 +176,7 @@ class User extends Mce\User {
 
   /**
    * Récupération du champ out of offices
-   * 
+   *
    * @return Outofoffice[] Tableau de d'objets Outofoffice
    */
   protected function getMapOutofoffices() {
@@ -219,7 +200,7 @@ class User extends Mce\User {
 
   /**
    * Positionnement du champ out of offices
-   * 
+   *
    * @param Outofoffice[] $OofObjects
    */
   protected function setMapOutofoffices($OofObjects) {

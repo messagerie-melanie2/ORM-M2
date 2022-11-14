@@ -1,3 +1,7 @@
+ORM M2 - 0.6.4.1
+------
+- Ajout d'un gitattributes pour nettoyer les releases
+
 ORM M2 - 0.6.4
 ------
 - 0007042: Pouvoir gérer des absences hebdo internes ou externes

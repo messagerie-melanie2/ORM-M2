@@ -1,4 +1,4 @@
-ORM M2 - 0.6.3.7
+ORM M2 - 0.6.4
 ------
 - 0007042: Pouvoir gérer des absences hebdo internes ou externes
 - 0007045: Problème dans le calcul des itemName

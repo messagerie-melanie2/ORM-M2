@@ -126,6 +126,7 @@ class User extends Mce\User {
     "ou"                      => 'ou',                            // OU associé à l'entrée
     "gestionnaire"            => 'gestionnaire',                  // Gestionnaire de la boite
     "matricule"               => 'matricule',                     // Matricule de l'utilisateur
+    "employeenumber"          => 'employeenumber',                // Employee number de l'utilisateur
     "profil"                  => 'mceportailprofil',
   ];
 
@@ -213,8 +214,8 @@ class User extends Mce\User {
       $i = 0;
       foreach ($this->objectmelanie->outofoffices as $oof) {
         $object = new Outofoffice($oof);
-        if ($object->type == Outofoffice::TYPE_ALL) {
-          $key = $object->type.$i++;
+        if (isset($object->days)) {
+          $key = Outofoffice::HEBDO.$i++;
         }
         else {
           $key = $object->type;

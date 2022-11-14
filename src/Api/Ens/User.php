@@ -213,8 +213,8 @@ class User extends Defaut\User {
       $i = 0;
       foreach ($this->objectmelanie->outofoffices as $oof) {
         $object = new Outofoffice($oof);
-        if ($object->type == Outofoffice::TYPE_ALL) {
-          $key = $object->type.$i++;
+        if (isset($object->days)) {
+          $key = Outofoffice::HEBDO.$i++;
         }
         else {
           $key = $object->type;

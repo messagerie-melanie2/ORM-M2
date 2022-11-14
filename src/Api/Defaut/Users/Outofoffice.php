@@ -48,6 +48,9 @@ class Outofoffice extends MceObject {
   const TYPE_INTERNAL = 'int';
   const TYPE_ALL = 'all';
 
+  // Identifiant des absences récurrentes
+  const HEBDO = 'hebdo';
+
   // DAY utilisable
   const DAY_SUNDAY = 'sun';
   const DAY_MONDAY = 'mon';

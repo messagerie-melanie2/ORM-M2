@@ -1,3 +1,10 @@
+ORM M2 - 0.6.3.7
+------
+- 0007042: Pouvoir gérer des absences hebdo internes ou externes
+- 0007045: Problème dans le calcul des itemName
+- MR #5  Correctif Gn
+- Gestion de paramètres dans read_version.php
+
 ORM M2 - 0.6.3.6
 ------
 - Nouveau mapping pour le User de Api/Mi

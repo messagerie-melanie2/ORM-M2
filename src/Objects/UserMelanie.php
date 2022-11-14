@@ -1180,30 +1180,34 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   private function readItemConfiguration($itemName, $server) {
     if (isset(Config\Ldap::$SERVERS[$server]) && isset(Config\Ldap::$SERVERS[$server]["items"])) {
       $itemsConf = Config\Ldap::$SERVERS[$server]["items"];
-      if (isset($itemsConf[$itemName])) {
-        // Si l'itemName est directement dans la configuration
-        $this->_itemConfiguration = $itemsConf[$itemName];
-        $this->_supportCreation = isset($itemsConf[$itemName]['creation']) ? $itemsConf[$itemName]['creation'] : false;
-      }
-      else if (strpos($itemName, '.') !== false) {
-        // Si c'est un itemName par partie on cherche chaque partie dans la conf
-        //$parts = explode('.', $itemName);
-        // sam: en accord avec la doc, il faudrait ceci
-          $parts = [$itemName];
-          $pItem = $itemName;
-          while($p = strrchr($pItem, '.')) {
-              $pItem = str_replace($p, "", $pItem);
-              $parts[] = $pItem;
-          }
-        foreach ($parts as $part) {
-          if (isset($itemsConf[$part])) {
-            // Si l'itemName est directement dans la configuration
-            $this->_itemConfiguration = $itemsConf[$part];
-            $this->_supportCreation = isset($itemsConf[$part]['creation']) ? $itemsConf[$part]['creation'] : false;
-            return;
-          }
+      // Si c'est un itemName par partie on cherche chaque partie dans la conf
+      foreach ($this->explodeParts($itemName) as $part) {
+        if (isset($itemsConf[$part])) {
+          // Si l'itemName est directement dans la configuration
+          $this->_itemConfiguration = $itemsConf[$part];
+          $this->_supportCreation = isset($itemsConf[$part]['creation']) ? $itemsConf[$part]['creation'] : false;
+          return;
         }
       }
     }
+  }
+
+  /**
+   * Transforme un itemName en parts pour les retrouver dans la conf
+   * 
+   * @param string $itemName
+   * 
+   * @return array
+   */
+  private function explodeParts($itemName) {
+    $parts = [$itemName];
+    if (strpos($itemName, '.') !== false) {
+      $pItem = $itemName;
+      while($p = strrchr($pItem, '.')) {
+          $pItem = str_replace($p, "", $pItem);
+          $parts[] = $pItem;
+      }
+    }
+    return $parts;
   }
 }

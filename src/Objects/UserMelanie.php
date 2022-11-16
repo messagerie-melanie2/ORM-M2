@@ -338,11 +338,9 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
-    // Result
-    $ret = true;
     // Est-ce que le dn est bien défini ?
     if (!isset($this->dn)) {
-      return false;
+      return null;
     }
     // MANTIS 0006136: Gérer la création d'un objet LDAP
     if ($this->_supportCreation && !$this->exists()) {
@@ -350,9 +348,18 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
       $ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$MASTER_LDAP);
       // Gérer une authentification externe
       if (isset($this->_itemConfiguration['bind_dn'])) {
-        $ret = $ldap->authenticate($this->_itemConfiguration['bind_dn'], $this->_itemConfiguration['bind_password']);
+        if (!$ldap->authenticate($this->_itemConfiguration['bind_dn'], $this->_itemConfiguration['bind_password'])) {
+          M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() Erreur " . $ldap->getError());
+          return null;
+        }
       }
-      return $ret && $ldap->add($this->dn, $entry);
+      if ($ldap->add($this->dn, $entry)) {
+        return true;
+      }
+      else {
+        M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() Erreur " . $ldap->getError());
+        return null;
+      }
     }
     else {
       // Modification de l'entrée si on est pas en création
@@ -361,12 +368,22 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
         $ldap = Ldap::GetInstance(\LibMelanie\Config\Ldap::$MASTER_LDAP);
         // Gérer une authentification externe
         if (isset($this->_itemConfiguration['bind_dn'])) {
-          $ret = $ldap->authenticate($this->_itemConfiguration['bind_dn'], $this->_itemConfiguration['bind_password']);
+          if (!$ldap->authenticate($this->_itemConfiguration['bind_dn'], $this->_itemConfiguration['bind_password'])) {
+            M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() Erreur " . $ldap->getError());
+            return null;
+          }
         }
-        return $ret && $ldap->modify($this->dn, $entry);
+        if ($ldap->modify($this->dn, $entry)) {
+          return false;
+        }
+        else {
+          M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() Erreur " . $ldap->getError());
+          return null;
+        }
       }
     }
-    return $ret;
+    // On ne doit pas arriver ici
+    return null;
   }
   
   /**

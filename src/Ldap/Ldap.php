@@ -1246,7 +1246,7 @@ class Ldap {
    * @return resource a search result identifier or false on error.
    */
   public function search($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->search($base_dn, $filter)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->search() | ldapsearch -LLL -b \"$base_dn\" \"$filter\" " . (isset($attributes) ? implode(" ", $attributes) : ""));
     self::$last_request = "ldap_search($base_dn, $filter, attributes, $attrsonly, $sizelimit)";
     @ldap_set_option($this->connection, LDAP_OPT_DEREF, LDAP_DEREF_NEVER);
     return @ldap_search($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
@@ -1277,7 +1277,7 @@ class Ldap {
    * @return resource a search result identifier or false on error.
    */
   public function search_alias($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0, $deref = LDAP_DEREF_ALWAYS) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->search_alias($base_dn, $filter)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->search_alias() | ldapsearch -LLL -a " . $this->_get_deref_command($deref) . " -b \"$base_dn\" \"$filter\" " . (isset($attributes) ? implode(" ", $attributes) : ""));
     self::$last_request = "ldap_search($base_dn, $filter, attributes, $attrsonly, $sizelimit, $deref)";
     @ldap_set_option($this->connection, LDAP_OPT_DEREF, $deref);
     return @ldap_search($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
@@ -1301,7 +1301,7 @@ class Ldap {
    * @return resource a search result identifier or false on error.
    */
   public function read($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->read($base_dn, $filter)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->read() | ldapsearch -LLL -s base -b \"$base_dn\" \"$filter\" " . (isset($attributes) ? implode(" ", $attributes) : ""));
     self::$last_request = "ldap_read($base_dn, $filter, attributes, $attrsonly, $sizelimit)";
     @ldap_set_option($this->connection, LDAP_OPT_DEREF, LDAP_DEREF_NEVER);
     return @ldap_read($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
@@ -1332,7 +1332,7 @@ class Ldap {
    * @return resource a search result identifier or false on error.
    */
   public function read_alias($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0, $deref = LDAP_DEREF_ALWAYS) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->read_alias($base_dn, $filter)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->read_alias() | ldapsearch -LLL -s base -a " . $this->_get_deref_command($deref) . " -b \"$base_dn\" \"$filter\" " . (isset($attributes) ? implode(" ", $attributes) : ""));
     self::$last_request = "ldap_read($base_dn, $filter, attributes, $attrsonly, $sizelimit, $deref)";
     @ldap_set_option($this->connection, LDAP_OPT_DEREF, $deref);
     return @ldap_read($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
@@ -1356,7 +1356,7 @@ class Ldap {
    * @return resource a search result identifier or false on error.
    */
   public function ldap_list($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->ldap_list($base_dn, $filter)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->ldap_list() | ldapsearch -LLL -s one -b \"$base_dn\" \"$filter\" " . (isset($attributes) ? implode(" ", $attributes) : ""));
     self::$last_request = "ldap_list($base_dn, $filter, attributes, $attrsonly, $sizelimit)";
     @ldap_set_option($this->connection, LDAP_OPT_DEREF, LDAP_DEREF_NEVER);
     return @ldap_list($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
@@ -1388,10 +1388,29 @@ class Ldap {
    * @return resource a search result identifier or false on error.
    */
   public function list_alias($base_dn, $filter, $attributes = null, $attrsonly = 0, $sizelimit = 0, $deref = LDAP_DEREF_ALWAYS) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->list_alias($base_dn, $filter)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->list_alias() | ldapsearch -LLL -s one -a " . $this->_get_deref_command($deref) . " -b \"$base_dn\" \"$filter\" " . (isset($attributes) ? implode(" ", $attributes) : ""));
     self::$last_request = "ldap_list($base_dn, $filter, attributes, $attrsonly, $sizelimit, $deref)";
     @ldap_set_option($this->connection, LDAP_OPT_DEREF, $deref);
     return @ldap_list($this->connection, $base_dn, $filter, $this->getMappingAttributes($attributes), $attrsonly, $sizelimit);
+  }
+  /**
+   * Retourne le paramètre -a dans la commande ldapsearch en fonction du deref
+   * 
+   * @param integer $deref LDAP_DEREF_*
+   * 
+   * @return string
+   */
+  private function _get_deref_command($deref) {
+    switch ($deref) {
+      case LDAP_DEREF_NEVER:
+        return 'never';
+      case LDAP_DEREF_SEARCHING:
+        return 'search';
+      case LDAP_DEREF_FINDING:
+        return 'find';
+      case LDAP_DEREF_ALWAYS:
+        return 'always';
+    }
   }
   /**
    * Retourne les entrées trouvées via le Ldap search
@@ -1464,7 +1483,7 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function mod_add($dn, $entry) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->mod_add($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->mod_add() | ldapmodify\r\n" . $this->_print_mod_entry($dn, $entry, 'add'));
     self::$last_request = "ldap_mod_add($dn)";
     $this->emptyCache();
     return @ldap_mod_add($this->connection, $dn, $entry);
@@ -1481,7 +1500,7 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function mod_replace($dn, $entry) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->mod_replace($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->mod_replace() | ldapmodify\r\n" . $this->_print_mod_entry($dn, $entry, 'replace'));
     self::$last_request = "ldap_mod_replace($dn)";
     $this->emptyCache();
     return @ldap_mod_replace($this->connection, $dn, $entry);
@@ -1498,7 +1517,7 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function mod_del($dn, $entry) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->mod_del($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->mod_del() | ldapmodify\r\n" . $this->_print_mod_entry($dn, $entry, 'delete'));
     self::$last_request = "ldap_mod_del($dn)";
     $this->emptyCache();
     return @ldap_mod_del($this->connection, $dn, $entry);
@@ -1513,7 +1532,7 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function add($dn, $entry) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->add($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->add() | ldapadd\r\n" . $this->_print_entry($dn, $entry));
     self::$last_request = "ldap_add($dn)";
     $this->emptyCache();
     return @ldap_add($this->connection, $dn, $entry);
@@ -1529,7 +1548,7 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function modify($dn, $entry) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->modify($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->modify($dn) | ldapmodify\r\n" . $this->_print_entry($dn, $entry));
     self::$last_request = "ldap_modify($dn)";
     $this->emptyCache();
     return @ldap_modify($this->connection, $dn, $entry);
@@ -1542,10 +1561,58 @@ class Ldap {
    * @return bool Cette fonction retourne TRUE en cas de succès ou FALSE si une erreur survient.
    */
   public function delete($dn) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->delete($dn)");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "[" . $this->config['hostname'] . "] " . "Ldap->delete() | ldapdelete \"$dn\"");
     self::$last_request = "ldap_delete($dn)";
     $this->emptyCache();
     return @ldap_delete($this->connection, $dn);
+  }
+  /**
+   * Retourne l'entrée sous format ldif
+   * 
+   * @param string $dn
+   * @param array $entry
+   * 
+   * @return string
+   */
+  private function _print_entry($dn, $entry) {
+    $text = "dn: $dn\r\n";
+    foreach ($entry as $key => $value) {
+      if (is_string($value)) {
+        $text .= "$key: $value\r\n";
+      }
+      else {
+        foreach ($value as $val) {
+          $text .= "$key: $val\r\n";
+        }
+      }      
+    }
+    return $text;
+  }
+  /**
+   * Retourne l'entrée sous format ldif avec changetype: modify
+   * 
+   * @param string $dn
+   * @param array $entry
+   * 
+   * @return string
+   */
+  private function _print_mod_entry($dn, $entry, $type) {
+    $text = "dn: $dn\r\nchangetype: modify\r\n";
+    foreach ($entry as $key => $value) {
+      $text .= "$type: $key";
+      if (is_string($value)) {
+        $text .= "$key: $value\r\n";
+      }
+      else {
+        foreach ($value as $val) {
+          $text .= "$key: $val\r\n";
+        }
+      }
+      if ($key != array_key_last($entry)) {
+        $text .= "-";
+      }
+    }
+    return $text;
   }
   /**
    * Renomme une entrée pour déplacer l'objet dans l'annuaire
@@ -1662,4 +1729,3 @@ class Ldap {
     return $mapAttributes;
   }
 }
-?>

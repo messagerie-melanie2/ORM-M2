@@ -1,3 +1,8 @@
+ORM M2 - 0.6.4.2
+------
+- 0007050: Logguer les commandes ldapsearch, ldapadd, ... dans l'objet Ldap
+- 0007051: Problème dans l'enregistrement d'un utilisateur
+
 ORM M2 - 0.6.4.1
 ------
 - Ajout d'un gitattributes pour nettoyer les releases

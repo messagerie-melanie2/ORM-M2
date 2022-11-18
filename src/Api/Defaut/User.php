@@ -516,11 +516,11 @@ abstract class User extends MceObject {
    * @param boolean $gssapi Utiliser une authentification GSSAPI sans mot de passe
    * @return boolean
    */
-  public function authentification($password = null, $master = false, $user_dn = null, $gssapi = false) {
+  public function authentification($password = null, $master = false, $user_dn = null, $gssapi = false, $itemName = null) {
     if ($master) {
       $this->_server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
     }
-    return $this->objectmelanie->authentification($password, $master, $user_dn, $gssapi);
+    return $this->objectmelanie->authentification($password, $master, $user_dn, $gssapi, $itemName);
   }
 
   /**

@@ -1,3 +1,8 @@
+ORM M2 - 0.6.4.3
+------
+- 0007056: Gestion des itemName sur les objectshares
+- Fix shares pour Api/Gn/User
+
 ORM M2 - 0.6.4.2
 ------
 - 0007050: Logguer les commandes ldapsearch, ldapadd, ... dans l'objet Ldap

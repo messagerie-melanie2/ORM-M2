@@ -65,6 +65,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * Liste des propriétés qui ne peuvent pas être modifiées
    * 
    * @var array Valeur non static
+   * @ignore
    */
   private $_unchangeableProperties;
   /**
@@ -78,6 +79,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * Supporter la création d'un objet ?
    * 
    * @var boolean
+   * @ignore
    */
   private $_supportCreation = false;
 
@@ -85,8 +87,17 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * Configuration de l'objet dans le ldap
    * 
    * @var array
+   * @ignore
    */
   private $_itemConfiguration;
+
+  /**
+   * Nom de l'item chargé en conf
+   * 
+   * @var string
+   * @ignore
+   */
+  private $_itemName;
   
   /**
    * Constructeur de la class
@@ -1195,18 +1206,25 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @param string $server Serveur ou chercher la configuration
    */
   private function readItemConfiguration($itemName, $server) {
+    // Ne pas charger la conf si c'est déjà fait
+    if ($this->_itemName == $itemName) {
+      return;
+    }
     if (isset(Config\Ldap::$SERVERS[$server]) && isset(Config\Ldap::$SERVERS[$server]["items"])) {
       $itemsConf = Config\Ldap::$SERVERS[$server]["items"];
       // Si c'est un itemName par partie on cherche chaque partie dans la conf
       foreach ($this->explodeParts($itemName) as $part) {
         if (isset($itemsConf[$part])) {
           // Si l'itemName est directement dans la configuration
+          $this->_itemName = $itemName;
           $this->_itemConfiguration = $itemsConf[$part];
           $this->_supportCreation = isset($itemsConf[$part]['creation']) ? $itemsConf[$part]['creation'] : false;
           return;
         }
       }
     }
+    // On enregistre le fait qu'on n'a rien trouvé
+    $this->_itemName = $itemName;
   }
 
   /**

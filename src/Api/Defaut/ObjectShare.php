@@ -53,6 +53,7 @@ abstract class ObjectShare extends MceObject {
    * Boite associée à l'objet de partage
    * 
    * @var User
+   * @ignore
    */
   protected $_mailbox;
 
@@ -60,6 +61,7 @@ abstract class ObjectShare extends MceObject {
    * UID de l'utilisateur accédant à l'objet de partage
    * 
    * @var string
+   * @ignore
    */
   protected $_user_uid;
 
@@ -67,6 +69,7 @@ abstract class ObjectShare extends MceObject {
    * UID de la boite possedant l'objet de partage
    * 
    * @var string
+   * @ignore
    */
   protected $_mailbox_uid;
 
@@ -74,8 +77,17 @@ abstract class ObjectShare extends MceObject {
    * Nom de la conf serveur utilisé pour le LDAP
    * 
    * @var string
+   * @ignore
    */
   protected $_server;
+
+  /**
+   * Configuration de l'item name associé à l'objet courant
+   * 
+   * @var string
+   * @ignore
+   */
+  protected $_itemName;
 
   /**
    * Liste des propriétés à sérialiser pour le cache
@@ -89,26 +101,28 @@ abstract class ObjectShare extends MceObject {
 
   /**
    * Constructeur de l'objet
+   * 
+   * @param string $server Serveur d'annuaire a utiliser en fonction de la configuration
+   * @param string $itemName Nom de l'objet associé dans la configuration LDAP
    */
-  public function __construct($server = null) {
+  public function __construct($server = null, $itemName = null) {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
+
+    // Récupération de l'itemName
+    $this->_itemName = $itemName;
+
+    $classUser = $this->__getNamespace() . '\\User';
+
     // Définition de l'utilisateur
-    $this->objectmelanie = new UserMelanie($server);
+    $this->objectmelanie = new UserMelanie($server, null, $classUser::MAPPING, $this->_itemName);
     // Gestion d'un second serveur d'annuaire dans le cas ou les informations sont répartis
     if (isset(\LibMelanie\Config\Ldap::$OTHER_LDAP)) {
-      $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP);
+      $this->otherldapobject = new UserMelanie(\LibMelanie\Config\Ldap::$OTHER_LDAP, null, $classUser::MAPPING, $this->_itemName);
     }
     $this->_server = $server;
-    $classUser = $this->__getNamespace() . '\\User';
-    // Mise en place du mapping
-    if (!empty($classUser::MAPPING)) {
-      foreach (\LibMelanie\Config\Ldap::$SERVERS as $key => $_server) {
-        \LibMelanie\Config\Ldap::$SERVERS[$key]['mapping'] = isset($_server['mapping']) ? \array_merge($classUser::MAPPING, $_server['mapping']) : $classUser::MAPPING;
-      }
-    }
   }
 
   /**
@@ -123,7 +137,7 @@ abstract class ObjectShare extends MceObject {
       $this->_user_uid = $uid[0];
       $this->_mailbox_uid = $uid[1];
       $class = $this->__getNamespace() . '\\User';
-      $this->_mailbox = new $class($this->_server);
+      $this->_mailbox = new $class($this->_server, $this->_itemName);
       $this->_mailbox->uid = $this->_mailbox_uid;
       if (!$this->_mailbox->load()) {
         $this->_mailbox = null;

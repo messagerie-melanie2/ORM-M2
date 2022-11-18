@@ -1,12 +1,12 @@
 <?php
 /**
  * Ce fichier est développé pour la gestion de la lib MCE
- * 
+ *
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * 
+ *
  * ORM Mél Copyright © 2021 Groupe Messagerie/MTE
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -33,13 +33,13 @@ use LibMelanie\Config\MappingMce;
 
 /**
  * Classe utilisateur par defaut
- * 
+ *
  * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/Defaut
  * @api
- * 
- * @property string $dn DN de l'utilisateur dans l'annuaire            
+ *
+ * @property string $dn DN de l'utilisateur dans l'annuaire
  * @property string $uid Identifiant unique de l'utilisateur
  * @property string $fullname Nom complet de l'utilisateur
  * @property string $name Nom de l'utilisateur
@@ -48,13 +48,13 @@ use LibMelanie\Config\MappingMce;
  * @property array $email_list Liste de toutes les adresses email de l'utilisateur
  * @property string $email_send Adresse email d'émission principale de l'utilisateur
  * @property array $email_send_list Liste de toutes les adresses email d'émission de l'utilisateur
- * 
+ *
  * @property Share[] $shares Liste des partages de la boite
  * @property-read array $supported_shares Liste des droits supportés par cette boite
- * 
+ *
  * @property-read boolean $is_synchronisation_enable Est-ce que la synchronisation est activée pour l'utilisateur ?
  * @property-read string $synchronisation_profile Profil de synchronisation positionné pour l'utilisateur (STANDARD ou SENSIBLE)
- * 
+ *
  * @property-read boolean $is_individuelle Est-ce qu'il s'agit d'une boite individuelle ?
  * @property-read boolean $is_partagee Est-ce qu'il s'agit d'une boite partagée ?
  * @property-read boolean $is_fonctionnelle Est-ce qu'il s'agit d'une boite fonctionnelle ?
@@ -65,34 +65,34 @@ use LibMelanie\Config\MappingMce;
  * @property-read boolean $is_applicative Est-ce qu'il s'agit d'une boite applicative ?
  * @property-read boolean $is_list Est-ce qu'il s'agit d'une liste ?
  * @property-read boolean $is_listab Est-ce qu'il s'agit d'une list a abonnement ?
- * 
+ *
  * @method bool save() Enregistrement de l'utilisateur dans l'annuaire
  */
 abstract class User extends MceObject {
   /**
    * Objet de partage associé a l'utilisateur courant si nécessaire
-   * 
+   *
    * @var ObjectShare
    */
   protected $objectshare;
 
   /**
    * UserMelanie provenant d'un autre annuaire
-   * 
+   *
    * @var UserMelanie
    */
   protected $otherldapobject;
 
   /**
    * Liste des workspaces de l'utilisateur
-   * 
+   *
    * @var Workspace[]
    * @ignore
    */
   protected $_userWorkspaces;
   /**
    * Liste de tous les workspaces auquel l'utilisateur a accés
-   * 
+   *
    * @var Workspace[]
    * @ignore
    */
@@ -100,28 +100,28 @@ abstract class User extends MceObject {
 
   /**
    * Liste des news que l'utilisateur peut consulter
-   * 
+   *
    * @var News\News[]
    * @ignore
    */
   protected $_userNews;
   /**
    * Dernière news que l'utilisateur peut consulter
-   * 
+   *
    * @var News\News
    * @ignore
    */
   protected $_userLastNews;
   /**
    * Liste des rss que l'utilisateur peut consulter
-   * 
+   *
    * @var News\Rss[]
    * @ignore
    */
   protected $_userRss;
   /**
    * Liste des droits de l'utilisateur sur les news et rss
-   * 
+   *
    * @var News\NewsShare[]
    * @ignore
    */
@@ -129,21 +129,21 @@ abstract class User extends MceObject {
 
   /**
    * Calendrier par défaut de l'utilisateur
-   * 
+   *
    * @var Calendar
    * @ignore
    */
   protected $_defaultCalendar;
   /**
    * Liste des calendriers de l'utilisateur
-   * 
+   *
    * @var Calendar[]
    * @ignore
    */
   protected $_userCalendars;
   /**
    * Liste de tous les calendriers auquel l'utilisateur a accés
-   * 
+   *
    * @var Calendar[]
    * @ignore
    */
@@ -151,20 +151,20 @@ abstract class User extends MceObject {
 
   /**
    * Carnet d'adresses par défaut de l'utilisateur
-   * 
+   *
    * @var Addressbook
    */
   protected $_defaultAddressbook;
   /**
    * Liste des carnets d'adresses de l'utilisateur
-   * 
+   *
    * @var Addressbook
    * @ignore
    */
   protected $_userAddressbooks;
   /**
    * Liste de tous les carnets d'adresses auquel l'utilisateur a accés
-   * 
+   *
    * @var Addressbook
    * @ignore
    */
@@ -172,21 +172,21 @@ abstract class User extends MceObject {
 
   /**
    * Liste de tâches par défaut de l'utilisateur
-   * 
+   *
    * @var Taskslist
    * @ignore
    */
   protected $_defaultTaskslist;
   /**
    * Liste des listes de tâches de l'utilisateur
-   * 
+   *
    * @var Taskslist
    * @ignore
    */
   protected $_userTaskslists;
   /**
    * Liste de toutes les listes de tâches auquel l'utilisateur a accés
-   * 
+   *
    * @var Taskslist
    * @ignore
    */
@@ -194,21 +194,21 @@ abstract class User extends MceObject {
 
   /**
    * Liste des objets partagés accessibles à l'utilisateur
-   * 
+   *
    * @var ObjectShare[]
    * @ignore
    */
   protected $_objectsShared;
   /**
    * Liste des objets partagés accessibles en emission à l'utilisateur
-   * 
+   *
    * @var ObjectShare[]
    * @ignore
    */
   protected $_objectsSharedEmission;
   /**
    * Liste des objets partagés accessibles en gestionnaire à l'utilisateur
-   * 
+   *
    * @var ObjectShare[]
    * @ignore
    */
@@ -216,21 +216,21 @@ abstract class User extends MceObject {
 
   /**
    * Liste des boites partagées accessibles à l'utilisateur
-   * 
+   *
    * @var User[]
    * @ignore
    */
   protected $_shared;
   /**
    * Liste des boites partagées accessibles en emission à l'utilisateur
-   * 
+   *
    * @var User[]
    * @ignore
    */
   protected $_sharedEmission;
   /**
    * Liste des boites partagées accessibles en gestionnaire à l'utilisateur
-   * 
+   *
    * @var User[]
    * @ignore
    */
@@ -238,14 +238,14 @@ abstract class User extends MceObject {
 
   /**
    * Liste des partages pour l'objet courant
-   * 
+   *
    * @var Share[]
    * @ignore
    */
   protected $_shares;
   /**
    * Liste des groupes pour l'objet courant
-   * 
+   *
    * @var Group[]
    * @ignore
    */
@@ -253,7 +253,7 @@ abstract class User extends MceObject {
 
   /**
    * Nom de la conf serveur utilisé pour le LDAP
-   * 
+   *
    * @var string
    * @ignore
    */
@@ -261,7 +261,7 @@ abstract class User extends MceObject {
 
   /**
    * Est-ce que l'objet est déjà chargé depuis l'annuaire ?
-   * 
+   *
    * @var boolean
    * @ignore
    */
@@ -269,7 +269,7 @@ abstract class User extends MceObject {
 
   /**
    * Est-ce que l'objet existe dans l'annuaire ?
-   * 
+   *
    * @var boolean
    * @ignore
    */
@@ -277,7 +277,7 @@ abstract class User extends MceObject {
 
   /**
    * Liste des preferences de l'utilisateur
-   * 
+   *
    * @var UserPrefs[]
    * @ignore
    */
@@ -323,7 +323,7 @@ abstract class User extends MceObject {
   /**
    * Droits d'envoi de messages sur la boite
    */
-  protected static $_sharesSend = ['G', 'C']; 
+  protected static $_sharesSend = ['G', 'C'];
 
   /**
    * Droits de niveau administrateur ou gestionnaire sur la boite
@@ -332,7 +332,7 @@ abstract class User extends MceObject {
 
   /**
    * Configuration de l'item name associé à l'objet courant
-   * 
+   *
    * @var string
    * @ignore
    */
@@ -376,109 +376,109 @@ abstract class User extends MceObject {
   // **** Configuration des filtres et des attributs par défaut
   /**
    * Filtre pour la méthode load()
-   * 
+   *
    * @ignore
    */
   const LOAD_FILTER = null;
   /**
    * Filtre pour la méthode load() avec un email
-   * 
+   *
    * @ignore
    */
   const LOAD_FROM_EMAIL_FILTER = null;
   /**
    * Attributs par défauts pour la méthode load()
-   * 
+   *
    * @ignore
    */
   const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_routage', 'shares', 'type'];
   /**
    * Filtre pour la méthode load() si c'est un objet de partage
-   * 
+   *
    * @ignore
    */
   const LOAD_OBJECTSHARE_FILTER = null;
   /**
    * Filtre pour la méthode load() avec un email si c'est un object de partage
-   * 
+   *
    * @ignore
    */
   const LOAD_OBJECTSHARE_FROM_EMAIL_FILTER = null;
   /**
    * Attributs par défauts pour la méthode load() si c'est un objet de partage
-   * 
+   *
    * @ignore
    */
   const LOAD_OBJECTSHARE_ATTRIBUTES = ['fullname', 'uid', 'email_send', 'email_send_list', 'shares'];
   /**
    * Filtre pour la méthode getBalp()
-   * 
+   *
    * @ignore
    */
   const GET_BALP_FILTER = null;
   /**
    * Attributs par défauts pour la méthode getBalp()
-   * 
+   *
    * @ignore
    */
   const GET_BALP_ATTRIBUTES = ['fullname', 'email_send', 'email_send_list', 'uid', 'shares'];
   /**
    * Filtre pour la méthode getBalpEmission()
-   * 
+   *
    * @ignore
    */
   const GET_BALP_EMISSION_FILTER = null;
   /**
    * Attributs par défauts pour la méthode getBalpEmission()
-   * 
+   *
    * @ignore
    */
   const GET_BALP_EMISSION_ATTRIBUTES = self::GET_BALP_ATTRIBUTES;
   /**
    * Filtre pour la méthode getBalpGestionnaire()
-   * 
+   *
    * @ignore
    */
   const GET_BALP_GESTIONNAIRE_FILTER = null;
   /**
    * Attributs par défauts pour la méthode getBalpGestionnaire()
-   * 
+   *
    * @ignore
    */
   const GET_BALP_GESTIONNAIRE_ATTRIBUTES = self::GET_BALP_ATTRIBUTES;
   /**
    * Filtre pour la méthode getGroups()
-   * 
+   *
    * @ignore
    */
   const GET_GROUPS_FILTER = null;
   /**
    * Attributs par défauts pour la méthode getGroups()
-   * 
+   *
    * @ignore
    */
   const GET_GROUPS_ATTRIBUTES = ['dn','fullname','type','email','members'];
   /**
    * Filtre pour la méthode getGroupsIsMember()
-   * 
+   *
    * @ignore
    */
   const GET_GROUPS_IS_MEMBER_FILTER = null;
   /**
    * Attributs par défauts pour la méthode getGroupsIsMember()
-   * 
+   *
    * @ignore
    */
   const GET_GROUPS_IS_MEMBER_ATTRIBUTES = self::GET_GROUPS_ATTRIBUTES;
   /**
    * Filtre pour la méthode getListsIsMember()
-   * 
+   *
    * @ignore
    */
   const GET_LISTS_IS_MEMBER_FILTER = null;
   /**
    * Attributs par défauts pour la méthode getListsIsMember()
-   * 
+   *
    * @ignore
    */
   const GET_LISTS_IS_MEMBER_ATTRIBUTES = self::GET_GROUPS_ATTRIBUTES;
@@ -490,14 +490,14 @@ abstract class User extends MceObject {
 
   /**
    * Constructeur de l'objet
-   * 
+   *
    * @param string $server Serveur d'annuaire a utiliser en fonction de la configuration
    * @param string $itemName Nom de l'objet associé dans la configuration LDAP
    */
   public function __construct($server = null, $itemName = null) {
     // Défini la classe courante
     $this->get_class = get_class($this);
-    
+
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct($server)");
 
     // Récupération de l'itemName
@@ -514,14 +514,14 @@ abstract class User extends MceObject {
 
   /**
 	 * Récupère le délimiteur d'un objet de partage
-	 * 
+	 *
 	 * @return string ObjectShare::DELIMITER
 	 */
 	protected function getObjectShareDelimiter() {
     $class = $this->__getNamespace() . '\\ObjectShare';
 		return $class::DELIMITER;
 	}
-   
+
   /**
    * ***************************************************
    * METHOD MAPPING
@@ -529,7 +529,7 @@ abstract class User extends MceObject {
   /**
    * Enregistrement de l'objet
    * Nettoie le cache du user
-   * 
+   *
    * @return null si erreur, boolean sinon (true insert, false update)
    */
   public function save() {
@@ -541,7 +541,7 @@ abstract class User extends MceObject {
   /**
    * Suppression de l'objet
    * Nettoie le cache du user
-   * 
+   *
    * @return boolean
    */
   public function delete() {
@@ -558,7 +558,7 @@ abstract class User extends MceObject {
    * @param string $user_dn DN de l'utilisateur si ce n'est pas le courant a utiliser
    * @param boolean $gssapi Utiliser une authentification GSSAPI sans mot de passe
    * @param string $itemName Nom de l'objet associé dans la configuration LDAP
-   * 
+   *
    * @return boolean
    */
   public function authentification($password = null, $master = false, $user_dn = null, $gssapi = false, $itemName = null) {
@@ -576,9 +576,9 @@ abstract class User extends MceObject {
 
   /**
    * Charge les données de l'utilisateur depuis l'annuaire (en fonction de l'uid ou l'email)
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
-   * 
+   *
    * @return boolean true si l'objet existe dans l'annuaire false sinon
    */
   public function load($attributes = null) {
@@ -623,9 +623,9 @@ abstract class User extends MceObject {
   /**
    * Est-ce que l'utilisateur existe dans l'annuaire (en fonction de l'uid ou l'email)
    * Effectue un load cette méthode a donc peu d'intéret dans cet objet
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
-   * 
+   *
    * @return boolean true si l'objet existe dans l'annuaire false sinon
    */
   public function exists($attributes = null) {
@@ -651,10 +651,10 @@ abstract class User extends MceObject {
 
   /**
    * Est-ce que l'utilisateur a les droits demandés sur cette boite
-   * 
+   *
    * @param string $username
    * @param string $right Voir User::RIGHT_*
-   * 
+   *
    * @return boolean
    */
   public function asRight($username, $right) {
@@ -681,7 +681,7 @@ abstract class User extends MceObject {
 
   /**
    * Récupère la liste des objets de partage accessibles à l'utilisateur
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    *
    * @return ObjectShare[] Liste d'objets
@@ -696,7 +696,7 @@ abstract class User extends MceObject {
         $attributes = static::GET_BALP_ATTRIBUTES;
       }
       $filter = static::GET_BALP_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
           && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_partagees_filter'])) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_partagees_filter'];
       }
@@ -714,7 +714,7 @@ abstract class User extends MceObject {
 
   /**
    * Récupère la liste des boites partagées à l'utilisateur
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    *
    * @return User[] Liste de boites
@@ -729,7 +729,7 @@ abstract class User extends MceObject {
         $attributes = static::GET_BALP_ATTRIBUTES;
       }
       $filter = static::GET_BALP_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
           && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_partagees_filter'])) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_partagees_filter'];
       }
@@ -746,7 +746,7 @@ abstract class User extends MceObject {
 
   /**
    * Récupère la liste des objets de partage accessibles au moins en émission à l'utilisateur
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    *
    * @return ObjectShare[] Liste d'objets
@@ -761,7 +761,7 @@ abstract class User extends MceObject {
         $attributes = static::GET_BALP_EMISSION_ATTRIBUTES;
       }
       $filter = static::GET_BALP_EMISSION_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
           && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_emission_filter'])) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_emission_filter'];
       }
@@ -779,7 +779,7 @@ abstract class User extends MceObject {
 
   /**
    * Récupère la liste des boites accessibles au moins en émission à l'utilisateur
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    *
    * @return User[] Liste d'objets
@@ -794,7 +794,7 @@ abstract class User extends MceObject {
         $attributes = static::GET_BALP_EMISSION_ATTRIBUTES;
       }
       $filter = static::GET_BALP_EMISSION_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
           && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_emission_filter'])) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_emission_filter'];
       }
@@ -811,7 +811,7 @@ abstract class User extends MceObject {
 
   /**
    * Récupère la liste des objets de partage accessibles en tant que gestionnaire pour l'utilisateur
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    *
    * @return ObjectShare[] Liste d'objets
@@ -826,7 +826,7 @@ abstract class User extends MceObject {
         $attributes = static::GET_BALP_GESTIONNAIRE_ATTRIBUTES;
       }
       $filter = static::GET_BALP_GESTIONNAIRE_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
           && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_gestionnaire_filter'])) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_gestionnaire_filter'];
       }
@@ -844,7 +844,7 @@ abstract class User extends MceObject {
 
   /**
    * Récupère la liste des boites accessibles en tant que gestionnaire pour l'utilisateur
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    *
    * @return User[] Liste d'objets
@@ -859,7 +859,7 @@ abstract class User extends MceObject {
         $attributes = static::GET_BALP_GESTIONNAIRE_ATTRIBUTES;
       }
       $filter = static::GET_BALP_GESTIONNAIRE_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
           && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_gestionnaire_filter'])) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_gestionnaire_filter'];
       }
@@ -876,7 +876,7 @@ abstract class User extends MceObject {
 
   /**
    * Récupère la liste des groupes dont l'utilisateur est propriétaire
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    *
    * @return Group[] Liste d'objets
@@ -891,7 +891,7 @@ abstract class User extends MceObject {
         $attributes = static::GET_GROUPS_ATTRIBUTES;
       }
       $filter = static::GET_GROUPS_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
           && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_groups_filter'])) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_groups_filter'];
       }
@@ -909,7 +909,7 @@ abstract class User extends MceObject {
 
   /**
    * Récupère la liste des groupes dont l'utilisateur est membre
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    *
    * @return Group[] Liste d'objets
@@ -924,7 +924,7 @@ abstract class User extends MceObject {
         $attributes = static::GET_GROUPS_IS_MEMBER_ATTRIBUTES;
       }
       $filter = static::GET_GROUPS_IS_MEMBER_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
           && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_groups_user_member_filter'])) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_groups_user_member_filter'];
       }
@@ -942,7 +942,7 @@ abstract class User extends MceObject {
 
   /**
    * Récupère la liste des listes de diffusion dont l'utilisateur est membre
-   * 
+   *
    * @param array $attributes [Optionnal] List of attributes to load
    *
    * @return Group[] Liste d'objets
@@ -957,7 +957,7 @@ abstract class User extends MceObject {
         $attributes = static::GET_LISTS_IS_MEMBER_ATTRIBUTES;
       }
       $filter = static::GET_LISTS_IS_MEMBER_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
           && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_lists_user_member_filter'])) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_lists_user_member_filter'];
       }
@@ -975,10 +975,10 @@ abstract class User extends MceObject {
 
   /**
    * Récupère la préférence de l'utilisateur
-   * 
+   *
    * @param string $scope Scope de la préférence, voir User::PREF_SCOPE*
    * @param string $name Nom de la préférence
-   * 
+   *
    * @return string La valeur de la préférence si elle existe, null sinon
    */
   public function getPreference($scope, $name) {
@@ -994,9 +994,9 @@ abstract class User extends MceObject {
   }
   /**
    * Récupération de la préférence avec un scope Default
-   * 
+   *
    * @param string $name Nom de la préférence
-   * 
+   *
    * @return string La valeur de la préférence si elle existe, null sinon
    */
   public function getDefaultPreference($name) {
@@ -1004,9 +1004,9 @@ abstract class User extends MceObject {
   }
   /**
    * Récupération de la préférence avec un scope Calendar
-   * 
+   *
    * @param string $name Nom de la préférence
-   * 
+   *
    * @return string La valeur de la préférence si elle existe, null sinon
    */
   public function getCalendarPreference($name) {
@@ -1014,9 +1014,9 @@ abstract class User extends MceObject {
   }
   /**
    * Récupération de la préférence avec un scope Taskslist
-   * 
+   *
    * @param string $name Nom de la préférence
-   * 
+   *
    * @return string La valeur de la préférence si elle existe, null sinon
    */
   public function getTaskslistPreference($name) {
@@ -1024,9 +1024,9 @@ abstract class User extends MceObject {
   }
   /**
    * Récupération de la préférence avec un scope Addressbook
-   * 
+   *
    * @param string $name Nom de la préférence
-   * 
+   *
    * @return string La valeur de la préférence si elle existe, null sinon
    */
   public function getAddressbookPreference($name) {
@@ -1052,11 +1052,11 @@ abstract class User extends MceObject {
 
   /**
    * Enregistre la préférence de l'utilisateur
-   * 
+   *
    * @param string $scope Scope de la préférence, voir User::PREF_SCOPE*
    * @param string $name Nom de la préférence
    * @param string $value Valeur de la préférence a enregistrer
-   * 
+   *
    * @return boolean
    */
   public function savePreference($scope, $name, $value) {
@@ -1073,14 +1073,14 @@ abstract class User extends MceObject {
     $this->_preferences["$scope:$name"]->value = $value;
     $ret = $this->_preferences["$scope:$name"]->save();
     $this->executeCache();
-    return !is_null($ret);  
+    return !is_null($ret);
   }
   /**
    * Enregistre la préférence de l'utilisateur avec le scope Default
-   * 
+   *
    * @param string $name Nom de la préférence
    * @param string $value Valeur de la préférence a enregistrer
-   * 
+   *
    * @return boolean
    */
   public function saveDefaultPreference($name, $value) {
@@ -1088,10 +1088,10 @@ abstract class User extends MceObject {
   }
   /**
    * Enregistre la préférence de l'utilisateur avec le scope Calendar
-   * 
+   *
    * @param string $name Nom de la préférence
    * @param string $value Valeur de la préférence a enregistrer
-   * 
+   *
    * @return boolean
    */
   public function saveCalendarPreference($name, $value) {
@@ -1099,10 +1099,10 @@ abstract class User extends MceObject {
   }
   /**
    * Enregistre la préférence de l'utilisateur avec le scope Taskslist
-   * 
+   *
    * @param string $name Nom de la préférence
    * @param string $value Valeur de la préférence a enregistrer
-   * 
+   *
    * @return boolean
    */
   public function saveTaskslistPreference($name, $value) {
@@ -1110,10 +1110,10 @@ abstract class User extends MceObject {
   }
   /**
    * Enregistre la préférence de l'utilisateur avec le scope Addressbook
-   * 
+   *
    * @param string $name Nom de la préférence
    * @param string $value Valeur de la préférence a enregistrer
-   * 
+   *
    * @return boolean
    */
   public function saveAddressbookPreference($name, $value) {
@@ -1122,10 +1122,10 @@ abstract class User extends MceObject {
 
   /**
    * Supprime la préférence de l'utilisateur
-   * 
+   *
    * @param string $scope Scope de la préférence, voir User::PREF_SCOPE*
    * @param string $name Nom de la préférence
-   * 
+   *
    * @return boolean
    */
   public function deletePreference($scope, $name) {
@@ -1142,17 +1142,17 @@ abstract class User extends MceObject {
     $ret = $this->_preferences["$scope:$name"]->delete();
     unset($this->_preferences["$scope:$name"]);
     $this->executeCache();
-    return !is_null($ret);  
+    return !is_null($ret);
   }
 
   /**
    * Retourne la liste des workspaces de l'utilisateur
-   * 
+   *
    * @param string $orderby [Optionnel] nom du champ a trier
    * @param boolean $asc [Optionnel] tri ascendant ?
    * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
    * @param integer $offset [Optionnel] offset pour la pagination
-   * 
+   *
    * @return Workspace[]
    */
   public function getUserWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
@@ -1218,12 +1218,12 @@ abstract class User extends MceObject {
 
   /**
    * Retourne la liste des workspaces de l'utilisateur et ceux qui lui sont partagés
-   * 
+   *
    * @param string $orderby [Optionnel] nom du champ a trier
    * @param boolean $asc [Optionnel] tri ascendant ?
    * @param integer $limit [Optionnel] limite du nombre de résultats à retourner
    * @param integer $offset [Optionnel] offset pour la pagination
-   * 
+   *
    * @return Workspace[]
    */
   public function getSharedWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
@@ -1271,7 +1271,7 @@ abstract class User extends MceObject {
   }
 
   /**
-   * Nettoyer les donnés en cache 
+   * Nettoyer les donnés en cache
    * (appelé lors de la modification d'un workspace)
    */
   public function cleanWorkspaces() {
@@ -1282,7 +1282,7 @@ abstract class User extends MceObject {
 
   /**
    * Permet de lister les droits de l'utilisateur sur les news et les flux rss
-   * 
+   *
    * @return News\NewsShare[]
    */
   public function getUserNewsShares() {
@@ -1299,7 +1299,7 @@ abstract class User extends MceObject {
   }
 
   /**
-   * Nettoyer les donnés en cache 
+   * Nettoyer les donnés en cache
    * (appelé lors de la modification d'un NewsShare)
    */
   public function cleanNewsShare() {
@@ -1309,14 +1309,14 @@ abstract class User extends MceObject {
 
   /**
    * Permet de lister les services associés à l'utilisateur
-   * 
+   *
    * @param boolean $sharedServices [Optionnal] Permet de lister les services associés aux droits de l'utilisateurs
-   * 
+   *
    * @return array Liste des services de l'utilisateur
    */
   protected function _get_user_services($sharedServices = true) {
     // Supprimer la base dn du dn pour limiter les services
-    if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
+    if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
         && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['base_dn'])) {
       $userDn = trim(str_replace(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['base_dn'], '', $this->dn), ',');
     }
@@ -1346,7 +1346,7 @@ abstract class User extends MceObject {
 
   /**
    * Permet de parcourir les news et définir si l'utilisateur courant en est un publisher
-   * 
+   *
    * @param News\News[]|News\Rss[] [in/out]
    */
   protected function _set_news_is_publisher(&$news) {
@@ -1372,7 +1372,7 @@ abstract class User extends MceObject {
 
   /**
    * Permet de définir si l'utilisateur courant en est un publisher de la news
-   * 
+   *
    * @param News\News|News\Rss [in/out]
    */
   public function isNewsPublisher(&$news) {
@@ -1397,10 +1397,10 @@ abstract class User extends MceObject {
   /**
    * Parcours la liste des services pour déterminer si le service en fait parti
    * Il peut également être un sous service d'un service de la liste et donc en faire partie
-   * 
+   *
    * @param string $service
    * @param array $servicesList
-   * 
+   *
    * @return boolean
    */
   protected function _is_in_services($service, $servicesList) {
@@ -1414,7 +1414,7 @@ abstract class User extends MceObject {
 
   /**
    * Retourne toutes les news de l'utilisateur liées à son service ou à ses droits
-   * 
+   *
    * @return News\News[]
    */
   public function getUserNews() {
@@ -1436,7 +1436,7 @@ abstract class User extends MceObject {
 
   /**
    * Retourne la dernière news de l'utilisateur liée à son service ou à ses droits
-   * 
+   *
    * @return News\News
    */
   public function getUserLastNews() {
@@ -1462,7 +1462,7 @@ abstract class User extends MceObject {
    * Récupère les deux dernières news associées à l'utilisateur
    * Retourne la news la plus récente du service le plus éloigné de l'utilisateur (service national)
    * et la news la plus récente du service le plus proche de l'utilisateur
-   * 
+   *
    * @return array 2 news au maximum, la plus proche et la plus loin
    */
   public function getUserLastTwoNews() {
@@ -1482,7 +1482,7 @@ abstract class User extends MceObject {
     }
 
     // Récupérer la première et la dernière news
-    $first = null; 
+    $first = null;
     $last = null;
 
     foreach ($newsByService as $news) {
@@ -1500,7 +1500,7 @@ abstract class User extends MceObject {
   }
 
   /**
-   * Nettoyer les donnés en cache 
+   * Nettoyer les donnés en cache
    * (appelé lors de la modification d'une news)
    */
   public function cleanNews() {
@@ -1511,7 +1511,7 @@ abstract class User extends MceObject {
 
   /**
    * Retourne tous les rss de l'utilisateur liées à son service ou à ses droits
-   * 
+   *
    * @return News\Rss
    */
   public function getUserRss() {
@@ -1532,7 +1532,7 @@ abstract class User extends MceObject {
   }
 
   /**
-   * Nettoyer les donnés en cache 
+   * Nettoyer les donnés en cache
    * (appelé lors de la modification d'un rss)
    */
   public function cleanRss() {
@@ -1543,9 +1543,9 @@ abstract class User extends MceObject {
   /**
    * Récupération des notifications de l'utilisateur
    * Si $last est positionné, récupère les notifications depuis le dernier timestamp
-   * 
+   *
    * @param integer $last [Optionnel] Dernier timestamp de récupération des notifications
-   * 
+   *
    * @return Notification[] Liste des notifications de l'utilisateur
    */
   public function getNotifications($last = null) {
@@ -1560,16 +1560,16 @@ abstract class User extends MceObject {
       $_notif->modified = $last;
       $_operators['modified'] = MappingMce::supeq;
     }
-    
+
     return $_notif->getList(null, null, $_operators, 'created', false);
   }
 
   /**
    * Passe la notification de l'utilisateur en read (ou non si $read = false)
-   * 
+   *
    * @param string|Notification $notification Notification ou uid de la notification
    * @param boolean $read Passer en lu ?
-   * 
+   *
    * @return boolean
    */
   public function readNotification($notification, $read = true) {
@@ -1596,9 +1596,9 @@ abstract class User extends MceObject {
 
   /**
    * Supprime la notification de l'utilisateur
-   * 
+   *
    * @param string|Notification $notification Notification ou uid de la notification
-   * 
+   *
    * @return boolean
    */
   public function deleteNotification($notification) {
@@ -1616,9 +1616,9 @@ abstract class User extends MceObject {
 
   /**
    * Ajoute la notification pour l'utilisateur
-   * 
+   *
    * @param Notification $notification Notification
-   * 
+   *
    * @return string|boolean Uid de la nouvelle notification si Ok, false sinon
    */
   public function addNotification($notification) {
@@ -1652,7 +1652,7 @@ abstract class User extends MceObject {
 
   /**
    * Retourne le calendrier par défaut
-   * 
+   *
    * @return Calendar Calendrier par défaut de l'utilisateur, null s'il n'existe pas
    */
   public function getDefaultCalendar() {
@@ -1689,9 +1689,9 @@ abstract class User extends MceObject {
 
   /**
    * Modifie le calendrier par défaut de l'utilisateur
-   * 
+   *
    * @param string|Calendar $calendar Calendrier à mettre par défaut pour l'utilisateur
-   * 
+   *
    * @return boolean
    */
   public function setDefaultCalendar($calendar) {
@@ -1720,9 +1720,9 @@ abstract class User extends MceObject {
 
   /**
    * Création du calendrier par défaut pour l'utilisateur courant
-   * 
+   *
    * @param string $calendarName [Optionnel] Nom du calendrier
-   * 
+   *
    * @return true si la création est OK, false sinon
    */
   public function createDefaultCalendar($calendarName = null) {
@@ -1752,7 +1752,7 @@ abstract class User extends MceObject {
 
   /**
    * Retourne la liste des calendriers de l'utilisateur
-   * 
+   *
    * @return Calendar[]
    */
   public function getUserCalendars() {
@@ -1803,7 +1803,7 @@ abstract class User extends MceObject {
 
   /**
    * Retourne la liste des calendriers de l'utilisateur et ceux qui lui sont partagés
-   * 
+   *
    * @return Calendar[]
    */
   public function getSharedCalendars() {
@@ -1836,7 +1836,7 @@ abstract class User extends MceObject {
   }
 
   /**
-   * Nettoyer les donnés en cache 
+   * Nettoyer les donnés en cache
    * (appelé lors de la modification d'un calendrier)
    */
   public function cleanCalendars() {
@@ -1845,10 +1845,10 @@ abstract class User extends MceObject {
     $this->_sharedCalendars = null;
     $this->executeCache();
   }
-  
+
   /**
    * Retourne la liste de tâches par défaut
-   * 
+   *
    * @return Taskslist
    */
   public function getDefaultTaskslist() {
@@ -1885,9 +1885,9 @@ abstract class User extends MceObject {
 
   /**
    * Modifie la liste de tâches par défaut de l'utilisateur
-   * 
+   *
    * @param string|Taskslist $taskslist Liste de tâches à mettre par défaut pour l'utilisateur
-   * 
+   *
    * @return boolean
    */
   public function setDefaultTaskslist($taskslist) {
@@ -1916,9 +1916,9 @@ abstract class User extends MceObject {
 
   /**
    * Création de la liste de taches par défaut pour l'utilisateur courant
-   * 
+   *
    * @param string $taskslistName [Optionnel] Nom de la liste de taches
-   * 
+   *
    * @return true si la création est OK, false sinon
    */
   public function createDefaultTaskslist($taskslistName = null) {
@@ -1946,7 +1946,7 @@ abstract class User extends MceObject {
 
   /**
    * Retourne la liste des liste de tâches de l'utilisateur
-   * 
+   *
    * @return Taskslist[]
    */
   public function getUserTaskslists() {
@@ -1996,7 +1996,7 @@ abstract class User extends MceObject {
 
   /**
    * Retourne la liste des liste de taches de l'utilisateur et celles qui lui sont partagés
-   * 
+   *
    * @return Taskslist[]
    */
   public function getSharedTaskslists() {
@@ -2029,7 +2029,7 @@ abstract class User extends MceObject {
   }
 
   /**
-   * Nettoyer les donnés en cache 
+   * Nettoyer les donnés en cache
    * (appelé lors de la modification d'un calendrier)
    */
   public function cleanTaskslists() {
@@ -2038,10 +2038,10 @@ abstract class User extends MceObject {
     $this->_sharedTaskslists = null;
     $this->executeCache();
   }
-  
+
   /**
    * Retourne la liste de contacts par défaut
-   * 
+   *
    * @return Addressbook
    */
   public function getDefaultAddressbook() {
@@ -2077,9 +2077,9 @@ abstract class User extends MceObject {
 
   /**
    * Modifie le carnet d'adresses par défaut de l'utilisateur
-   * 
+   *
    * @param string|Addressbook $addressbook Carnet d'adresses à mettre par défaut pour l'utilisateur
-   * 
+   *
    * @return boolean
    */
   public function setDefaultAddressbook($addressbook) {
@@ -2108,9 +2108,9 @@ abstract class User extends MceObject {
 
   /**
    * Création du carnet d'adresses par défaut pour l'utilisateur courant
-   * 
+   *
    * @param string $addressbookName [Optionnel] Nom du carnet d'adresses
-   * 
+   *
    * @return true si la création est OK, false sinon
    */
   public function createDefaultAddressbook($addressbookName = null) {
@@ -2138,7 +2138,7 @@ abstract class User extends MceObject {
 
   /**
    * Retourne la liste des liste de contacts de l'utilisateur
-   * 
+   *
    * @return Addressbook[]
    */
   public function getUserAddressbooks() {
@@ -2187,7 +2187,7 @@ abstract class User extends MceObject {
   }
   /**
    * Retourne la liste des liste de contacts de l'utilisateur et celles qui lui sont partagés
-   * 
+   *
    * @return Addressbook[]
    */
   public function getSharedAddressbooks() {
@@ -2220,7 +2220,7 @@ abstract class User extends MceObject {
   }
 
   /**
-   * Nettoyer les donnés en cache 
+   * Nettoyer les donnés en cache
    * (appelé lors de la modification d'un calendrier)
    */
   public function cleanAddressbooks() {
@@ -2229,14 +2229,14 @@ abstract class User extends MceObject {
     $this->_sharedAddressbooks = null;
     $this->executeCache();
   }
-  
+
   /**
    * ***************************************************
    * DATA MAPPING
    */
   /**
    * Est-ce que l'utilisateur est en fait un objet de partage ?
-   * 
+   *
    * @return boolean true s'il s'agit d'un objet de partage, false sinon
    */
   protected function getMapIs_objectshare() {
@@ -2246,14 +2246,14 @@ abstract class User extends MceObject {
       return false;
     }
 
-    return isset($this->uid) && strpos($this->uid, $this->getObjectShareDelimiter()) !== false 
+    return isset($this->uid) && strpos($this->uid, $this->getObjectShareDelimiter()) !== false
         || isset($this->email) && strpos($this->email, $this->getObjectShareDelimiter()) !== false;
   }
 
   /**
    * Récupère l'objet de partage associé à l'utilisateur courant
    * si celui ci est bien un objet de partage
-   * 
+   *
    * @return ObjectShare Objet de partage associé, null si pas d'objet de partage
    */
   protected function getMapObjectshare() {
@@ -2264,7 +2264,7 @@ abstract class User extends MceObject {
     }
 
     if (!isset($this->objectshare)) {
-      if (isset($this->uid) && strpos($this->uid, $this->getObjectShareDelimiter()) !== false 
+      if (isset($this->uid) && strpos($this->uid, $this->getObjectShareDelimiter()) !== false
           || isset($this->email) && strpos($this->email, $this->getObjectShareDelimiter()) !== false) {
         $class = $this->__getNamespace() . '\\ObjectShare';
         $this->objectshare = new $class($this->_server, $this->_itemName);
@@ -2276,7 +2276,7 @@ abstract class User extends MceObject {
 
   /**
    * Mapping is_synchronisation_enable field
-   * 
+   *
    * @return boolean true si la synchronisation est activée pour l'utilisateur
    */
   protected function getMapIs_synchronisation_enable() {
@@ -2285,9 +2285,9 @@ abstract class User extends MceObject {
 
   /**
    * Mapping is_synchronisation_enable field
-   * 
+   *
    * @param string $is_synchronisation_enable Si la synchronisation de l'utilisateur est activée
-   * 
+   *
    * @return boolean false non supporté
    */
   protected function setMapIs_synchronisation_enable($is_synchronisation_enable) {
@@ -2296,7 +2296,7 @@ abstract class User extends MceObject {
 
   /**
    * Mapping synchronisation_profile field
-   * 
+   *
    * @return string Profil de synchronisation de l'utilisateur
    */
   protected function getMapSynchronisation_profile() {
@@ -2305,9 +2305,9 @@ abstract class User extends MceObject {
 
   /**
    * Mapping synchronisation_profile field
-   * 
+   *
    * @param string $synchronisation_profile Profil de synchronisation de l'utilisateur
-   * 
+   *
    * @return boolean false non supporté
    */
   protected function setMapSynchronisation_profile($synchronisation_profile) {
@@ -2316,7 +2316,7 @@ abstract class User extends MceObject {
 
   /**
    * Mapping is_individuelle field
-   * 
+   *
    * @return boolean true si la boite est individuelle
    */
   protected function getMapIs_individuelle() {
@@ -2325,7 +2325,7 @@ abstract class User extends MceObject {
 
   /**
    * Mapping is_partagee field
-   * 
+   *
    * @return boolean true si la boite est partagée
    */
   protected function getMapIs_partagee() {
@@ -2334,7 +2334,7 @@ abstract class User extends MceObject {
 
   /**
    * Mapping is_fonctionnelle field
-   * 
+   *
    * @return boolean true si la boite est fonctionnelle
    */
   protected function getMapIs_fonctionnelle() {
@@ -2343,16 +2343,16 @@ abstract class User extends MceObject {
 
   /**
    * Mapping is_ressource field
-   * 
+   *
    * @return boolean true si la boite est une ressource
    */
   protected function getMapIs_ressource() {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_RESSOURCE);
   }
-  
+
   /**
    * Mapping is_unite field
-   * 
+   *
    * @return boolean true si la boite est une unite
    */
   protected function getMapIs_unite() {
@@ -2361,7 +2361,7 @@ abstract class User extends MceObject {
 
   /**
    * Mapping is_service field
-   * 
+   *
    * @return boolean true si la boite est un service
    */
   protected function getMapIs_service() {
@@ -2370,7 +2370,7 @@ abstract class User extends MceObject {
 
   /**
    * Mapping is_personne field
-   * 
+   *
    * @return boolean true si la boite est une personne
    */
   protected function getMapIs_personne() {
@@ -2379,7 +2379,7 @@ abstract class User extends MceObject {
 
   /**
    * Mapping is_applicative field
-   * 
+   *
    * @return boolean true si la boite est une application
    */
   protected function getMapIs_applicative() {
@@ -2388,7 +2388,7 @@ abstract class User extends MceObject {
 
   /**
    * Mapping is_list field
-   * 
+   *
    * @return boolean true si la boite est une list
    */
   protected function getMapIs_list() {
@@ -2397,7 +2397,7 @@ abstract class User extends MceObject {
 
   /**
    * Mapping is_listab field
-   * 
+   *
    * @return boolean true si la boite est une listab
    */
   protected function getMapIs_listab() {
@@ -2406,7 +2406,7 @@ abstract class User extends MceObject {
 
   /**
    * Mapping is_mailbox field
-   * 
+   *
    * @return boolean true s'il s'agit bien d'une boite (valeur par défaut pour la MCE)
    */
   protected function getMapIs_mailbox() {
@@ -2415,7 +2415,7 @@ abstract class User extends MceObject {
 
   /**
    * Mapping shares field
-   * 
+   *
    * @return Share[] Liste des partages de l'objet
    */
   protected function getMapShares() {

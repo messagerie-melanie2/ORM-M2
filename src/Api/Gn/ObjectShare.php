@@ -48,6 +48,24 @@ class ObjectShare extends Defaut\ObjectShare {
   const DELIMITER = '.-.';
 
 
+//   /**
+//   * Retourne l'uid de l'utilisateur de l'objet de partage
+//   *
+//   * @return string
+//   */
+//  protected function getMapUser_uid() {
+//    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUser_Uid()");
+//    if (!isset($this->_user_uid)) {
+//        $this->uid;
+//        print $this->uid;die('ok');
+//        preg_match("/(?P<user>.+?)\.\-\.(?P<balp>.+?)@(?P<domain>.+?)/", $this->uid, $m);
+//      $uid = explode(static::DELIMITER, $this->uid, 2);
+//      $this->_user_uid = $uid[0];
+//      $this->_mailbox_uid = $uid[1];
+//    }
+//    return $this->_user_uid;
+//  }
+
     /**
      * Retourne la boite mail associée à l'objet de partage
      *
@@ -65,6 +83,9 @@ class ObjectShare extends Defaut\ObjectShare {
             $this->_mailbox = new $class($this->_server, $this->_itemName);
             $this->_mailbox->uid = $this->_mailbox_uid;
             $this->_mailbox->load();
+//            if (!$this->_mailbox->load()) {
+//                $this->_mailbox = null;
+//            }
         }
         return $this->_mailbox;
     }

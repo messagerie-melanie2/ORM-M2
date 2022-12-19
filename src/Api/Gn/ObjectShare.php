@@ -1,12 +1,12 @@
 <?php
 /**
  * Ce fichier est développé pour la gestion de la lib MCE
- * 
+ *
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * 
+ *
  * ORM Mél Copyright © 2021 Groupe Messagerie/MTE
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -26,12 +26,12 @@ use LibMelanie\Log\M2Log;
 
 /**
  * Classe objet partagé LDAP pour GN
- * 
+ *
  * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/GN
  * @api
- * 
+ *
  * @property string $uid Identifiant unique de l'utilisateur
  * @property string $fullname Nom complet de l'utilisateur
  * @property string $email_send Adresse email d'émission principale de l'utilisateur
@@ -42,11 +42,29 @@ use LibMelanie\Log\M2Log;
 class ObjectShare extends Defaut\ObjectShare {
   /**
    * Délimiteur de l'objet de partage
-   * 
+   *
    * @var string
    */
   const DELIMITER = '.-.';
 
+
+//   /**
+//   * Retourne l'uid de l'utilisateur de l'objet de partage
+//   *
+//   * @return string
+//   */
+//  protected function getMapUser_uid() {
+//    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUser_Uid()");
+//    if (!isset($this->_user_uid)) {
+//        $this->uid;
+//        print $this->uid;die('ok');
+//        preg_match("/(?P<user>.+?)\.\-\.(?P<balp>.+?)@(?P<domain>.+?)/", $this->uid, $m);
+//      $uid = explode(static::DELIMITER, $this->uid, 2);
+//      $this->_user_uid = $uid[0];
+//      $this->_mailbox_uid = $uid[1];
+//    }
+//    return $this->_user_uid;
+//  }
 
     /**
      * Retourne la boite mail associée à l'objet de partage
@@ -54,7 +72,7 @@ class ObjectShare extends Defaut\ObjectShare {
      * @return User
      */
     protected function getMapMailbox() {
-        M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapMailbox()");
+        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapMailbox()");
         if (!isset($this->_mailbox)) {
             $uid = explode(static::DELIMITER, $this->uid, 2);
             $this->_user_uid = $uid[0];
@@ -65,6 +83,9 @@ class ObjectShare extends Defaut\ObjectShare {
             $this->_mailbox = new $class($this->_server, $this->_itemName);
             $this->_mailbox->uid = $this->_mailbox_uid;
             $this->_mailbox->load();
+//            if (!$this->_mailbox->load()) {
+//                $this->_mailbox = null;
+//            }
         }
         return $this->_mailbox;
     }
@@ -75,7 +96,7 @@ class ObjectShare extends Defaut\ObjectShare {
    * @return string
    */
   protected function getMapUser_uid() {
-    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapUser_Uid()");
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUser_Uid()");
     if (!isset($this->_user_uid)) {
         $uid = explode(static::DELIMITER, $this->uid, 2);
         $this->_user_uid = $uid[0];
@@ -92,7 +113,7 @@ class ObjectShare extends Defaut\ObjectShare {
    * @return string
    */
   protected function getMapMailbox_uid() {
-    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapMailbox_uid()");
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapMailbox_uid()");
     if (!isset($this->_mailbox_uid)) {
         $this->_mailbox_uid = $this->mailbox->uid;
     }

@@ -155,7 +155,7 @@ class User extends Mce\User {
 
   /**
    * Mapping shares field
-   *
+   * 
    * @return Share[] Liste des partages positionnés sur cette boite
    */
   protected function getMapShares() {

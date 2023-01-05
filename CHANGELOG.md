@@ -1,3 +1,9 @@
+ORM M2 - 0.6.5
+------
+- 0007426: Avancer la date de fin de récurrence devrait supprimer les occurrences postérieures
+- 0007433: [MagicObject] Conserver la valeur avant modification d'un champ
+- 0007427: Modifier toutes les occurrences devrait également modifier les occurrences modifiées si possible
+
 ORM M2 - 0.6.4.3
 ------
 - 0007056: Gestion des itemName sur les objectshares

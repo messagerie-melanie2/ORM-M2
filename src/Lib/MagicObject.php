@@ -451,7 +451,9 @@ abstract class MagicObject implements Serializable {
     if (isset($this->data[$lname]) && is_scalar($value) && !is_array($value) && $this->data[$lname] === $value) {
       return false;
     }
-    $this->oldData[$lname] = $this->data[$lname];
+    if (isset($this->data[$lname])) {
+      $this->oldData[$lname] = $this->data[$lname];
+    }
     $this->data[$lname] = $value;
     $this->haschanged[$lname] = true;
     $this->isLoaded = false;

@@ -129,6 +129,7 @@ class User extends Mce\User {
     "matricule"               => 'matricule',                     // Matricule de l'utilisateur
     "employeenumber"          => 'employeenumber',                // Employee number de l'utilisateur
     "profil"                  => 'mceportailprofil',
+    "direction"               => 'mceportaildirection',
   ];
 
   /**

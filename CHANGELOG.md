@@ -1,3 +1,8 @@
+ORM M2 - 0.6.5.1
+------
+- 0007471: [VCard] Une liste de contacts est basé sur les id
+- 0007472: [MagicObject] La valeur précédente peut être vide il ne faut donc pas la conserver
+
 ORM M2 - 0.6.5
 ------
 - 0007426: Avancer la date de fin de récurrence devrait supprimer les occurrences postérieures

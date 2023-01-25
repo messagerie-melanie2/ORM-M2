@@ -114,7 +114,6 @@ class ContactToVCard {
           foreach ($_contacts as $_c) {
             $vcontact->add(VCard::MEMBER, 'urn:uuid:' . $_c->uid);
           }
-          
         }
       }
     }

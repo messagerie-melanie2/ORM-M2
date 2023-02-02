@@ -48,6 +48,7 @@ abstract class Group extends MceObject {
    * Nom de la conf serveur utilisé pour le LDAP
    * 
    * @var string
+   * @ignore
    */
   protected $_server;
 
@@ -55,6 +56,7 @@ abstract class Group extends MceObject {
    * Est-ce que l'objet est déjà chargé depuis l'annuaire ?
    * 
    * @var boolean
+   * @ignore
    */
   protected $_isLoaded;
 
@@ -62,6 +64,7 @@ abstract class Group extends MceObject {
    * Est-ce que l'objet existe dans l'annuaire ?
    * 
    * @var boolean
+   * @ignore
    */
   protected $_isExist;
 
@@ -69,6 +72,7 @@ abstract class Group extends MceObject {
    * Liste des membres du groupe
    * 
    * @var User[]
+   * @ignore
    */
   protected $_members;
 
@@ -80,6 +84,14 @@ abstract class Group extends MceObject {
     '_isLoaded',
     '_isExist',
   ];
+
+  /**
+   * Configuration de l'item name associé à l'objet courant
+   * 
+   * @var string
+   * @ignore
+   */
+  protected $_itemName;
 
   // **** Configuration des filtres et des attributs par défaut
   /**
@@ -119,8 +131,12 @@ abstract class Group extends MceObject {
     $this->get_class = get_class($this);
     
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
+
+    // Récupération de l'itemName
+    $this->_itemName = $itemName;
+
     // Définition de l'utilisateur
-    $this->objectmelanie = new GroupMelanie($server, null, static::MAPPING, $itemName);
+    $this->objectmelanie = new GroupMelanie($server, null, static::MAPPING, $this->_itemName);
 
     $this->_server = $server;
   }
@@ -147,13 +163,22 @@ abstract class Group extends MceObject {
    * @param string $password
    * @param boolean $master Utiliser le serveur maitre (nécessaire pour faire des modifications)
    * @param string $user_dn DN de l'utilisateur si ce n'est pas le courant a utiliser
+   * @param boolean $gssapi Utiliser une authentification GSSAPI sans mot de passe
+   * @param string $itemName Nom de l'objet associé dans la configuration LDAP
+   * 
    * @return boolean
    */
-  public function authentification($password, $master = false, $user_dn = null) {
+  public function authentification($password, $master = false, $user_dn = null, $gssapi = false, $itemName = null) {
     if ($master) {
       $this->_server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
     }
-    return $this->objectmelanie->authentification($password, $master, $user_dn);
+
+    // Récupération de l'itemName
+    if (isset($itemName)) {
+      $this->_itemName = $itemName;
+    }
+    
+    return $this->objectmelanie->authentification($password, $master, $user_dn, $gssapi, $this->_itemName);
   }
 
   /**

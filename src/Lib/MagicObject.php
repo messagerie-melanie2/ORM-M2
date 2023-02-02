@@ -38,6 +38,11 @@ abstract class MagicObject implements Serializable {
 	 * @var array
 	 */
 	protected $data = [];
+  /**
+   * Stockage des anciennes données lors d'un changement
+   * @var array
+   */
+  protected $oldData = [];
 	/**
 	 * Défini si les propriété ont changé pour les requêtes SQL
 	 * @var array
@@ -109,9 +114,30 @@ abstract class MagicObject implements Serializable {
 	 */
 	protected function initializeHasChanged() {
 		foreach ($this->haschanged as $key => $value) {
-      		$this->haschanged[$key] = false;
-    	}
+      $this->haschanged[$key] = false;
+    }
+    // Effacer les anciennes données
+    $this->oldData = [];
 	}
+
+  /**
+   * Retourne les données avant la modification
+   * 
+   * @param string $name
+   * @return mixed
+   */
+  public function getOldData($name) {
+    $lname = strtolower($name);
+	  // Récupèration des données de mapping
+	  if (isset(MappingMce::$Data_Mapping[$this->objectType])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
+      $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
+    }
+    if (isset($this->oldData[$lname])) {
+      return $this->oldData[$lname];
+    }
+	  return null;
+  }
 	
 	/**
 	 * Détermine si le champ a changé
@@ -424,6 +450,9 @@ abstract class MagicObject implements Serializable {
     }
     if (isset($this->data[$lname]) && is_scalar($value) && !is_array($value) && $this->data[$lname] === $value) {
       return false;
+    }
+    if (isset($this->data[$lname])) {
+      $this->oldData[$lname] = $this->data[$lname];
     }
     $this->data[$lname] = $value;
     $this->haschanged[$lname] = true;

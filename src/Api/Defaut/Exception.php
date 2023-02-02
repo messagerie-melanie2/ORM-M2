@@ -56,6 +56,7 @@ use LibMelanie\Config\Config;
  * @property Recurrence $recurrence Inaccessible depuis une exception
  * @property bool $deleted Défini si l'exception est un évènement ou juste une suppression
  * @property string $recurrence_id Défini la date de l'exception pour l'occurrence (nouvelle version)
+ * @property-read \Datetime $dtrecurrence_id Défini la date de l'exception pour l'occurrence (nouvelle version) en Datetime
  * @property-read string $realuid UID réellement stocké dans la base de données (utilisé pour les exceptions) (Lecture seule)
  * 
  * @method bool load() Chargement l'évènement, en fonction du calendar et de l'uid
@@ -70,6 +71,13 @@ class Exception extends Event {
    * @var Event $eventParent
    */
   private $eventParent;
+
+  /**
+   * DateTime basée sur le recurrence_id
+   * 
+   * @var \DateTime
+   */
+  protected $_dtrecurrence_id;
   
   // Constantes
   const RECURRENCE_ID = '@RECURRENCE-ID';
@@ -323,6 +331,23 @@ class Exception extends Event {
       $_recId = date("Y-m-d", strtotime($_recId)) . ' ' . $startTime->format('H:i:s');
     }
     return $_recId;
+  }
+
+  /**
+   * Mapping dtrecurrence_id field
+   */
+  protected function getMapDtrecurrence_id() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDtrecurrence_id()");
+    if (!isset($this->_dtrecurrence_id)) {
+      try {
+        $this->_dtrecurrence_id = new \DateTime($this->getMapRecurrence_id(), new \DateTimeZone($this->getMapTimezone()));
+      }
+      catch (\Exception $ex) {
+        M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->getMapDtrecurrence_id() Erreur pour l'événement '" . $this->objectmelanie->uid . "' : " . $ex->getMessage());
+        $this->_dtrecurrence_id = new \DateTime();
+      }
+    }
+    return $this->_dtrecurrence_id;
   }
   
   /**

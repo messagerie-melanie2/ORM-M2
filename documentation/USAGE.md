@@ -76,6 +76,30 @@ Pour aller un peu plus loin et avoir une instanciation dynamique des objets en f
   }
 ```
 
+Même chose pour la récupération d'une constante de classe, il est possible d'utiliser la lecture dynamique pour récupérer sa valeur en fonction du namespace.
+
+```php
+  /**
+   * Return constantName value from objectName and NS
+   *
+   * @param string $objectName Name of the object
+   * @param string $constantName Name of the constant
+   *
+   * @return mixed constant value
+   */
+  public static function const($objectName, $constantName) {
+    return constant(static::$_objectsNS . $objectName . '::' . $constantName);
+  }
+```
+
+Puis ensuite de récupérer la valeur de la constante de classe.
+
+```php
+$value = \myclass::const('User', 'RIGHT_SEND')
+```
+
+Permet de récupérer la valeur de la constante `User::RIGHT_SEND` avec User qui dépend du namespace configuré.
+
 ## B/ User
 
 ### 1 - Chargement d'un utilisateur

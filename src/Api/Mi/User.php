@@ -94,7 +94,8 @@ class User extends Mce\User {
     "shares"                  => [MappingMce::name => 'mcedelegation', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
     "server_routage"          => 'mailhost',                      // Champ utilisé pour le routage des messages
     "type"                    => 'mcetypecompte',                 // Type d'entrée (boite individuelle, partagée, ressource, ...)
-    "street"                  => 'postaladdress',                        // Rue
+    "postaladdress"           => 'postaladdress',                 // Postal address
+    "street"                  => 'street',                        // Rue
     "postalcode"              => 'postalcode',                    // Code postal
     "locality"                => 'l',                             // Ville
     "title"                   => 'title',                         // Titre
@@ -124,10 +125,11 @@ class User extends Mce\User {
     "mceportailmethodauth"    => 'mceportailmethodauth',          // Method d'authentification
 
     "ou"                      => 'ou',                            // OU associé à l'entrée
-    "gestionnaire"            => 'gestionnaire',                  // Gestionnaire de la boite
+    "gestionnaire"            => 'mceportailgestionnaire',        // Gestionnaire de la boite
     "matricule"               => 'matricule',                     // Matricule de l'utilisateur
     "employeenumber"          => 'employeenumber',                // Employee number de l'utilisateur
     "profil"                  => 'mceportailprofil',
+    "direction"               => 'mceportaildirection',
   ];
 
   /**

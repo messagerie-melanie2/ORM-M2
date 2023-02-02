@@ -59,18 +59,36 @@ class VCardToContact {
 	  $vcontact = VObject\Reader::read($vcard);
 	  $contact->uid = (string)$vcontact->UID;
 
-	  if (isset($vcontact->KIND)
-	      && strtolower($vcontact->KIND) == 'group') {
+    $kind = isset($vcontact->KIND) ? strtolower((string)$vcontact->KIND) : 
+              (isset($vcontact->{"X-ADDRESSBOOKSERVER-KIND"}) ? strtolower((string)$vcontact->{"X-ADDRESSBOOKSERVER-KIND"}) : null);
+
+	  if (isset($kind)
+	      && $kind == 'group') {
 	    // Type list
       $contact->type = Contact::TYPE_LIST;
       // Members list
       $members = [];
       if (isset($vcontact->MEMBER)) {
         foreach($vcontact->MEMBER as $vcontact_member) {
-          $members[] = $vcontact_member->getValue();
+          $value = $vcontact_member->getValue();
+          if (strpos($value, 'urn:uuid:') === 0) {
+            $members[] = substr($vcontact_member->getValue(), 9);
+          }
         }
       }
-      $contact->members = serialize($members);
+      // Convertir les uid des membres en id des contacts
+      $ids = [];
+      $class = get_class($contact);
+      $_contact = new $class([$contact->getUserMelanie(), $contact->getAddressbookMelanie()]);
+      $_contact->type = Contact::TYPE_CONTACT;
+      $_contact->uid = $members;
+      $_contacts = $_contact->getList('id');
+      if (is_array($_contacts) && count($_contacts)) {
+        foreach ($_contacts as $_c) {
+          $ids[] = $_c->id;
+        }
+      }
+      $contact->members = serialize($ids);
       // Group name
       $contact->lastname = (string)$vcontact->FN;
     }

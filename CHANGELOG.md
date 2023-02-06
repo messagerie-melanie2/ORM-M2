@@ -1,3 +1,11 @@
+ORM M2 - 0.6.5.2
+------
+- 0007480: Optimisation LDAP pour les participants
+- 0007479: Optimisation lecture LDAP pour les participants liste
+- 0007495: Support du champ modifiedtime pour les User
+- 0007496: Ajouter le support du fullname et de l'email du creator
+- 0007498: [ICS] Rendre configurable l'affichage du createur dans la description
+
 ORM M2 - 0.6.5.1
 ------
 - 0007471: [VCard] Une liste de contacts est basé sur les id

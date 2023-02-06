@@ -557,8 +557,24 @@ class EventToICS {
         $vevent->add(ICS::X_CALDAV_CALENDAR_ID, $calendar->id);
         $vevent->add(ICS::X_CALDAV_CALENDAR_OWNER, $calendar->owner);
         // MANTIS 4002: Ajouter le creator dans la description lors de la génération de l'ICS
-        if ($event->owner != $calendar->owner && !empty($event->owner) && strpos($vevent->DESCRIPTION, "[" . $event->owner . "]") === false) {
-          $vevent->DESCRIPTION = "[" . $event->owner . "]\n\n" . $vevent->DESCRIPTION;
+        if (Config::get(Config::ALWAYS_SHOW_EVENT_CREATOR) || $event->owner != $calendar->owner && !empty($event->owner)) {
+          if ($event->owner == $user->uid) {
+            $creatorText = Config::get(Config::SHARED_EVENT_CREATOR_SELF);
+          }
+          else {
+            $creatorText = Config::get(Config::SHARED_EVENT_CREATOR);
+          }
+          
+          if (isset($creatorText) 
+              && (strpos($creatorText, '%%uid%%') === false || isset($event->owner))
+              && (strpos($creatorText, '%%email%%') === false || isset($event->creator_email))
+              && (strpos($creatorText, '%%name%%') === false || isset($event->creator_name))) {
+            $creatorText = str_replace(
+                ['%%uid%%', '%%email%%', '%%name%%', '%%date%%'], 
+                [$event->owner, $event->creator_email, $event->creator_name, date(Config::get(Config::SHARED_EVENT_CREATION_DATE_FORMAT), $event->created)], 
+                $creatorText);
+            $vevent->DESCRIPTION = "[$creatorText]\n\n" . $vevent->DESCRIPTION;
+          }
         }
       }
       // Sequence

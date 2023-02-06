@@ -125,7 +125,14 @@ class ICSToEvent {
           $object->owner = $event->owner;
         }
         else {
-          $object->owner = isset($user) && isset($user->uid) ? $user->uid : $calendar->owner;
+          if (isset($user) && isset($user->uid)) {
+            $object->owner = $user->uid;
+            $object->creator_email = $user->email;
+            $object->creator_name = $user->name;
+          }
+          else {
+            $object->owner = $calendar->owner;
+          }
         }        
       }
       // DTSTART & DTEND

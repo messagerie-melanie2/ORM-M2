@@ -44,6 +44,8 @@ use LibMelanie\Config\DefaultConfig;
  * @property string $calendar Identifiant du calendrier de l'évènement
  * @property string $uid UID de l'évènement
  * @property string $owner Créateur de l'évènement
+ * @property string $creator_email Email du créateur de l'évènement
+ * @property string $creator_name Nom du créateur de l'évènement
  * @property string $keywords Keywords
  * @property string $title Titre de l'évènement
  * @property string $description Description de l'évènement
@@ -350,6 +352,16 @@ class Event extends MceObject {
     
   }
   /**
+   * Positionne un attribut uniquement en json 
+   * le temps que lightning attributes est toujours utilisée en écriture
+   */
+  protected function setAttributeJson($name, $value) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setAttributeJson($name, $value)");
+    $attributes = json_decode($this->objectmelanie->properties, true);
+    $attributes[$name] = $value;
+    $this->objectmelanie->properties = json_encode($attributes);
+  }
+  /**
    * Met à jour ou ajoute l'attribut
    * 
    * @param string $name
@@ -395,7 +407,7 @@ class Event extends MceObject {
         $this->attributes[$name] = $eventproperty;
       }
       // 0005093: Ne plus utiliser la table lightning_attributes
-      $this->objectmelanie->properties = $this->attributesToJson($this->attributes);
+      $this->attributesToJson();
     }
   }
   /**
@@ -409,7 +421,7 @@ class Event extends MceObject {
     $this->attributes = $attributes;
     $this->attributes_loaded = true;
     // 0005093: Ne plus utiliser la table lightning_attributes
-    $this->objectmelanie->properties = $this->attributesToJson($this->attributes);
+    $this->attributesToJson();
   }
   /**
    * Suppression d'un attribut
@@ -426,7 +438,7 @@ class Event extends MceObject {
       if ($this->attributes[$name]->delete()) {
         unset($this->attributes[$name]);
         // 0005093: Ne plus utiliser la table lightning_attributes
-        $this->objectmelanie->properties = $this->attributesToJson($this->attributes);
+        $this->attributesToJson();
       }
     }
     return false;
@@ -434,15 +446,24 @@ class Event extends MceObject {
 
   /**
    * Converti la liste des attributs en une valeur json exploitable
-   * 
-   * @return string json properties
    */
   protected function attributesToJson() {
+    $propsToKeep = ['creator_email', 'creator_name'];
     $properties = [];
+    $oldProperties = json_decode($this->objectmelanie->properties, true);
+
+    // Enregistrer les anciennes properties
+    foreach ($propsToKeep as $prop) {
+      if (isset($oldProperties[$prop])) {
+        $properties[$prop] = $oldProperties[$prop];
+      }
+    }
+
+    // Enregistrer les nouvelles properties
     foreach ($this->attributes as $name => $attribute) {
       $properties[$name] = $attribute->value;
     }
-    return json_encode($properties);
+    $this->objectmelanie->properties = json_encode($properties);
   }
   
   /**
@@ -2361,17 +2382,32 @@ class Event extends MceObject {
       $_attendees = unserialize($object_attendees);
       $this->_attendees = [];
       $newAttendees = [];
+
       if (is_array($_attendees) && count($_attendees) > 0) {
         $Attendee = $this->__getNamespace() . '\\Attendee';
+
+        // Rechercher dans les participants pour ne pas avoir à chercher dans les listes
+        $attendeeFound = false;
+        if (isset($this->user->email)) {
+          foreach ($_attendees as $key => $_attendee) {
+            if (strtolower($key) == strtolower($this->user->email)) {
+              $attendeeFound = true;
+              break;
+            }
+          }
+        }
+
+        // Traitement des participants
         foreach ($_attendees as $key => $_attendee) {
           $attendee = new $Attendee($this);
           $attendee->setEmail($key);
           $attendee->define($_attendee);
 
           // MANTIS 0006191: Mode en attente lorsque le participant est une liste
-          if ($this->getMapOrganizer()->owner_uid != $this->user->uid 
+          if ($this->getMapOrganizer()->owner_uid != $this->user->uid
+              && !$attendeeFound
               && $attendee->is_list) {
-            $this->attendeeIsList($attendee, $newAttendees, $Attendee);
+            $this->attendeeIsList($attendee, $newAttendees, $Attendee, $attendeeFound);
           }
 
           $this->_attendees[] = $attendee;
@@ -2389,21 +2425,26 @@ class Event extends MceObject {
    * @param Attendee $attendee
    * @param Attendee[] $attendees [In/Out]
    * @param string $Attendee
+   * @param boolean $attendeeFound [In/Out]
    */
-  protected function attendeeIsList($attendee, &$attendees, $Attendee) {
+  protected function attendeeIsList($attendee, &$attendees, $Attendee, &$attendeeFound) {
     $members = $attendee->members;
     if (is_array($members)) {
       foreach ($members as $member) {
+        if ($attendeeFound) {
+          break;
+        }
         // L'utilisateur existe bien dans l'annuaire
         $listAttendee = new $Attendee();
         $listAttendee->email = $member;
 
         if ($listAttendee->is_list) {
-          $this->attendeeIsList($listAttendee, $attendees, $Attendee);
+          $this->attendeeIsList($listAttendee, $attendees, $Attendee, $attendeeFound);
         }
         else if ($listAttendee->uid == $this->user->uid) {
           $listAttendee->response = Attendee::RESPONSE_NEED_ACTION;
           $listAttendee->role = $attendee->role;
+          $attendeeFound = true;
 
           $attendees[] = $listAttendee;
         }
@@ -2475,6 +2516,56 @@ class Event extends MceObject {
       $deleted = $deleted || isset($this->objectmelanie->exceptions) && strlen($this->objectmelanie->exceptions) > 16;
     }
     return $deleted;
+  }
+
+  /**
+   * Mapping creator_email field
+   * 
+   * @param bool $creator_email          
+   */
+  protected function setMapCreator_email($creator_email) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapCreator_email($creator_email)");
+    $this->setAttributeJson('creator_email', $creator_email);
+  }
+  /**
+   * Mapping creator_email field
+   */
+  protected function getMapCreator_email() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCreator_email()");
+    return $this->getAttribute('creator_email');
+  }
+  /**
+   * Mapping creator_email field
+   */
+  protected function issetMapCreator_email() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapCreator_email()");
+    $ret = $this->getAttribute('creator_email');
+    return isset($ret);
+  }
+
+  /**
+   * Mapping creator_name field
+   * 
+   * @param bool $creator_name          
+   */
+  protected function setMapCreator_name($creator_name) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapCreator_name($creator_name)");
+    $this->setAttributeJson('creator_name', $creator_name);
+  }
+  /**
+   * Mapping creator_name field
+   */
+  protected function getMapCreator_name() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCreator_name()");
+    return $this->getAttribute('creator_name');
+  }
+  /**
+   * Mapping creator_name field
+   */
+  protected function issetMapCreator_name() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapCreator_name()");
+    $ret = $this->getAttribute('creator_name');
+    return isset($ret);
   }
   
   /**

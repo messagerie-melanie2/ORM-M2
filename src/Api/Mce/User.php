@@ -155,6 +155,7 @@ class User extends Defaut\User {
     "postalcode"              => 'postalcode',                    // Code postal
     "locality"                => 'l',                             // Ville
     "title"                   => 'title',                         // Titre
+    "modifiedtime"            => 'mcemodifiedtimestamp',
   ];
   
   /**

@@ -215,7 +215,13 @@ class DefaultConfig {
   const DECLINED = "declined";
   const IN_PROCESS = "in_process";
   const SELF_INVITE_ATTENDEE = "self_invite";
+  const NEED_ACTION_ATTENDEE = "need_action";
   const IS_SAVED_ATTENDEE = "is_saved";
+  const IS_LIST_ATTENDEE = "is_list";
+  const IS_INDIVIDUELLE_ATTENDEE = "is_ind";
+  const IS_RESSOURCE_ATTENDEE = "is_res";
+  const IS_EXTERNAL_ATTENDEE = "is_ext";
+  const UID_ATTENDEE = "uid";
   // const TENTATIVE = "tentative"; // -> see Status
   
   /* Attendee role */
@@ -256,6 +262,29 @@ class DefaultConfig {
 
   /* Quel texte utilisé pour le via, mots clés : %%creator_name%%, %%creator_fullname%%, %%owner_name%%, %%owner_fullname%% */
 	const SHARED_INVITATION_TEXT = ' (via %%creator_name%%) - ';
+
+  /**
+   * Toujours afficher le créateur de l'événement même si ce n'est pas un événement partagé ?
+   */
+  const ALWAYS_SHOW_EVENT_CREATOR = false;
+
+  /* Quel texte afficher dans la description ICS si le créateur de l'événement n'est pas le propriétaire du calendrier ?
+      Si null rien ne sera affiché
+      mots clés : %%name%%, %%uid%%, %%email%%, %%date%%
+  */
+  const SHARED_EVENT_CREATOR = "Créé le %%date%% par %%name%%";
+
+  /* Quel texte afficher dans la description ICS si le créateur de l'événement n'est pas le propriétaire du calendrier ?
+      Cas ou le créateur est l'utilisateur courant
+      Si null rien ne sera affiché
+      mots clés : %%name%%, %%uid%%, %%email%%, %%date%%
+  */
+  const SHARED_EVENT_CREATOR_SELF = "Créé le %%date%% par vous";
+
+  /**
+   * Format à utiliser pour la date de création de l'événement
+   */
+  const SHARED_EVENT_CREATION_DATE_FORMAT = 'd/m/Y à H\hi';
   
   /**
    * Droits sur les objets Melanie2

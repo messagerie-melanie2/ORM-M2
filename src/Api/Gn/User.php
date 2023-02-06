@@ -103,6 +103,7 @@ class User extends Mce\User {
     "displayname"             => 'displayname', 
     "employeenumber"          => 'employeenumber',
     "givenname"               => 'givenname',
+    "modifiedtime"            => 'mcemodifiedtimestamp',
   ];
 
   /**

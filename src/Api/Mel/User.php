@@ -268,6 +268,7 @@ class User extends Defaut\User {
     "cerbere"                   => [MappingMce::name => 'info', MappingMce::prefixLdap => 'AUTH.Cerbere:', MappingMce::type => MappingMce::stringLdap],
     "double_authentification"   => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => 'DoubleAuth.Obligatoire: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'oui', MappingMce::falseLdapValue => 'non'],
     "is_mailbox"                => [MappingMce::name => 'objectclass', MappingMce::trueLdapValue => 'mineqMelBoite', MappingMce::type => MappingMce::booleanLdap],             // Est-ce qu'il s'agit bien d'une boite Mél ?
+    "modifiedtime"              => 'mineqmodifiedtimestamp',
   ];
 
   /**

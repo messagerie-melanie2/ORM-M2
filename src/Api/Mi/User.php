@@ -130,6 +130,7 @@ class User extends Mce\User {
     "employeenumber"          => 'employeenumber',                // Employee number de l'utilisateur
     "profil"                  => 'mceportailprofil',
     "direction"               => 'mceportaildirection',
+    "modifiedtime"            => 'mcemodifiedtimestamp',
   ];
 
   /**

@@ -1,3 +1,8 @@
+ORM M2 - 0.6.5.3
+------
+- 0007510: Ajouter un champ pour le quota nextCloud
+- PR #7 Bugfix/mailbox partage
+
 ORM M2 - 0.6.5.2
 ------
 - 0007480: Optimisation LDAP pour les participants

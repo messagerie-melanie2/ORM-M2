@@ -21,6 +21,8 @@
 namespace LibMelanie\Api\Gn;
 
 use LibMelanie\Api\Defaut;
+use LibMelanie\Api\Defaut\User;
+use LibMelanie\Log\M2Log;
 
 /**
  * Classe objet partagé LDAP pour GN
@@ -44,4 +46,56 @@ class ObjectShare extends Defaut\ObjectShare {
    * @var string
    */
   const DELIMITER = '.-.';
+
+
+    /**
+     * Retourne la boite mail associée à l'objet de partage
+     *
+     * @return User
+     */
+    protected function getMapMailbox() {
+        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapMailbox()");
+        if (!isset($this->_mailbox)) {
+            $uid = explode(static::DELIMITER, $this->uid, 2);
+            $this->_user_uid = $uid[0];
+            $this->_mailbox_uid = $uid[1];
+            $d = explode('@', $this->_mailbox_uid);
+            $this->_user_uid .= "@".$d[1];
+            $class = $this->__getNamespace() . '\\User';
+            $this->_mailbox = new $class($this->_server, $this->_itemName);
+            $this->_mailbox->uid = $this->_mailbox_uid;
+            $this->_mailbox->load();
+        }
+        return $this->_mailbox;
+    }
+
+      /**
+   * Retourne l'uid de l'utilisateur de l'objet de partage
+   *
+   * @return string
+   */
+  protected function getMapUser_uid() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUser_Uid()");
+    if (!isset($this->_user_uid)) {
+        $uid = explode(static::DELIMITER, $this->uid, 2);
+        $this->_user_uid = $uid[0];
+        $this->_mailbox_uid = $uid[1];
+        $d = explode('@', $this->_mailbox_uid);
+        $this->_user_uid .= "@".$d[1];
+    }
+    return $this->_user_uid;
+  }
+
+    /**
+   * Retourne l'uid de la boite possedant l'objet de partage
+   *
+   * @return string
+   */
+  protected function getMapMailbox_uid() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapMailbox_uid()");
+    if (!isset($this->_mailbox_uid)) {
+        $this->_mailbox_uid = $this->mailbox->uid;
+    }
+    return $this->_mailbox_uid;
+  }
 }

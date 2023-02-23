@@ -214,6 +214,7 @@ class DefaultConfig {
   const ACCEPTED = "accepted";
   const DECLINED = "declined";
   const IN_PROCESS = "in_process";
+  const DELEGATED = "delegated";
   const SELF_INVITE_ATTENDEE = "self_invite";
   const NEED_ACTION_ATTENDEE = "need_action";
   const IS_SAVED_ATTENDEE = "is_saved";
@@ -222,6 +223,8 @@ class DefaultConfig {
   const IS_RESSOURCE_ATTENDEE = "is_res";
   const IS_EXTERNAL_ATTENDEE = "is_ext";
   const UID_ATTENDEE = "uid";
+  const DELEGATED_FROM = "delegated-from";
+  const DELEGATED_TO = "delegated-to";
   // const TENTATIVE = "tentative"; // -> see Status
   
   /* Attendee role */

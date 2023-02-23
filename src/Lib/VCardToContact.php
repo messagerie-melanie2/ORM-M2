@@ -78,17 +78,19 @@ class VCardToContact {
       }
       // Convertir les uid des membres en id des contacts
       $ids = [];
-      $class = get_class($contact);
-      $_contact = new $class([$contact->getUserMelanie(), $contact->getAddressbookMelanie()]);
-      $_contact->type = Contact::TYPE_CONTACT;
-      $_contact->uid = $members;
-      $_contacts = $_contact->getList('id');
-      if (is_array($_contacts) && count($_contacts)) {
-        foreach ($_contacts as $_c) {
-          $ids[] = $_c->id;
+      if (!empty($members)) {
+        $class = get_class($contact);
+        $_contact = new $class([$contact->getUserMelanie(), $contact->getAddressbookMelanie()]);
+        $_contact->type = Contact::TYPE_CONTACT;
+        $_contact->uid = $members;
+        $_contacts = $_contact->getList('id');
+        if (is_array($_contacts) && count($_contacts)) {
+          foreach ($_contacts as $_c) {
+            $ids[] = $_c->id;
+          }
         }
+        $contact->members = serialize($ids);
       }
-      $contact->members = serialize($ids);
       // Group name
       $contact->lastname = (string)$vcontact->FN;
     }

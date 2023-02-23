@@ -494,6 +494,9 @@ class EventToICS {
             case Attendee::RESPONSE_NEED_ACTION :
               $partstat = ICS::PARTSTAT_NEEDS_ACTION;
               break;
+            case Attendee::RESPONSE_DELEGATED :
+              $partstat = ICS::PARTSTAT_DELEGATED;
+              break;
             case Attendee::RESPONSE_TENTATIVE :
               $partstat = ICS::PARTSTAT_TENTATIVE;
               break;
@@ -546,6 +549,16 @@ class EventToICS {
           // 0006294: Ajouter l'information dans un participant quand il a été enregistré en attente
           if (is_bool($attendee->is_saved)) {
             $params[ICS::X_MEL_EVENT_SAVED] = $attendee->is_saved;
+          }
+          // delegated-from
+          $delegated_from = $attendee->delegated_from;
+          if (isset($delegated_from)) {
+            $params[ICS::DELEGATED_FROM] = $delegated_from;
+          }
+          // delegated-to
+          $delegated_to = $attendee->delegated_to;
+          if (isset($delegated_to)) {
+            $params[ICS::DELEGATED_TO] = $delegated_to;
           }
           // Add attendee
           $vevent->add(ICS::ATTENDEE, 'mailto:' . $attendee->email, $params);

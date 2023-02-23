@@ -438,6 +438,14 @@ class ICSToEvent {
           if (isset($attendee[ICS::CN])) {
             $_attendee->name = $attendee[ICS::CN]->getValue();
           }
+          // Gestion du DELEGATED-FROM
+          if (isset($attendee[ICS::DELEGATED_FROM])) {
+            $_attendee->delegated_from = $attendee[ICS::DELEGATED_FROM]->getValue();
+          }
+          // Gestion du DELEGATED-TO
+          if (isset($attendee[ICS::DELEGATED_TO])) {
+            $_attendee->delegated_to = $attendee[ICS::DELEGATED_TO]->getValue();
+          }
           // Gestion du PARTSTAT
           // MANTIS 4016: Gestion des COPY/MOVE
           if (isset($attendee[ICS::PARTSTAT]) && !$copy) {
@@ -447,6 +455,9 @@ class ICSToEvent {
                 break;
               case ICS::PARTSTAT_IN_PROCESS :
                 $_attendee->response = $Attendee::RESPONSE_IN_PROCESS;
+                break;
+              case ICS::PARTSTAT_DELEGATED :
+                $_attendee->response = $Attendee::RESPONSE_DELEGATED;
                 break;
               case ICS::PARTSTAT_NEEDS_ACTION :
                 if (isset($_old_response) 

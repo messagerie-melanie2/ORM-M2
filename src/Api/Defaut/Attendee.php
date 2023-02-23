@@ -38,6 +38,8 @@ use LibMelanie\Config\DefaultConfig;
  * @property string $name Nom du participant
  * @property string $uid Uid du participant
  * @property string $type Type du participant (individuel, ressource, ...)
+ * @property string $delegated_to A qui le participant délègue sa participation
+ * @property string $delegated_from Qui a délégué la participation du participant
  * @property boolean $self_invite Est-ce que ce participant s'est lui même invité
  * @property boolean $is_saved Est-ce que l'événement a été enregistré dans son agenda en attente ?
  * @property-read boolean $need_action Est-ce que le mode En attente est activé pour ce participant
@@ -156,6 +158,22 @@ class Attendee extends MceObject {
   protected $_self_invite;
 
   /**
+   * Le participant est délégué par un autre participant
+   * 
+   * @var string
+   * @ignore
+   */
+  protected $_delegated_from;
+
+  /**
+   * Le participant a délégué a un autre participant
+   * 
+   * @var string
+   * @ignore
+   */
+  protected $_delegated_to;
+
+  /**
    * Utilisateur associé a l'attendee
    * 
    * @var User
@@ -168,6 +186,7 @@ class Attendee extends MceObject {
   const RESPONSE_DECLINED = DefaultConfig::DECLINED;
   const RESPONSE_IN_PROCESS = DefaultConfig::IN_PROCESS;
   const RESPONSE_TENTATIVE = DefaultConfig::TENTATIVE;
+  const RESPONSE_DELEGATED = DefaultConfig::DELEGATED;
   
   // Attendee Role Fields
   const ROLE_CHAIR = DefaultConfig::CHAIR;
@@ -226,6 +245,12 @@ class Attendee extends MceObject {
     if (isset($this->_is_saved)) {
       $attendee[Config::get(Config::IS_SAVED_ATTENDEE)] = $this->_is_saved;
     }
+    if (isset($this->_delegated_from)) {
+      $attendee[Config::get(Config::DELEGATED_FROM)] = $this->_delegated_from;
+    }
+    if (isset($this->_delegated_to)) {
+      $attendee[Config::get(Config::DELEGATED_TO)] = $this->_delegated_to;
+    }
     if (isset($this->_is_external)) {
       $attendee[Config::get(Config::IS_EXTERNAL_ATTENDEE)] = $this->_is_external;
 
@@ -272,6 +297,8 @@ class Attendee extends MceObject {
     $this->_is_ressource = isset($attendee[Config::get(Config::IS_RESSOURCE_ATTENDEE)]) ? $attendee[Config::get(Config::IS_RESSOURCE_ATTENDEE)] : null;
     $this->_is_individuelle = isset($attendee[Config::get(Config::IS_INDIVIDUELLE_ATTENDEE)]) ? $attendee[Config::get(Config::IS_INDIVIDUELLE_ATTENDEE)] : null;
     $this->_uid = isset($attendee[Config::get(Config::UID_ATTENDEE)]) ? $attendee[Config::get(Config::UID_ATTENDEE)] : null;
+    $this->_delegated_from = isset($attendee[Config::get(Config::DELEGATED_FROM)]) ? $attendee[Config::get(Config::DELEGATED_FROM)] : null;
+    $this->_delegated_to = isset($attendee[Config::get(Config::DELEGATED_TO)]) ? $attendee[Config::get(Config::DELEGATED_TO)] : null;
   }
   
   /**
@@ -380,6 +407,46 @@ class Attendee extends MceObject {
   protected function getMapSelf_invite() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapSelf_invite()");
     return $this->_self_invite;
+  }
+
+  /**
+   * Set delegated_from property
+   *
+   * @param string $delegated_from
+   * @ignore
+   */
+  protected function setMapDelegated_from($delegated_from) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapDelegated_from($delegated_from)");
+    $this->_delegated_from = $delegated_from;
+  }
+  /**
+   * Get delegated_from property
+   *
+   * @ignore
+   */
+  protected function getMapDelegated_from() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDelegated_from()");
+    return $this->_delegated_from;
+  }
+
+  /**
+   * Set delegated_to property
+   *
+   * @param string $delegated_to
+   * @ignore
+   */
+  protected function setMapDelegated_to($delegated_to) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapDelegated_to($delegated_to)");
+    $this->_delegated_to = $delegated_to;
+  }
+  /**
+   * Get delegated_to property
+   *
+   * @ignore
+   */
+  protected function getMapDelegated_to() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDelegated_to()");
+    return $this->_delegated_to;
   }
 
   /**

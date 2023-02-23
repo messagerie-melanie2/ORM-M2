@@ -649,24 +649,27 @@ class MappingMce {
 	const ATT_ACCEPTED = 2;
 	const ATT_DECLINED = 3;
 	const ATT_TENTATIVE = 4;
+	const ATT_DELEGATED = 5;
 	/**
 	 * Attendee response mapping object to MCE
 	 */
 	public static $MapAttendeeResponseObjectToMce = [
-	    DefaultConfig::NEED_ACTION => self::ATT_NEED_ACTION,
-	    DefaultConfig::ACCEPTED => self::ATT_ACCEPTED,
-	    DefaultConfig::DECLINED => self::ATT_DECLINED,
-	    DefaultConfig::IN_PROCESS => self::ATT_NEED_ACTION,
-	    DefaultConfig::TENTATIVE => self::ATT_TENTATIVE,
+	    DefaultConfig::NEED_ACTION 	=> self::ATT_NEED_ACTION,
+	    DefaultConfig::ACCEPTED 	=> self::ATT_ACCEPTED,
+	    DefaultConfig::DECLINED 	=> self::ATT_DECLINED,
+	    DefaultConfig::IN_PROCESS 	=> self::ATT_NEED_ACTION,
+	    DefaultConfig::TENTATIVE 	=> self::ATT_TENTATIVE,
+		DefaultConfig::DELEGATED 	=> self::ATT_DELEGATED,
 	];
 	/**
 	 * Attendee response mapping MCE to object
 	 */
 	public static $MapAttendeeResponseMceToObject = [
-	    self::ATT_NEED_ACTION => DefaultConfig::NEED_ACTION,
-	    self::ATT_ACCEPTED => DefaultConfig::ACCEPTED,
-	    self::ATT_DECLINED => DefaultConfig::DECLINED,
-	    self::ATT_TENTATIVE => DefaultConfig::TENTATIVE
+	    self::ATT_NEED_ACTION 	=> DefaultConfig::NEED_ACTION,
+	    self::ATT_ACCEPTED 		=> DefaultConfig::ACCEPTED,
+	    self::ATT_DECLINED 		=> DefaultConfig::DECLINED,
+	    self::ATT_TENTATIVE 	=> DefaultConfig::TENTATIVE,
+		self::ATT_DELEGATED 	=> DefaultConfig::DELEGATED,
 	];
 
 	// Attendee role	

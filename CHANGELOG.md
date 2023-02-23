@@ -1,3 +1,8 @@
+ORM M2 - 0.6.5.4
+------
+- 0007534: [VCard] Erreur SQL lors de la création d'une liste sans membre
+- 0007536: Gérer le statut de participant Délégué
+
 ORM M2 - 0.6.5.3
 ------
 - 0007510: Ajouter un champ pour le quota nextCloud

@@ -549,6 +549,7 @@ class Event extends MceObject {
       
       // Définition de la sauvegarde de l'évènement de l'organisateur
       $save = false;
+      $saveAttendees = false;
       if (!isset($organizer_event)) {
         $Calendar = $this->__getNamespace() . '\\Calendar';
         $organizer_calendar = new $Calendar($this->user);
@@ -593,6 +594,7 @@ class Event extends MceObject {
       if (!$this->deleted && isset($this->objectmelanie->attendees)) {
         // Recupération de la réponse du participant
         $response = $Attendee::RESPONSE_NEED_ACTION;
+        $delegated_to = null;
         foreach ($this->getMapAttendees() as $attendee) {
           // 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur
           if (strtolower($attendee->uid) == strtolower($this->calendarmce->owner)) {
@@ -600,6 +602,10 @@ class Event extends MceObject {
             // MANTIS 0004708: Lors d'un "s'inviter" utiliser les informations de l'ICS
             $att_email = $attendee->email;
             $att_name = $attendee->name;
+            // Gérer la délégation
+            if ($response == $Attendee::RESPONSE_DELEGATED) {
+              $delegated_to = $attendee->delegated_to;
+            }
             break;
           }
         }
@@ -608,6 +614,24 @@ class Event extends MceObject {
           // Récupère les participants de l'organisateur
           $organizer_attendees = $organizer_event->getMapAttendees();
           $invite = true;
+          // Gérer la délégation
+          if ($response == $Attendee::RESPONSE_DELEGATED && isset($delegated_to)) {
+            // Trouver le participant délégué
+            $filter_attendee = function($attendee) use ($delegated_to) { 
+              return strtolower($attendee->email) == strtolower($delegated_to); 
+            };
+            $organizer_attendee = array_filter($organizer_attendees, $filter_attendee);
+            if (empty($organizer_attendee)) {
+              $new_attendee = array_filter($this->getMapAttendees(), $filter_attendee);
+              if (!empty($new_attendee)) {
+                // On trouve le participant, on l'ajoute pour l'organisateur
+                $organizer_attendees = array_merge($organizer_attendees, $new_attendee);
+                // Enregistrer en attente dans l'agenda du nouveau participant
+                $saveAttendees = true;
+              }
+            }
+          }
+          // Parcourir les participants de l'organisateur
           foreach ($organizer_attendees as $attendee) {
             // 0005028: L'enregistrement de la réponse d'un participant ne se base pas sur la bonne valeur
             if (strtolower($attendee->uid) == strtolower($this->calendarmce->owner)) {
@@ -618,6 +642,7 @@ class Event extends MceObject {
                     $this->status = static::STATUS_CONFIRMED;
                     break;
                   case $Attendee::RESPONSE_DECLINED:
+                  case $Attendee::RESPONSE_DELEGATED:
                     $this->status = static::STATUS_NONE;
                     break;
                   case $Attendee::RESPONSE_TENTATIVE:
@@ -627,6 +652,10 @@ class Event extends MceObject {
                 $attendee->response = $response;
                 if (empty($attendee->name) && isset($att_name)) {
                   $attendee->name = $att_name;
+                }
+                // Gérer la délégation
+                if ($response == $Attendee::RESPONSE_DELEGATED) {
+                  $attendee->delegated_to = $delegated_to;
                 }
                 $organizer_event->setMapAttendees($organizer_attendees);
                 // Sauvegarde de l'evenement de l'organisateur
@@ -663,7 +692,7 @@ class Event extends MceObject {
       if ($save) {
         $organizer_event->modified = time();
         // Ne pas appeler le saveAttendees pour éviter les doubles sauvegardes (mode en attente)
-        $organizer_event->save(false);
+        $organizer_event->save($saveAttendees);
         if (strpos($this->get_class, '\Exception') !== false) {
           // Si on est dans une exception on met à jour le modified du maitre également
           $Event = $this->__getNamespace() . '\\Event';

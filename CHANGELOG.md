@@ -1,3 +1,8 @@
+ORM M2 - 0.6.5.5
+------
+- 0007565: [SQL] Gérer la connexion au format DSN
+- 0007564: [ICS] Lors d'un copier/coller supprimer les participants
+
 ORM M2 - 0.6.5.4
 ------
 - 0007534: [VCard] Erreur SQL lors de la création d'une liste sans membre

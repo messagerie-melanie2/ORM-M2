@@ -378,7 +378,8 @@ class ICSToEvent {
       } else
         $object->status = Event::STATUS_NONE;
       // ATTENDEE
-      if (isset($vevent->ATTENDEE)) {
+      // MANTIS 0007564: [ICS] Lors d'un copier/coller supprimer les participants
+      if (isset($vevent->ATTENDEE) && !$copy) {
         // 0005064: [ICS] si l'organisateur existe, ne pas le modifier depuis l'ICS
         $organizer = $object->organizer;
         $organizer_email = isset($organizer) ? $organizer->email : null;
@@ -447,8 +448,7 @@ class ICSToEvent {
             $_attendee->delegated_to = $attendee[ICS::DELEGATED_TO]->getValue();
           }
           // Gestion du PARTSTAT
-          // MANTIS 4016: Gestion des COPY/MOVE
-          if (isset($attendee[ICS::PARTSTAT]) && !$copy) {
+          if (isset($attendee[ICS::PARTSTAT])) {
             switch ($attendee[ICS::PARTSTAT]->getValue()) {
               case ICS::PARTSTAT_DECLINED :
                 $_attendee->response = $Attendee::RESPONSE_DECLINED;

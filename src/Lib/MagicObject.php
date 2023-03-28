@@ -311,6 +311,10 @@ abstract class MagicObject implements Serializable {
                     if (!is_array($value)) { 
                       $value = intval($value);
                     }
+                    // MANTIS 0007602: Erreur PG out of range for type integer
+                    if ($value < -2147483648 || $value > 2147483647) {
+                      $value = 0;
+                    }
                     break;
                 // DOUBLE
                 case MappingMce::double:
@@ -439,11 +443,10 @@ abstract class MagicObject implements Serializable {
                     } else if (!is_array($value))  {
                         $value = intval($value);
                     }
-                    // MANTIS 0006124: Problème avec les timestamp négatif
-                    // Problème avec cet update
-                    // if ($value < 0) {
-                    //   $value = time();
-                    // }
+                    // MANTIS 0007602: Erreur PG out of range for type integer
+                    if ($value < 0 || $value > 2147483647) {
+                      $value = time();
+                    }
                     break;
             }
         }        

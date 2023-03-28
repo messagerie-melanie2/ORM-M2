@@ -1,3 +1,7 @@
+ORM M2 - 0.6.5.6
+------
+- 0007602: Erreur PG out of range for type integer
+
 ORM M2 - 0.6.5.5
 ------
 - 0007565: [SQL] Gérer la connexion au format DSN

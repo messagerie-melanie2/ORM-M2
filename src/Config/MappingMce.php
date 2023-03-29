@@ -179,11 +179,11 @@ class MappingMce {
 	      // Gestion de l'historique : objet HistoryMelanie
 	      "HistoryMelanie" => [
 	          "id" 					=> [self::name => "history_id", self::type => self::integer],
-	          "uid" 				=> [self::name => "object_uid"],
-	          "action" 				=> [self::name => "history_action"],
+	          "uid" 				=> [self::name => "object_uid", self::type => self::string, self::size => 255],
+	          "action" 				=> [self::name => "history_action", self::type => self::string, self::size => 32],
 	          "timestamp" 			=> [self::name => "history_ts", self::type => self::timestamp, self::defaut => 0],
 	          "description" 		=> [self::name => "history_desc"],
-	          "who" 				=> [self::name => "history_who"],
+	          "who" 				=> [self::name => "history_who", self::type => self::string, self::size => 255],
 	          "extra" 				=> [self::name => "history_extra"]
 	      ],
 	      // Gestion des évènements : objet EventMelanie

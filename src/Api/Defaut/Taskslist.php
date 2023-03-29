@@ -109,7 +109,7 @@ class Taskslist extends MceObject {
   public function save() {
     $ret = $this->objectmelanie->save();
     if (!is_null($ret) && isset($this->user)) {
-      $this->user->cleanTaskslists();
+      if (method_exists($this->user, 'cleanTaskslists')) $this->user->cleanTaskslists();
     }
     return $ret;
   }
@@ -123,7 +123,7 @@ class Taskslist extends MceObject {
   public function delete() {
     $ret = $this->objectmelanie->delete();
     if ($ret && isset($this->user)) {
-      $this->user->cleanTaskslists();
+      if (method_exists($this->user, 'cleanTaskslists')) $this->user->cleanTaskslists();
     }
     return $ret;
   }

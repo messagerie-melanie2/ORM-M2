@@ -1,3 +1,7 @@
+ORM M2 - 0.6.5.8
+------
+- Possibilité d'avoir des listes de tâches sans owner pour le Bnum
+
 ORM M2 - 0.6.5.7
 ------
 - 0007601: Erreur PG value too long

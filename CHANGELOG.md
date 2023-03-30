@@ -1,3 +1,7 @@
+ORM M2 - 0.6.5.9
+------
+- Correctif MagicObject sur la gestion des array dans les timestamp et les int
+
 ORM M2 - 0.6.5.8
 ------
 - Possibilité d'avoir des listes de tâches sans owner pour le Bnum

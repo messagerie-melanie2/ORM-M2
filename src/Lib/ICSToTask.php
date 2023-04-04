@@ -100,6 +100,18 @@ class ICSToTask {
 			  $task->category = implode(',', $categories);
 			}
 			else $task->category = '';
+			// DTSTAMP
+			if (isset($vtodo->DTSTAMP)) $task->modified = $vtodo->DTSTAMP->getDateTime()->format('U');
+			else if (isset($vtodo->{ICS::LAST_MODIFIED})) $task->modified = $vtodo->{ICS::LAST_MODIFIED}->getDateTime()->format('U');
+			else if (isset($vtodo->CREATED)) $task->modified = $vtodo->CREATED->getDateTime()->format('U');
+			else $task->modified = time();
+
+			// DTSTART
+			if (isset($vtodo->DTSTART)) $task->start = $vtodo->DTSTART->getDateTime()->format('U');
+			else $task->start = null;
+			// DUE
+			if (isset($vtodo->DUE)) $task->due = $vtodo->DUE->getDateTime()->format('U');
+			else $task->due = null;
 			// VALARM
 			if (isset($vtodo->VALARM)) {
 				$alarmDate = $vtodo->VALARM->getEffectiveTriggerTime();
@@ -132,18 +144,7 @@ class ICSToTask {
 			if (isset($vtodo->{ICS::X_MOZ_GENERATION})) {
 			  	$task->setAttribute(ICS::X_MOZ_GENERATION, $vtodo->{ICS::X_MOZ_GENERATION}->getValue());
 			}
-			// DTSTAMP
-			if (isset($vtodo->DTSTAMP)) $task->modified = $vtodo->DTSTAMP->getDateTime()->format('U');
-			else if (isset($vtodo->{ICS::LAST_MODIFIED})) $task->modified = $vtodo->{ICS::LAST_MODIFIED}->getDateTime()->format('U');
-			else if (isset($vtodo->CREATED)) $task->modified = $vtodo->CREATED->getDateTime()->format('U');
-			else $task->modified = time();
-
-			// DTSTART
-			if (isset($vtodo->DTSTART)) $task->start = $vtodo->DTSTART->getDateTime()->format('U');
-			else $task->start = null;
-			// DUE
-			if (isset($vtodo->DUE)) $task->due = $vtodo->DUE->getDateTime()->format('U');
-			else $task->due = null;
+			
 			// COMPLETED
 			if (isset($vtodo->COMPLETED)) {
 				$task->completed_date = $vtodo->COMPLETED->getDateTime()->format('U');			

@@ -1,3 +1,8 @@
+ORM M2 - 0.6.5.10
+------
+- 0007626: [ICS] Gérer un SENT-BY vide
+- 0007629: [ICSToTask] Erreur de traitement du VALARM
+
 ORM M2 - 0.6.5.9
 ------
 - Correctif MagicObject sur la gestion des array dans les timestamp et les int

@@ -397,7 +397,10 @@ class ICSToEvent {
           if (isset($parameters[ICS::PARTSTAT])) {
             $organizer->partstat = $parameters[ICS::PARTSTAT]->getValue();
           }
-          if (isset($parameters[ICS::SENT_BY])) {
+          // 0007626: [ICS] Gérer un SENT-BY vide
+          if (isset($parameters[ICS::SENT_BY])
+              && !empty($parameters[ICS::SENT_BY]->getValue())
+              && $parameters[ICS::SENT_BY]->getValue() != 'mailto:') {
             $organizer->email = str_replace('mailto:', '', strtolower($parameters[ICS::SENT_BY]->getValue()));
             // 0005096: Le champ X-M2-ORG-MAIL n'est pas alimenté pour une modification d'événement
             $organizer->owner_email = str_replace('mailto:', '', strtolower($vevent->ORGANIZER->getValue()));

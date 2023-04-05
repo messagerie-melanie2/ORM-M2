@@ -1,3 +1,7 @@
+ORM M2 - 0.6.5.11
+------
+- 0007636: Undefined variable: exDuration
+
 ORM M2 - 0.6.5.10
 ------
 - 0007626: [ICS] Gérer un SENT-BY vide

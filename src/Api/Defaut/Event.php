@@ -1761,8 +1761,6 @@ class Event extends MceObject {
         $tmpDate = clone $this->getMapOlddtstart();
         $tmpDate->add($exception->dtstart->diff($exception->dtend));
 
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->updateOccurrences() duration ($exception->realuid) compare = " . ($oldEventDuration == $exDuration));
-
         if ($tmpDate == $this->getMapOlddtend()) {
           // on est dans le cas ou l'exception n'a pas changé d'horaire, on va pouvoir appliquer les modifications
           if (isset($startChangeDuration)) {

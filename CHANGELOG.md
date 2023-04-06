@@ -1,3 +1,8 @@
+ORM M2 - 0.6.5.12
+------
+- 0007639: [ICSToTask] Erreur de calcul pour l'alarme
+- 0007640: [ICSToTask] Nettoyer les ICS des tâches
+
 ORM M2 - 0.6.5.11
 ------
 - 0007636: Undefined variable: exDuration

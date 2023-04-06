@@ -106,10 +106,12 @@ class TaskToICS {
 	  	elseif (isset($taskslist)) {
 			$timezone = $taskslist->getTimezone();
 		}
+
 		if (empty($timezone)) {
 		  	$timezone = Config::get(Config::CALENDAR_DEFAULT_TIMEZONE);
 		}
 		M2Log::Log(M2Log::LEVEL_DEBUG, "TaskToICS->getVtodoFromTask() timezone : " . $timezone);
+
 		// Class
 		if (isset($task->class)) {
 			switch ($task->class) {
@@ -119,31 +121,26 @@ class TaskToICS {
 				case Task::CLASS_PRIVATE:
 					$vtodo->CLASS = ICS::CLASS_PRIVATE;
 					break;
-				case Task::CLASS_PUBLIC:
-				default:
-				  $vtodo->CLASS = ICS::CLASS_PUBLIC;
-				  break;
 			}
-		} else $vtodo->CLASS = ICS::CLASS_PUBLIC;
+		}
 
 		// Status
 		if (isset($task->status)) {
 		  switch ($task->status) {
-	      case Task::STATUS_CANCELLED:
-	        $vtodo->STATUS = ICS::STATUS_CANCELLED;
-	        break;
-	      case Task::STATUS_COMPLETED:
-	        $vtodo->STATUS = ICS::STATUS_COMPLETED;
-	        break;
-	      case Task::STATUS_IN_PROCESS:
-	        $vtodo->STATUS = ICS::STATUS_IN_PROCESS;
-	        break;
-	      default:
-	      case Task::STATUS_NEEDS_ACTION:
-	        $vtodo->STATUS = ICS::STATUS_NEEDS_ACTION;
-	        break;
+			case Task::STATUS_CANCELLED:
+				$vtodo->STATUS = ICS::STATUS_CANCELLED;
+				break;
+			case Task::STATUS_COMPLETED:
+				$vtodo->STATUS = ICS::STATUS_COMPLETED;
+				break;
+			case Task::STATUS_IN_PROCESS:
+				$vtodo->STATUS = ICS::STATUS_IN_PROCESS;
+				break;
+			case Task::STATUS_NEEDS_ACTION:
+				$vtodo->STATUS = ICS::STATUS_NEEDS_ACTION;
+				break;
 		  }
-		} else $vtodo->STATUS = ICS::STATUS_NEEDS_ACTION;
+		}
 
 		// DTSTAMP
 		if (isset($task->modified)) {
@@ -160,27 +157,32 @@ class TaskToICS {
 		  $dateTime = new \DateTime('@'.$task->start, new \DateTimeZone($timezone));
 		  $vtodo->add(ICS::DTSTART, $dateTime->format('Ymd\THis\Z'));
 		}
+
 		// DUE
 		if (isset($task->due)) {
 		  $dateTime = new \DateTime('@'.$task->due, new \DateTimeZone($timezone));
 		  $vtodo->add(ICS::DUE, $dateTime->format('Ymd\THis\Z'));
 		}
+
 		// COMPLETED
 		if (isset($task->completed_date)) {
 		  $dateTime = new \DateTime('@'.$task->completed_date, new \DateTimeZone($timezone));
 		  $vtodo->add(ICS::COMPLETED, $dateTime->format('Ymd\THis\Z'));
 		}
 
-		if (($task->class == Task::CLASS_PRIVATE
-				|| $task->class == Task::CLASS_CONFIDENTIAL)
+		if (($task->class == Task::CLASS_PRIVATE || $task->class == Task::CLASS_CONFIDENTIAL)
 				&& $task->owner != $user->uid
 				&& isset($taskslist)
-				&& $taskslist->owner !=  $user->uid
+				&& $taskslist->owner != $user->uid
 		    	&& !$taskslist->asRight(Config::get(Config::PRIV))) {
-			$vtodo->SUMMARY = 'Événement privé';
-		} else {
+			$vtodo->SUMMARY = 'Tâche privée';
+		} 
+		else {
 			// Titre
-			if (isset($task->name) && $task->name != "") $vtodo->SUMMARY = $task->name;
+			if (isset($task->name) && $task->name != "") {
+				$vtodo->SUMMARY = $task->name;
+			}
+
 			// Catégories
 			if (isset($task->category) && $task->category != "") {
 			  $categories = explode(',', $task->category);
@@ -188,59 +190,79 @@ class TaskToICS {
 			    $vtodo->add(ICS::CATEGORIES, $category);
 			  }
 			}
+
 			// Description
-			if (isset($task->description) && $task->description != "") $vtodo->DESCRIPTION = $task->description;
+			if (isset($task->description) && $task->description != "") {
+				$vtodo->DESCRIPTION = $task->description;
+			}
+
 			// Percent complete
-			if (isset($task->percent_complete)) $vtodo->add(ICS::PERCENT_COMPLETE, $task->percent_complete);
-      // Priority
-      if (isset($task->priority)) {
-        switch ($task->priority) {
-          case Task::PRIORITY_VERY_HIGH:
-            $vtodo->PRIORITY = 1;
-            break;
-          case Task::PRIORITY_HIGH:
-            $vtodo->PRIORITY = 3;
-            break;
-          case Task::PRIORITY_NORMAL;
-            $vtodo->PRIORITY = 5;
-            break;
-          case Task::PRIORITY_LOW;
-            $vtodo->PRIORITY = 7;
-            break;
-          case Task::PRIORITY_VERY_LOW;
-            $vtodo->PRIORITY = 9;
-            break;
-          default:
-            $vtodo->PRIORITY = 0;
-            break;
-        }
-      }
-      // Parent
-      if (isset($task->parent)) {
-        $vtodo->{ICS::RELATED_TO} = $task->parent;
-      }
+			if (isset($task->percent_complete)) {
+				$vtodo->add(ICS::PERCENT_COMPLETE, $task->percent_complete);
+			}
+
+			// Priority
+			if (isset($task->priority)) {
+				switch ($task->priority) {
+					case Task::PRIORITY_VERY_HIGH:
+						$vtodo->PRIORITY = 1;
+						break;
+					case Task::PRIORITY_HIGH:
+						$vtodo->PRIORITY = 3;
+						break;
+					case Task::PRIORITY_NORMAL;
+						$vtodo->PRIORITY = 5;
+						break;
+					case Task::PRIORITY_LOW;
+						$vtodo->PRIORITY = 7;
+						break;
+					case Task::PRIORITY_VERY_LOW;
+						$vtodo->PRIORITY = 9;
+						break;
+				}
+			}
+
+			// Parent
+			if (isset($task->parent)) {
+				$vtodo->{ICS::RELATED_TO} = $task->parent;
+			}
+
 			// Alarm
 			if (isset($task->alarm) && $task->alarm != 0) {
 				$valarm = $vtodo->add('VALARM');
 				$valarm->TRIGGER = self::formatAlarm($task->alarm);
 				$valarm->ACTION = ICS::ACTION_DISPLAY;
+
 				// Attributs sur l'alarme
 				$x_moz_lastack = $task->getAttribute(ICS::X_MOZ_LASTACK);
-				if (isset($x_moz_lastack)) $vtodo->{ICS::X_MOZ_LASTACK} = $x_moz_lastack;
+				if (isset($x_moz_lastack)) {
+					$vtodo->{ICS::X_MOZ_LASTACK} = $x_moz_lastack;
+				}
+
 				$x_moz_snooze_time = $task->getAttribute(ICS::X_MOZ_SNOOZE_TIME);
-				if (isset($x_moz_snooze_time)) $vtodo->{ICS::X_MOZ_SNOOZE_TIME} = $x_moz_snooze_time;
+				if (isset($x_moz_snooze_time)) {
+					$vtodo->{ICS::X_MOZ_SNOOZE_TIME} = $x_moz_snooze_time;
+				}
 			}
 			// Taskslist infos
 			if (isset($taskslist)) {
 			  $vtodo->add(ICS::X_CALDAV_CALENDAR_ID, $taskslist->id);
-			  $vtodo->add(ICS::X_CALDAV_CALENDAR_OWNER, $taskslist->owner);
+			  if (isset($taskslist->owner)) {
+				$vtodo->add(ICS::X_CALDAV_CALENDAR_OWNER, $taskslist->owner);
+			  }
 			}
+
 			// Sequence
 			$sequence = $task->getAttribute(ICS::SEQUENCE);
-			if (isset($sequence)) $vtodo->SEQUENCE = $sequence;
+			if (isset($sequence)) {
+				$vtodo->SEQUENCE = $sequence;
+			}
+
 			// X Moz Generation
 			$moz_generation = $task->getAttribute(ICS::X_MOZ_GENERATION);
-			if (isset($moz_generation)) $vtodo->add(ICS::X_MOZ_GENERATION, $moz_generation);
+			if (isset($moz_generation)) {
+				$vtodo->add(ICS::X_MOZ_GENERATION, $moz_generation);
+			}
 		}
 		return $vtodo;
 	}

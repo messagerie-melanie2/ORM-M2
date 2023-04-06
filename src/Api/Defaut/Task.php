@@ -462,7 +462,13 @@ class Task extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapPercent_Complete($percent_complete)");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-    $this->setAttribute('PERCENT-COMPLETE', intval($percent_complete));
+    if (isset($percent_complete)) {
+      $this->setAttribute('PERCENT-COMPLETE', intval($percent_complete));
+    }
+    else {
+      $this->deleteAttribute('PERCENT-COMPLETE');
+    }
+    
   }
   /**
    * Mapping percent_complete field
@@ -497,7 +503,12 @@ class Task extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapStatus($status)");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-    $this->setAttribute('STATUS', $status);
+    if (isset($status)) {
+      $this->setAttribute('STATUS', $status);
+    }
+    else {
+      $this->deleteAttribute('STATUS');
+    }
   }
   /**
    * Mapping percent_complete field

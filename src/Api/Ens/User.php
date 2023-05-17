@@ -148,7 +148,7 @@ class User extends Defaut\User {
     "email"                   => 'mailroutingaddress',                        // Adresse e-mail principale de l'utilisateur en reception
     "email_list"              => [MappingMce::name => 'mailroutingaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
     "email_send"              => 'mailroutingaddress',        // Adresse e-mail principale de l'utilisateur en emission
-    "email_send_list"         => [MappingMce::name => 'mailroutingaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
+    "email_send_list"         => [MappingMce::name => 'enslpersonbal2fct', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
     "service"                 => 'supannaffectation',              // Department Number
     "type"                    => 'supannentiteaffectationprincipale',               // Type d'entrée (boite individuelle, partagée, ressource, ...)
     "outofoffices"            => [MappingMce::name => 'enslpersonm2absence', MappingMce::type => MappingMce::arrayLdap], // Affichage du message d'absence de l'utilisateur

@@ -1,3 +1,9 @@
+ORM M2 - 0.6.5.13
+------
+- 0007699: Sortir l'objectshare du cache
+- 0007692: Avoir la possibilité de ne pas avoir d'objet de partage
+- Fichier de tests pour le ldap
+
 ORM M2 - 0.6.5.12
 ------
 - 0007639: [ICSToTask] Erreur de calcul pour l'alarme

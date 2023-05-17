@@ -280,7 +280,6 @@ abstract class User extends MceObject {
    * Liste des propriétés à sérialiser pour le cache
    */
   protected $serializedProperties = [
-    'objectshare',
     'otherldapobject',
     '_userWorkspaces',
     '_sharedWorkspaces',
@@ -2210,6 +2209,11 @@ abstract class User extends MceObject {
    */
   protected function getMapIs_objectshare() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapIs_objectshare()");
+
+    if (empty($this->getObjectShareDelimiter())) {
+      return false;
+    }
+
     return isset($this->uid) && strpos($this->uid, $this->getObjectShareDelimiter()) !== false 
         || isset($this->email) && strpos($this->email, $this->getObjectShareDelimiter()) !== false;
   }
@@ -2222,6 +2226,11 @@ abstract class User extends MceObject {
    */
   protected function getMapObjectshare() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapObjectshare()");
+
+    if (empty($this->getObjectShareDelimiter())) {
+      return null;
+    }
+
     if (!isset($this->objectshare)) {
       if (isset($this->uid) && strpos($this->uid, $this->getObjectShareDelimiter()) !== false 
           || isset($this->email) && strpos($this->email, $this->getObjectShareDelimiter()) !== false) {

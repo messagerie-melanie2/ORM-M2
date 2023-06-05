@@ -1,3 +1,7 @@
+ORM M2 - 0.6.5.15
+------
+- 0007731: Récupérer la dernière news d'un utilisateur
+
 ORM M2 - 0.6.5.14
 ------
 - 0007728: Remplace les length > 10 dans le sql

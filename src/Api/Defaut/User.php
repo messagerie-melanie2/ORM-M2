@@ -106,6 +106,13 @@ abstract class User extends MceObject {
    */
   protected $_userNews;
   /**
+   * Dernière news que l'utilisateur peut consulter
+   * 
+   * @var News\News
+   * @ignore
+   */
+  protected $_userLastNews;
+  /**
    * Liste des rss que l'utilisateur peut consulter
    * 
    * @var News\Rss[]
@@ -1408,7 +1415,7 @@ abstract class User extends MceObject {
   /**
    * Retourne toutes les news de l'utilisateur liées à son service ou à ses droits
    * 
-   * @return News\News
+   * @return News\News[]
    */
   public function getUserNews() {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserNews()");
@@ -1425,6 +1432,30 @@ abstract class User extends MceObject {
       $this->_set_news_is_publisher($this->_userNews);
     }
     return $this->_userNews;
+  }
+
+  /**
+   * Retourne la dernière news de l'utilisateur liée à son service ou à ses droits
+   * 
+   * @return News\News
+   */
+  public function getUserLastNews() {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserLastNews()");
+    // Si le DN de l'utilisateur n'est pas positionné
+    if (!isset($this->dn)) {
+      return null;
+    }
+    if (!isset($this->_userLastNews)) {
+      $news = new News\News();
+      $news->service = $this->_get_user_services();
+      $list = $news->getList([], "", [], "modified", false, 1);
+
+      // Ajouter une informations pour les news publisher
+      $this->_set_news_is_publisher($list);
+
+      $this->_userLastNews = array_pop($list);
+    }
+    return $this->_userLastNews;
   }
 
   /**
@@ -1445,7 +1476,7 @@ abstract class User extends MceObject {
 
     // Parcourir les news pour alimenter le tableau $newsByService
     foreach ($this->getUserNews() as $news) {
-      if ($newsByService[$news->service] === false) {
+      if (isset($newsByService[$news->service]) && $newsByService[$news->service] === false) {
         $newsByService[$news->service] = $news;
       }
     }
@@ -1474,6 +1505,7 @@ abstract class User extends MceObject {
    */
   public function cleanNews() {
     $this->_userNews = null;
+    $this->_userLastNews = null;
     $this->executeCache();
   }
 

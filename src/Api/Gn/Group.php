@@ -66,7 +66,7 @@ class Group extends Defaut\Group {
 
             $ldap = Ldap::GetInstance(LdapConfig::$SEARCH_LDAP);
             $filter = $ldap->getConfig("get_users_by_group");
-            $filter = str_replace("%%gendmemberof%%", $this->dn, $filter);
+            $filter = str_replace("%%memberOf%%", $this->dn, $filter);
             $search = $ldap->search($ldap->getConfig("base_dn"), $filter);
             $entries = $ldap->get_entries($search);
 

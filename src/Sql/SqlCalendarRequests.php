@@ -35,7 +35,7 @@ class SqlCalendarRequests {
 	 * @param REPLACE {event_range}
 	 * @param PDO :calendar_id
 	 */
-	const listAllEvents = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2 ON k1.event_uid = k2.event_uid AND char_length(k2.event_attendees) > 10 WHERE k1.calendar_id = :calendar_id{event_range};";
+	const listAllEvents = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2 ON k1.event_uid = k2.event_uid AND k1.organizer_calendar_id = k2.calendar_id WHERE k1.calendar_id = :calendar_id{event_range};";
 
 	/**
 	 * @var string SELECT
@@ -48,14 +48,14 @@ class SqlCalendarRequests {
 	 * @var string SELECT
 	 * @param PDO :calendar_id, :event_uid
 	 */
-	const getEvent = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2	ON k1.event_uid = k2.event_uid AND char_length(k2.event_attendees) > 10 WHERE k1.calendar_id = :calendar_id AND k1.event_uid = :event_uid;";
+	const getEvent = "SELECT k1.*, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2	ON k1.event_uid = k2.event_uid AND k1.organizer_calendar_id = k2.calendar_id WHERE k1.calendar_id = :calendar_id AND k1.event_uid = :event_uid;";
 
 	/**
 	 * @var string SELECT
 	 * @param REPLACE {fields_list}
 	 * @param PDO :calendar_id, :event_uid
 	 */
-	const getListEvents = "SELECT {fields_list}, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2 ON k1.event_uid = k2.event_uid AND char_length(k2.event_attendees) > 10 WHERE {where_clause};";
+	const getListEvents = "SELECT {fields_list}, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2 ON k1.event_uid = k2.event_uid AND k1.organizer_calendar_id = k2.calendar_id WHERE {where_clause};";
 	/**
 	 * @var string SELECT
 	 * @param REPLACE {fields_list}

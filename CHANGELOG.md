@@ -1,3 +1,9 @@
+ORM M2 - 0.6.5.14
+------
+- 0007728: Remplace les length > 10 dans le sql
+- 0007727: [Event] Ne plus order by sur attendees
+- Test: ne plus update + 1 tout le monde pour éviter les lock sur la base de données
+
 ORM M2 - 0.6.5.13
 ------
 - 0007699: Sortir l'objectshare du cache

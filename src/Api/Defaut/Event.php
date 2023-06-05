@@ -693,18 +693,20 @@ class Event extends MceObject {
         $organizer_event->modified = time();
         // Ne pas appeler le saveAttendees pour éviter les doubles sauvegardes (mode en attente)
         $organizer_event->save($saveAttendees);
-        if (strpos($this->get_class, '\Exception') !== false) {
-          // Si on est dans une exception on met à jour le modified du maitre également
-          $Event = $this->__getNamespace() . '\\Event';
-          $organizer_master_event = new $Event($this->user, $organizer_calendar);
-          $organizer_master_event->uid = $this->uid;
-          // Mise à jour de l'etag pour tout le monde
-          $organizer_master_event->getObjectMelanie()->updateMeetingEtag();
-        }
-        else {
-          // Mise à jour de l'etag pour tout le monde
-          $this->objectmelanie->updateMeetingEtag();
-        }
+
+        // XXX: Tester de ne plus update tout le monde pour éviter les lock sur pg
+        // if (strpos($this->get_class, '\Exception') !== false) {
+        //   // Si on est dans une exception on met à jour le modified du maitre également
+        //   $Event = $this->__getNamespace() . '\\Event';
+        //   $organizer_master_event = new $Event($this->user, $organizer_calendar);
+        //   $organizer_master_event->uid = $this->uid;
+        //   // Mise à jour de l'etag pour tout le monde
+        //   $organizer_master_event->getObjectMelanie()->updateMeetingEtag();
+        // }
+        // else {
+        //   // Mise à jour de l'etag pour tout le monde
+        //   $this->objectmelanie->updateMeetingEtag();
+        // }
       }
     }
     else {
@@ -867,7 +869,7 @@ class Event extends MceObject {
     if (isset($owner) && !empty($owner)) {
       $listevents->owner = $owner;
     }
-    return $listevents->getList(null, null, null, 'attendees', false);
+    return $listevents->getList();
   }
 
   /**

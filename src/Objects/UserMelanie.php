@@ -817,7 +817,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::getDefaultObject;
+
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionGetDefaultObject;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::getDefaultObject;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['CalendarMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['CalendarMelanie']['id'][MappingMce::name], $query);
@@ -860,7 +867,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::listUserObjects;
+
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionListUserObjects;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::listUserObjects;
+    }
+    
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['CalendarMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['CalendarMelanie']['id'][MappingMce::name], $query);
@@ -892,7 +906,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::listSharedObjects;
+
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionListSharedObjects;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::listSharedObjects;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['CalendarMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['CalendarMelanie']['id'][MappingMce::name], $query);
@@ -926,7 +947,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::getDefaultObject;
+    
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionGetDefaultObject;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::getDefaultObject;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['TaskslistMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['TaskslistMelanie']['id'][MappingMce::name], $query);
@@ -969,7 +997,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::listUserObjects;
+
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionListUserObjects;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::listUserObjects;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['TaskslistMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['TaskslistMelanie']['id'][MappingMce::name], $query);
@@ -1001,7 +1036,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::listSharedObjects;
+    
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionListSharedObjects;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::listSharedObjects;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['TaskslistMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['TaskslistMelanie']['id'][MappingMce::name], $query);
@@ -1035,7 +1077,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::getDefaultObject;
+    
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionGetDefaultObject;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::getDefaultObject;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['AddressbookMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['AddressbookMelanie']['id'][MappingMce::name], $query);
@@ -1078,7 +1127,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::listUserObjects;
+
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionListUserObjects;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::listUserObjects;
+    }
+    
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['AddressbookMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['AddressbookMelanie']['id'][MappingMce::name], $query);
@@ -1110,7 +1166,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::listSharedObjects;
+
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionListSharedObjects;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::listSharedObjects;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['AddressbookMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['AddressbookMelanie']['id'][MappingMce::name], $query);

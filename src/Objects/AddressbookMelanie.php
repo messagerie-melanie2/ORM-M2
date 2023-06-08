@@ -115,10 +115,20 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 
 		// Gérer le load si user n'est pas défini
 		if (isset($this->user_uid)) {
-			$query = Sql\SqlMelanieRequests::listObjectsByUidAndUser;
+			if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+				$query = Sql\SqlMelanieRequests::functionListObjectsByUidAndUser;
+			}
+			else {
+				$query = Sql\SqlMelanieRequests::listObjectsByUidAndUser;
+			}
 		}
 		else {
-			$query = Sql\SqlMelanieRequests::listObjectsByUid;
+			if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+				$query = Sql\SqlMelanieRequests::functionListObjectsByUid;
+			}
+			else {
+				$query = Sql\SqlMelanieRequests::listObjectsByUid;
+			}
 		}
 
 		// Replace name

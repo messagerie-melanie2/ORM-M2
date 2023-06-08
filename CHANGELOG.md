@@ -1,3 +1,8 @@
+ORM M2 - 0.6.5.16
+------
+- 0007740: Utiliser les functions plsql stable pour lister les objets d'un utilisateur
+- 0007741: Proposer une configuration pour utiliser les functions SQL plutôt que les requêtes
+
 ORM M2 - 0.6.5.15
 ------
 - 0007731: Récupérer la dernière news d'un utilisateur

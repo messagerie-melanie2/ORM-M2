@@ -400,5 +400,12 @@ class DefaultConfig {
    * Exemple : ['info' => 'en attente : oui'] 
    * si le le champ de l'utilisateur matche la valeur c'est désactivé
    */
-  const NEED_ACTION_DISABLE_FILTER = null; 
+  const NEED_ACTION_DISABLE_FILTER = null;
+
+  /**
+   * Utiliser les fonctions PL/SQL à la place des requêtes directes pour améliorer les performances
+   * 
+   * @var boolean
+   */
+  const USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES = false;
 }

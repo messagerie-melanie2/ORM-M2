@@ -2459,23 +2459,46 @@ class Event extends MceObject {
   protected function attendeeIsList($attendee, &$attendees, $Attendee, &$attendeeFound) {
     $members = $attendee->members;
     if (is_array($members)) {
-      foreach ($members as $member) {
-        if ($attendeeFound) {
-          break;
-        }
-        // L'utilisateur existe bien dans l'annuaire
-        $listAttendee = new $Attendee();
-        $listAttendee->email = $member;
+      // Recherche d'abord simplement dans les membres par email pour ne pas charger l'annuaire
+      if (isset($this->user->email)) {
+        foreach ($members as $member) {
+          if ($member == $this->user->email) {
+            // L'utilisateur est trouvé dans la liste, on l'ajout de manière virtuelle
+            $listAttendee = new $Attendee();
+            $listAttendee->email = $member;
+            $listAttendee->response = Attendee::RESPONSE_NEED_ACTION;
+            $listAttendee->role = $attendee->role;
+            $attendeeFound = true;
+  
+            $attendees[] = $listAttendee;
 
-        if ($listAttendee->is_list) {
-          $this->attendeeIsList($listAttendee, $attendees, $Attendee, $attendeeFound);
+            break;
+          }
         }
-        else if ($listAttendee->uid == $this->user->uid) {
-          $listAttendee->response = Attendee::RESPONSE_NEED_ACTION;
-          $listAttendee->role = $attendee->role;
-          $attendeeFound = true;
+      }
+      
+      // Rechercher plus en détails si besoin
+      if (!$attendeeFound) {
+        foreach ($members as $member) {
+          if ($attendeeFound) {
+            break;
+          }
+          // L'utilisateur existe bien dans l'annuaire
+          $listAttendee = new $Attendee();
+          $listAttendee->email = $member;
+  
+          if ($listAttendee->is_list) {
+            $this->attendeeIsList($listAttendee, $attendees, $Attendee, $attendeeFound);
+          }
+          else if ($listAttendee->uid == $this->user->uid) {
+            $listAttendee->response = Attendee::RESPONSE_NEED_ACTION;
+            $listAttendee->role = $attendee->role;
+            $attendeeFound = true;
+  
+            $attendees[] = $listAttendee;
 
-          $attendees[] = $listAttendee;
+            break;
+          }
         }
       }
     }

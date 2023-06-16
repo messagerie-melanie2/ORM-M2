@@ -1,3 +1,8 @@
+ORM M2 - 0.6.5.17
+------
+- 0007750: Optimisation des réunions à des liste
+- 0007747: Syntaxe OutOfOffice MCE: passer les horaires hebdo en UTC
+
 ORM M2 - 0.6.5.16
 ------
 - 0007740: Utiliser les functions plsql stable pour lister les objets d'un utilisateur

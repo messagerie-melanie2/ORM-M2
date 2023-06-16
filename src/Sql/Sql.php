@@ -416,7 +416,7 @@ class Sql {
     // Si la connexion n'est pas instanciée
     if (!isset($this->connection)) {
       // Throw exception, erreur
-      M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->executeQueryToObject(): Problème de connexion à la base de données");
+      M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->executeQuery(): Problème de connexion à la base de données");
       throw new Exceptions\Melanie2DatabaseException("Erreur de base de données Mélanie2 : Erreur de connexion", 21);
     }
     // Configuration de la réutilisation des prepares statements

@@ -87,6 +87,11 @@ use LibMelanie\Config\DefaultConfig;
  */
 class Event extends MceObject {
   /**
+   * Version du schéma pour les events
+   */
+  const VERSION = 2;
+
+  /**
    * Format de datetime pour la base de données
    *
    * @var string
@@ -1014,19 +1019,19 @@ class Event extends MceObject {
       }
 
       // MANTIS 0005053: [En attente] Lors de la suppression d'un participant, passer son événement en annulé
-      if ($this->exists()) {
+      if (strpos($this->get_class, '\Exception') === false && $this->exists()) {
         $attendees_uid[] = $this->calendar;
         $Event = $this->__getNamespace() . '\\Event';
         $event = new $Event();
-        $event->uid = $this->uid;
+        $event->realuid = $this->uid;
         $event->calendar = $attendees_uid;
         // Liste des opérateurs
         $operators = [
-            'uid'       => MappingMce::eq,
+            'realuid'   => MappingMce::eq,
             'calendar'  => MappingMce::diff,
         ];
         // Filtre
-        $filter = "#uid# AND #calendar#";
+        $filter = "#realuid# AND #calendar#";
         $User = $this->__getNamespace() . '\\User';
         // Lister les événements pour les passer en annulé
         foreach ($event->getList(null, $filter, $operators) as $_e) {
@@ -1035,26 +1040,32 @@ class Event extends MceObject {
           $listAttendee->uid = $_e->calendar;
 
           if ($listAttendee->need_action) {
-            // Copier l'événement même pour une annulation
-            $this->copyEventNeedAction($this, $_e, null, $copyFieldsList, $needActionFieldsList, null, null, strpos($this->get_class, '\Exception') !== false, true);
-            // Doit on annuler l'événement pour le participant ?
-            if ($clean_deleted_attendees) {
-              $_e->status = self::STATUS_CANCELLED;
-
-              // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
-              if (!empty($_e->sequence)) {
-                $_e->sequence = $_e->sequence + 1;
-              }
-              else {
-                $_e->sequence = 1;
-              }
+            if ($_e->status == self::STATUS_TENTATIVE) {
+              // Si on est en provisoire on le supprime directement
+              $_e->delete();
             }
-            $_e->modified = time();
-            $_e->save(false);
-          }       
+            else {
+              // Copier l'événement même pour une annulation
+              $this->copyEventNeedAction($this, $_e, null, $copyFieldsList, $needActionFieldsList, null, null, false, true);
+              // Doit on annuler l'événement pour le participant ?
+              if ($clean_deleted_attendees) {
+                $_e->status = self::STATUS_CANCELLED;
+
+                // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
+                if (!empty($_e->sequence)) {
+                  $_e->sequence = $_e->sequence + 1;
+                }
+                else {
+                  $_e->sequence = 1;
+                }
+              }
+              $_e->modified = time();
+              $_e->save(false);
+            }
+          }
         }
       }
-    }      
+    }
   }
 
   /**
@@ -1266,6 +1277,20 @@ class Event extends MceObject {
             $event->attendees = $attendees;
           }          
         }
+        // MANTIS 0007811: Désannuler un événement via le en attente
+        else if ($attendee_event->status == self::STATUS_CANCELLED
+            && $event->status != self::STATUS_CANCELLED
+            && isset($attendee_key)) {
+          switch ($attendees[$attendee_key]->response) {
+            case Attendee::RESPONSE_ACCEPTED:
+              $attendee_event->status = self::STATUS_CONFIRMED;
+              break;
+            case Attendee::RESPONSE_NEED_ACTION:
+            case Attendee::RESPONSE_TENTATIVE:
+              $attendee_event->status = self::STATUS_TENTATIVE;
+              break;
+          }
+        }
         return true;
       }
     }
@@ -1344,11 +1369,13 @@ class Event extends MceObject {
           $event->attendees = $attendees;
         }
       }
-      $attendee_event->class = self::CLASS_PUBLIC;
-      $attendee_event->transparency = self::TRANS_OPAQUE;
-      $attendee_event->created = time();      
-      $attendee_event->owner = $attendee_uid;
-      $attendee_event->alarm = 0;
+      $attendee_event->class          = self::CLASS_PUBLIC;
+      $attendee_event->transparency   = self::TRANS_OPAQUE;
+      $attendee_event->created        = time();      
+      $attendee_event->owner          = $event->owner;
+      $attendee_event->creator_email  = $event->creator_email;
+      $attendee_event->creator_name   = $event->creator_name;
+      $attendee_event->alarm          = 0;
 
       // MANTIS 0006232: [En attente] Gérer les catégories des espaces de travail du BNum
       if (strpos($event->category, 'ws#') === 0) {
@@ -1357,7 +1384,11 @@ class Event extends MceObject {
       
       // copier la liste des champs
       foreach ($copyFieldsList as $field) {
-        $attendee_event->$field = $event->$field;
+        if ($event->getObjectMelanie()->getFieldValueFromData($field) != $attendee_event->getObjectMelanie()->getFieldValueFromData($field)) {
+          $newvalue = $event->getObjectMelanie()->getFieldValueFromData($field);
+          $attendee_event->getObjectMelanie()->setFieldValueToData($field, $newvalue);
+          $attendee_event->getObjectMelanie()->setFieldHasChanged($field);
+        }
       }
       return true;
     }
@@ -1637,19 +1668,31 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
+
+    // Version du schéma par défaut
+    $this->version = self::VERSION;
+
     // MANTIS 0005125: Bloquer les répétitions "récursives"
     if (!$this->checkRecurrence()) {
       M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() La recurrence ne respecte pas les regles d'usage (duree de l'evenement plus longue que la repetition)");
       return null;
     }
-    // Sauvegarde des participants
-    if ($saveAttendees) {
-      $this->saveAttendees();
-    }
+
     // MANTIS 0007426: Avancer la date de fin de récurrence devrait supprimer les occurrences postérieures
     if ($this->objectmelanie->fieldHasChanged('enddate')) {
       $this->deleteOldOccurrences();
     }
+
+    if (isset($this->exceptions)) {
+      // MANTIS 0007427: Modifier toutes les occurrences devrait également modifier les occurrences modifiées si possible
+      $this->updateOccurrences();
+    }
+
+    // Sauvegarde des participants
+    if ($saveAttendees) {
+      $this->saveAttendees();
+    }
+    
     // Supprimer les exceptions
     if (isset($this->deleted_exceptions) && is_array($this->deleted_exceptions) && count($this->deleted_exceptions) > 0) {
       M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save() delete " . count($this->deleted_exceptions));
@@ -1662,14 +1705,12 @@ class Event extends MceObject {
     $exMod = false;
     // Sauvegarde des exceptions
     if (isset($this->exceptions)) {
-      // MANTIS 0007427: Modifier toutes les occurrences devrait également modifier les occurrences modifiées si possible
-      $this->updateOccurrences();
-
       foreach ($this->exceptions as $exception) {
         $res = $exception->save();
         $exMod = $exMod || !is_null($res);
       }
     }
+
     if ($this->deleted) {
       // Sauvegarde des attributs
       $this->saveAttributes();
@@ -1682,8 +1723,7 @@ class Event extends MceObject {
     if (!isset($this->owner)) {
       $this->owner = $this->user->uid;
     }
-    // Version du schéma par défaut
-    $this->version = 2;
+
     // Sauvegarde l'objet
     $insert = $this->objectmelanie->save();
     if (!is_null($insert)) {
@@ -1750,9 +1790,20 @@ class Event extends MceObject {
     foreach ($this->exceptions as $exception) {
       foreach ($fields as $field) {
         if ($this->objectmelanie->fieldHasChanged($field) 
+            // Comparaison entre oldData et les valeurs de l'exception
             && $this->objectmelanie->getOldData($field) == $exception->getObjectMelanie()->getFieldValueFromData($field)) {
-          $exception->$field = $this->$field;
+          if ($this->getObjectMelanie()->getFieldValueFromData($field) != $exception->getObjectMelanie()->getFieldValueFromData($field)) {
+            // Si les valeurs sont égales on fait la même modification dans l'exception que dans la récurrence
+            $newvalue = $this->getObjectMelanie()->getFieldValueFromData($field);
+            $exception->getObjectMelanie()->setFieldValueToData($field, $newvalue);
+            $exception->getObjectMelanie()->setFieldHasChanged($field);
+          }
         }
+      }
+
+      // MANTIS 0007800: Modifier toute la récurrence devrait aussi modifier les participants des occurrences modifiées
+      if ($this->objectmelanie->fieldHasChanged('attendees')) {
+        $this->updateOccurrenceAttendees($exception);
       }
 
       // Gestion de la date
@@ -1778,6 +1829,80 @@ class Event extends MceObject {
             $exception->dtend = $dtend;
           }
         }
+      }
+    }
+  }
+
+  /**
+   * Mise a jour des participants de l'occurrence à partir de la récurrence
+   * 
+   * @param Exception $exception
+   */
+  protected function updateOccurrenceAttendees(&$exception) {
+    // Comparaison entre oldData et les valeurs de l'exception
+    $oldAttendees = unserialize($this->objectmelanie->getOldData('attendees'));
+    $exceptionAttendees = unserialize($exception->getObjectMelanie()->getFieldValueFromData('attendees'));
+
+    if (is_array($oldAttendees)) {
+      $oldAttendees     = array_change_key_case($oldAttendees);
+      $oldAttendeesKeys = array_keys($oldAttendees);
+      sort($oldAttendeesKeys);
+    }
+    else {
+      $oldAttendees     = [];
+      $oldAttendeesKeys = [];
+    }
+
+    if (is_array($exceptionAttendees)) {
+      $exceptionAttendees     = array_change_key_case($exceptionAttendees);
+      $exceptionAttendeesKeys = array_keys($exceptionAttendees);
+      sort($exceptionAttendeesKeys);
+    }
+    else {
+      $exceptionAttendees     = [];
+      $exceptionAttendeesKeys = [];
+    }
+
+    if ($oldAttendeesKeys == $exceptionAttendeesKeys) {
+      // Si les valeurs sont égales on fait la même modification dans l'exception que dans la récurrence
+      $newAttendees = unserialize($this->getObjectMelanie()->getFieldValueFromData('attendees'));
+      $toChanged    = false;
+
+      if (is_array($newAttendees)) {
+        $newAttendees     = array_change_key_case($newAttendees);
+        $newAttendeesKeys = array_keys($newAttendees);
+        sort($newAttendeesKeys);
+      }
+      else {
+        $newAttendees     = [];
+        $newAttendeesKeys = [];
+      }
+
+      // Rechercher les participants à ajouter
+      $attendeesToAdd = array_diff($newAttendeesKeys, $exceptionAttendeesKeys);
+
+      if (count($attendeesToAdd)) {
+        foreach($attendeesToAdd as $email) {
+          $exceptionAttendees[$email] = $newAttendees[$email];
+          $toChanged = true;
+        }
+      }
+
+      // Rechercher les participants à supprimer
+      $attendeesToDel = array_diff($exceptionAttendeesKeys, $newAttendeesKeys);
+
+      if (count($attendeesToDel)) {
+        foreach($attendeesToDel as $email) {
+          unset($exceptionAttendees[$email]);
+          $toChanged = true;
+        }
+      }
+
+      // Une valeur a changé on met à jour les participants de l'exception
+      if ($toChanged) {
+        $exception->getObjectMelanie()->setFieldValueToData('attendees', serialize($exceptionAttendees));
+        $exception->getObjectMelanie()->setFieldHasChanged('attendees');
+        $exception->clearAttendees();
       }
     }
   }
@@ -2365,6 +2490,14 @@ class Event extends MceObject {
   }
   
   /**
+   * Cas ou les participants ont été changée dans les data
+   * Réinitialise la variable temporaire _attendees 
+   * pour faire un recalcul au prochain appel
+   */
+  public function clearAttendees() {
+    $this->_attendees = null;
+  }
+  /**
    * Mapping attendees field
    * 
    * @param Attendee[] $attendees          
@@ -2417,11 +2550,17 @@ class Event extends MceObject {
 
         // Rechercher dans les participants pour ne pas avoir à chercher dans les listes
         $attendeeFound = false;
-        if (isset($this->user->email)) {
-          foreach ($_attendees as $key => $_attendee) {
-            if (strtolower($key) == strtolower($this->user->email)) {
-              $attendeeFound = true;
-              break;
+        $owner_email = strtolower(isset($this->calendar_owner_email) ? $this->calendar_owner_email : (isset($this->user->email) ? $this->user->email : null));
+        if (isset($owner_email)) {
+          if (strtolower($this->getMapOrganizer()->email) == $owner_email) {
+            $attendeeFound = true;
+          }
+          else {
+            foreach ($_attendees as $key => $_attendee) {
+              if (strtolower($key) == $owner_email) {
+                $attendeeFound = true;
+                break;
+              }
             }
           }
         }
@@ -2433,8 +2572,8 @@ class Event extends MceObject {
           $attendee->define($_attendee);
 
           // MANTIS 0006191: Mode en attente lorsque le participant est une liste
-          if ($this->getMapOrganizer()->owner_uid != $this->user->uid
-              && !$attendeeFound
+          if (!$attendeeFound
+              && $this->getMapOrganizer()->owner_uid != $this->user->uid
               && $attendee->is_list) {
             $this->attendeeIsList($attendee, $newAttendees, $Attendee, $attendeeFound);
           }

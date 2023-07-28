@@ -193,6 +193,9 @@ class Exception extends Event {
       throw new Exceptions\ObjectMelanieUndefinedException();
     if ($this->deleted)
       return false;
+
+    // Version du schéma par défaut
+    $this->version = self::VERSION;
     
     if (!isset($this->owner)) {
       $this->owner = $this->user->uid;
@@ -201,6 +204,7 @@ class Exception extends Event {
     if ($saveAttendees) {
       $this->saveAttendees();
     }
+
     // Sauvegarde l'objet
     $insert = $this->objectmelanie->save();
     if (!is_null($insert)) {

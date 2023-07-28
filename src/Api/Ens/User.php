@@ -20,7 +20,7 @@
  */
 namespace LibMelanie\Api\Ens;
 
-use LibMelanie\Api\Defaut;
+use LibMelanie\Api\Mce;
 use LibMelanie\Api\Ens\Users\Outofoffice;
 use LibMelanie\Api\Ens\Users\Share;
 use LibMelanie\Log\M2Log;
@@ -113,7 +113,7 @@ use LibMelanie\Config\Config;
  * @method string getTimezone() [OSOLETE] Chargement du timezone de l'utilisateur
  * @method bool save() Enregistrement de l'utilisateur dans l'annuaire
  */
-class User extends Defaut\User {
+class User extends Mce\User {
 
   // **** Configuration des filtres et des attributs par défaut
   /**
@@ -133,7 +133,20 @@ class User extends Defaut\User {
    * 
    * @ignore
    */
-  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'type'];
+  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'type', 'seealso'];
+
+  /**
+   * Filtre pour la méthode getBalp()
+   * 
+   * @ignore
+   */
+  const GET_BALP_FILTER = "(seealso=uid=%%uid%%,ou=people,dc=ens-lyon,dc=fr)";
+  /**
+   * Filtre pour la méthode getBalpEmission()
+   * 
+   * @ignore
+   */
+  const GET_BALP_EMISSION_FILTER = self::GET_BALP_FILTER;
 
   /**
    * Configuration du mapping qui surcharge la conf

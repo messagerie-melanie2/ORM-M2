@@ -288,7 +288,7 @@ class Attendee extends MceObject {
     $this->_name = isset($attendee[Config::get(Config::NAME)]) ? $attendee[Config::get(Config::NAME)] : "";
     $this->_role = isset($attendee[Config::get(Config::ROLE)]) ? $attendee[Config::get(Config::ROLE)] : MappingMce::REQ_PARTICIPANT;
     $this->_response = isset($attendee[Config::get(Config::RESPONSE)]) ? $attendee[Config::get(Config::RESPONSE)] : MappingMce::ATT_NEED_ACTION;
-    $this->_type = isset($attendee[Config::get(Config::CUTYPE)]) ? $attendee[Config::get(Config::CUTYPE)] : MappingMce::ATT_TYPE_INDIVIDUAL;
+    $this->_type = isset($attendee[Config::get(Config::CUTYPE)]) ? $attendee[Config::get(Config::CUTYPE)] : null;
     $this->_self_invite = isset($attendee[Config::get(Config::SELF_INVITE_ATTENDEE)]) ? $attendee[Config::get(Config::SELF_INVITE_ATTENDEE)] : false;
     $this->_need_action = isset($attendee[Config::get(Config::NEED_ACTION_ATTENDEE)]) ? $attendee[Config::get(Config::NEED_ACTION_ATTENDEE)] : null;
     $this->_is_saved = isset($attendee[Config::get(Config::IS_SAVED_ATTENDEE)]) ? $attendee[Config::get(Config::IS_SAVED_ATTENDEE)] : null;

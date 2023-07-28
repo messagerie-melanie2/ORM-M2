@@ -222,6 +222,9 @@ abstract class MagicObject implements Serializable {
 	      && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
       $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
     }
+    if (isset($this->data[$lname]) && !$this->haschanged[$lname]) {
+      $this->oldData[$lname] = $this->data[$lname];
+    }
     $this->data[$lname] = $value;
 	}
 
@@ -457,7 +460,7 @@ abstract class MagicObject implements Serializable {
     if (isset($this->data[$lname]) && is_scalar($value) && !is_array($value) && $this->data[$lname] === $value) {
       return false;
     }
-    if (isset($this->data[$lname])) {
+    if (isset($this->data[$lname]) && !$this->haschanged[$lname]) {
       $this->oldData[$lname] = $this->data[$lname];
     }
     $this->data[$lname] = $value;

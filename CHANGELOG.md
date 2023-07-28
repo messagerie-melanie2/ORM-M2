@@ -1,3 +1,14 @@
+ORM M2 - 0.6.5.18
+------
+- 0007798: Mauvaise copie des données via le en attente
+- 0007799: Régression liée à la suppression des ocurrences après la date de fin de récurrence
+- 0007802: [MagicObject] L'enregistrement des anciennes valeur ne doit se faire que si haschanged est à false
+- 0007800: Modifier toute la récurrence devrait aussi modifier les participants des occurrences modifiées
+- 0007806: Ajouter la version du schéma dans les exceptions
+- 0007807: Suppression d'un participant d'une réunion récurrente
+- 0007809: Mettre l'organisateur en créateur via le en attente
+- 0007811: Désannuler un événement via le en attente
+
 ORM M2 - 0.6.5.17
 ------
 - 0007750: Optimisation des réunions à des liste

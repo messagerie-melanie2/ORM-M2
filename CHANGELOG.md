@@ -1,3 +1,7 @@
+ORM M2 - 0.6.5.19
+------
+- 0007843: Copie des pièces jointes dans le en attente
+
 ORM M2 - 0.6.5.18
 ------
 - 0007798: Mauvaise copie des données via le en attente

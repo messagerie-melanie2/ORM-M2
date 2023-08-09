@@ -533,9 +533,13 @@ class ICS {
 	 */
 	const FMTTYPE = 'FMTTYPE';
 	/**
-	 * Size of the Attachment (http://tools.ietf.org/html/draft-daboo-caldav-attachments-00#page-11)
+	 * Size of the Attachment (https://datatracker.ietf.org/doc/html/rfc8607#section-4.1)
 	 */
 	const SIZE = 'SIZE';
+	/**
+	 * Filename of the Attachment (https://datatracker.ietf.org/doc/html/rfc8607#section-4.2)
+	 */
+	const FILENAME = 'FILENAME';
 
 	// Freebusy
 	/**

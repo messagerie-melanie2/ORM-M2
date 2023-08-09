@@ -55,7 +55,6 @@ class UserPrefs extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    // M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
     // Définition de la propriété de l'évènement
     $this->objectmelanie = new ObjectMelanie('UserPrefs');
     
@@ -73,7 +72,6 @@ class UserPrefs extends MceObject {
    *
    */
   function setUserMelanie($user) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
     $this->objectmelanie->user = $user->uid;
   }
   

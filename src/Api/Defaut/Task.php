@@ -126,7 +126,6 @@ class Task extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    // M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
     // Définition de la tâche melanie2
     $this->objectmelanie = new ObjectMelanie('TaskMelanie');
     
@@ -147,7 +146,6 @@ class Task extends MceObject {
    *
    */
   function setUserMelanie($user) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
     $this->user = $user;
   }
   
@@ -159,7 +157,6 @@ class Task extends MceObject {
    *
    */
   function setTaskslistMelanie($taskslist) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setTaskslistMelanie()");
     $this->taskslistmce = $taskslist;
     $this->objectmelanie->taskslist = $this->taskslistmce->id;
   }

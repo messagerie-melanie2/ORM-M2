@@ -268,7 +268,6 @@ class Event extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    // M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
     // Définition de l'évènement melanie2
     $this->objectmelanie = new EventMelanie();
     
@@ -289,7 +288,6 @@ class Event extends MceObject {
    *
    */
   public function setUserMelanie($user) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
     $this->user = $user;
   }
   /**
@@ -298,7 +296,6 @@ class Event extends MceObject {
    * @return User
    */
   public function getUserMelanie() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserMelanie()");
     return $this->user;
   }
   
@@ -310,7 +307,6 @@ class Event extends MceObject {
    *
    */
   public function setCalendarMelanie($calendar) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setCalendarMelanie()");
     $this->calendarmce = $calendar;
     $this->objectmelanie->calendar = $this->calendarmce->id;
   }
@@ -320,7 +316,6 @@ class Event extends MceObject {
    * @return Calendar
    */
   public function getCalendarMelanie() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getCalendarMelanie()");
     return $this->calendarmce;
   }
   
@@ -940,6 +935,7 @@ class Event extends MceObject {
         'recurrence_json',
         'organizer_json',
         'organizer_calendar_id',
+        'attachments',
     ];
     // Vérifier si l'enregistrement en attente est nécessaire
     if ($this->exists()) {

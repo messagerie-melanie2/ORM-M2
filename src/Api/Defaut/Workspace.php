@@ -116,7 +116,6 @@ class Workspace extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
     // Définition du calendrier melanie2
     $this->objectmelanie = new WorkspaceMelanie();
     
@@ -133,7 +132,6 @@ class Workspace extends MceObject {
    * @ignore
    */
   public function setUserMelanie($user) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
     $this->user = $user;
   }
   

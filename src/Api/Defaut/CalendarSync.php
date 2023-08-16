@@ -67,7 +67,7 @@ class CalendarSync extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
 
-    // M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class."->__construct()");
     // Définition de la propriété de l'objet
     $this->objectmelanie = new ObjectMelanie('CalendarSync');
 

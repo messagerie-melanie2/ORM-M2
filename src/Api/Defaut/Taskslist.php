@@ -159,7 +159,7 @@ class Taskslist extends MceObject {
    * Mapping caldavurl field
    */
   protected function getMapCaldavurl() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCaldavurl()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapCaldavurl()");
     if (!isset($this->objectmelanie)) throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     $url = null;
     if (Config::is_set(Config::TASKSLIST_CALDAV_URL)) {

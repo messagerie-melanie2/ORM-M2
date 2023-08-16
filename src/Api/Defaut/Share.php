@@ -90,7 +90,7 @@ class Share extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    // M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class."->__construct()");
     // Définition du partage
     $this->objectmelanie = new ObjectMelanie('Share');
     
@@ -108,7 +108,7 @@ class Share extends MceObject {
    *
    */
   function setObject($object) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setObject()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setObject()");
     if (isset($object->object_id)) {
       $this->objectmelanie->object_id = $object->object_id;
     }

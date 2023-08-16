@@ -167,7 +167,7 @@ class Calendar extends MceObject {
           $exceptions[$exception->uid . $exception->calendar][$recId->format($Exception::FORMAT_ID)] = $exception;
         }
       } catch (\Exception $ex) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getAllEvents() Exception: " . $ex);
+        M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->getAllEvents() Exception: " . $ex);
       }
     }
     // Détruit les variables pour libérer le plus rapidement de la mémoire
@@ -256,7 +256,7 @@ class Calendar extends MceObject {
           $exceptions[$exception->uid . $exception->calendar][$recId->format($Exception::FORMAT_ID)] = $exception;
         }
       } catch (\Exception $ex) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getRangeEvents() Exception: " . $ex);
+        M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->getRangeEvents() Exception: " . $ex);
       }
     }
     // Détruit les variables pour libérer le plus rapidement de la mémoire
@@ -305,7 +305,7 @@ class Calendar extends MceObject {
    * Mapping caldavurl field
    */
   protected function getMapCaldavurl() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCaldavurl()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapCaldavurl()");
     if (!isset($this->objectmelanie)) throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     $url = null;
     if (Config::is_set(Config::CALENDAR_CALDAV_URL)) {

@@ -49,7 +49,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 	    // Défini la classe courante
 	    $this->get_class = get_class($this);
 
-		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
+		M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class."->__construct()");
 
 		// Récupération du type d'objet en fonction de la class
 		$this->objectType = explode('\\',$this->get_class);
@@ -512,7 +512,7 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 	 * @return boolean
 	 */
 	public function asRight($action) {
-		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->asRight($action)");
+		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->asRight($action, $this->id)");
 		return (DefaultConfig::$PERMS[$action] & $this->perm_calendar) === DefaultConfig::$PERMS[$action];
 	}
 }

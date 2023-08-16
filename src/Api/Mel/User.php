@@ -352,7 +352,7 @@ class User extends Defaut\User {
    * @return boolean true si l'access internet de l'utilisateur est activé, false sinon
    */
   protected function getMapInternet_access_enable() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapInternet_access_enable()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapInternet_access_enable()");
     return $this->internet_access_admin && $this->internet_access_user;
   }
 
@@ -362,7 +362,7 @@ class User extends Defaut\User {
    * @return mixed|NULL Valeur du serveur host, null si non trouvé
    */
   protected function getMapServer_host() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapServer_host()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapServer_host()");
     if (is_array($this->server_routage)) {
       foreach ($this->server_routage as $route) {
         if (strpos($route, self::SERVER_HOST_DELIMITER) !== false) {
@@ -380,7 +380,7 @@ class User extends Defaut\User {
    * @return mixed|NULL Valeur du serveur user, null si non trouvé
    */
   protected function getMapServer_user() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapServer_user()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapServer_user()");
     if (is_array($this->server_routage)) {
       foreach ($this->server_routage as $route) {
         if (strpos($route, self::SERVER_HOST_DELIMITER) !== false) {
@@ -398,7 +398,7 @@ class User extends Defaut\User {
    * @param Share[] $shares
    */
   protected function setMapShares($shares) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapShares()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapShares()");
     if (!isset($this->objectmelanie)) {
       throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     }
@@ -440,7 +440,7 @@ class User extends Defaut\User {
    * @return boolean true si l'access internet de l'utilisateur est activé, false sinon
    */
   protected function getMapShares() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapShares()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapShares()");
     if (!isset($this->_shares)) {
       $_shares = $this->objectmelanie->shares;
       $this->_shares = [];
@@ -873,7 +873,7 @@ class User extends Defaut\User {
    * @return Outofoffice[] Tableau de d'objets Outofoffice
    */
   protected function getMapOutofoffices() {
-		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOutofoffices()");
+		M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapOutofoffices()");
     $objects = [];
     if (is_array($this->objectmelanie->outofoffices)) {
       $i = 0;
@@ -897,7 +897,7 @@ class User extends Defaut\User {
    * @param Outofoffice[] $OofObjects
    */
   protected function setMapOutofoffices($OofObjects) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapOutofoffices()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapOutofoffices()");
     $reponses = [];
     if (is_array($OofObjects)) {
       foreach ($OofObjects as $OofObject) {

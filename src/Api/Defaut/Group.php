@@ -130,7 +130,7 @@ abstract class Group extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->__construct()");
 
     // Récupération de l'itemName
     $this->_itemName = $itemName;
@@ -246,7 +246,7 @@ abstract class Group extends MceObject {
    * @return User[] Liste d'objets User
    */
   protected function getMapMembers() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapMembers()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapMembers()");
     if (!isset($this->_members)) {
       $this->_members = [];
       $classUser = $this->__getNamespace() . '\\User';
@@ -268,7 +268,7 @@ abstract class Group extends MceObject {
    * @param User[] Liste d'objets User  
    */
   function setMapMembers($members) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapMembers()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapMembers()");
     $this->_members = $members;
     $_members = [];
     foreach ($this->_members as $member) {

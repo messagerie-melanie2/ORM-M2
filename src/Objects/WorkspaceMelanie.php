@@ -50,7 +50,7 @@ class WorkspaceMelanie extends ObjectMelanie {
      * @return WorkspaceMelanie[]
      */
     public function listPublicsWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->listWorkspacesByHashtag()");
+        M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->listWorkspacesByHashtag()");
         $query = Sql\SqlWorkspaceRequests::listPublicsWorkspaces;
         $query = str_replace('{order_by}', Sql\Sql::GetOrderByClause($this->objectType, $orderby, $asc), $query);
         $query = str_replace('{limit}', Sql\Sql::GetLimitClause($limit, $offset), $query);
@@ -70,7 +70,7 @@ class WorkspaceMelanie extends ObjectMelanie {
      * @return WorkspaceMelanie[]
      */
 	public function listWorkspacesByHashtag($hashtag, $orderby = null, $asc = true, $limit = null, $offset = null) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->listWorkspacesByHashtag()");
+        M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->listWorkspacesByHashtag()");
         $query = Sql\SqlWorkspaceRequests::listWorkspacesByHashtag;
         $query = str_replace('{order_by}', Sql\Sql::GetOrderByClause($this->objectType, $orderby, $asc), $query);
         $query = str_replace('{limit}', Sql\Sql::GetLimitClause($limit, $offset), $query);
@@ -88,7 +88,7 @@ class WorkspaceMelanie extends ObjectMelanie {
      * @return ObjectMelanie[]
      */
     public function getWorkspaceHashtags() {
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserWorkspaces()");
+        M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserWorkspaces()");
         // Gestion du mapping global
         if (!isset($this->id)) {
             return false;
@@ -110,7 +110,7 @@ class WorkspaceMelanie extends ObjectMelanie {
      * @return ObjectMelanie[]
      */
     public function getWorkspaceShares() {
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getWorkspaceShares()");
+        M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getWorkspaceShares()");
         // Gestion du mapping global
         if (!isset($this->id)) {
             return false;

@@ -207,7 +207,7 @@ class Addressbook extends MceObject {
    * Mapping carddavurl field
    */
   protected function getMapCarddavurl() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCarddavurl()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapCarddavurl()");
     if (!isset($this->objectmelanie)) throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     $url = null;
     if (Config::is_set(Config::ADDRESSBOOK_CARDDAV_URL)) {

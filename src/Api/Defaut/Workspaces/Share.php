@@ -64,7 +64,7 @@ class Share extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->__construct()");
     // Définition du calendrier melanie2
     $this->objectmelanie = new ObjectMelanie('WorkspaceShare');
     
@@ -82,7 +82,7 @@ class Share extends MceObject {
    *
    */
   public function setWorkspace($workspace) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setWorkspace()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setWorkspace()");
     $this->objectmelanie->workspace = $workspace->id;
   }
 }

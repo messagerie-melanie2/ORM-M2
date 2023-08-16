@@ -210,7 +210,7 @@ class Attendee extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->__construct()");
 
     // Définition de l'évènement Mél associé
     if (isset($event)) {
@@ -231,7 +231,7 @@ class Attendee extends MceObject {
    *
    */
   public function render() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->render()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->render()");
     $attendee = [];
     $attendee[Config::get(Config::NAME)] = $this->_name;
     $attendee[Config::get(Config::ROLE)] = $this->_role;
@@ -280,7 +280,7 @@ class Attendee extends MceObject {
    *
    */
   public function define($attendee) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->define()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->define()");
     if (!is_array($attendee)) {
       M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->define(): attendee not an array");
       return null;
@@ -335,7 +335,7 @@ class Attendee extends MceObject {
    *
    */
   protected function getMapEmail() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapEmail()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapEmail()");
     if (empty($this->_email) && isset($this->_user)) {
       $this->_email = $this->_user->email;
     }
@@ -360,7 +360,7 @@ class Attendee extends MceObject {
    *
    */
   protected function getMapName() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapName()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapName()");
     if (empty($this->_name) && isset($this->_user)) {
       $this->_name = $this->_user->fullname;
     }
@@ -383,7 +383,7 @@ class Attendee extends MceObject {
    * @ignore
    */
   protected function getMapIs_saved() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapIs_saved()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapIs_saved()");
     return $this->_is_saved;
   }
   
@@ -405,7 +405,7 @@ class Attendee extends MceObject {
    *
    */
   protected function getMapSelf_invite() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapSelf_invite()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapSelf_invite()");
     return $this->_self_invite;
   }
 
@@ -425,7 +425,7 @@ class Attendee extends MceObject {
    * @ignore
    */
   protected function getMapDelegated_from() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDelegated_from()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapDelegated_from()");
     return $this->_delegated_from;
   }
 
@@ -445,7 +445,7 @@ class Attendee extends MceObject {
    * @ignore
    */
   protected function getMapDelegated_to() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDelegated_to()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapDelegated_to()");
     return $this->_delegated_to;
   }
 
@@ -468,7 +468,7 @@ class Attendee extends MceObject {
    *
    */
   protected function getMapType() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapType()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapType()");
     if (isset(MappingMce::$MapAttendeeTypeMceToObject[$this->_type]))
       return MappingMce::$MapAttendeeTypeMceToObject[$this->_type];
     else
@@ -494,7 +494,7 @@ class Attendee extends MceObject {
    *
    */
   protected function getMapResponse() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapResponse()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapResponse()");
     if (isset(MappingMce::$MapAttendeeResponseMceToObject[$this->_response]))
       return MappingMce::$MapAttendeeResponseMceToObject[$this->_response];
     else
@@ -520,7 +520,7 @@ class Attendee extends MceObject {
    *
    */
   protected function getMapRole() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRole()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapRole()");
     if (isset(MappingMce::$MapAttendeeRoleMceToObject[$this->_role]))
       return MappingMce::$MapAttendeeRoleMceToObject[$this->_role];
     else
@@ -540,7 +540,7 @@ class Attendee extends MceObject {
    * Mapping attendee uid field
    */
   protected function getMapUid() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUid()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapUid()");
     // Si l'email n'est pas set ou si c'est un externe on considère que c'est individuel
     if (!isset($this->_email) || isset($this->_is_external) && $this->_is_external) {
       return null;
@@ -625,7 +625,7 @@ class Attendee extends MceObject {
    * @return array] Liste d'adresses email
    */
   protected function getMapMembers() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapMembers()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapMembers()");
     if (isset($this->_email)) {
       $Group = $this->__getNamespace() . '\\Group';
       $group = new $Group();
@@ -641,7 +641,7 @@ class Attendee extends MceObject {
    * Mapping attendee need_action field
    */
   protected function getMapNeed_action() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapNeed_action()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapNeed_action()");
     if (!isset($this->_need_action) 
         && (isset($this->_email) || isset($this->_uid))) {
       $need_action = Config::get(Config::NEED_ACTION_ENABLE);

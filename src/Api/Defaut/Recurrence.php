@@ -87,7 +87,7 @@ class Recurrence extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->__construct()");
     // Définition de l'évènement melanie2
     if (isset($event)) {
       $this->event = $event;
@@ -111,7 +111,7 @@ class Recurrence extends MceObject {
    * @ignore
    */
   protected function setMapEnddate($enddate) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapEnddate()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapEnddate()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->objectmelanie->enddate = $enddate;
     if ($enddate instanceof \DateTime) {
@@ -132,7 +132,7 @@ class Recurrence extends MceObject {
    *
    */
   protected function getMapEnddate() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapEnddate()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapEnddate()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset($this->event) && $this->event->useJsonData()) {
       $enddate = $this->getRecurrenceParam(ICS::UNTIL);
@@ -156,7 +156,7 @@ class Recurrence extends MceObject {
    *
    */
   protected function issetMapEnddate() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapEnddate()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->issetMapEnddate()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset($this->event) && $this->event->useJsonData()) {
       return $this->issetRecurrenceParam(ICS::UNTIL);
@@ -189,7 +189,7 @@ class Recurrence extends MceObject {
    *
    */
   protected function getMapCount() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCount()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapCount()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset($this->event) && $this->event->useJsonData()) {
       return $this->getRecurrenceParam(ICS::COUNT);
@@ -205,7 +205,7 @@ class Recurrence extends MceObject {
    *
    */
   protected function issetMapCount() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapCount()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->issetMapCount()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset($this->event) && $this->event->useJsonData()) {
       return $this->issetRecurrenceParam(ICS::COUNT);
@@ -239,7 +239,7 @@ class Recurrence extends MceObject {
    *
    */
   protected function getMapInterval() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapInterval()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapInterval()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset($this->event) && $this->event->useJsonData()) {
       if ($this->issetRecurrenceParam(ICS::INTERVAL)) {
@@ -260,7 +260,7 @@ class Recurrence extends MceObject {
    *
    */
   protected function issetMapInterval() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapInterval()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->issetMapInterval()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset($this->event) && $this->event->useJsonData()) {
       return $this->issetRecurrenceParam(ICS::INTERVAL);
@@ -308,7 +308,7 @@ class Recurrence extends MceObject {
    *
    */
   protected function getMapType() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRecurtype()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapRecurtype()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     return MappingMce::$MapRecurtypeMceToObject[$this->objectmelanie->type];
   }
@@ -322,7 +322,7 @@ class Recurrence extends MceObject {
    *
    */
   protected function setMapDays($days) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapDays()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapDays()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     $this->objectmelanie->days = MappingMce::NODAY;
     if (is_array($days)) {
@@ -358,7 +358,7 @@ class Recurrence extends MceObject {
    *
    */
   protected function getMapDays() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDays()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapDays()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
       if (isset($this->event) && $this->event->useJsonData()) {
@@ -380,7 +380,7 @@ class Recurrence extends MceObject {
    *
    */
   protected function issetMapDays() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapDays()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->issetMapDays()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset($this->event) && $this->event->useJsonData()) {
       return $this->issetRecurrenceParam(ICS::BYDAY);
@@ -401,7 +401,7 @@ class Recurrence extends MceObject {
    *          An iCalendar 2.0 conform RRULE value.
    */
   protected function setMapRrule($rdata) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRrule()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapRrule()");
     $recurrence = $this;
     
     // Nettoyer la rdate
@@ -587,7 +587,7 @@ class Recurrence extends MceObject {
    * @return array An iCalendar 2.0 conform RRULE value for roundcube.
    */
   protected function getMapRrule() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRrule()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapRrule()");
     // Tableau permettant de recuperer toutes les valeurs de la recurrence
     $recurrence = [];
     if (isset($this->event) 

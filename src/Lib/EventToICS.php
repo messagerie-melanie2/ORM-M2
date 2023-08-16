@@ -421,7 +421,11 @@ class EventToICS {
       }
       // Location
       if (isset($event->location) && $event->location != "") {
-        $vevent->LOCATION = self::cleanUTF8String($event->location);
+        $location = self::cleanUTF8String($event->location);
+        if (strpos($location, '@visio:') === 0) {
+          $location = substr($location, 7);
+        }
+        $vevent->LOCATION = $location;
       }
       // Alarm
       if (isset($event->alarm) && $event->alarm != 0) {

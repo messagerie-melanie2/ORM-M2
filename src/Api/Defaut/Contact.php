@@ -312,7 +312,7 @@ class Contact extends MceObject {
    *
    */
   protected function setMapVcard($vcard) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapVcard()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapVcard()");
     \LibMelanie\Lib\VCardToContact::Convert($vcard, $this, $this->addressbookmce, $this->user);
   }
   /**
@@ -323,7 +323,7 @@ class Contact extends MceObject {
    *
    */
   protected function getMapVcard() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapVcard()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapVcard()");
     return \LibMelanie\Lib\ContactToVCard::Convert($this, $this->addressbookmce, $this->user);
   }
 }

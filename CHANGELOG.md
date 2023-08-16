@@ -1,3 +1,9 @@
+ORM M2 - 0.6.5.20
+------
+- 0007846: [ICS] Nettoyer le @visio: dans la location
+- 0007849: Ajouter un niveau de log TRACE
+- 0007850: Ne pas charger les informations des participants quand l'organisateur est externe
+
 ORM M2 - 0.6.5.19
 ------
 - 0007843: Copie des pièces jointes dans le en attente

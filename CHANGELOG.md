@@ -1,3 +1,7 @@
+ORM M2 - 0.6.5.21
+------
+- 0007856: Déplacer le read_version.php à la racine
+
 ORM M2 - 0.6.5.20
 ------
 - 0007846: [ICS] Nettoyer le @visio: dans la location

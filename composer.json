@@ -1,7 +1,7 @@
 {
 	"name" : "messagerie-melanie2/orm-m2",
-	"version" : "0.6.5.20",
-	"version_normalized" : "0.6.5.20",
+	"version" : "0.6.5.21",
+	"version_normalized" : "0.6.5.21",
 	"description" : "ORM pour l'accès aux données Mél",
 	"keywords" : [
 		"ORM",

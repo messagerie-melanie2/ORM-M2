@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-include __DIR__ . '/../Version.php';
+include __DIR__ . '/Version.php';
 
 if (isset($argv) && count($argv) == 2) {
     if ($argv[1] == 'version') {

@@ -134,7 +134,7 @@ class Outofoffice extends Defaut\Users\Outofoffice {
         }
         else if ($hour_start instanceof \DateTime) {
             $oldTimezone = $hour_start->getTimezone();
-            if ($oldTimezone->getName() != 'Europe/Paris') {
+            if (!$this->isLocalTimezone($oldTimezone)) {
                 $offset = $oldTimezone->getOffset($hour_start);
                 $this->offset = $offset/3600;
             }
@@ -308,14 +308,14 @@ class Outofoffice extends Defaut\Users\Outofoffice {
             if ($this->hour_start->format('His') != $this->hour_end->format('His')) {
                 // Heure de debut
                 if (isset($this->hour_start)) {
-                    if ($this->hour_start->getTimezone()->getName() != 'Europe/Paris') {
+                    if (!$this->isLocalTimezone($this->hour_start->getTimezone())) {
                         $this->hour_start->setTimezone(new \DateTimeZone('GMT'));
                     }
                     $data[] = 'HDEB:' . $this->hour_start->format('His');
                 }
                 // Heure de fin
                 if (isset($this->hour_end)) {
-                    if ($this->hour_end->getTimezone()->getName() != 'Europe/Paris') {
+                    if (!$this->isLocalTimezone($this->hour_end->getTimezone())) {
                         $this->hour_end->setTimezone(new \DateTimeZone('GMT'));
                     }
                     $data[] = 'HFIN:' . $this->hour_end->format('His');
@@ -334,5 +334,36 @@ class Outofoffice extends Defaut\Users\Outofoffice {
         $data[] = 'TEXTE:' . $this->message;
 
         return implode(' ', $data);
+    }
+
+    /**
+     * Retourne si le timezone est local
+     * 
+     * @param \DateTimeZone $timezone
+     * 
+     * @return boolean
+     */
+    protected function isLocalTimezone($timezone) {
+        $locals = [
+            'Europe/Amsterdam',
+            'Europe/Belgrade',
+            'Europe/Berlin',
+            'Europe/Bratislava',
+            'Europe/Brussels',
+            'Europe/Budapest',
+            'Europe/Copenhagen',
+            'Europe/Ljubljana',
+            'Europe/Madrid',
+            'Europe/Paris',
+            'Europe/Prague',
+            'Europe/Rome',
+            'Europe/Sarajevo',
+            'Europe/Skopje',
+            'Europe/Stockholm',
+            'Europe/Vienna',
+            'Europe/Warsaw',
+            'Europe/Zagreb',
+        ];
+        return in_array($timezone->getName(), $locals);
     }
 }

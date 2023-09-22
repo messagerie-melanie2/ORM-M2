@@ -1,3 +1,9 @@
+ORM M2 - 0.6.5.22
+------
+- 0007897: [Mel/Outofoffice] Gérer des timezone locaux autres que Europe/Paris
+- Fonction PL/SQL pour purger les événements
+- Fonction PL/SQL pour nettoyer les pièces jointes inutiles
+
 ORM M2 - 0.6.5.21
 ------
 - 0007856: Déplacer le read_version.php à la racine

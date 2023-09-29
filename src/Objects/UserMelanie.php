@@ -351,6 +351,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     static::Init($this->mapping, $this->server);
     // Est-ce que le dn est bien défini ?
     if (!isset($this->dn)) {
+      M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() dn is null");
       return null;
     }
     // MANTIS 0006136: Gérer la création d'un objet LDAP

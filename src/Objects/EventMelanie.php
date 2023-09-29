@@ -158,7 +158,10 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
-		if (!isset($this->primaryKeys)) return null;
+		if (!isset($this->primaryKeys)) {
+			M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() No primaryKeys");
+			return null;
+		}
 
 		// Ne rien sauvegarder si rien n'a changé
 		$haschanged = false;
@@ -166,7 +169,10 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 			$haschanged = $haschanged || $value;
 			if ($haschanged) break;
 		}
-		if (!$haschanged) return null;
+		if (!$haschanged) {
+			M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Nothing has changed");
+			return null;
+		}
 		// Si isExist est à null c'est qu'on n'a pas encore testé
 		if (!is_bool($this->isExist)) {
 		  $this->isExist = $this->exists();
@@ -184,7 +190,10 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 			$params = [];
 			// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
 			foreach ($this->primaryKeys as $key) {
-				if (!isset($this->$key)) return null;
+				if (!isset($this->$key)) {
+					M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Update $key is null");
+					return null;
+				}
 				// Récupèration des données de mapping
 				if (isset(MappingMce::$Data_Mapping[$this->objectType])
 							&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
@@ -205,7 +214,10 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 				}
 			}
 			// Pas d'update
-			if ($update == "") return null;
+			if ($update == "") {
+				M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Update is null");
+				return null;
+			}
 
 			// Replace
 			$query = str_replace("{event_set}", $update, Sql\SqlCalendarRequests::updateEvent);
@@ -217,7 +229,10 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 			$insert = true;
 			// Test si les clés primaires sont bien instanciées
 			foreach ($this->primaryKeys as $key) {
-				if (!isset($this->$key)) return null;
+				if (!isset($this->$key)) {
+					M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Insert $key is null");
+					return null;
+				}
 			}
 			// Gestion de l'event_id
 			if (!isset($this->id)) $this->id = hash('sha256', $this->uid . $this->calendar . uniqid(), false);
@@ -241,7 +256,10 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 				}
 			}
 			// Pas d'insert
-			if ($data_fields == "") return null;
+			if ($data_fields == "") {
+				M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Insert is null");
+				return null;
+			}
 
 			// Replace
 			$query = str_replace("{data_fields}", $data_fields, Sql\SqlCalendarRequests::insertEvent);

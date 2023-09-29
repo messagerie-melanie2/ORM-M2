@@ -174,7 +174,10 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
-		if (!isset($this->primaryKeys)) return null;
+		if (!isset($this->primaryKeys)) {
+			M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() No primaryKeys");
+			return null;
+		}
 
 		// Ne rien sauvegarder si rien n'a changé
 		$haschanged = false;
@@ -182,7 +185,10 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 			$haschanged = $haschanged || $value;
 			if ($haschanged) break;
 		}
-		if (!$haschanged) return null;
+		if (!$haschanged) {
+			M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Nothing has changed");
+			return null;
+		}
 		// Si isExist est à null c'est qu'on n'a pas encore testé
 		if (!is_bool($this->isExist)) {
 		  $this->isExist = $this->exists();
@@ -207,7 +213,7 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 					'datatree_name' => $datatree_name,
 					'datatree_ctag' => md5($datatree_name),
 					'user_uid' => $this->user_uid,
-			    'group_uid' => isset($this->group) ?  $this->group : DefaultConfig::TASKSLIST_GROUP_UID,
+			    	'group_uid' => isset($this->group) ?  $this->group : DefaultConfig::TASKSLIST_GROUP_UID,
 			];
 			if (Sql\Sql::GetInstance()->executeQuery($query, $params)) {
 				$this->isExist = true;
@@ -215,41 +221,45 @@ class TaskslistMelanie extends MagicObject implements IObjectMelanie {
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
 				$params = [
 						'datatree_id' => $datatree_id,
-				    'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_NAME,
+				    	'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_NAME,
 						'attribute_key' => '',
 						'attribute_value' => isset($this->name) ?  $this->name : $datatree_name,
 				];
 				if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
 			        Sql\Sql::GetInstance()->rollBack();
+					M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Error on insert attribute name");
 			        return null;
 				}
 				// owner
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
 				$params = [
 						'datatree_id' => $datatree_id,
-				    'attribute_name' => DefaultConfig::ATTRIBUTE_OWNER,
+				    	'attribute_name' => DefaultConfig::ATTRIBUTE_OWNER,
 						'attribute_key' => '',
 						'attribute_value' => $this->user_uid,
 				];
 			    if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
 			        Sql\Sql::GetInstance()->rollBack();
+					M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Error on insert attribute owner");
 			        return null;
 				}
 				// perm
 				$query = Sql\SqlObjectPropertyRequests::insertProperty;
 				$params = [
 						'datatree_id' => $datatree_id,
-				    'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_PERM,
+				    	'attribute_name' => DefaultConfig::ATTRIBUTE_NAME_PERM,
 						'attribute_key' => $this->user_uid,
 						'attribute_value' => '30',
 				];
 			    if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
 			        Sql\Sql::GetInstance()->rollBack();
+					M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Error on insert attribute perm");
 			        return null;
 				}
 				Sql\Sql::GetInstance()->commit();
 			} else {
 			    Sql\Sql::GetInstance()->rollBack();
+				M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Error on insert object");
 			    return null;
 			}
 		}

@@ -1,3 +1,7 @@
+ORM M2 - 0.6.5.23
+------
+- 0007917: Enrichir les logs pour les save()
+
 ORM M2 - 0.6.5.22
 ------
 - 0007897: [Mel/Outofoffice] Gérer des timezone locaux autres que Europe/Paris

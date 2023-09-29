@@ -166,8 +166,14 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."\\".$this->objectType."->save()");
 		$insert = false;
 		// Si les clés primaires et la table ne sont pas définies, impossible de charger l'objet
-		if (!isset($this->primaryKeys)) return null;
-		if (!isset($this->tableName)) return null;
+		if (!isset($this->primaryKeys)) {
+			M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() No primaryKeys");
+			return null;
+		}
+		if (!isset($this->tableName)) {
+			M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() No tableName");
+			return null;
+		}
 
 		// Ne rien sauvegarder si rien n'a changé
 		$haschanged = false;
@@ -175,7 +181,10 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 			$haschanged = $haschanged || $value;
 			if ($haschanged) break;
 		}
-		if (!$haschanged) return null;
+		if (!$haschanged) {
+			M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Nothing has changed");
+			return null;
+		}
 		// Si isExist est à null c'est qu'on n'a pas encore testé
 		if (!is_bool($this->isExist)) {
 		  $this->isExist = $this->exists();
@@ -187,7 +196,10 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 			$whereClause = "";
 			// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
 			foreach ($this->primaryKeys as $key) {
-				if (!isset($this->$key)) return null;
+				if (!isset($this->$key)) {
+					M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Update $key is null");
+					return null;
+				}
 				// Récupèration des données de mapping
 				if (isset(MappingMce::$Data_Mapping[$this->objectType])
 						&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
@@ -210,7 +222,10 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 				}
 			}
 			// Pas d'update
-			if ($update == "") return null;
+			if ($update == "") {
+				M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Update is null");
+				return null;
+			}
 
 			// Replace
 			$query = Sql\SqlObjectRequests::updateObject;
@@ -225,7 +240,10 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 			$insert = true;
 			// Test si les clés primaires sont bien instanciées
 			foreach ($this->primaryKeys as $key) {
-				if (!isset($this->$key)) return null;
+				if (!isset($this->$key)) {
+					M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Insert $key is null");
+					return null;
+				}
 			}
 
 			// Si l'objet n'existe pas, on fait un INSERT
@@ -243,7 +261,10 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 				}
 			}
 			// Pas d'insert
-			if ($data_fields == "") return null;
+			if ($data_fields == "") {
+				M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Insert is null");
+				return null;
+			}
 
 			// Replace
 			$query = Sql\SqlObjectRequests::insertObject;

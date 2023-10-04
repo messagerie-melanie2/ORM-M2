@@ -23,6 +23,8 @@ namespace LibMelanie\Api\Gn;
 use LibMelanie\Api\Mce;
 use LibMelanie\Api\Gn\Users\Outofoffice;
 use LibMelanie\Api\Gn\Users\Share;
+use LibMelanie\Ldap\Ldap;
+use LibMelanie\Config\Ldap as LdapConfig;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\MappingMce;
 
@@ -102,7 +104,7 @@ class User extends Mce\User {
     "displayname"             => 'displayname',
     "employeenumber"          => 'employeenumber',
     "givenname"               => 'givenname',
-    "modifiedtime"            => 'mcemodifiedtimestamp',
+    "mcedomain"               => [MappingMce::name => 'mcedomain', MappingMce::type => MappingMce::stringLdap],
   ];
 
   /**
@@ -139,7 +141,7 @@ class User extends Mce\User {
    * @param Share[] $shares
    */
   protected function setMapShares($shares) {
-    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapShares()");
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapShares()");
     if (!isset($this->objectmelanie)) {
       throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     }
@@ -158,7 +160,7 @@ class User extends Mce\User {
    * @return Share[] Liste des partages positionnés sur cette boite
    */
   protected function getMapShares() {
-    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapShares()");
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapShares()");
     if (!isset($this->_shares)) {
       $_shares = $this->objectmelanie->shares??[];
       $this->_shares = [];
@@ -187,7 +189,7 @@ class User extends Mce\User {
    * @return Outofoffice[] Tableau de d'objets Outofoffice
    */
   protected function getMapOutofoffices() {
-		M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapOutofoffices()");
+		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOutofoffices()");
     $objects = [];
     if (is_array($this->objectmelanie->outofoffices)) {
       $i = 0;
@@ -211,7 +213,7 @@ class User extends Mce\User {
    * @param Outofoffice[] $OofObjects
    */
   protected function setMapOutofoffices($OofObjects) {
-    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapOutofoffices()");
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapOutofoffices()");
     $reponses = [];
     if (is_array($OofObjects)) {
       foreach ($OofObjects as $OofObject) {
@@ -219,5 +221,14 @@ class User extends Mce\User {
       }
     }
     $this->objectmelanie->outofoffices = array_unique($reponses);
+  }
+
+
+  public function delete() {
+      if(!$this->_isLoaded) {
+          $this->load();
+      }
+      $ldap = Ldap::GetInstance(LdapConfig::$MASTER_LDAP);
+      return $ldap->delete($this->dn);
   }
 }

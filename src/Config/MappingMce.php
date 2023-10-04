@@ -471,40 +471,41 @@ class MappingMce {
 	}
 
 	// Mapping constants
-	const name = "name";
-	const type = "type";
-	const size = "size";
-	const format = "format";
-	const string = "string";
-	const integer = "integer";
-	const double = "double";
-	const date = "date";
-	const prefixLdap = "prefixLdap";
-	const arrayLdap = "arrayLdap";
-	const stringLdap = "stringLdap";
-	const booleanLdap = "booleanLdap";
-	const trueLdapValue = "trueLdapValue";
-	const falseLdapValue = "falseLdapValue";
-	const emptyLdapValue = "emptyLdapValue";
-	const timestamp = "timestamp";
-	const defaut = "defaut";
-	const sup = ">";
-	const supeq = ">=";
-	const inf = "<";
-	const infeq = "<=";
-	const diff = "<>";
-	const like = "LIKE";
-	const eq = "=";
-	const in = "IN";
-	const notin = "NOT IN";
-	const between = "BETWEEN";
-	const notbetween = "NOT BETWEEN";
+	const name 				= "name";
+	const type 				= "type";
+	const size 				= "size";
+	const format 			= "format";
+	const string 			= "string";
+	const integer 			= "integer";
+	const double 			= "double";
+	const date 				= "date";
+	const prefixLdap 		= "prefixLdap";
+	const arrayLdap 		= "arrayLdap";
+	const stringLdap 		= "stringLdap";
+	const booleanLdap 		= "booleanLdap";
+	const dateLdap 			= "dateLdap";
+	const trueLdapValue 	= "trueLdapValue";
+	const falseLdapValue 	= "falseLdapValue";
+	const emptyLdapValue 	= "emptyLdapValue";
+	const timestamp 		= "timestamp";
+	const defaut 			= "defaut";
+	const sup 				= ">";
+	const supeq 			= ">=";
+	const inf 				= "<";
+	const infeq 			= "<=";
+	const diff 				= "<>";
+	const like 				= "LIKE";
+	const eq 				= "=";
+	const in 				= "IN";
+	const notin 			= "NOT IN";
+	const between 			= "BETWEEN";
+	const notbetween 		= "NOT BETWEEN";
 
 	// DATA MAPPING
 	// Class
-	const PRIV = 1;
-	const PUB = 0;
-	const CONF = 2;
+	const PRIV 	= 1;
+	const PUB 	= 0;
+	const CONF 	= 2;
 	/**
 	 * Class mapping object to MCE
 	 */

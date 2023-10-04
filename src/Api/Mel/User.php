@@ -110,6 +110,11 @@ use LibMelanie\Config\Config;
  * @property-read boolean $is_list Est-ce qu'il s'agit d'une liste ?
  * @property-read boolean $is_listab Est-ce qu'il s'agit d'une list a abonnement ?
  * 
+ * @property string $token_otp Token OTP de l'utilisateur
+ * @property timestamp token_otp_expire Timestamp d'expiration du token OTP de l'utilisateur
+ * @property string $double_authentification_adresse_recuperation Adresse de récupération de l'utilisateur
+ * @property boolean $double_authentification_adresse_valide Est-ce que l'adresse de récupération a été validé par l'utilisateur ?
+ * 
  * @method string getTimezone() [OSOLETE] Chargement du timezone de l'utilisateur
  * @method bool save() Enregistrement de l'utilisateur dans l'annuaire
  */
@@ -268,8 +273,10 @@ class User extends Defaut\User {
     "synchronisation_profile"       => 'mineqmelaccessynchrou',       // Retourne le profil de synchronisation
     "cerbere"                   => [MappingMce::name => 'info', MappingMce::prefixLdap => 'AUTH.Cerbere:', MappingMce::type => MappingMce::stringLdap],
     "double_authentification"   => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => 'DoubleAuth.Obligatoire: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'oui', MappingMce::falseLdapValue => 'non'],
-    "is_mailbox"                => [MappingMce::name => 'objectclass', MappingMce::trueLdapValue => 'mineqMelBoite', MappingMce::type => MappingMce::booleanLdap],             // Est-ce qu'il s'agit bien d'une boite Mél ?
+    "is_mailbox"                => [MappingMce::name => 'objectclass', MappingMce::trueLdapValue => 'mineqMelBoite', MappingMce::type => MappingMce::booleanLdap],             // Est-ce qu'il s'agit bien d'une boite Mél
     "modifiedtime"              => 'mineqmodifiedtimestamp',
+    "double_authentification_forcee"        => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => '2FA.Forcee: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => '1', MappingMce::falseLdapValue => '0'],
+    "double_authentification_date_butoir"   => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => '2FA.DateButoir: ', MappingMce::type => MappingMce::dateLdap],
   ];
 
   /**
@@ -926,5 +933,137 @@ class User extends Defaut\User {
    */
   protected function getMapIs_mailbox() {
     return $this->objectmelanie->is_mailbox;
+  }
+
+  /**
+   * Mapping token_otp field
+   *
+   * @param string $token_otp
+   */
+  protected function setMapToken_otp($token_otp) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapToken_otp()");
+    $pref = $this->getDefaultPreference('token_otp');
+    if (isset($pref)) {
+      $pref = json_decode($pref, 1);
+    }
+    else {
+      $pref = [];
+    }
+    $pref['otp'] = $token_otp;
+    return $this->saveDefaultPreference('token_otp', json_encode($pref));
+  }
+
+  /**
+   * Mapping token_otp field
+   * 
+   * @return string Token OTP
+   */
+  protected function getMapToken_otp() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapToken_otp()");
+    $pref = $this->getDefaultPreference('token_otp');
+    if (isset($pref)) {
+      $pref = json_decode($pref, 1);
+      return isset($pref['otp']) ? $pref['otp'] : null;
+    }
+    return null;
+  }
+
+  /**
+   * Mapping token_otp_expire field
+   *
+   * @param timestamp $token_otp_expire
+   */
+  protected function setMapToken_otp_expire($token_otp_expire) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapToken_otp_expire()");
+    $pref = $this->getDefaultPreference('token_otp');
+    if (isset($pref)) {
+      $pref = json_decode($pref, 1);
+    }
+    else {
+      $pref = [];
+    }
+    $pref['expire'] = $token_otp_expire;
+    return $this->saveDefaultPreference('token_otp', json_encode($pref));
+  }
+
+  /**
+   * Mapping token_otp_expire field
+   * 
+   * @return timestamp Token OTP
+   */
+  protected function getMapToken_otp_expire() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapToken_otp_expire()");
+    $pref = $this->getDefaultPreference('token_otp');
+    if (isset($pref)) {
+      $pref = json_decode($pref, 1);
+      return isset($pref['expire']) ? $pref['expire'] : null;
+    }
+    return null;
+  }
+
+  /**
+   * Mapping double_authentification_adresse_recuperation field
+   *
+   * @param string $double_authentification_adresse_recuperation
+   */
+  protected function setMapDouble_authentification_adresse_recuperation($double_authentification_adresse_recuperation) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapDouble_authentification_adresse_recuperation()");
+    $pref = $this->getDefaultPreference('2fa_recovery_address');
+    if (isset($pref)) {
+      $pref = json_decode($pref, 1);
+    }
+    else {
+      $pref = [];
+    }
+    $pref['email'] = $double_authentification_adresse_recuperation;
+    return $this->saveDefaultPreference('2fa_recovery_address', json_encode($pref));
+  }
+
+  /**
+   * Mapping double_authentification_adresse_recuperation field
+   * 
+   * @return string Recovery address
+   */
+  protected function getMapDouble_authentification_adresse_recuperation() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapDouble_authentification_adresse_recuperation()");
+    $pref = $this->getDefaultPreference('2fa_recovery_address');
+    if (isset($pref)) {
+      $pref = json_decode($pref, 1);
+      return isset($pref['email']) ? $pref['email'] : null;
+    }
+    return null;
+  }
+
+  /**
+   * Mapping double_authentification_adresse_valide field
+   *
+   * @param boolean $double_authentification_adresse_valide
+   */
+  protected function setMapDouble_authentification_adresse_valide($double_authentification_adresse_valide) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapDouble_authentification_adresse_valide()");
+    $pref = $this->getDefaultPreference('2fa_recovery_address');
+    if (isset($pref)) {
+      $pref = json_decode($pref, 1);
+    }
+    else {
+      $pref = [];
+    }
+    $pref['valid'] = $double_authentification_adresse_valide;
+    return $this->saveDefaultPreference('2fa_recovery_address', json_encode($pref));
+  }
+
+  /**
+   * Mapping double_authentification_adresse_valide field
+   * 
+   * @return boolean Recovery address is valid
+   */
+  protected function getMapDouble_authentification_adresse_valide() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapDouble_authentification_adresse_valide()");
+    $pref = $this->getDefaultPreference('2fa_recovery_address');
+    if (isset($pref)) {
+      $pref = json_decode($pref, 1);
+      return isset($pref['valid']) ? $pref['valid'] : null;
+    }
+    return null;
   }
 }

@@ -1,3 +1,117 @@
+ORM M2 - 0.6.5.23
+------
+- 0007917: Enrichir les logs pour les save()
+
+ORM M2 - 0.6.5.22
+------
+- 0007897: [Mel/Outofoffice] Gérer des timezone locaux autres que Europe/Paris
+- Fonction PL/SQL pour purger les événements
+- Fonction PL/SQL pour nettoyer les pièces jointes inutiles
+
+ORM M2 - 0.6.5.21
+------
+- 0007856: Déplacer le read_version.php à la racine
+
+ORM M2 - 0.6.5.20
+------
+- 0007846: [ICS] Nettoyer le @visio: dans la location
+- 0007849: Ajouter un niveau de log TRACE
+- 0007850: Ne pas charger les informations des participants quand l'organisateur est externe
+
+ORM M2 - 0.6.5.19
+------
+- 0007843: Copie des pièces jointes dans le en attente
+
+ORM M2 - 0.6.5.18
+------
+- 0007798: Mauvaise copie des données via le en attente
+- 0007799: Régression liée à la suppression des ocurrences après la date de fin de récurrence
+- 0007802: [MagicObject] L'enregistrement des anciennes valeur ne doit se faire que si haschanged est à false
+- 0007800: Modifier toute la récurrence devrait aussi modifier les participants des occurrences modifiées
+- 0007806: Ajouter la version du schéma dans les exceptions
+- 0007807: Suppression d'un participant d'une réunion récurrente
+- 0007809: Mettre l'organisateur en créateur via le en attente
+- 0007811: Désannuler un événement via le en attente
+
+ORM M2 - 0.6.5.17
+------
+- 0007750: Optimisation des réunions à des liste
+- 0007747: Syntaxe OutOfOffice MCE: passer les horaires hebdo en UTC
+
+ORM M2 - 0.6.5.16
+------
+- 0007740: Utiliser les functions plsql stable pour lister les objets d'un utilisateur
+- 0007741: Proposer une configuration pour utiliser les functions SQL plutôt que les requêtes
+
+ORM M2 - 0.6.5.15
+------
+- 0007731: Récupérer la dernière news d'un utilisateur
+
+ORM M2 - 0.6.5.14
+------
+- 0007728: Remplace les length > 10 dans le sql
+- 0007727: [Event] Ne plus order by sur attendees
+- Test: ne plus update + 1 tout le monde pour éviter les lock sur la base de données
+
+ORM M2 - 0.6.5.13
+------
+- 0007699: Sortir l'objectshare du cache
+- 0007692: Avoir la possibilité de ne pas avoir d'objet de partage
+- Fichier de tests pour le ldap
+
+ORM M2 - 0.6.5.12
+------
+- 0007639: [ICSToTask] Erreur de calcul pour l'alarme
+- 0007640: [ICSToTask] Nettoyer les ICS des tâches
+
+ORM M2 - 0.6.5.11
+------
+- 0007636: Undefined variable: exDuration
+
+ORM M2 - 0.6.5.10
+------
+- 0007626: [ICS] Gérer un SENT-BY vide
+- 0007629: [ICSToTask] Erreur de traitement du VALARM
+
+ORM M2 - 0.6.5.9
+------
+- Correctif MagicObject sur la gestion des array dans les timestamp et les int
+
+ORM M2 - 0.6.5.8
+------
+- Possibilité d'avoir des listes de tâches sans owner pour le Bnum
+
+ORM M2 - 0.6.5.7
+------
+- 0007601: Erreur PG value too long
+
+ORM M2 - 0.6.5.6
+------
+- 0007602: Erreur PG out of range for type integer
+
+ORM M2 - 0.6.5.5
+------
+- 0007565: [SQL] Gérer la connexion au format DSN
+- 0007564: [ICS] Lors d'un copier/coller supprimer les participants
+
+ORM M2 - 0.6.5.4
+------
+- 0007534: [VCard] Erreur SQL lors de la création d'une liste sans membre
+- 0007536: Gérer le statut de participant Délégué
+
+ORM M2 - 0.6.5.3
+------
+- 0007510: Ajouter un champ pour le quota nextCloud
+- PR #7 Bugfix/mailbox partage
+
+ORM M2 - 0.6.5.2
+------
+- 0007480: Optimisation LDAP pour les participants
+- 0007479: Optimisation lecture LDAP pour les participants liste
+- 0007495: Support du champ modifiedtime pour les User
+- 0007496: Ajouter le support du fullname et de l'email du creator
+- 0007498: [ICS] Rendre configurable l'affichage du createur dans la description
+
 ORM M2 - 0.6.5.1
 ------
 - 0007471: [VCard] Une liste de contacts est basé sur les id

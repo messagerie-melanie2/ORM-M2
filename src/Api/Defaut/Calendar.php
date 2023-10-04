@@ -69,7 +69,6 @@ class Calendar extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
     // Définition du calendrier melanie2
     $this->objectmelanie = new CalendarMelanie();
     
@@ -93,7 +92,6 @@ class Calendar extends MceObject {
    *
    */
   public function setUserMelanie($user) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
     $this->user = $user;
     $this->objectmelanie->user_uid = $this->user->uid;
   }
@@ -169,7 +167,7 @@ class Calendar extends MceObject {
           $exceptions[$exception->uid . $exception->calendar][$recId->format($Exception::FORMAT_ID)] = $exception;
         }
       } catch (\Exception $ex) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getAllEvents() Exception: " . $ex);
+        M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->getAllEvents() Exception: " . $ex);
       }
     }
     // Détruit les variables pour libérer le plus rapidement de la mémoire
@@ -258,7 +256,7 @@ class Calendar extends MceObject {
           $exceptions[$exception->uid . $exception->calendar][$recId->format($Exception::FORMAT_ID)] = $exception;
         }
       } catch (\Exception $ex) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getRangeEvents() Exception: " . $ex);
+        M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->getRangeEvents() Exception: " . $ex);
       }
     }
     // Détruit les variables pour libérer le plus rapidement de la mémoire
@@ -307,7 +305,7 @@ class Calendar extends MceObject {
    * Mapping caldavurl field
    */
   protected function getMapCaldavurl() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCaldavurl()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapCaldavurl()");
     if (!isset($this->objectmelanie)) throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     $url = null;
     if (Config::is_set(Config::CALENDAR_CALDAV_URL)) {

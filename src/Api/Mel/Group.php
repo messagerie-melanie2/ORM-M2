@@ -105,7 +105,7 @@ class Group extends Defaut\Group {
      * @return mixed|NULL Valeur du serveur host, null si non trouvé
      */
     protected function getMapServer_host() {
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapServer_host()");
+        M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapServer_host()");
         foreach ($this->server_routage as $route) {
             if (strpos($route, self::SERVER_HOST_DELIMITER) !== false) {
                 $route = explode('@', $route, 2);
@@ -121,7 +121,7 @@ class Group extends Defaut\Group {
      * @return mixed|NULL Valeur du serveur user, null si non trouvé
      */
     protected function getMapServer_user() {
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapServer_user()");
+        M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapServer_user()");
         foreach ($this->server_routage as $route) {
             if (strpos($route, self::SERVER_HOST_DELIMITER) !== false) {
                 $route = explode('@', $route, 2);

@@ -72,7 +72,7 @@ class User extends Mce\User {
    * @return ObjectShare[] Liste d'objets
    */
   public function getObjectsShared($attributes = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getObjectsShared() [" . $this->_server . "]");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getObjectsShared() [" . $this->_server . "]");
     if (!isset($this->_objectsShared)) {
       if (isset($attributes) && is_string($attributes)) {
         $attributes = [$attributes];
@@ -111,7 +111,7 @@ class User extends Mce\User {
    * @return User[] Liste de boites
    */
   public function getShared($attributes = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getShared() [" . $this->_server . "]");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getShared() [" . $this->_server . "]");
     if (!isset($this->_shared)) {
       if (isset($attributes) && is_string($attributes)) {
         $attributes = [$attributes];
@@ -145,7 +145,7 @@ class User extends Mce\User {
    * @return ObjectShare[] Liste d'objets
    */
   public function getObjectsSharedEmission($attributes = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getObjectsSharedEmission() [" . $this->_server . "]");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getObjectsSharedEmission() [" . $this->_server . "]");
     if (!isset($this->_objectsSharedEmission)) {
       if (isset($attributes) && is_string($attributes)) {
         $attributes = [$attributes];
@@ -187,7 +187,7 @@ class User extends Mce\User {
    * @return User[] Liste d'objets
    */
   public function getSharedEmission($attributes = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedEmission() [" . $this->_server . "]");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getSharedEmission() [" . $this->_server . "]");
     if (!isset($this->_objectsSharedEmission)) {
       if (isset($attributes) && is_string($attributes)) {
         $attributes = [$attributes];
@@ -224,7 +224,7 @@ class User extends Mce\User {
    * @return ObjectShare[] Liste d'objets
    */
   public function getObjectsSharedGestionnaire($attributes = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getObjectsSharedGestionnaire() [" . $this->_server . "]");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getObjectsSharedGestionnaire() [" . $this->_server . "]");
     if (!isset($this->_objectsSharedGestionnaire)) {
       if (isset($attributes) && is_string($attributes)) {
         $attributes = [$attributes];
@@ -266,7 +266,7 @@ class User extends Mce\User {
    * @return User[] Liste d'objets
    */
   public function getSharedGestionnaire($attributes = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedGestionnaire() [" . $this->_server . "]");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getSharedGestionnaire() [" . $this->_server . "]");
     if (!isset($this->_objectsSharedGestionnaire)) {
       if (isset($attributes) && is_string($attributes)) {
         $attributes = [$attributes];
@@ -301,7 +301,7 @@ class User extends Mce\User {
    * @return Share[] Liste des partages de l'objet
    */
   protected function getShares() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapShares()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapShares()");
     if (!isset($this->_shares)) {
       $_shares = $this->objectmelanie->shares;
       $this->_shares = [];

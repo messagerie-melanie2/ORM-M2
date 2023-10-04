@@ -111,7 +111,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->__construct()");
     
     // Récupération du type d'objet en fonction de la class
     $this->objectType = explode('\\', $this->get_class);
@@ -351,6 +351,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     static::Init($this->mapping, $this->server);
     // Est-ce que le dn est bien défini ?
     if (!isset($this->dn)) {
+      M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() dn is null");
       return null;
     }
     // MANTIS 0006136: Gérer la création d'un objet LDAP
@@ -507,7 +508,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return boolean
    */
   public function authentification($password, $master = false, $user_dn = null, $gssapi = false, $itemName = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->authentification()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->authentification()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if ($master) {
@@ -544,7 +545,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return UserMelanie[] Liste d'objet UserMelanie
    */
   public function getBalp($attributes = null, $filter = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getBalpList()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getBalpList()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
@@ -580,7 +581,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return UserMelanie[] Liste d'objet UserMelanie
    */
   public function getBalpEmission($attributes = null, $filter = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getBalpListEmission()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getBalpListEmission()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
@@ -616,7 +617,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return UserMelanie[] Liste d'objet UserMelanie
    */
   public function getBalpGestionnaire($attributes = null, $filter = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getBalpListGestionnaire()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getBalpListGestionnaire()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
@@ -652,7 +653,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return UserMelanie[] Liste d'objet UserMelanie
    */
   public function getGroups($attributes = null, $filter = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getGroups()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getGroups()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->dn)) {
@@ -688,7 +689,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return UserMelanie[] Liste d'objet UserMelanie
    */
   public function getGroupsIsMember($attributes = null, $filter = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getGroupsIsMember()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getGroupsIsMember()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
@@ -724,7 +725,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return UserMelanie[] Liste d'objet UserMelanie
    */
   public function getListsIsMember($attributes = null, $filter = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getListsIsMember()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getListsIsMember()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     // Mapping pour les champs
@@ -759,7 +760,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return WorkspaceMelanie[]
    */
   public function getUserWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserWorkspaces()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserWorkspaces()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
@@ -787,7 +788,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return WorkspaceMelanie[]
    */
   public function getSharedWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedWorkspaces()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getSharedWorkspaces()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
@@ -811,13 +812,20 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return CalendarMelanie
    */
   public function getDefaultCalendar() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultCalendar()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getDefaultCalendar()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::getDefaultObject;
+
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionGetDefaultObject;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::getDefaultObject;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['CalendarMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['CalendarMelanie']['id'][MappingMce::name], $query);
@@ -854,13 +862,20 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return CalendarMelanie[]
    */
   public function getUserCalendars() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserCalendars()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserCalendars()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::listUserObjects;
+
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionListUserObjects;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::listUserObjects;
+    }
+    
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['CalendarMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['CalendarMelanie']['id'][MappingMce::name], $query);
@@ -886,13 +901,20 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return CalendarMelanie[]
    */
   public function getSharedCalendars() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedCalendars()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getSharedCalendars()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::listSharedObjects;
+
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionListSharedObjects;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::listSharedObjects;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['CalendarMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['CalendarMelanie']['id'][MappingMce::name], $query);
@@ -920,13 +942,20 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return TaskslistMelanie
    */
   public function getDefaultTaskslist() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultTaskslist()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getDefaultTaskslist()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::getDefaultObject;
+    
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionGetDefaultObject;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::getDefaultObject;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['TaskslistMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['TaskslistMelanie']['id'][MappingMce::name], $query);
@@ -963,13 +992,20 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return TaskslistMelanie[]
    */
   public function getUserTaskslists() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserTaskslists()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserTaskslists()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::listUserObjects;
+
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionListUserObjects;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::listUserObjects;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['TaskslistMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['TaskslistMelanie']['id'][MappingMce::name], $query);
@@ -995,13 +1031,20 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return TaskslistMelanie[]
    */
   public function getSharedTaskslists() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedTaskslists()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getSharedTaskslists()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::listSharedObjects;
+    
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionListSharedObjects;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::listSharedObjects;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['TaskslistMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['TaskslistMelanie']['id'][MappingMce::name], $query);
@@ -1029,13 +1072,20 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return AddressbookMelanie
    */
   public function getDefaultAddressbook() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getDefaultAddressbook()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getDefaultAddressbook()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::getDefaultObject;
+    
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionGetDefaultObject;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::getDefaultObject;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['AddressbookMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['AddressbookMelanie']['id'][MappingMce::name], $query);
@@ -1072,13 +1122,20 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return AddressbookMelanie[]
    */
   public function getUserAddressbooks() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserAddressbooks()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserAddressbooks()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::listUserObjects;
+
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionListUserObjects;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::listUserObjects;
+    }
+    
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['AddressbookMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['AddressbookMelanie']['id'][MappingMce::name], $query);
@@ -1104,13 +1161,20 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @return AddressbookMelanie[]
    */
   public function getSharedAddressbooks() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getSharedAddressbooks()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getSharedAddressbooks()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {
       return false;
     }
-    $query = Sql\SqlMelanieRequests::listSharedObjects;
+
+    if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+      $query = Sql\SqlMelanieRequests::functionListSharedObjects;
+    }
+    else {
+      $query = Sql\SqlMelanieRequests::listSharedObjects;
+    }
+
     // Replace name
     $query = str_replace('{user_uid}', MappingMce::$Data_Mapping['AddressbookMelanie']['owner'][MappingMce::name], $query);
     $query = str_replace('{datatree_name}', MappingMce::$Data_Mapping['AddressbookMelanie']['id'][MappingMce::name], $query);
@@ -1138,7 +1202,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    * @deprecated
    */
   public function getTimezone() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getTimezone()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getTimezone()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
     if (!isset($this->uid)) {

@@ -229,6 +229,8 @@ class Outofoffice extends Defaut\Users\Outofoffice {
         // Gestion des heures
         if (isset($this->hour_start) 
                 && isset($this->hour_end)) {
+            $this->hour_start->setTimezone(new \DateTimeZone('UTC'));
+            $this->hour_end->setTimezone(new \DateTimeZone('UTC'));
             $hour = $this->hour_start->format('G') . '-' . $this->hour_end->format('G');
         }
 

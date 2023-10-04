@@ -127,7 +127,6 @@ class Contact extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    // M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
     // Définition du contact melanie2
     $this->objectmelanie = new ObjectMelanie('ContactMelanie');
     
@@ -148,7 +147,6 @@ class Contact extends MceObject {
    *
    */
   public function setUserMelanie($user) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
     $this->user = $user;
   }
 
@@ -159,7 +157,6 @@ class Contact extends MceObject {
    * @ignore
    */
   public function getUserMelanie() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getUserMelanie()");
     return $this->user;
   }
   
@@ -171,7 +168,6 @@ class Contact extends MceObject {
    *
    */
   public function setAddressbookMelanie($addressbook) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setAddressbookMelanie()");
     $this->addressbookmce = $addressbook;
     $this->objectmelanie->addressbook = $this->addressbookmce->id;
   }
@@ -184,7 +180,6 @@ class Contact extends MceObject {
    *
    */
   public function getAddressbookMelanie() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getAddressbookMelanie()");
     return $this->addressbookmce;
   }
   
@@ -317,7 +312,7 @@ class Contact extends MceObject {
    *
    */
   protected function setMapVcard($vcard) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapVcard()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapVcard()");
     \LibMelanie\Lib\VCardToContact::Convert($vcard, $this, $this->addressbookmce, $this->user);
   }
   /**
@@ -328,7 +323,7 @@ class Contact extends MceObject {
    *
    */
   protected function getMapVcard() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapVcard()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapVcard()");
     return \LibMelanie\Lib\ContactToVCard::Convert($this, $this->addressbookmce, $this->user);
   }
 }

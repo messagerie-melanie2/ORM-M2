@@ -105,7 +105,7 @@ class Organizer extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->__construct()");
     // Intialisation de l'email de l'organisateur
     $this->organizer_email = null;
     $this->organizer_name = null;
@@ -150,7 +150,7 @@ class Organizer extends MceObject {
    *
    */
   protected function getMapUid() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapName()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapName()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     return $this->objectmelanie->organizer_uid;
   }
@@ -162,7 +162,7 @@ class Organizer extends MceObject {
    *
    */
   protected function getMapOwner_uid() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapName()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapName()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (!isset($this->owner_uid)) {
       $owner_email = $this->getMapOwner_email();
@@ -206,7 +206,7 @@ class Organizer extends MceObject {
    *
    */
   protected function getMapExtern() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapExtern()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapExtern()");
     $extern = $this->getOrganizerParam('extern');
     if (isset($extern)) {
       $this->extern = $extern;      
@@ -263,7 +263,7 @@ class Organizer extends MceObject {
    * @ignore
    */
   protected function getMapCalendar() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCalendar()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapCalendar()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if ($this->event->useJsonData()) {
       if ($this->event instanceof Exception) {
@@ -288,7 +288,7 @@ class Organizer extends MceObject {
    * @ignore
    */
   protected function getMapAttendees() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapAttendees()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapAttendees()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (!isset($this->objectmelanie->organizer_attendees))
       return null;
@@ -354,7 +354,7 @@ class Organizer extends MceObject {
    * @ignore
    */
   protected function getMapEmail() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapEmail()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapEmail()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (is_null($this->organizer_email)) {
       if ($this->event->useJsonData()) {
@@ -406,7 +406,7 @@ class Organizer extends MceObject {
    * @ignore
    */
   protected function getMapName() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapName()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapName()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if (is_null($this->organizer_name)) {
       if ($this->event->useJsonData()) {
@@ -452,7 +452,7 @@ class Organizer extends MceObject {
    * @ignore
    */
   protected function getMapRole() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRole()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapRole()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if ($this->event->useJsonData()) {
       return $this->getOrganizerParam(ICS::ROLE);
@@ -478,7 +478,7 @@ class Organizer extends MceObject {
    * @ignore
    */
   protected function getMapOwner_email() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOwner_email()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapOwner_email()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if ($this->event->useJsonData()) {
       return $this->getOrganizerParam(ICS::X_M2_ORG_MAIL);
@@ -504,7 +504,7 @@ class Organizer extends MceObject {
    * @ignore
    */
   protected function getMapPartstat() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapPartstat()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapPartstat()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if ($this->event->useJsonData()) {
       return $this->getOrganizerParam(ICS::PARTSTAT);
@@ -530,7 +530,7 @@ class Organizer extends MceObject {
    * @ignore
    */
   protected function getMapSent_by() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapSent_by()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapSent_by()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if ($this->event->useJsonData()) {
       return $this->getOrganizerParam(ICS::SENT_BY);
@@ -556,7 +556,7 @@ class Organizer extends MceObject {
    * @ignore
    */
   protected function getMapRsvp() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRsvp()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapRsvp()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
     if ($this->event->useJsonData()) {
       return $this->getOrganizerParam(ICS::RSVP);

@@ -83,7 +83,7 @@ class Task extends MceObject {
   /**
    * Tableau d'attributs pour l'évènement
    * 
-   * @var string[$attribute]
+   * @var array
    */
   private $attributes;
   /**
@@ -126,7 +126,6 @@ class Task extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    // M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
     // Définition de la tâche melanie2
     $this->objectmelanie = new ObjectMelanie('TaskMelanie');
     
@@ -147,7 +146,6 @@ class Task extends MceObject {
    *
    */
   function setUserMelanie($user) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
     $this->user = $user;
   }
   
@@ -159,7 +157,6 @@ class Task extends MceObject {
    *
    */
   function setTaskslistMelanie($taskslist) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setTaskslistMelanie()");
     $this->taskslistmce = $taskslist;
     $this->objectmelanie->taskslist = $this->taskslistmce->id;
   }
@@ -356,7 +353,7 @@ class Task extends MceObject {
    * Sauvegarde les attributs dans la base de données
    */
   private function saveAttributes() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->saveAttributes()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->saveAttributes()");
     // Parcours les attributs pour les enregistrer
     if (isset($this->attributes)) {
       foreach ($this->attributes as $name => $attribute) {
@@ -368,7 +365,7 @@ class Task extends MceObject {
    * Charge les attributs en mémoire
    */
   private function loadAttributes() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->loadAttributes()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->loadAttributes()");
     // Création de l'objet s'il n'existe pas
     if (!isset($this->attributes))
       $this->attributes = [];
@@ -393,7 +390,7 @@ class Task extends MceObject {
    * Supprime les attributs
    */
   private function deleteAttributes() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->loadAttributes()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->deleteAttributes()");
     if (!$this->attributes_loaded) {
       $this->loadAttributes();
     }
@@ -424,7 +421,7 @@ class Task extends MceObject {
    * Mapping class field
    */
   protected function getMapClass() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapClass()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapClass()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
     return MappingMce::$MapClassMceToObject[$this->objectmelanie->class];
@@ -447,7 +444,7 @@ class Task extends MceObject {
    * @return Task::PRIORITY_*
    */
   protected function getMapPriority() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapPriority()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapPriority()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
     return MappingMce::$MapPriorityMceToObject[$this->objectmelanie->priority];
@@ -462,7 +459,13 @@ class Task extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapPercent_Complete($percent_complete)");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-    $this->setAttribute('PERCENT-COMPLETE', intval($percent_complete));
+    if (isset($percent_complete)) {
+      $this->setAttribute('PERCENT-COMPLETE', intval($percent_complete));
+    }
+    else {
+      $this->deleteAttribute('PERCENT-COMPLETE');
+    }
+    
   }
   /**
    * Mapping percent_complete field
@@ -470,7 +473,7 @@ class Task extends MceObject {
    * @return int
    */
   protected function getMapPercent_Complete() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapPercent_Complete()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapPercent_Complete()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
     return intval($this->getAttribute('PERCENT-COMPLETE'));
@@ -481,7 +484,7 @@ class Task extends MceObject {
    * @return boolean
    */
   protected function issetMapPercent_Complete() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapPercent_Complete()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->issetMapPercent_Complete()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
     $percent_complete = $this->getAttribute('PERCENT-COMPLETE');
@@ -497,7 +500,12 @@ class Task extends MceObject {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapStatus($status)");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
-    $this->setAttribute('STATUS', $status);
+    if (isset($status)) {
+      $this->setAttribute('STATUS', $status);
+    }
+    else {
+      $this->deleteAttribute('STATUS');
+    }
   }
   /**
    * Mapping percent_complete field
@@ -505,7 +513,7 @@ class Task extends MceObject {
    * @return int
    */
   protected function getMapStatus() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapStatus()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapStatus()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
     return $this->getAttribute('STATUS');
@@ -516,7 +524,7 @@ class Task extends MceObject {
    * @return boolean
    */
   protected function issetMapStatus() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapStatus()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->issetMapStatus()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
     $status = $this->getAttribute('STATUS');
@@ -529,7 +537,7 @@ class Task extends MceObject {
    *
    */
   protected function setMapIcs($ics) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapsIcs()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapsIcs()");
     \LibMelanie\Lib\ICSToTask::Convert($ics, $this, $this->taskslistmce, $this->user);
   }
   /**
@@ -540,7 +548,7 @@ class Task extends MceObject {
    *
    */
   protected function getMapIcs() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapIcs()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapIcs()");
     return \LibMelanie\Lib\TaskToICS::Convert($this, $this->taskslistmce, $this->user);
   }
 }

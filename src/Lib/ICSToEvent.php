@@ -125,7 +125,14 @@ class ICSToEvent {
           $object->owner = $event->owner;
         }
         else {
-          $object->owner = isset($user) && isset($user->uid) ? $user->uid : $calendar->owner;
+          if (isset($user) && isset($user->uid)) {
+            $object->owner = $user->uid;
+            $object->creator_email = $user->email;
+            $object->creator_name = $user->name;
+          }
+          else {
+            $object->owner = $calendar->owner;
+          }
         }        
       }
       // DTSTART & DTEND
@@ -371,7 +378,8 @@ class ICSToEvent {
       } else
         $object->status = Event::STATUS_NONE;
       // ATTENDEE
-      if (isset($vevent->ATTENDEE)) {
+      // MANTIS 0007564: [ICS] Lors d'un copier/coller supprimer les participants
+      if (isset($vevent->ATTENDEE) && !$copy) {
         // 0005064: [ICS] si l'organisateur existe, ne pas le modifier depuis l'ICS
         $organizer = $object->organizer;
         $organizer_email = isset($organizer) ? $organizer->email : null;
@@ -389,7 +397,10 @@ class ICSToEvent {
           if (isset($parameters[ICS::PARTSTAT])) {
             $organizer->partstat = $parameters[ICS::PARTSTAT]->getValue();
           }
-          if (isset($parameters[ICS::SENT_BY])) {
+          // 0007626: [ICS] Gérer un SENT-BY vide
+          if (isset($parameters[ICS::SENT_BY])
+              && !empty($parameters[ICS::SENT_BY]->getValue())
+              && $parameters[ICS::SENT_BY]->getValue() != 'mailto:') {
             $organizer->email = str_replace('mailto:', '', strtolower($parameters[ICS::SENT_BY]->getValue()));
             // 0005096: Le champ X-M2-ORG-MAIL n'est pas alimenté pour une modification d'événement
             $organizer->owner_email = str_replace('mailto:', '', strtolower($vevent->ORGANIZER->getValue()));
@@ -431,15 +442,25 @@ class ICSToEvent {
           if (isset($attendee[ICS::CN])) {
             $_attendee->name = $attendee[ICS::CN]->getValue();
           }
+          // Gestion du DELEGATED-FROM
+          if (isset($attendee[ICS::DELEGATED_FROM])) {
+            $_attendee->delegated_from = $attendee[ICS::DELEGATED_FROM]->getValue();
+          }
+          // Gestion du DELEGATED-TO
+          if (isset($attendee[ICS::DELEGATED_TO])) {
+            $_attendee->delegated_to = $attendee[ICS::DELEGATED_TO]->getValue();
+          }
           // Gestion du PARTSTAT
-          // MANTIS 4016: Gestion des COPY/MOVE
-          if (isset($attendee[ICS::PARTSTAT]) && !$copy) {
+          if (isset($attendee[ICS::PARTSTAT])) {
             switch ($attendee[ICS::PARTSTAT]->getValue()) {
               case ICS::PARTSTAT_DECLINED :
                 $_attendee->response = $Attendee::RESPONSE_DECLINED;
                 break;
               case ICS::PARTSTAT_IN_PROCESS :
                 $_attendee->response = $Attendee::RESPONSE_IN_PROCESS;
+                break;
+              case ICS::PARTSTAT_DELEGATED :
+                $_attendee->response = $Attendee::RESPONSE_DELEGATED;
                 break;
               case ICS::PARTSTAT_NEEDS_ACTION :
                 if (isset($_old_response) 

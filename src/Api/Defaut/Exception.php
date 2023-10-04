@@ -119,7 +119,7 @@ class Exception extends Event {
    * @param Event $eventParent          
    */
   public function setEventParent($eventParent) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setEventParent()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setEventParent()");
     $this->eventParent = $eventParent;
     if (isset($eventParent)) {
       if (!isset($this->user)) {
@@ -136,7 +136,7 @@ class Exception extends Event {
    * @return Event
    */
   public function getEventParent() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getEventParent()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getEventParent()");
     return $this->eventParent;
   }
   
@@ -193,6 +193,9 @@ class Exception extends Event {
       throw new Exceptions\ObjectMelanieUndefinedException();
     if ($this->deleted)
       return false;
+
+    // Version du schéma par défaut
+    $this->version = self::VERSION;
     
     if (!isset($this->owner)) {
       $this->owner = $this->user->uid;
@@ -201,6 +204,7 @@ class Exception extends Event {
     if ($saveAttendees) {
       $this->saveAttendees();
     }
+
     // Sauvegarde l'objet
     $insert = $this->objectmelanie->save();
     if (!is_null($insert)) {
@@ -279,7 +283,7 @@ class Exception extends Event {
    * @param Recurrence $recurrence          
    */
   protected function setMapRecurrence($recurrence) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapRecurrence()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapRecurrence()");
     throw new Exceptions\ObjectMelanieUndefinedException();
   }
   /**
@@ -287,7 +291,7 @@ class Exception extends Event {
    * Inaccessible
    */
   protected function getMapRecurrence() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRecurrence()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapRecurrence()");
     throw new Exceptions\ObjectMelanieUndefinedException();
   }
 
@@ -311,7 +315,7 @@ class Exception extends Event {
    * Mapping recurrence_id field
    */
   protected function getMapRecurrence_id() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapRecurrence_id()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapRecurrence_id()");
     if (isset($this->objectmelanie->recurrence_id)) {
       $_recId = $this->objectmelanie->recurrence_id;
     }
@@ -337,7 +341,7 @@ class Exception extends Event {
    * Mapping dtrecurrence_id field
    */
   protected function getMapDtrecurrence_id() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDtrecurrence_id()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapDtrecurrence_id()");
     if (!isset($this->_dtrecurrence_id)) {
       try {
         $this->_dtrecurrence_id = new \DateTime($this->getMapRecurrence_id(), new \DateTimeZone($this->getMapTimezone()));
@@ -379,7 +383,7 @@ class Exception extends Event {
    * Mapping uid field
    */
   protected function getMapUid() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUid()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapUid()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
     if (isset($this->objectmelanie->realuid)) {
@@ -393,7 +397,7 @@ class Exception extends Event {
    * Mapping organizer field
    */
   protected function getMapOrganizer() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapOrganizer()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapOrganizer()");
     if (!isset($this->organizer)) {
       if (isset($this->eventParent) && !$this->eventParent->deleted && isset($this->eventParent->organizer) && !empty($this->eventParent->organizer->uid)) {
         $this->organizer = clone $this->eventParent->organizer;

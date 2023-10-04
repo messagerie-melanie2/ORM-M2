@@ -99,7 +99,7 @@ class Attachment extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    // M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class."->__construct()");
     // Définition de la pièce jointe melanie2
     $this->objectmelanie = new AttachmentMelanie();
   }
@@ -272,7 +272,7 @@ class Attachment extends MceObject {
    * @param string $path          
    */
   protected function setMapPath($path) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapPath()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapPath()");
     if (!isset($this->objectmelanie))
       throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     if (is_string($path)) {
@@ -306,7 +306,7 @@ class Attachment extends MceObject {
    * Mapping isfolder field
    */
   protected function getMapIsfolder() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapIsfolder()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapIsfolder()");
     if (!isset($this->objectmelanie))
       throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     if ($this->objectmelanie->type === Config::get(Config::TYPE_FOLDER))
@@ -319,7 +319,7 @@ class Attachment extends MceObject {
    * Mapping data field
    */
   protected function getMapData() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapData()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapData()");
     if (!isset($this->objectmelanie))
       throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     if ($this->type == self::TYPE_URL)
@@ -338,7 +338,7 @@ class Attachment extends MceObject {
    * @return boolean
    */
   protected function setMapData($data) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapData()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapData()");
     if (!isset($this->objectmelanie))
       throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     if ($this->type == self::TYPE_URL || $this->objectmelanie->type === Config::get(Config::TYPE_FOLDER))
@@ -353,7 +353,7 @@ class Attachment extends MceObject {
    * Mapping url field
    */
   protected function getMapUrl() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUrl()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapUrl()");
     if (!isset($this->objectmelanie))
       throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     if ($this->type == self::TYPE_BINARY) {
@@ -389,7 +389,7 @@ class Attachment extends MceObject {
    * @return Attachment::TYPE_*
    */
   protected function getMapType() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapType()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapType()");
     if (!isset($this->objectmelanie))
       throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     return $this->type;
@@ -413,7 +413,7 @@ class Attachment extends MceObject {
    * Mapping size field
    */
   protected function getMapSize() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapSize()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapSize()");
     if ($this->type == self::TYPE_URL) {
       return 0;
     }
@@ -434,7 +434,7 @@ class Attachment extends MceObject {
    * Mapping hash field
    */
   protected function getMapHash() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapHash()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapHash()");
     if (!isset($this->_hash)) {
       $this->_hash = hash('md5', $this->getMapData());
     }
@@ -452,7 +452,7 @@ class Attachment extends MceObject {
    * Mapping content type field
    */
   protected function getMapContenttype() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapContenttype()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapContenttype()");
     if ($this->type == self::TYPE_URL) {
       return null;
     }

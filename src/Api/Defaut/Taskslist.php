@@ -68,7 +68,6 @@ class Taskslist extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
     // Définition du calendrier melanie2
     $this->objectmelanie = new TaskslistMelanie();
     // Définition des objets associés
@@ -91,7 +90,6 @@ class Taskslist extends MceObject {
    *
    */
   public function setUserMelanie($user) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
     $this->user = $user;
     $this->objectmelanie->user_uid = $this->user->uid;
   }
@@ -109,7 +107,7 @@ class Taskslist extends MceObject {
   public function save() {
     $ret = $this->objectmelanie->save();
     if (!is_null($ret) && isset($this->user)) {
-      $this->user->cleanTaskslists();
+      if (method_exists($this->user, 'cleanTaskslists')) $this->user->cleanTaskslists();
     }
     return $ret;
   }
@@ -123,7 +121,7 @@ class Taskslist extends MceObject {
   public function delete() {
     $ret = $this->objectmelanie->delete();
     if ($ret && isset($this->user)) {
-      $this->user->cleanTaskslists();
+      if (method_exists($this->user, 'cleanTaskslists')) $this->user->cleanTaskslists();
     }
     return $ret;
   }
@@ -161,7 +159,7 @@ class Taskslist extends MceObject {
    * Mapping caldavurl field
    */
   protected function getMapCaldavurl() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCaldavurl()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapCaldavurl()");
     if (!isset($this->objectmelanie)) throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     $url = null;
     if (Config::is_set(Config::TASKSLIST_CALDAV_URL)) {

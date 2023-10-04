@@ -28,16 +28,13 @@ namespace LibMelanie\Log;
  * @subpackage LOG
  */
 class Log {
-	/**
-	 * Function callback de debug
-	 * @var Callback $debuglog
-	 */
-	private $debuglog;
+	
 	/**
 	 * Function callback d'erreur
 	 * @var Callback $errorlog
 	 */
 	private $errorlog;
+
 	/**
 	 * Function callback d'info
 	 * @var Callback $infolog
@@ -45,12 +42,26 @@ class Log {
 	private $infolog;
 
 	/**
+	 * Function callback de debug
+	 * @var Callback $debuglog
+	 */
+	private $debuglog;
+
+	/**
+	 * Function callback de trace
+	 * @var Callback $tracelog
+	 */
+	private $tracelog;
+	
+
+	/**
 	 * Constructeur par défaut
 	 */
 	public function __construct() {
-		$this->debuglog = null;
-		$this->errorlog = null;
-		$this->infolog = null;
+		$this->errorlog 	= null;
+		$this->infolog 		= null;
+		$this->debuglog 	= null;
+		$this->tracelog 	= null;
 	}
 
 	/**
@@ -64,6 +75,16 @@ class Log {
 	}
 
 	/**
+	 * Intialisation de la methode de log info
+	 *
+	 * @param mixed $infolog function appelé pour logger le debug
+	 * doit prendre en paramètre le message
+	 */
+	public function setInfoLog($infolog) {
+		$this->infolog = $infolog;
+	}
+
+	/**
 	 * Intialisation de la methode de log debug
 	 *
 	 * @param mixed $debuglog function appelé pour logger le debug
@@ -74,14 +95,15 @@ class Log {
 	}
 
 	/**
-	 * Intialisation de la methode de log info
+	 * Intialisation de la methode de log trace
 	 *
-	 * @param mixed $infolog function appelé pour logger le debug
+	 * @param mixed $tracelog function appelé pour logger les traces
 	 * doit prendre en paramètre le message
 	 */
-	public function setInfoLog($infolog) {
-		$this->infolog = $infolog;
+	public function setTraceLog($tracelog) {
+		$this->tracelog = $tracelog;
 	}
+
 
 	/**
 	 * Appel les logs associé au level
@@ -97,16 +119,22 @@ class Log {
 					$errorlog($message);
 				}
 				break;
+			case M2Log::LEVEL_INFO:
+				if (isset($this->infolog)) {
+					$info = $this->infolog;
+					$info($message);
+				}
+				break;
 			case M2Log::LEVEL_DEBUG:
 				if (isset($this->debuglog)) {
 					$debuglog = $this->debuglog;
 					$debuglog($message);
 				}
 				break;
-			case M2Log::LEVEL_INFO:
-				if (isset($this->infolog)) {
-					$info = $this->infolog;
-					$info($message);
+			case M2Log::LEVEL_TRACE:
+				if (isset($this->tracelog)) {
+					$tracelog = $this->tracelog;
+					$tracelog($message);
 				}
 				break;
 		}

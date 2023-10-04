@@ -109,7 +109,7 @@ abstract class ObjectShare extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->__construct()");
 
     // Récupération de l'itemName
     $this->_itemName = $itemName;
@@ -131,7 +131,7 @@ abstract class ObjectShare extends MceObject {
    * @return User
    */
   protected function getMapMailbox() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapMailbox()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapMailbox()");
     if (!isset($this->_mailbox)) {
       $uid = explode(static::DELIMITER, $this->uid, 2);
       $this->_user_uid = $uid[0];
@@ -152,7 +152,7 @@ abstract class ObjectShare extends MceObject {
    * @return boolean
    */
   protected function issetMapMailbox() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->issetMapMailbox()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->issetMapMailbox()");
     $this->getMapMailbox();
     return isset($this->_mailbox);
   }
@@ -163,7 +163,7 @@ abstract class ObjectShare extends MceObject {
    * @return string
    */
   protected function getMapUser_uid() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUser_Uid()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapUser_Uid()");
     if (!isset($this->_user_uid)) {
       $uid = explode(static::DELIMITER, $this->uid, 2);
       $this->_user_uid = $uid[0];
@@ -178,7 +178,7 @@ abstract class ObjectShare extends MceObject {
    * @return string
    */
   protected function getMapMailbox_uid() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapMailbox_uid()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapMailbox_uid()");
     if (!isset($this->_mailbox_uid)) {
       $uid = explode(static::DELIMITER, $this->uid, 2);
       $this->_user_uid = $uid[0];
@@ -193,7 +193,7 @@ abstract class ObjectShare extends MceObject {
    * @return string
    */
   protected function getMapDelimiter() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapDelimiter()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapDelimiter()");
     return static::DELIMITER;
   }
 }

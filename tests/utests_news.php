@@ -88,11 +88,13 @@ $user->uid = 'thomas.payen';
 // $newsShare->delete();
 
 if ($user->load()) {
-  $newsList = $user->getUserLastTwoNews();
+  // $newsList = $user->getUserLastTwoNews();
 
-  foreach ($newsList as $n) {
-    echo "$n\r\n";
-  }
+  // foreach ($newsList as $n) {
+  //   echo "$n\r\n";
+  // }
+
+  echo $user->getUserLastNews();
 }
 
 echo "\r\n\r\n";

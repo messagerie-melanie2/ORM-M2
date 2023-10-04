@@ -57,6 +57,12 @@ class ConfigSQL {
            */
           'persistent' => 'false',
           /**
+           * DSN de connexion
+           * 
+           * https://www.php.net/manual/fr/ref.pdo-pgsql.connection.php
+           */
+          'dsn' => 'pgsql:host=localhost;port=5432;dbname=testdb;user=bruce;password=mypass',
+          /**
            * Hostname ou IP vers le serveur SGBD
            */
           'hostspec' => 'sgbd.test',

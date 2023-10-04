@@ -222,6 +222,9 @@ abstract class MagicObject implements Serializable {
 	      && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
       $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
     }
+    if (isset($this->data[$lname]) && !$this->haschanged[$lname]) {
+      $this->oldData[$lname] = $this->data[$lname];
+    }
     $this->data[$lname] = $value;
 	}
 
@@ -310,6 +313,11 @@ abstract class MagicObject implements Serializable {
                 case MappingMce::integer:
                     if (!is_array($value)) { 
                       $value = intval($value);
+
+                      // MANTIS 0007602: Erreur PG out of range for type integer
+                      if ($value < -2147483648 || $value > 2147483647) {
+                        $value = 0;
+                      }
                     }
                     break;
                 // DOUBLE
@@ -430,20 +438,21 @@ abstract class MagicObject implements Serializable {
                         // Une erreur s'est produite, on met une valeur par défaut pour le pas bloquer la lecture des données
                         $value = "1970-01-01 00:00:00";
                     }
-
                     break;
                 // TIMESTAMP
                 case MappingMce::timestamp:
                     if ($value instanceof \DateTime) {
                         $value = $value->getTimestamp();
-                    } else if (!is_array($value))  {
+                    } 
+                    
+                    if (!is_array($value))  {
                         $value = intval($value);
+
+                        // MANTIS 0007602: Erreur PG out of range for type integer
+                        if ($value < 0 || $value > 2147483647) {
+                          $value = time();
+                        }
                     }
-                    // MANTIS 0006124: Problème avec les timestamp négatif
-                    // Problème avec cet update
-                    // if ($value < 0) {
-                    //   $value = time();
-                    // }
                     break;
             }
         }        
@@ -451,7 +460,7 @@ abstract class MagicObject implements Serializable {
     if (isset($this->data[$lname]) && is_scalar($value) && !is_array($value) && $this->data[$lname] === $value) {
       return false;
     }
-    if (isset($this->data[$lname])) {
+    if (isset($this->data[$lname]) && !$this->haschanged[$lname]) {
       $this->oldData[$lname] = $this->data[$lname];
     }
     $this->data[$lname] = $value;

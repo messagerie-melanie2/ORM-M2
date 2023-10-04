@@ -421,7 +421,11 @@ class EventToICS {
       }
       // Location
       if (isset($event->location) && $event->location != "") {
-        $vevent->LOCATION = self::cleanUTF8String($event->location);
+        $location = self::cleanUTF8String($event->location);
+        if (strpos($location, '@visio:') === 0) {
+          $location = substr($location, 7);
+        }
+        $vevent->LOCATION = $location;
       }
       // Alarm
       if (isset($event->alarm) && $event->alarm != 0) {
@@ -494,6 +498,9 @@ class EventToICS {
             case Attendee::RESPONSE_NEED_ACTION :
               $partstat = ICS::PARTSTAT_NEEDS_ACTION;
               break;
+            case Attendee::RESPONSE_DELEGATED :
+              $partstat = ICS::PARTSTAT_DELEGATED;
+              break;
             case Attendee::RESPONSE_TENTATIVE :
               $partstat = ICS::PARTSTAT_TENTATIVE;
               break;
@@ -547,6 +554,16 @@ class EventToICS {
           if (is_bool($attendee->is_saved)) {
             $params[ICS::X_MEL_EVENT_SAVED] = $attendee->is_saved;
           }
+          // delegated-from
+          $delegated_from = $attendee->delegated_from;
+          if (isset($delegated_from)) {
+            $params[ICS::DELEGATED_FROM] = $delegated_from;
+          }
+          // delegated-to
+          $delegated_to = $attendee->delegated_to;
+          if (isset($delegated_to)) {
+            $params[ICS::DELEGATED_TO] = $delegated_to;
+          }
           // Add attendee
           $vevent->add(ICS::ATTENDEE, 'mailto:' . $attendee->email, $params);
         }
@@ -557,8 +574,24 @@ class EventToICS {
         $vevent->add(ICS::X_CALDAV_CALENDAR_ID, $calendar->id);
         $vevent->add(ICS::X_CALDAV_CALENDAR_OWNER, $calendar->owner);
         // MANTIS 4002: Ajouter le creator dans la description lors de la génération de l'ICS
-        if ($event->owner != $calendar->owner && !empty($event->owner) && strpos($vevent->DESCRIPTION, "[" . $event->owner . "]") === false) {
-          $vevent->DESCRIPTION = "[" . $event->owner . "]\n\n" . $vevent->DESCRIPTION;
+        if (Config::get(Config::ALWAYS_SHOW_EVENT_CREATOR) || $event->owner != $calendar->owner && !empty($event->owner)) {
+          if ($event->owner == $user->uid) {
+            $creatorText = Config::get(Config::SHARED_EVENT_CREATOR_SELF);
+          }
+          else {
+            $creatorText = Config::get(Config::SHARED_EVENT_CREATOR);
+          }
+          
+          if (isset($creatorText) 
+              && (strpos($creatorText, '%%uid%%') === false || isset($event->owner))
+              && (strpos($creatorText, '%%email%%') === false || isset($event->creator_email))
+              && (strpos($creatorText, '%%name%%') === false || isset($event->creator_name))) {
+            $creatorText = str_replace(
+                ['%%uid%%', '%%email%%', '%%name%%', '%%date%%'], 
+                [$event->owner, $event->creator_email, $event->creator_name, date(Config::get(Config::SHARED_EVENT_CREATION_DATE_FORMAT), $event->created)], 
+                $creatorText);
+            $vevent->DESCRIPTION = "[$creatorText]\n\n" . $vevent->DESCRIPTION;
+          }
         }
       }
       // Sequence

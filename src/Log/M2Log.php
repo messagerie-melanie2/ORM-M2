@@ -43,9 +43,10 @@ class M2Log {
 	/**
 	 * Log level const
 	 */
-	const LEVEL_ERROR = "error";
-	const LEVEL_DEBUG = "debug";
-	const LEVEL_INFO = "info";
+	const LEVEL_ERROR 	= "error";
+	const LEVEL_INFO 	= "info";
+	const LEVEL_DEBUG 	= "debug";
+	const LEVEL_TRACE 	= "trace";
 
 	/**
 	 * Intialisation de la methode de log error
@@ -56,6 +57,17 @@ class M2Log {
 	public static function InitErrorLog($errorlog) {
 		if (!isset(self::$log)) self::$log = new Log();
 		self::$log->setErrorLog($errorlog);
+	}
+
+	/**
+	 * Intialisation de la methode de log info
+	 *
+	 * @param mixed $infolog function appelé pour logger le debug
+	 * doit prendre en paramètre le message
+	 */
+	public static function InitInfoLog($infolog) {
+		if (!isset(self::$log)) self::$log = new Log();
+		self::$log->setInfoLog($infolog);
 	}
 
 	/**
@@ -70,14 +82,14 @@ class M2Log {
 	}
 
 	/**
-	 * Intialisation de la methode de log info
+	 * Intialisation de la methode de log trace
 	 *
-	 * @param mixed $infolog function appelé pour logger le debug
+	 * @param mixed $tracelog function appelé pour logger les traces
 	 * doit prendre en paramètre le message
 	 */
-	public static function InitInfoLog($infolog) {
+	public static function InitTraceLog($tracelog) {
 		if (!isset(self::$log)) self::$log = new Log();
-		self::$log->setInfoLog($infolog);
+		self::$log->setTraceLog($tracelog);
 	}
 
 	/**

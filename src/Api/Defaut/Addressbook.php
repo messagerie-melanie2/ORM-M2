@@ -66,7 +66,6 @@ class Addressbook extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct()");
     // Définition du carnet d'adresse Mel
     $this->objectmelanie = new AddressbookMelanie();
     // Définition des objets associés
@@ -89,7 +88,6 @@ class Addressbook extends MceObject {
    *
    */
   public function setUserMelanie($user) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
     $this->user = $user;
     $this->objectmelanie->user_uid = $this->user->uid;
   }
@@ -209,7 +207,7 @@ class Addressbook extends MceObject {
    * Mapping carddavurl field
    */
   protected function getMapCarddavurl() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapCarddavurl()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapCarddavurl()");
     if (!isset($this->objectmelanie)) throw new \LibMelanie\Exceptions\ObjectMelanieUndefinedException();
     $url = null;
     if (Config::is_set(Config::ADDRESSBOOK_CARDDAV_URL)) {

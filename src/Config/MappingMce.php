@@ -181,11 +181,11 @@ class MappingMce {
 	      // Gestion de l'historique : objet HistoryMelanie
 	      "HistoryMelanie" => [
 	          "id" 					=> [self::name => "history_id", self::type => self::integer],
-	          "uid" 				=> [self::name => "object_uid"],
-	          "action" 				=> [self::name => "history_action"],
+	          "uid" 				=> [self::name => "object_uid", self::type => self::string, self::size => 255],
+	          "action" 				=> [self::name => "history_action", self::type => self::string, self::size => 32],
 	          "timestamp" 			=> [self::name => "history_ts", self::type => self::timestamp, self::defaut => 0],
 	          "description" 		=> [self::name => "history_desc"],
-	          "who" 				=> [self::name => "history_who"],
+	          "who" 				=> [self::name => "history_who", self::type => self::string, self::size => 255],
 	          "extra" 				=> [self::name => "history_extra"]
 	      ],
 	      // Gestion des évènements : objet EventMelanie
@@ -661,24 +661,27 @@ class MappingMce {
 	const ATT_ACCEPTED = 2;
 	const ATT_DECLINED = 3;
 	const ATT_TENTATIVE = 4;
+	const ATT_DELEGATED = 5;
 	/**
 	 * Attendee response mapping object to MCE
 	 */
 	public static $MapAttendeeResponseObjectToMce = [
-	    DefaultConfig::NEED_ACTION => self::ATT_NEED_ACTION,
-	    DefaultConfig::ACCEPTED => self::ATT_ACCEPTED,
-	    DefaultConfig::DECLINED => self::ATT_DECLINED,
-	    DefaultConfig::IN_PROCESS => self::ATT_NEED_ACTION,
-	    DefaultConfig::TENTATIVE => self::ATT_TENTATIVE,
+	    DefaultConfig::NEED_ACTION 	=> self::ATT_NEED_ACTION,
+	    DefaultConfig::ACCEPTED 	=> self::ATT_ACCEPTED,
+	    DefaultConfig::DECLINED 	=> self::ATT_DECLINED,
+	    DefaultConfig::IN_PROCESS 	=> self::ATT_NEED_ACTION,
+	    DefaultConfig::TENTATIVE 	=> self::ATT_TENTATIVE,
+		DefaultConfig::DELEGATED 	=> self::ATT_DELEGATED,
 	];
 	/**
 	 * Attendee response mapping MCE to object
 	 */
 	public static $MapAttendeeResponseMceToObject = [
-	    self::ATT_NEED_ACTION => DefaultConfig::NEED_ACTION,
-	    self::ATT_ACCEPTED => DefaultConfig::ACCEPTED,
-	    self::ATT_DECLINED => DefaultConfig::DECLINED,
-	    self::ATT_TENTATIVE => DefaultConfig::TENTATIVE
+	    self::ATT_NEED_ACTION 	=> DefaultConfig::NEED_ACTION,
+	    self::ATT_ACCEPTED 		=> DefaultConfig::ACCEPTED,
+	    self::ATT_DECLINED 		=> DefaultConfig::DECLINED,
+	    self::ATT_TENTATIVE 	=> DefaultConfig::TENTATIVE,
+		self::ATT_DELEGATED 	=> DefaultConfig::DELEGATED,
 	];
 
 	// Attendee role

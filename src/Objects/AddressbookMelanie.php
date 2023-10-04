@@ -49,7 +49,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	    // Défini la classe courante
 	    $this->get_class = get_class($this);
 
-		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
+		M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class."->__construct()");
 
 		// Récupération du type d'objet en fonction de la class
 		$this->objectType = explode('\\',$this->get_class);
@@ -115,10 +115,20 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 
 		// Gérer le load si user n'est pas défini
 		if (isset($this->user_uid)) {
-			$query = Sql\SqlMelanieRequests::listObjectsByUidAndUser;
+			if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+				$query = Sql\SqlMelanieRequests::functionListObjectsByUidAndUser;
+			}
+			else {
+				$query = Sql\SqlMelanieRequests::listObjectsByUidAndUser;
+			}
 		}
 		else {
-			$query = Sql\SqlMelanieRequests::listObjectsByUid;
+			if (\LibMelanie\Config\Config::get(\LibMelanie\Config\Config::USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES)) {
+				$query = Sql\SqlMelanieRequests::functionListObjectsByUid;
+			}
+			else {
+				$query = Sql\SqlMelanieRequests::listObjectsByUid;
+			}
 		}
 
 		// Replace name
@@ -164,14 +174,20 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save()");
 		$insert = false;
 		// Si les clés primaires ne sont pas définis, impossible de charger l'objet
-		if (!isset($this->primaryKeys)) return null;
+		if (!isset($this->primaryKeys)) {
+			M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() No primaryKeys");
+			return null;
+		}
 		// Ne rien sauvegarder si rien n'a changé
 		$haschanged = false;
 		foreach ($this->haschanged as $value) {
 			$haschanged = $haschanged || $value;
 			if ($haschanged) break;
 		}
-		if (!$haschanged) return null;
+		if (!$haschanged) {
+			M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Nothing has changed");
+			return null;
+		}
 		// Si isExist est à null c'est qu'on n'a pas encore testé
 		if (!is_bool($this->isExist)) {
 		  $this->isExist = $this->exists();
@@ -210,6 +226,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 				];
 				if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
 					Sql\Sql::GetInstance()->rollBack();
+					M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Error on insert attribute name");
 			        return null;
 				}
 				// owner
@@ -222,6 +239,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 				];
 			    if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
 			        Sql\Sql::GetInstance()->rollBack();
+					M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Error on insert attribute owner");
 			        return null;
 				}
 				// perm
@@ -234,6 +252,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 				];
 			    if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
 			        Sql\Sql::GetInstance()->rollBack();
+					M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Error on insert attribute perm");
 			        return null;
 				}
 				// params
@@ -246,11 +265,13 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 				];
 				if (!Sql\Sql::GetInstance()->executeQuery($query, $params)) {
 			        Sql\Sql::GetInstance()->rollBack();
+					M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Error on insert property");
 			        return null;
 				}
 				Sql\Sql::GetInstance()->commit();
 			} else {
 				Sql\Sql::GetInstance()->rollBack();
+				M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->save() Error on insert object");
 			    return null;
 			}
 		}
@@ -442,7 +463,7 @@ class AddressbookMelanie extends MagicObject implements IObjectMelanie {
 	 * @return boolean
 	 */
 	public function asRight($action) {
-		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->asRight($action)");
+		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->asRight($action, $this->id)");
 		return (DefaultConfig::$PERMS[$action] & $this->perm_addressbook) === DefaultConfig::$PERMS[$action];
 	}
 }

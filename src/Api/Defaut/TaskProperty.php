@@ -56,7 +56,6 @@ class TaskProperty extends MceObject {
     // Défini la classe courante
     $this->get_class = get_class($this);
     
-    // M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->__construct()");
     // Définition de la propriété de l'évènement
     $this->objectmelanie = new ObjectMelanie('TaskProperties');
     
@@ -78,7 +77,6 @@ class TaskProperty extends MceObject {
    *
    */
   function setUserMelanie($user) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setUserMelanie()");
     $this->objectmelanie->user = $user->uid;
   }
   
@@ -90,7 +88,6 @@ class TaskProperty extends MceObject {
    *
    */
   function setTaskMelanie($taskmelanie) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setTaskMelanie()");
     $this->objectmelanie->task = $taskmelanie->uid;
     $this->objectmelanie->taskslist = $taskmelanie->taskslist;
   }

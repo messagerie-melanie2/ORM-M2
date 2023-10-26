@@ -1,3 +1,7 @@
+ORM M2 - 0.6.5.25
+------
+- 0007990: [Mel/User/] Ajout de la date de grâce pour la double authentification
+
 ORM M2 - 0.6.5.24
 ------
 - 0007918: [MagicObject] Ajouter une fonction fieldsHasChanged

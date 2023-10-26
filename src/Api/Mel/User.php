@@ -277,6 +277,7 @@ class User extends Defaut\User {
     "modifiedtime"              => 'mineqmodifiedtimestamp',
     "double_authentification_forcee"        => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => '2FA.Forcee: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => '1', MappingMce::falseLdapValue => '0'],
     "double_authentification_date_butoir"   => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => '2FA.DateButoir: ', MappingMce::type => MappingMce::dateLdap],
+    "double_authentification_date_grace"    => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => '2FA.DateDeGrace: ', MappingMce::type => MappingMce::dateLdap],
   ];
 
   /**

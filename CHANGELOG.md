@@ -1,3 +1,15 @@
+ORM M2 - 0.6.5.25
+------
+- 0007990: [Mel/User/] Ajout de la date de grâce pour la double authentification
+
+ORM M2 - 0.6.5.24
+------
+- 0007918: [MagicObject] Ajouter une fonction fieldsHasChanged
+- 0007919: [MagicObject] Ajouter un type dateLdap
+- 0007904: [Mel/User] état de la double authentification
+- 0007911: [Mel/User] champs token_otp et token_otp_expire
+- 0007906: [Mel/User] adresse de récupération pour la double authentification
+
 ORM M2 - 0.6.5.23
 ------
 - 0007917: Enrichir les logs pour les save()

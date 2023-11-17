@@ -138,6 +138,27 @@ abstract class MagicObject implements Serializable {
     }
 	  return null;
   }
+
+  /**
+   * Retourne la liste de tous les champs qui ont changé
+   * 
+   * @return array
+   */
+  public function fieldsHasChanged() {
+    $fields = [];
+    foreach ($this->haschanged as $field => $value) {
+      if ($value) {
+        foreach (MappingMce::$Data_Mapping[$this->objectType] as $key => $mapping) {
+          if ($mapping[MappingMce::name] == $field) {
+            $field = $key;
+            break;
+          }
+        }
+        $fields[] = $field;
+      }
+    }
+    return $fields;
+  }
 	
 	/**
 	 * Détermine si le champ a changé
@@ -439,6 +460,28 @@ abstract class MagicObject implements Serializable {
                         $value = "1970-01-01 00:00:00";
                     }
                     break;
+                // DATE LDAP
+                case MappingMce::dateLdap:
+                  try {
+                      if ($value instanceof \DateTime) {
+                          $value->setTimezone(new \DateTimeZone('GMT'));
+                          if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::format]))
+                              $value = $value->format(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::format]) . 'Z';
+                          else
+                              $value = $value->format('YmdHis')  . 'Z';
+                      } else if (!is_array($value)) {
+                          if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::format]))
+                              $value = date(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::format], strtotime($value)) . 'Z';
+                          else
+                              $value = date('YmdHis', strtotime($value)) . 'Z';
+                      }
+                  }
+                  catch (\Exception $ex) {
+                      M2Log::Log(M2Log::LEVEL_ERROR, "MagicObject->__set($name, $value) : Exception dans le format de dateLdap, utilisation de la valeur par defaut");
+                      // Une erreur s'est produite, on met une valeur par défaut pour le pas bloquer la lecture des données
+                      $value = "19700101000000Z";
+                  }
+                  break;
                 // TIMESTAMP
                 case MappingMce::timestamp:
                     if ($value instanceof \DateTime) {
@@ -536,6 +579,41 @@ abstract class MagicObject implements Serializable {
 		        else {
 		          $value = [$value];
 		        }
+            break;
+          // DATE LDAP
+          case MappingMce::dateLdap:
+            // Gestion d'un prefix
+            if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap])) {
+              $_prefix = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap];
+              $_found = false;
+              foreach ($value as $val) {
+                if (strpos($val, $_prefix) === 0) {
+                  $value = trim(str_replace($_prefix, '', $val));
+                  $_found = true;
+                  break;
+                }
+              }
+              // Valeur par défaut
+              if (!$_found) {
+                if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut])) {
+                  $value = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut];
+                }
+                else {
+                  $value = "";
+                }
+              }
+            }
+
+            if (is_string($value)) {
+              // Remove the Z
+              if (substr($value, -1) == 'Z') {
+                $value = substr($value, 0, -1);
+                $value = \DateTime::createFromFormat('YmdHis', $value, new \DateTimeZone('GMT'));
+              }
+              else {
+                $value = \DateTime::createFromFormat('YmdHis', $value);
+              }
+            }
             break;
           // BOOLEAN LDAP
           case MappingMce::booleanLdap:

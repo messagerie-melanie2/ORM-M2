@@ -54,7 +54,7 @@ class ObjectShare extends Defaut\ObjectShare {
      * @return User
      */
     protected function getMapMailbox() {
-        M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapMailbox()");
+        M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapMailbox()");
         if (!isset($this->_mailbox)) {
             $uid = explode(static::DELIMITER, $this->uid, 2);
             $this->_user_uid = $uid[0];
@@ -75,7 +75,7 @@ class ObjectShare extends Defaut\ObjectShare {
    * @return string
    */
   protected function getMapUser_uid() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapUser_Uid()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapUser_Uid()");
     if (!isset($this->_user_uid)) {
         $uid = explode(static::DELIMITER, $this->uid, 2);
         $this->_user_uid = $uid[0];
@@ -92,7 +92,7 @@ class ObjectShare extends Defaut\ObjectShare {
    * @return string
    */
   protected function getMapMailbox_uid() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getMapMailbox_uid()");
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapMailbox_uid()");
     if (!isset($this->_mailbox_uid)) {
         $this->_mailbox_uid = $this->mailbox->uid;
     }

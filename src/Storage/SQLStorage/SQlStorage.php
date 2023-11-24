@@ -32,6 +32,8 @@ namespace LibMelanie\Storage\SQLStorage;
 use LibMelanie\Lib\MceObject;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Storage\IStorage;
+use LibMelanie\Sql;
+use LibMelanie\Config\MappingMce;
 
 class SQLStorage extends MceObject implements IStorage
 {
@@ -66,11 +68,11 @@ class SQLStorage extends MceObject implements IStorage
             // $query = str_replace("{where_clause}", $whereClause, $query);
 
             // Replace
-			// $query = str_replace("{data_fields}", $data_fields, Sql\SqlAttachmentRequests::insertAttachment);
-			// $query = str_replace("{data_values}", $data_values, $query);
+            // $query = str_replace("{data_fields}", $data_fields, Sql\SqlAttachmentRequests::insertAttachment);
+            // $query = str_replace("{data_values}", $data_values, $query);
 
-			// // Execute
-			// $this->isExist = Sql\Sql::GetInstance()->executeQuery($query, $params);
+            // // Execute
+            // $this->isExist = Sql\Sql::GetInstance()->executeQuery($query, $params);
 
             $response = true;
         } catch (\Exception $exception) {
@@ -86,11 +88,33 @@ class SQLStorage extends MceObject implements IStorage
 
         $response = null;
         try {
-            // $query = Sql\SqlAttachmentRequests::getAttachmentData;
+            // Paramètres de la requête
+            $params = [];
+            $whereClause = "";
+            // Test si les clés primaires sont bien instanciées et les ajoute en paramètres
+            foreach ($this->primaryKeys as $key) {
+                if (!isset($this->$key))
+                    return false;
+                // Récupèration des données de mapping
+                if (
+                    isset(MappingMce::$Data_Mapping[$this->objectType])
+                    && isset(MappingMce::$Data_Mapping[$this->objectType][$key])
+                ) {
+                    $mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
+                } else {
+                    $mapKey = $key;
+                }
+                $params[$mapKey] = $this->$key;
+                if ($whereClause != "")
+                    $whereClause .= " AND ";
+                $whereClause .= "$mapKey = :$mapKey";
+            }
+            // Chargement de la requête
+            $query = Sql\SqlAttachmentRequests::getAttachmentData;
             // Clause where
-            // $query = str_replace("{where_clause}", $whereClause, $query);
+            $query = str_replace("{where_clause}", $whereClause, $query);
 
-            $response = $this->filesystem->read($path);
+            Sql\Sql::GetInstance()->executeQueryToObject($query, $params, $response);
         } catch (\Exception $exception) {
             M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->read() Exception: " . $exception);
         }

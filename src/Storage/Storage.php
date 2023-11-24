@@ -74,7 +74,7 @@ class Storage
      */
     public static function getStorage(string $storageType = null)
     {
-        $storageType = ($storageType ? $storageType : Config::get('storage_type'));
+        $storageType ?? $storageType = Config::get('storage_type');
 
         switch ($storageType) {
             case Storage::S3:

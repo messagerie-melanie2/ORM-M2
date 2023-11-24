@@ -33,7 +33,7 @@ interface IStorage
 {
     /**
      * Create a new file at the specified path with the given contents, if the file already exists, it will be overwritten.
-     * @param string $path The path where the file should be created.
+     * @param string $path The path where the file should be created, including the filename.
      * @param string $contents The contents of the file to be created.
      * @return bool True on success, false on failure.
      */
@@ -41,14 +41,14 @@ interface IStorage
 
     /**
      * Read the contents of a file at the specified path.
-     * @param string $path The path of the file to be read.
+     * @param string $path The path of the file to be read, including the filename.
      * @return string | null The contents of the file, or null on failure.
      */
     public function read(string $path);
 
     /**
      * Delete a file at the specified path.
-     * @param string $path The path of the file to be deleted.
+     * @param string $path The path of the file to be deleted, including the filename.
      * @return bool True on success, false on failure.
      */
     public function delete(string $path);

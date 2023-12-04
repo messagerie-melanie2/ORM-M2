@@ -76,7 +76,7 @@ class Group extends Defaut\Group {
                     && $entries['count'] > 0) {
                 array_shift($entries);
                 foreach ($entries as $i => $entry) {
-                    $member = new Member();
+                    $member = new Member(LdapConfig::$SEARCH_LDAP);
                     $member->dn = $entry['dn'];
                     $member->load($attributes);
                     $this->_members[] = $member;

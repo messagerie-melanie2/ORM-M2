@@ -74,7 +74,7 @@ class User extends Mce\User {
    *
    * @ignore
    */
-  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_routage', 'shares', 'type','mailroutingaddress','outofoffices','mcedomain'];
+  const LOAD_ATTRIBUTES = ['fullname', 'displayname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_routage', 'shares', 'type','mailroutingaddress','outofoffices','mcedomain'];
 
 	/**
    * Configuration du mapping qui surcharge la conf

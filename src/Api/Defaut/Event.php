@@ -1710,7 +1710,7 @@ class Event extends MceObject {
     }
 
     // MANTIS 0008062: Gérer l'incrémentation de la séquence au moment du save
-    if (!$this->objectmelanie->fieldHasChanged('sequence')) {
+    if ($saveAttendees && !$this->objectmelanie->fieldHasChanged('sequence')) {
       foreach (['start', 'end', 'recurrence', 'location', 'status'] as $field) {
         if ($this->objectmelanie->fieldHasChanged($field)) {
           if (!empty($this->objectmelanie->sequence)) {

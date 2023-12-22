@@ -1,3 +1,7 @@
+ORM M2 - 0.6.5.27
+------
+- fix: ne pas incrémenter la séquence pour les participants
+
 ORM M2 - 0.6.5.26
 ------
 - 0008073: Intégrer l'interval dans la validation de la recurrence

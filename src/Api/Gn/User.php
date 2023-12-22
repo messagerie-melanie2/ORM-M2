@@ -74,7 +74,7 @@ class User extends Mce\User {
    *
    * @ignore
    */
-  const LOAD_ATTRIBUTES = ['fullname', 'displayname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_routage', 'shares', 'type','mailroutingaddress','outofoffices','mcedomain'];
+  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_routage', 'shares', 'type','mcemailroutingaddress','outofoffices','mcedomain','mceVisibilite'];
 
 	/**
    * Configuration du mapping qui surcharge la conf
@@ -106,6 +106,7 @@ class User extends Mce\User {
     "givenname"               => 'givenname',
     "mcedomain"               => [MappingMce::name => 'mcedomain', MappingMce::type => MappingMce::stringLdap],
     "modifiedtime"            => 'mcemodifiedtimestamp',
+    "mcevisibilite"           => [MappingMce::name => 'mcevisibilite', MappingMce::type => MappingMce::arrayLdap]
   ];
 
   /**

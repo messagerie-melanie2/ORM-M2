@@ -1,3 +1,11 @@
+ORM M2 - 0.6.5.26
+------
+- 0008073: Intégrer l'interval dans la validation de la recurrence
+- 0008069: [ICS] Nettoyer le participant qui est aussi le propriétaire de l'agenda organisateur
+- 0008063: Gestion du move depuis un ICS
+- 0008062: Gérer l'incrémentation de la séquence au moment du save
+- 0008072: [En attente] Ne plus supprimer les événements des participants
+
 ORM M2 - 0.6.5.25
 ------
 - 0007990: [Mel/User/] Ajout de la date de grâce pour la double authentification

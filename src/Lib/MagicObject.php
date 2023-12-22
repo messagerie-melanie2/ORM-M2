@@ -121,18 +121,43 @@ abstract class MagicObject implements Serializable {
 	}
 
   /**
+	 * Initialise le haschanged à partir des data
+	 * @ignore
+	 */
+	protected function initializeHasChangedFromData() {
+		foreach ($this->haschanged as $key => $value) {
+      $this->haschanged[$key] = false;
+    }
+    foreach ($this->data as $key => $value) {
+      $this->haschanged[$key] = true;
+    }
+	}
+
+  /**
+   * Retourne le nom du champ dans le mapping
+   * 
+   * @param string $name
+   * 
+   * @return string
+   */
+  protected function getMappingName($name) {
+    $lname = strtolower($name);
+    // Récupèration des données de mapping
+    if (isset(MappingMce::$Data_Mapping[$this->objectType])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
+      $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
+    }
+    return $lname;
+  }
+
+  /**
    * Retourne les données avant la modification
    * 
    * @param string $name
    * @return mixed
    */
   public function getOldData($name) {
-    $lname = strtolower($name);
-	  // Récupèration des données de mapping
-	  if (isset(MappingMce::$Data_Mapping[$this->objectType])
-        && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
-      $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
-    }
+    $lname = $this->getMappingName($name);
     if (isset($this->oldData[$lname])) {
       return $this->oldData[$lname];
     }
@@ -167,12 +192,7 @@ abstract class MagicObject implements Serializable {
 	 * @return boolean
 	 */
 	public function fieldHasChanged($name) {
-	  $lname = strtolower($name);
-	  // Récupèration des données de mapping
-	  if (isset(MappingMce::$Data_Mapping[$this->objectType])
-        && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
-      $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
-    }
+	  $lname = $this->getMappingName($name);
     if (isset($this->haschanged[$lname])) {
       return $this->haschanged[$lname];
     }
@@ -186,12 +206,7 @@ abstract class MagicObject implements Serializable {
    * @param boolean $haschanged
 	 */
 	public function setFieldHasChanged($name, $haschanged = true) {
-	  $lname = strtolower($name);
-	  // Récupèration des données de mapping
-	  if (isset(MappingMce::$Data_Mapping[$this->objectType])
-        && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
-      $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
-    }
+	  $lname = $this->getMappingName($name);
     $this->haschanged[$lname] = $haschanged;
   }
   
@@ -218,12 +233,7 @@ abstract class MagicObject implements Serializable {
 	 * @return mixed
 	 */
 	public function getFieldValueFromData($name) {
-	  $lname = strtolower($name);
-	  // Récupèration des données de mapping
-	  if (isset(MappingMce::$Data_Mapping[$this->objectType])
-	      && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
-      $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
-    }
+	  $lname = $this->getMappingName($name);
     if (isset($this->data[$lname])) {
       return $this->data[$lname];
     }
@@ -237,12 +247,7 @@ abstract class MagicObject implements Serializable {
    * @param string $value
 	 */
 	public function setFieldValueToData($name, $value) {
-	  $lname = strtolower($name);
-	  // Récupèration des données de mapping
-	  if (isset(MappingMce::$Data_Mapping[$this->objectType])
-	      && isset(MappingMce::$Data_Mapping[$this->objectType][$lname])) {
-      $lname = MappingMce::$Data_Mapping[$this->objectType][$lname][MappingMce::name];
-    }
+	  $lname = $this->getMappingName($name);
     if (isset($this->data[$lname]) && !$this->haschanged[$lname]) {
       $this->oldData[$lname] = $this->data[$lname];
     }
@@ -302,12 +307,30 @@ abstract class MagicObject implements Serializable {
 	/**
 	 * Copy l'objet depuis un autre
 	 * @param MagicObject $object
+   * @param boolean $initilizeHasChanged
+   * @param array $ignores
 	 * @return boolean
 	 */
-	public function __copy_from($object) {
+	public function __copy_from($object, $initilizeHasChanged = false, $ignores = []) {
 	    if (method_exists($object, "__get_data")) {
-	        $this->data = $object->__get_data();
-	        return true;
+
+        $map_ignores = [];
+        foreach ($ignores as $value) {
+          $map_ignores[] = $this->getMappingName($value);
+        }
+
+        foreach ($object->__get_data() as $key => $value) {
+          if (in_array($key, $map_ignores)) {
+            continue;
+          }
+          $this->data[$key] = $value;
+
+          if ($initilizeHasChanged) {
+            $this->haschanged[$key] = true;  
+          }
+        }
+        
+        return true;
 	    }
 	    return false;
 	}

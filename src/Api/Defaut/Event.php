@@ -1036,28 +1036,23 @@ class Event extends MceObject {
           $listAttendee->uid = $_e->calendar;
 
           if ($listAttendee->need_action) {
-            if ($_e->status == self::STATUS_TENTATIVE) {
-              // Si on est en provisoire on le supprime directement
-              $_e->delete();
-            }
-            else {
-              // Copier l'événement même pour une annulation
-              $this->copyEventNeedAction($this, $_e, null, $copyFieldsList, $needActionFieldsList, null, null, false, true);
-              // Doit on annuler l'événement pour le participant ?
-              if ($clean_deleted_attendees) {
-                $_e->status = self::STATUS_CANCELLED;
+            // 0008072: [En attente] Ne plus supprimer les événements des participants
+            // Copier l'événement même pour une annulation
+            $this->copyEventNeedAction($this, $_e, null, $copyFieldsList, $needActionFieldsList, null, null, false, true);
+            // Doit on annuler l'événement pour le participant ?
+            if ($clean_deleted_attendees) {
+              $_e->status = self::STATUS_CANCELLED;
 
-                // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
-                if (!empty($_e->sequence)) {
-                  $_e->sequence = $_e->sequence + 1;
-                }
-                else {
-                  $_e->sequence = 1;
-                }
+              // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
+              if (!empty($_e->sequence)) {
+                $_e->sequence = $_e->sequence + 1;
               }
-              $_e->modified = time();
-              $_e->save(false);
+              else {
+                $_e->sequence = 1;
+              }
             }
+            $_e->modified = time();
+            $_e->save(false);
           }
         }
       }
@@ -1433,25 +1428,17 @@ class Event extends MceObject {
             }
             $attendee_event->uid = $this->uid;
             if ($attendee_event->load()) {
-              // L'evement normal est supprimé
-              if ($attendee_event->status == self::STATUS_TENTATIVE
-                  && $attendee->response == $Attendee::RESPONSE_NEED_ACTION) {
-                // Supprimer l'événement qui est en en attente
-                $attendee_event->delete();
-                $save = false;
+              // 0008072: [En attente] Ne plus supprimer les événements des participants
+              // Modification en annulé
+              $attendee_event->status = self::STATUS_CANCELLED;
+              $save = true;
+
+              // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
+              if (!empty($attendee_event->sequence)) {
+                $attendee_event->sequence = $attendee_event->sequence + 1;
               }
               else {
-                // Modification en annulé
-                $attendee_event->status = self::STATUS_CANCELLED;
-                $save = true;
-
-                // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
-                if (!empty($attendee_event->sequence)) {
-                  $attendee_event->sequence = $attendee_event->sequence + 1;
-                }
-                else {
-                  $attendee_event->sequence = 1;
-                }
+                $attendee_event->sequence = 1;
               }
               if ($save) {
                 $attendee_event->modified = time();
@@ -1629,18 +1616,20 @@ class Event extends MceObject {
       $recurrence = json_decode($this->objectmelanie->recurrence_json, true);
       if (isset($recurrence[ICS::FREQ])) {
         $event_duration = strtotime($this->objectmelanie->end) - strtotime($this->objectmelanie->start);
+        // 0008073: Intégrer l'interval dans la validation de la recurrence
+        $interval = isset($recurrence[ICS::INTERVAL]) ? $recurrence[ICS::INTERVAL] : 1;
         switch ($recurrence[ICS::FREQ]) {
           case ICS::FREQ_DAILY:
-            $event_max_duration = 60*60*24;
+            $event_max_duration = 60*60*24*$interval;
             break;
           case ICS::FREQ_WEEKLY:
-            $event_max_duration = 60*60*24*7;
+            $event_max_duration = 60*60*24*7*$interval;
             break;
           case ICS::FREQ_MONTHLY:
-            $event_max_duration = 60*60*24*7*31;
+            $event_max_duration = 60*60*24*7*31*$interval;
             break;
           case ICS::FREQ_YEARLY:
-            $event_max_duration = 60*60*24*366;
+            $event_max_duration = 60*60*24*366*$interval;
             break;
         }
         return $event_max_duration >= $event_duration;
@@ -1718,6 +1707,21 @@ class Event extends MceObject {
     }
     if (!isset($this->owner)) {
       $this->owner = $this->user->uid;
+    }
+
+    // MANTIS 0008062: Gérer l'incrémentation de la séquence au moment du save
+    if ($saveAttendees && !$this->objectmelanie->fieldHasChanged('sequence')) {
+      foreach (['start', 'end', 'recurrence', 'location', 'status'] as $field) {
+        if ($this->objectmelanie->fieldHasChanged($field)) {
+          if (!empty($this->objectmelanie->sequence)) {
+            $this->objectmelanie->sequence = $this->objectmelanie->sequence + 1;
+          }
+          else {
+            $this->objectmelanie->sequence = 1;
+          }
+          break;
+        }
+      }
     }
 
     // Sauvegarde l'objet
@@ -1900,6 +1904,33 @@ class Event extends MceObject {
         $exception->getObjectMelanie()->setFieldHasChanged('attendees');
         $exception->clearAttendees();
       }
+    }
+  }
+
+  /**
+   * Déplacement d'un évènement d'un calendrier à un autre
+   * 
+   * @param string $calendar_id Identifiant du calendrier source
+   */
+  public function move($calendar_id) {
+    $event = new $this->get_class();
+    $event->uid = $this->uid;
+    $event->calendar = $calendar_id;
+    if ($event->load()) {
+      $is_organizer = $event->calendar == $event->getMapOrganizer()->calendar;
+
+      // Gérer la copie des données
+      $this->objectmelanie->__copy_from($event->getObjectMelanie(), true, ['calendar', 'id']);
+      $this->modified = time();
+
+      // Si on est dans un événement d'organisateur, il faut modifier pour tout le monde
+      if ($is_organizer) {
+        $this->getMapOrganizer()->calendar = $this->calendar;
+        $event->getMapOrganizer()->calendar = $this->calendar;
+      }
+
+      $event->delete();
+      $this->save();
     }
   }
   

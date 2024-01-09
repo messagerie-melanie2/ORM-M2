@@ -100,6 +100,8 @@ class ICSToEvent {
       }
     }
     foreach ($vcalendar->VEVENT as $vevent) {
+
+      // Gestion de la recurrence
       $recurrence_id = $vevent->{ICS::RECURRENCE_ID};
       if (isset($recurrence_id)) {
         $Exception = $event->__getNamespace() . '\\Exception';
@@ -113,11 +115,20 @@ class ICSToEvent {
       } else {
         $object = $event;
       }
+
       // UID
       if (!isset($vevent->UID))
         continue;
       else
         $object->uid = $vevent->UID;
+
+      // Gérer un MOVE en chargeant l'ancien événement
+      if (isset($vevent->{ICS::X_CM2V3_ACTION}) 
+          && strtolower($vevent->{ICS::X_CM2V3_ACTION}) == 'move'
+          && isset($vevent->{ICS::X_CALDAV_CALENDAR_ID})) {
+        $object->move($vevent->{ICS::X_CALDAV_CALENDAR_ID}->getValue());
+      }
+
       // Owner
       if (isset($recurrence_id) && (!isset($object->owner) || empty($object->owner))) {
         M2Log::Log(M2Log::LEVEL_DEBUG, "ICSToEvent::Convert() SetOwner = " . isset($user) && isset($user->uid) ? $user->uid : $calendar->owner);
@@ -209,6 +220,7 @@ class ICSToEvent {
         $object->deleted = true;
         continue;
       }
+
       // Gestion du COPY/MOVE
       if (isset($vevent->{ICS::X_CM2V3_ACTION})) {
         $copy = strtolower($vevent->{ICS::X_CM2V3_ACTION}) == 'copy';
@@ -217,11 +229,13 @@ class ICSToEvent {
         $copy = false;
         $object->move = false;
       }
+
       // SUMMARY
       if (isset($vevent->SUMMARY))
         $object->title = $vevent->SUMMARY->getValue();
       else
         $object->title = '';
+
       // DESCRIPTION
       if (isset($vevent->DESCRIPTION)) {
         $object->description = $vevent->DESCRIPTION->getValue();
@@ -229,11 +243,13 @@ class ICSToEvent {
         $object->description = preg_replace('/^(\[.+?)+(\])\\n\\n/i', "", $object->description, 1);
       } else
         $object->description = '';
+      
       // LOCATION
       if (isset($vevent->LOCATION))
         $object->location = $vevent->LOCATION->getValue();
       else
         $object->location = '';
+
       // CATEGORY
       if (isset($vevent->CATEGORIES)) {
         $categories = [];
@@ -243,6 +259,7 @@ class ICSToEvent {
         $object->category = implode(',', $categories);
       } else
         $object->category = '';
+
       // VALARM
       if (isset($vevent->VALARM)) {
         $alarmDate = $vevent->VALARM->getEffectiveTriggerTime();
@@ -255,6 +272,7 @@ class ICSToEvent {
       } else {
         $object->alarm = 0;
       }
+
       // Gestion des alarmes même pour les occurrences
       if (!isset($recurrence_id)) {
         // X MOZ LASTACK
@@ -286,6 +304,7 @@ class ICSToEvent {
           $object->deleteAttribute("X-MOZ-SNOOZE-TIME-CHILDREN");
         }
       }
+
       // SEQUENCE
       if (isset($vevent->SEQUENCE)) {
         $object->sequence = $vevent->SEQUENCE->getValue();
@@ -293,18 +312,21 @@ class ICSToEvent {
         $object->deleteAttribute(ICS::SEQUENCE);
         $object->sequence = 0;
       }
+
       // X-MOZ-RECEIVED-SEQUENCE
       if (isset($vevent->{ICS::X_MOZ_RECEIVED_SEQUENCE})) {
         $object->setAttribute(ICS::X_MOZ_RECEIVED_SEQUENCE, $vevent->{ICS::X_MOZ_RECEIVED_SEQUENCE}->getValue());
       } else {
         $object->deleteAttribute(ICS::X_MOZ_RECEIVED_SEQUENCE);
       }
+
       // X-MOZ-RECEIVED-DTSTAMP
       if (isset($vevent->{ICS::X_MOZ_RECEIVED_DTSTAMP})) {
         $object->setAttribute(ICS::X_MOZ_RECEIVED_DTSTAMP, $vevent->{ICS::X_MOZ_RECEIVED_DTSTAMP}->getValue());
       } else {
         $object->deleteAttribute(ICS::X_MOZ_RECEIVED_DTSTAMP);
       }
+
       // X Moz Send Invitations
       if (isset($vevent->{ICS::X_MOZ_SEND_INVITATIONS})) {
         $object->setAttribute(ICS::X_MOZ_SEND_INVITATIONS, $vevent->{ICS::X_MOZ_SEND_INVITATIONS}->getValue());
@@ -312,6 +334,7 @@ class ICSToEvent {
       else {
         $object->deleteAttribute(ICS::X_MOZ_SEND_INVITATIONS);
       }
+
       // X Moz Send Invitations Undisclosed
       if (isset($vevent->{ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED})) {
         $object->setAttribute(ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED, $vevent->{ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED}->getValue());
@@ -319,18 +342,21 @@ class ICSToEvent {
       else {
         $object->deleteAttribute(ICS::X_MOZ_SEND_INVITATIONS_UNDISCLOSED);
       }
+
       // X MOZ GENERATION
       if (isset($vevent->{ICS::X_MOZ_GENERATION})) {
         $object->setAttribute(ICS::X_MOZ_GENERATION, $vevent->{ICS::X_MOZ_GENERATION}->getValue());
       } else {
         $object->deleteAttribute(ICS::X_MOZ_GENERATION);
       }
+
       // TRANSP
       if (isset($vevent->TRANSP)) {
         $object->transparency = $vevent->TRANSP->getValue();
       } else {
         $object->deleteAttribute(ICS::TRANSP);
       }
+
       // DTSTAMP
       if (isset($vevent->DTSTAMP))
         $object->modified = strtotime($vevent->DTSTAMP->getValue());
@@ -345,6 +371,7 @@ class ICSToEvent {
       if (isset($vevent->CREATED)) {
         $object->created = strtotime($vevent->CREATED->getValue());
       }
+
       // CLASS
       if (isset($vevent->CLASS)) {
         switch ($vevent->CLASS->getValue()) {
@@ -361,6 +388,7 @@ class ICSToEvent {
         }
       } else
         $object->class = Event::CLASS_PUBLIC;
+      
       // STATUS
       if (isset($vevent->STATUS)) {
         switch ($vevent->STATUS->getValue()) {
@@ -377,6 +405,7 @@ class ICSToEvent {
         }
       } else
         $object->status = Event::STATUS_NONE;
+
       // ATTENDEE
       // MANTIS 0007564: [ICS] Lors d'un copier/coller supprimer les participants
       if (isset($vevent->ATTENDEE) && !$copy) {
@@ -435,7 +464,9 @@ class ICSToEvent {
           }
           // Ne pas conserver de participant avec la même adresse mail que l'organisateur
           // Test de non suppression du participant pour voir / PENDING: Test non concluant on réactive
-          if ($object->organizer->email == $_attendee->email) {
+          if ($object->organizer->email == $_attendee->email 
+              // 0008069: [ICS] Nettoyer le participant qui est aussi le propriétaire de l'agenda organisateur
+              || $object->organizer->owner_email == $_attendee->email) {
             continue;
           }
           // Gestion du CNAME

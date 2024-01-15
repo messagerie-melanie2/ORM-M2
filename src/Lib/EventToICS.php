@@ -337,6 +337,7 @@ class EventToICS {
       switch ($event->status) {
         default :
         case Event::STATUS_CONFIRMED :
+        case Event::STATUS_VACATION :
           $vevent->STATUS = ICS::STATUS_CONFIRMED;
           break;
         case Event::STATUS_NONE :

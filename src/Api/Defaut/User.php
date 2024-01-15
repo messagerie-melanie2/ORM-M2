@@ -77,6 +77,13 @@ abstract class User extends MceObject {
   protected $objectshare;
 
   /**
+   * Groupe a l'utilisateur courant si nécessaire
+   * 
+   * @var Group
+   */
+  protected $group;
+
+  /**
    * UserMelanie provenant d'un autre annuaire
    * 
    * @var UserMelanie
@@ -2393,6 +2400,24 @@ abstract class User extends MceObject {
    */
   protected function getMapIs_list() {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_LIST);
+  }
+
+  /**
+   * Récupère l'objet de partage associé à l'utilisateur courant
+   * si celui ci est bien un objet de partage
+   * 
+   * @return Group Groupe associé, null si pas une liste
+   */
+  protected function getMapList() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapList()");
+
+    if ($this->getMapIs_list()) {
+      $class = $this->__getNamespace() . '\\Group';
+      $this->group = new $class($this->_server, $this->_itemName);
+      $this->group->dn = $this->objectmelanie->dn;
+      $this->group->load();
+    }
+    return $this->group;
   }
 
   /**

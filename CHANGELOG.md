@@ -1,3 +1,8 @@
+ORM M2 - 0.6.5.28
+------
+- 0008106: Supporter un statut "En congé" dans les événements
+- 0008100: Si un user est is_list pouvoir directement récupérer la liste
+
 ORM M2 - 0.6.5.27
 ------
 - fix: ne pas incrémenter la séquence pour les participants

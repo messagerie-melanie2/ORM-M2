@@ -528,6 +528,7 @@ class MappingMce {
 	const TENTATIVE = 1;
 	const CONFIRMED = 2;
 	const CANCELLED = 3;
+	const VACATION = 6;
 	/**
 	 * Status mapping object to MCE
 	 */
@@ -537,6 +538,7 @@ class MappingMce {
 		DefaultConfig::TELEWORK => self::TELEWORK,
 	    DefaultConfig::CONFIRMED => self::CONFIRMED,
 	    DefaultConfig::CANCELLED => self::CANCELLED,
+		DefaultConfig::VACATION => self::VACATION,
 	];
 	/**
 	 * Status mapping MCE to object
@@ -546,7 +548,8 @@ class MappingMce {
 	    self::CONFIRMED => DefaultConfig::CONFIRMED,
 	    self::NONE => DefaultConfig::NONE,
 		self::TELEWORK => DefaultConfig::TELEWORK,
-	    self::CANCELLED => DefaultConfig::CANCELLED
+	    self::CANCELLED => DefaultConfig::CANCELLED,
+		self::VACATION => DefaultConfig::VACATION,
 	];
 
 	// Recurrence days

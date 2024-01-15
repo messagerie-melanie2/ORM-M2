@@ -180,6 +180,7 @@ class DefaultConfig {
   const CANCELLED = "cancelled";
   const NONE = "none";
   const TELEWORK = "telework";
+  const VACATION = "vacation";
   
   /* Recurrence days */
   const NODAY = "";

@@ -247,6 +247,7 @@ class Event extends MceObject {
   const STATUS_CANCELLED = DefaultConfig::CANCELLED;
   const STATUS_NONE = DefaultConfig::NONE;
   const STATUS_TELEWORK = DefaultConfig::TELEWORK;
+  const STATUS_VACATION = DefaultConfig::VACATION;
   // TRANS Fields
   const TRANS_TRANSPARENT = ICS::TRANSP_TRANSPARENT;
   const TRANS_OPAQUE = ICS::TRANSP_OPAQUE;

@@ -99,4 +99,10 @@ class SqlCalendarRequests {
 	 * @param :calendar_id
 	 */
 	const getCTag = "SELECT datatree_ctag as ctag FROM horde_datatree WHERE datatree_name = :calendar_id AND group_uid = 'horde.shares.kronolith'";
+
+	/**
+	 * @var string SELECT
+	 * @param :calendar_id
+	 */
+	const getSyncToken = "SELECT datatree_synctoken as synctoken FROM horde_datatree WHERE datatree_name = :calendar_id AND group_uid = 'horde.shares.kronolith'";
 }

@@ -1,3 +1,8 @@
+ORM M2 - 0.6.5.29
+------
+- 0008143: Sur le modèle de getCTag, ajoute un getSyncToken
+- 0008142: Proposer lors de getCTag de ne pas charger le ctag en cache
+
 ORM M2 - 0.6.5.28
 ------
 - 0008106: Supporter un statut "En congé" dans les événements

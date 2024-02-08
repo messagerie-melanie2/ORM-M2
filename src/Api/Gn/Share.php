@@ -1,12 +1,12 @@
 <?php
 /**
  * Ce fichier est développé pour la gestion de la lib MCE
- * 
+ *
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * 
+ *
  * ORM Mél Copyright © 2021 Groupe Messagerie/MTE
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -21,18 +21,20 @@
 namespace LibMelanie\Api\Gn;
 
 use LibMelanie\Api\Defaut;
+use LibMelanie\Sql\Sql;
+use LibMelanie\Sql\SqlObjectPropertyRequests;
 
 /**
  * Classe pour la gestion des droits
  * Permet d'ajouter de nouveaux partages sur la lib MCE
  * implémente les API de la librairie pour aller chercher les données dans la base de données
  * Certains champs sont mappés directement ou passe par des classes externes
- * 
+ *
  * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/GN
  * @api
- * 
+ *
  * @property string $object_id Identifiant de l'objet utilisé pour le partage
  * @property string $name Utilisateur ou groupe auquel est associé le partage
  * @property Share::TYPE_* $type Type de partage
@@ -42,4 +44,26 @@ use LibMelanie\Api\Defaut;
  * @method bool save() Sauvegarde la priopriété dans la base de données
  * @method bool delete() Supprime le partage, en fonction de l'object_id et du nom
  */
-class Share extends Defaut\Share {}
+class Share extends Defaut\Share {
+
+public function delete() {
+    $query = SqlObjectPropertyRequests::deleteProperty;
+
+    $whereClause = "datatree_id= :id and attribute_name= :type and attribute_key = :shareTo";
+		// Clause where
+		$query = str_replace("{where_clause}", $whereClause, $query);
+        $params = [
+          "id" => $this->datatree_id,
+          "type" => $this->attribute_name,
+          "shareTo" => $this->attribute_key
+        ];
+
+		// Supprimer l'évènement
+		$ret = Sql::GetInstance()->executeQuery($query, $params);
+		if ($ret) {
+		  $this->initializeHasChanged();
+		  $this->isExist = false;
+		}
+		return $ret;
+}
+}

@@ -1,12 +1,12 @@
 <?php
 /**
  * Ce fichier est développé pour la gestion de la lib MCE
- * 
+ *
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
  * Des objets génériques vont permettre d'accèder et de mettre à jour les données
- * 
+ *
  * ORM Mél Copyright © 2021 Groupe Messagerie/MTE
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -26,12 +26,12 @@ use LibMelanie\Log\M2Log;
 
 /**
  * Classe objet partagé LDAP pour GN
- * 
+ *
  * @author Groupe Messagerie/MTE - Apitech
  * @package LibMCE
  * @subpackage API/GN
  * @api
- * 
+ *
  * @property string $uid Identifiant unique de l'utilisateur
  * @property string $fullname Nom complet de l'utilisateur
  * @property string $email_send Adresse email d'émission principale de l'utilisateur
@@ -42,7 +42,7 @@ use LibMelanie\Log\M2Log;
 class ObjectShare extends Defaut\ObjectShare {
   /**
    * Délimiteur de l'objet de partage
-   * 
+   *
    * @var string
    */
   const DELIMITER = '.-.';

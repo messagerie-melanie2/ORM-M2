@@ -386,7 +386,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
           }
         }
         if ($ldap->modify($this->dn, $entry)) {
-          return false;
+            return false;
         }
         else {
           M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() Erreur " . $ldap->getError());
@@ -1289,6 +1289,14 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     }
     // On enregistre le fait qu'on n'a rien trouvé
     $this->_itemName = $itemName;
+  }
+
+  public function getItemConfiguration() {
+      return $this->_itemConfiguration;
+  }
+
+  public function setItemConfiguration($items) {
+      $this->_itemConfiguration = $items;
   }
 
   /**

@@ -1,0 +1,19 @@
+before_script:
+  - if [[ "$INTRANET" == '1' ]]; then /proxify;fi
+
+# pipeline
+stages:
+  - packagist
+
+# permet la mise à dépot du package sur gitlab interne 3
+packagist:
+  tags:
+    - stc-runner
+  stage: packagist
+  image: curlimages/curl
+  only:
+    refs:
+      - tags
+  when: manual
+  script:
+    - 'curl -k --header "Job-Token: $CI_JOB_TOKEN" --data tag=$CI_COMMIT_TAG "${CI_API_V4_URL}/projects/$CI_PROJECT_ID/packages/composer"'

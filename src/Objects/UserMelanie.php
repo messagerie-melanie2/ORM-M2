@@ -386,7 +386,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
           }
         }
         if ($ldap->modify($this->dn, $entry)) {
-            return true;
+            return false;
         }
         else {
           M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() Erreur " . $ldap->getError());

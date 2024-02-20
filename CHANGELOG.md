@@ -1,3 +1,8 @@
+ORM M2 - 0.6.6
+------
+- 0008158: Traitement du save particulier pour les événements d'agenda externe
+- 0008157: Ajout d'un champ source pour les événements de calendriers externes
+
 ORM M2 - 0.6.5.29
 ------
 - 0008143: Sur le modèle de getCTag, ajoute un getSyncToken

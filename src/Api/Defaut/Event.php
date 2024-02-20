@@ -490,7 +490,7 @@ class Event extends MceObject {
       $events = $this->listEventsByUid($this->uid);
       // Est-ce que l'événement existe quelque part ?
       if (count($events) === 0) {
-        if ($this->userIsOrganizer($organizer->uid, $this->user->uid)) {
+        if (isset($this->user) && $this->userIsOrganizer($organizer->uid, $this->user->uid)) {
           // L'évènement n'existe pas, l'organisateur est celui qui créé l'évènement
           // Donc on est dans le cas d'une création interne
           $organizer->calendar = $this->calendar;
@@ -1650,7 +1650,7 @@ class Event extends MceObject {
    * @ignore
    *
    */
-  public function save($saveAttendees = true) {
+  public function save($saveAttendees = true, $isExternal = false) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save()");
     if (!isset($this->objectmelanie))
       throw new Exceptions\ObjectMelanieUndefinedException();
@@ -1664,12 +1664,18 @@ class Event extends MceObject {
       return null;
     }
 
+    // Ne pas enregistrer un événement avec une source si on est pas sur un enregistrement externe
+    if (!$isExternal && !empty($this->objectmelanie->source)) {
+      M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() L'evenement a une source");
+      return null;
+    }
+
     // MANTIS 0007426: Avancer la date de fin de récurrence devrait supprimer les occurrences postérieures
-    if ($this->objectmelanie->fieldHasChanged('enddate')) {
+    if ($this->objectmelanie->fieldHasChanged('enddate') && !$isExternal) {
       $this->deleteOldOccurrences();
     }
 
-    if (isset($this->exceptions)) {
+    if (isset($this->exceptions) && !$isExternal) {
       // MANTIS 0007427: Modifier toutes les occurrences devrait également modifier les occurrences modifiées si possible
       $this->updateOccurrences();
     }
@@ -1692,7 +1698,7 @@ class Event extends MceObject {
     // Sauvegarde des exceptions
     if (isset($this->exceptions)) {
       foreach ($this->exceptions as $exception) {
-        $res = $exception->save();
+        $res = $exception->save($saveAttendees, $isExternal);
         $exMod = $exMod || !is_null($res);
       }
     }
@@ -1703,10 +1709,11 @@ class Event extends MceObject {
       return false;
     }
       
-    if ($exMod) {
+    if ($exMod && !$isExternal) {
       $this->setMapModified(time());
     }
-    if (!isset($this->owner)) {
+
+    if (!isset($this->owner) && isset($this->user)) {
       $this->owner = $this->user->uid;
     }
 
@@ -1772,7 +1779,7 @@ class Event extends MceObject {
    * si elles n'avaient pas changées
    */
   protected function updateOccurrences() {
-    $fields = ['title', 'location', 'description', 'status', 'class', 'category'];
+    $fields = ['title', 'location', 'description', 'status', 'class', 'category', 'source'];
 
     // Gestion de la date
     if ($this->objectmelanie->fieldHasChanged('start') || $this->objectmelanie->fieldHasChanged('end')) {
@@ -2602,6 +2609,7 @@ class Event extends MceObject {
           // MANTIS 0006191: Mode en attente lorsque le participant est une liste
           if (!$attendeeFound
               && !$this->getMapOrganizer()->extern
+              && isset($this->user)
               && $this->getMapOrganizer()->owner_uid != $this->user->uid
               && $attendee->is_list) {
             $this->attendeeIsList($attendee, $newAttendees, $Attendee, $attendeeFound);
@@ -2658,7 +2666,7 @@ class Event extends MceObject {
           if ($listAttendee->is_list) {
             $this->attendeeIsList($listAttendee, $attendees, $Attendee, $attendeeFound);
           }
-          else if ($listAttendee->uid == $this->user->uid) {
+          else if (isset($this->user) && $listAttendee->uid == $this->user->uid) {
             $listAttendee->response = Attendee::RESPONSE_NEED_ACTION;
             $listAttendee->role = $attendee->role;
             $attendeeFound = true;

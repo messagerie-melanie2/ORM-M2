@@ -358,12 +358,12 @@ class ICSToEvent {
       }
 
       // DTSTAMP
-      if (isset($vevent->DTSTAMP))
-        $object->modified = strtotime($vevent->DTSTAMP->getValue());
-      else if (isset($vevent->{ICS::LAST_MODIFIED}))
-        $object->modified = strtotime($vevent->{ICS::LAST_MODIFIED}->getValue());
+      if (isset($vevent->{ICS::LAST_MODIFIED}))
+        $object->modified = $vevent->{ICS::LAST_MODIFIED}->getDateTime()->getTimestamp();
       else if (isset($vevent->CREATED))
-        $object->modified = strtotime($vevent->CREATED->getValue());
+        $object->modified = $vevent->CREATED->getDateTime()->getTimestamp();
+      else if (isset($vevent->DTSTAMP))
+        $object->modified = $vevent->DTSTAMP->getDateTime()->getTimestamp();
       else
         $object->modified = time();
       

@@ -324,14 +324,14 @@ class Recurrence extends MceObject {
   protected function setMapDays($days) {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapDays()");
     if (!isset($this->objectmelanie)) throw new Exceptions\ObjectMelanieUndefinedException();
-    $this->objectmelanie->days = MappingMce::NODAY;
+    $mapping_days = MappingMce::NODAY;
     if (is_array($days)) {
       foreach ($days as $day) {
         if (!isset(MappingMce::$MapRecurdaysObjectToMce[$day])) {
           $day = substr($day, 1);
         }
         if (isset(MappingMce::$MapRecurdaysObjectToMce[$day])) {
-          $this->objectmelanie->days += intval(MappingMce::$MapRecurdaysObjectToMce[$day]);
+          $mapping_days += intval(MappingMce::$MapRecurdaysObjectToMce[$day]);
         }
       }
       if (empty($days)) {
@@ -341,15 +341,15 @@ class Recurrence extends MceObject {
         $this->setRecurrenceParam(ICS::BYDAY, $days);
       }
     } else {
-      $this->objectmelanie->days += intval(MappingMce::$MapRecurdaysObjectToMce[$days]);
+      $mapping_days += intval(MappingMce::$MapRecurdaysObjectToMce[$days]);
       if (empty($days)) {
         $this->unsetRecurrenceParam(ICS::BYDAY);
       }
       else {
         $this->setRecurrenceParam(ICS::BYDAY, [$days]);
       }
-      
     }
+    $this->objectmelanie->days = $mapping_days;
   }
   /**
    * Mapping days field
@@ -411,7 +411,6 @@ class Recurrence extends MceObject {
     if (isset($rdata[ICS::FREQ])) {
       // Always default the recurInterval to 1.
       $this->objectmelanie->interval = isset($rdata[ICS::INTERVAL]) ? intval($rdata[ICS::INTERVAL]) : 1;
-      $recurrence->days = array();
       // MANTIS 4103: Calculer une date de fin approximative pour un count
       $count = isset($rdata[ICS::COUNT]) ? intval($rdata[ICS::COUNT]) : 1;
       $nbdays = $count * $this->objectmelanie->interval;

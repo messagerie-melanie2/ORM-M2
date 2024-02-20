@@ -211,6 +211,7 @@ class MappingMce {
 	          "transparency" 	=> [self::name => "event_transparency", self::type => self::string, self::size => 10, self::defaut => 'OPAQUE'],
 	          "properties" 	  	=> [self::name => "event_properties_json"],
 			  "attachments" 	=> [self::name => "event_attachments_json"],
+			  "source" 			=> [self::name => "event_source", self::defaut => ''],
 	          
 	          // ATTENDEES
 	          "attendees" 	           => [self::name => "event_attendees"],

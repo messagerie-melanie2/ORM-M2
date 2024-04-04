@@ -21,3 +21,4 @@
 include_once (__DIR__ . '/config.php');
 include_once (__DIR__ . '/ldap.php');
 include_once (__DIR__ . '/sql.php');
+include_once (__DIR__ . '/mail.php');

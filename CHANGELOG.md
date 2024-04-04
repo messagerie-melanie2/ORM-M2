@@ -1,3 +1,7 @@
+ORM M2 - 0.6.7
+------
+- 0008176: Ajouter le support de l'envoi de mails depuis l'ORM
+
 ORM M2 - 0.6.6
 ------
 - 0008158: Traitement du save particulier pour les événements d'agenda externe

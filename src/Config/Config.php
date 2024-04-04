@@ -38,7 +38,7 @@ class Config {
    * 
    * @var string
    */
-  const CONFIG_NAME = "LibMelanie\Config\ConfigMelanie";
+  const CONFIG_NAME = "LibMelanie\Config\%%ConfigName%%";
   
   /**
    * Function permettant de récuper une valeur de configuration
@@ -46,10 +46,17 @@ class Config {
    * et si non retourne celle par défaut
    * 
    * @param string $name Nom de constante à utiliser
+   * @param string $defaultValue Valeur par défaut si la valeur n'est pas positionnée
+   * @param string $configName Nom de la configuration à utiliser
+   * 
    * @return mixed Valeur de configuration
    */
-  public static function get($name) {
-    $classname = self::CONFIG_NAME;
+  public static function get($name, $defaultValue = null, $configName = 'ConfigMelanie') {
+	// Ajouter "Config" si besoin
+	if (strpos($configName, 'Config') !== 0) {
+		$configName = "Config" . $configName;
+	}
+    $classname = str_replace('%%ConfigName%%', $configName, self::CONFIG_NAME);
     if (defined($classname . '::' . $name)) {
       // Valeur constante de serveur
       return constant($classname . '::' . $name);
@@ -58,18 +65,16 @@ class Config {
       // Valeur statique de serveur
       return $classname::$name;
     }
-    else if (defined('LibMelanie\Config\DefaultConfig::' . $name)) {
+    else if ($configName == 'ConfigMelanie' && defined('LibMelanie\Config\DefaultConfig::' . $name)) {
       // Valeur constante  par défaut
       return constant('LibMelanie\Config\DefaultConfig::' . $name);
     }
-    else if (isset(DefaultConfig::$name)) {
+    else if ($configName == 'ConfigMelanie' && isset(DefaultConfig::$name)) {
       // Valeur statique par défaut
       return DefaultConfig::$name;
     }
-    else {
-      // Valeur n'existe pas
-      return null;
-    }
+	// Valeur n'existe pas
+	return $defaultValue;
   }
   /**
    * Function permettant de déterminer si une valeur de configuration
@@ -78,10 +83,12 @@ class Config {
    * et si non retourne celle par défaut
    * 
    * @param string $name Nom de constante à utiliser
+   * @param string $configName Nom de la configuration à utiliser
+   * 
    * @return boolean true si la valeur est postionnée, false sinon
    */
-  public static function is_set($name) {
-    $classname = self::CONFIG_NAME;
+  public static function is_set($name, $configName = 'ConfigMelanie') {
+    $classname = str_replace('%%ConfigName%%', $configName, self::CONFIG_NAME);
     if (defined($classname . '::' . $name)) {
       // Valeur constante de serveur
       return true;
@@ -90,18 +97,16 @@ class Config {
       // Valeur statique de serveur
       return true;
     }
-    else if (defined('DefaultConfig::' . $name)) {
+    else if ($configName == 'ConfigMelanie' && defined('DefaultConfig::' . $name)) {
       // Valeur constante  par défaut
       return true;
     }
-    else if (isset(DefaultConfig::$name)) {
+    else if ($configName == 'ConfigMelanie' && isset(DefaultConfig::$name)) {
       // Valeur statique par défaut
       return true;
     }
-    else {
-      // Valeur n'existe pas
-      return false;
-    }
+	// Valeur n'existe pas
+	return false;
   }
   
 	/*
@@ -257,4 +262,7 @@ class Config {
 	const NEED_ACTION_DISABLE_FILTER = 'NEED_ACTION_DISABLE_FILTER';
 
   	const USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES = 'USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES';
+
+	const SENDERS = 'SENDERS';
+	const DEBUG = 'DEBUG';
 }

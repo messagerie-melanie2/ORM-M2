@@ -1,0 +1,2154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>API Documentation</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit--><script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src').replace( /\\/g, '/');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">API Documentation</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">                    <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">                            <li><a href="../namespaces/LibMelanie.html">\LibMelanie</a></li>                        </ul>
+                    </li>                    <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">                                    <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">49</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">                                    <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">35</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">                                    <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">2</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">    <section class="row-fluid">
+        <div class="span2 sidebar">    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-toggle" data-toggle="collapse" data-target="#namespace-350183843"></a>                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-350183843" class="accordion-body collapsein">
+                <div class="accordion-inner">    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-995006233"></a>                <a href="../namespaces/LibMelanie.html" style="margin-left: 30px; padding-left: 0">LibMelanie</a>
+            </div>
+            <div id="namespace-995006233" class="accordion-body collapse">
+                <div class="accordion-inner">    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-441417659"></a>                <a href="../namespaces/LibMelanie.Api.html" style="margin-left: 30px; padding-left: 0">Api</a>
+            </div>
+            <div id="namespace-441417659" class="accordion-body collapse">
+                <div class="accordion-inner">    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1792878423"></a>                <a href="../namespaces/LibMelanie.Api.Defaut.html" style="margin-left: 30px; padding-left: 0">Defaut</a>
+            </div>
+            <div id="namespace-1792878423" class="accordion-body collapse">
+                <div class="accordion-inner">    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1126538629"></a>                <a href="../namespaces/LibMelanie.Api.Defaut.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-1126538629" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.News.News.html">News</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.News.NewsShare.html">NewsShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.News.Rss.html">Rss</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-496998211"></a>                <a href="../namespaces/LibMelanie.Api.Defaut.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-496998211" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html">Outofoffice</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Users.Share.html">Share</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-436012888"></a>                <a href="../namespaces/LibMelanie.Api.Defaut.Workspaces.html" style="margin-left: 30px; padding-left: 0">Workspaces</a>
+            </div>
+            <div id="namespace-436012888" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Workspaces.Hashtag.html">Hashtag</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Workspaces.HashtagWorkspaceRef.html">HashtagWorkspaceRef</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Workspaces.Share.html">Share</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Addressbook.html">Addressbook</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.AddressbookSync.html">AddressbookSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Attachment.html">Attachment</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Attendee.html">Attendee</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Calendar.html">Calendar</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.CalendarSync.html">CalendarSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Contact.html">Contact</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Event.html">Event</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.EventProperty.html">EventProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Exception.html">Exception</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Group.html">Group</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Member.html">Member</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Notification.html">Notification</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.ObjectShare.html">ObjectShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Organizer.html">Organizer</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Recurrence.html">Recurrence</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Task.html">Task</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.TaskProperty.html">TaskProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Taskslist.html">Taskslist</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.TaskslistSync.html">TaskslistSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.User.html">User</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.UserPrefs.html">UserPrefs</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Defaut.Workspace.html">Workspace</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1655600894"></a>                <a href="../namespaces/LibMelanie.Api.Dgfip.html" style="margin-left: 30px; padding-left: 0">Dgfip</a>
+            </div>
+            <div id="namespace-1655600894" class="accordion-body collapse">
+                <div class="accordion-inner">    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-752734724"></a>                <a href="../namespaces/LibMelanie.Api.Dgfip.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-752734724" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.News.News.html">News</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.News.NewsShare.html">NewsShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.News.Rss.html">Rss</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-275488634"></a>                <a href="../namespaces/LibMelanie.Api.Dgfip.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-275488634" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Users.Outofoffice.html">Outofoffice</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Users.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Users.Type.html">Type</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Addressbook.html">Addressbook</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.AddressbookSync.html">AddressbookSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Attachment.html">Attachment</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Attendee.html">Attendee</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Calendar.html">Calendar</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.CalendarSync.html">CalendarSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Contact.html">Contact</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Event.html">Event</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.EventProperty.html">EventProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Exception.html">Exception</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Group.html">Group</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Member.html">Member</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Notification.html">Notification</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.ObjectShare.html">ObjectShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Organizer.html">Organizer</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Recurrence.html">Recurrence</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Task.html">Task</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.TaskProperty.html">TaskProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.Taskslist.html">Taskslist</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.TaskslistSync.html">TaskslistSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.User.html">User</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Dgfip.UserPrefs.html">UserPrefs</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-593878373"></a>                <a href="../namespaces/LibMelanie.Api.Ens.html" style="margin-left: 30px; padding-left: 0">Ens</a>
+            </div>
+            <div id="namespace-593878373" class="accordion-body collapse">
+                <div class="accordion-inner">    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-314581638"></a>                <a href="../namespaces/LibMelanie.Api.Ens.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-314581638" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.News.News.html">News</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.News.NewsShare.html">NewsShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.News.Rss.html">Rss</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-2061468356"></a>                <a href="../namespaces/LibMelanie.Api.Ens.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-2061468356" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Users.Outofoffice.html">Outofoffice</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Users.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Users.Type.html">Type</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1434318232"></a>                <a href="../namespaces/LibMelanie.Api.Ens.Workspaces.html" style="margin-left: 30px; padding-left: 0">Workspaces</a>
+            </div>
+            <div id="namespace-1434318232" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Workspaces.Hashtag.html">Hashtag</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Workspaces.HashtagWorkspaceRef.html">HashtagWorkspaceRef</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Workspaces.Share.html">Share</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Addressbook.html">Addressbook</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.AddressbookSync.html">AddressbookSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Attachment.html">Attachment</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Attendee.html">Attendee</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Calendar.html">Calendar</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.CalendarSync.html">CalendarSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Contact.html">Contact</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Event.html">Event</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.EventProperty.html">EventProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Exception.html">Exception</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Group.html">Group</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Member.html">Member</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Notification.html">Notification</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.ObjectShare.html">ObjectShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Organizer.html">Organizer</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Recurrence.html">Recurrence</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Task.html">Task</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.TaskProperty.html">TaskProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Taskslist.html">Taskslist</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.TaskslistSync.html">TaskslistSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.User.html">User</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.UserPrefs.html">UserPrefs</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Ens.Workspace.html">Workspace</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-123137553"></a>                <a href="../namespaces/LibMelanie.Api.Gn.html" style="margin-left: 30px; padding-left: 0">Gn</a>
+            </div>
+            <div id="namespace-123137553" class="accordion-body collapse">
+                <div class="accordion-inner">    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-2075749665"></a>                <a href="../namespaces/LibMelanie.Api.Gn.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-2075749665" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.News.News.html">News</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.News.NewsShare.html">NewsShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.News.Rss.html">Rss</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-134779601"></a>                <a href="../namespaces/LibMelanie.Api.Gn.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-134779601" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Users.Outofoffice.html">Outofoffice</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Users.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Users.Type.html">Type</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Addressbook.html">Addressbook</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.AddressbookSync.html">AddressbookSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Attachment.html">Attachment</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Attendee.html">Attendee</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Calendar.html">Calendar</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.CalendarSync.html">CalendarSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Contact.html">Contact</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Event.html">Event</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.EventProperty.html">EventProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Exception.html">Exception</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Group.html">Group</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Member.html">Member</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Notification.html">Notification</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.ObjectShare.html">ObjectShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Organizer.html">Organizer</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Recurrence.html">Recurrence</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Task.html">Task</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.TaskProperty.html">TaskProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.Taskslist.html">Taskslist</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.TaskslistSync.html">TaskslistSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.User.html">User</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Gn.UserPrefs.html">UserPrefs</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-32788637"></a>                <a href="../namespaces/LibMelanie.Api.Mce.html" style="margin-left: 30px; padding-left: 0">Mce</a>
+            </div>
+            <div id="namespace-32788637" class="accordion-body collapse">
+                <div class="accordion-inner">    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-367844445"></a>                <a href="../namespaces/LibMelanie.Api.Mce.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-367844445" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.News.News.html">News</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.News.NewsShare.html">NewsShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.News.Rss.html">Rss</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-312793964"></a>                <a href="../namespaces/LibMelanie.Api.Mce.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-312793964" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Users.Outofoffice.html">Outofoffice</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Users.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Users.Type.html">Type</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-962188528"></a>                <a href="../namespaces/LibMelanie.Api.Mce.Workspaces.html" style="margin-left: 30px; padding-left: 0">Workspaces</a>
+            </div>
+            <div id="namespace-962188528" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Workspaces.Hashtag.html">Hashtag</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Workspaces.HashtagWorkspaceRef.html">HashtagWorkspaceRef</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Workspaces.Share.html">Share</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Addressbook.html">Addressbook</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.AddressbookSync.html">AddressbookSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Attachment.html">Attachment</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Attendee.html">Attendee</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Calendar.html">Calendar</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.CalendarSync.html">CalendarSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Contact.html">Contact</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Event.html">Event</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.EventProperty.html">EventProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Exception.html">Exception</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Group.html">Group</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Member.html">Member</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Notification.html">Notification</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.ObjectShare.html">ObjectShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Organizer.html">Organizer</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Recurrence.html">Recurrence</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Task.html">Task</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.TaskProperty.html">TaskProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Taskslist.html">Taskslist</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.TaskslistSync.html">TaskslistSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.User.html">User</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.UserPrefs.html">UserPrefs</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mce.Workspace.html">Workspace</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-68813875"></a>                <a href="../namespaces/LibMelanie.Api.Mel.html" style="margin-left: 30px; padding-left: 0">Mel</a>
+            </div>
+            <div id="namespace-68813875" class="accordion-body collapse">
+                <div class="accordion-inner">    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-830113"></a>                <a href="../namespaces/LibMelanie.Api.Mel.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-830113" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.News.News.html">News</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.News.NewsShare.html">NewsShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.News.Rss.html">Rss</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1843127778"></a>                <a href="../namespaces/LibMelanie.Api.Mel.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-1843127778" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html">Outofoffice</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Users.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Users.Type.html">Type</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1259393228"></a>                <a href="../namespaces/LibMelanie.Api.Mel.Workspaces.html" style="margin-left: 30px; padding-left: 0">Workspaces</a>
+            </div>
+            <div id="namespace-1259393228" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Workspaces.Hashtag.html">Hashtag</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Workspaces.HashtagWorkspaceRef.html">HashtagWorkspaceRef</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Workspaces.Share.html">Share</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Addressbook.html">Addressbook</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.AddressbookSync.html">AddressbookSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Attachment.html">Attachment</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Attendee.html">Attendee</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Calendar.html">Calendar</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.CalendarSync.html">CalendarSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Contact.html">Contact</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Event.html">Event</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.EventProperty.html">EventProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Exception.html">Exception</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Group.html">Group</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Member.html">Member</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Notification.html">Notification</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.ObjectShare.html">ObjectShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Organizer.html">Organizer</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Recurrence.html">Recurrence</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Task.html">Task</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.TaskProperty.html">TaskProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Taskslist.html">Taskslist</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.TaskslistSync.html">TaskslistSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.User.html">User</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.UserPrefs.html">UserPrefs</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mel.Workspace.html">Workspace</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1345900746"></a>                <a href="../namespaces/LibMelanie.Api.Melanie2.html" style="margin-left: 30px; padding-left: 0">Melanie2</a>
+            </div>
+            <div id="namespace-1345900746" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Addressbook.html">Addressbook</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.AddressbookSync.html">AddressbookSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Attachment.html">Attachment</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Attendee.html">Attendee</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Calendar.html">Calendar</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.CalendarSync.html">CalendarSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Contact.html">Contact</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Event.html">Event</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.EventProperty.html">EventProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Exception.html">Exception</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.ObjectShare.html">ObjectShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Organizer.html">Organizer</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Recurrence.html">Recurrence</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Task.html">Task</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.TaskProperty.html">TaskProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.Taskslist.html">Taskslist</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.TaskslistSync.html">TaskslistSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.User.html">User</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Melanie2.UserPrefs.html">UserPrefs</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1284255541"></a>                <a href="../namespaces/LibMelanie.Api.Mi.html" style="margin-left: 30px; padding-left: 0">Mi</a>
+            </div>
+            <div id="namespace-1284255541" class="accordion-body collapse">
+                <div class="accordion-inner">    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1227426654"></a>                <a href="../namespaces/LibMelanie.Api.Mi.News.html" style="margin-left: 30px; padding-left: 0">News</a>
+            </div>
+            <div id="namespace-1227426654" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.News.News.html">News</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.News.NewsShare.html">NewsShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.News.Rss.html">Rss</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1146348707"></a>                <a href="../namespaces/LibMelanie.Api.Mi.Users.html" style="margin-left: 30px; padding-left: 0">Users</a>
+            </div>
+            <div id="namespace-1146348707" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Users.Outofoffice.html">Outofoffice</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Users.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Users.Type.html">Type</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Addressbook.html">Addressbook</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.AddressbookSync.html">AddressbookSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Attachment.html">Attachment</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Attendee.html">Attendee</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Calendar.html">Calendar</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.CalendarSync.html">CalendarSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Contact.html">Contact</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Event.html">Event</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.EventProperty.html">EventProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Exception.html">Exception</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Group.html">Group</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Member.html">Member</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Notification.html">Notification</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.ObjectShare.html">ObjectShare</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Organizer.html">Organizer</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Recurrence.html">Recurrence</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Share.html">Share</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Task.html">Task</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.TaskProperty.html">TaskProperty</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.Taskslist.html">Taskslist</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.TaskslistSync.html">TaskslistSync</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.User.html">User</a></li>                            <li class="class"><a href="../classes/LibMelanie.Api.Mi.UserPrefs.html">UserPrefs</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+                    <ul>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1134003301"></a>                <a href="../namespaces/LibMelanie.Cache.html" style="margin-left: 30px; padding-left: 0">Cache</a>
+            </div>
+            <div id="namespace-1134003301" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Cache.Cache.html">Cache</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1074451635"></a>                <a href="../namespaces/LibMelanie.Config.html" style="margin-left: 30px; padding-left: 0">Config</a>
+            </div>
+            <div id="namespace-1074451635" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Config.Config.html">Config</a></li>                            <li class="class"><a href="../classes/LibMelanie.Config.DefaultConfig.html">DefaultConfig</a></li>                            <li class="class"><a href="../classes/LibMelanie.Config.MappingMce.html">MappingMce</a></li>                            <li class="class"><a href="../classes/LibMelanie.Config.MappingMelanie.html">MappingMelanie</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1278718108"></a>                <a href="../namespaces/LibMelanie.Exceptions.html" style="margin-left: 30px; padding-left: 0">Exceptions</a>
+            </div>
+            <div id="namespace-1278718108" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Exceptions.Melanie2DatabaseException.html">Melanie2DatabaseException</a></li>                            <li class="class"><a href="../classes/LibMelanie.Exceptions.Melanie2Exception.html">Melanie2Exception</a></li>                            <li class="class"><a href="../classes/LibMelanie.Exceptions.Melanie2LdapException.html">Melanie2LdapException</a></li>                            <li class="class"><a href="../classes/LibMelanie.Exceptions.ObjectMelanieUndefinedException.html">ObjectMelanieUndefinedException</a></li>                            <li class="class"><a href="../classes/LibMelanie.Exceptions.PropertyDoesNotExistException.html">PropertyDoesNotExistException</a></li>                            <li class="class"><a href="../classes/LibMelanie.Exceptions.UndefinedMappingException.html">UndefinedMappingException</a></li>                            <li class="class"><a href="../classes/LibMelanie.Exceptions.UndefinedPrimaryKeyException.html">UndefinedPrimaryKeyException</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-550295010"></a>                <a href="../namespaces/LibMelanie.Interfaces.html" style="margin-left: 30px; padding-left: 0">Interfaces</a>
+            </div>
+            <div id="namespace-550295010" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="interface"><a href="../classes/LibMelanie.Interfaces.IObjectMelanie.html">IObjectMelanie</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1385617936"></a>                <a href="../namespaces/LibMelanie.Ldap.html" style="margin-left: 30px; padding-left: 0">Ldap</a>
+            </div>
+            <div id="namespace-1385617936" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Ldap.Ldap.html">Ldap</a></li>                            <li class="class"><a href="../classes/LibMelanie.Ldap.LDAPMelanie.html">LDAPMelanie</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-38567952"></a>                <a href="../namespaces/LibMelanie.Lib.html" style="margin-left: 30px; padding-left: 0">Lib</a>
+            </div>
+            <div id="namespace-38567952" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Lib.ContactToVCard.html">ContactToVCard</a></li>                            <li class="class"><a href="../classes/LibMelanie.Lib.EventToICS.html">EventToICS</a></li>                            <li class="class"><a href="../classes/LibMelanie.Lib.ICS.html">ICS</a></li>                            <li class="class"><a href="../classes/LibMelanie.Lib.ICSToEvent.html">ICSToEvent</a></li>                            <li class="class"><a href="../classes/LibMelanie.Lib.ICSToTask.html">ICSToTask</a></li>                            <li class="class"><a href="../classes/LibMelanie.Lib.MagicObject.html">MagicObject</a></li>                            <li class="class"><a href="../classes/LibMelanie.Lib.MceObject.html">MceObject</a></li>                            <li class="class"><a href="../classes/LibMelanie.Lib.Selaforme.html">Selaforme</a></li>                            <li class="class"><a href="../classes/LibMelanie.Lib.TaskToICS.html">TaskToICS</a></li>                            <li class="class"><a href="../classes/LibMelanie.Lib.UUID.html">UUID</a></li>                            <li class="class"><a href="../classes/LibMelanie.Lib.VCardToContact.html">VCardToContact</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-659401377"></a>                <a href="../namespaces/LibMelanie.Log.html" style="margin-left: 30px; padding-left: 0">Log</a>
+            </div>
+            <div id="namespace-659401377" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Log.Log.html">Log</a></li>                            <li class="class"><a href="../classes/LibMelanie.Log.M2Log.html">M2Log</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1200932939"></a>                <a href="../namespaces/LibMelanie.Mail.html" style="margin-left: 30px; padding-left: 0">Mail</a>
+            </div>
+            <div id="namespace-1200932939" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Mail.Mail.html">Mail</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1278267810"></a>                <a href="../namespaces/LibMelanie.Objects.html" style="margin-left: 30px; padding-left: 0">Objects</a>
+            </div>
+            <div id="namespace-1278267810" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Objects.AddressbookMelanie.html">AddressbookMelanie</a></li>                            <li class="class"><a href="../classes/LibMelanie.Objects.AttachmentMelanie.html">AttachmentMelanie</a></li>                            <li class="class"><a href="../classes/LibMelanie.Objects.CalendarMelanie.html">CalendarMelanie</a></li>                            <li class="class"><a href="../classes/LibMelanie.Objects.EventMelanie.html">EventMelanie</a></li>                            <li class="class"><a href="../classes/LibMelanie.Objects.GroupMelanie.html">GroupMelanie</a></li>                            <li class="class"><a href="../classes/LibMelanie.Objects.HashtagMelanie.html">HashtagMelanie</a></li>                            <li class="class"><a href="../classes/LibMelanie.Objects.HistoryMelanie.html">HistoryMelanie</a></li>                            <li class="class"><a href="../classes/LibMelanie.Objects.ObjectMelanie.html">ObjectMelanie</a></li>                            <li class="class"><a href="../classes/LibMelanie.Objects.TaskslistMelanie.html">TaskslistMelanie</a></li>                            <li class="class"><a href="../classes/LibMelanie.Objects.UserMelanie.html">UserMelanie</a></li>                            <li class="class"><a href="../classes/LibMelanie.Objects.WorkspaceMelanie.html">WorkspaceMelanie</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">                    <a class="accordion-togglecollapsed" data-toggle="collapse" data-target="#namespace-1546322586"></a>                <a href="../namespaces/LibMelanie.Sql.html" style="margin-left: 30px; padding-left: 0">Sql</a>
+            </div>
+            <div id="namespace-1546322586" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>                            <li class="class"><a href="../classes/LibMelanie.Sql.Sql.html">Sql</a></li>                            <li class="class"><a href="../classes/LibMelanie.Sql.SqlAttachmentRequests.html">SqlAttachmentRequests</a></li>                            <li class="class"><a href="../classes/LibMelanie.Sql.SqlCalendarRequests.html">SqlCalendarRequests</a></li>                            <li class="class"><a href="../classes/LibMelanie.Sql.SqlContactRequests.html">SqlContactRequests</a></li>                            <li class="class"><a href="../classes/LibMelanie.Sql.SqlHistoryRequests.html">SqlHistoryRequests</a></li>                            <li class="class"><a href="../classes/LibMelanie.Sql.SqlMelanieRequests.html">SqlMelanieRequests</a></li>                            <li class="class"><a href="../classes/LibMelanie.Sql.SqlObjectPropertyRequests.html">SqlObjectPropertyRequests</a></li>                            <li class="class"><a href="../classes/LibMelanie.Sql.SqlObjectRequests.html">SqlObjectRequests</a></li>                            <li class="class"><a href="../classes/LibMelanie.Sql.SqlTaskRequests.html">SqlTaskRequests</a></li>                            <li class="class"><a href="../classes/LibMelanie.Sql.SqlWorkspaceRequests.html">SqlWorkspaceRequests</a></li>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+                    <ul>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+                    <ul>                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav><a href="../namespaces/LibMelanie.Api.Ens.Users.html">\LibMelanie\Api\Ens\Users</a> <i class="icon-level-up"></i>                    </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\LibMelanie\Api\Ens\Users</small>Outofoffice</h1>
+                    <p><em>Classe utilisateur pour ENS
+pour la gestion du gestionnaire d&#039;absence</em></p>                    
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_define" class="">define()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_render" class="">render()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method___construct" class="">__construct()</a><br />                                    <a href="../classes/LibMelanie.Lib.MceObject.html#method___getNamespace" class="">__getNamespace()</a><br />                                    <a href="../classes/LibMelanie.Lib.MceObject.html#method_hasChanged" class="">hasChanged()</a><br />                                    <a href="../classes/LibMelanie.Lib.MceObject.html#method___toString" class="">__toString()</a><br />                                    <a href="../classes/LibMelanie.Lib.MceObject.html#method_serialize" class="">serialize()</a><br />                                    <a href="../classes/LibMelanie.Lib.MceObject.html#method_unserialize" class="">unserialize()</a><br />                                    <a href="../classes/LibMelanie.Lib.MceObject.html#method_registerCache" class="">registerCache()</a><br />                                    <a href="../classes/LibMelanie.Lib.MceObject.html#method_executeCache" class="">executeCache()</a><br />                                    <a href="../classes/LibMelanie.Lib.MceObject.html#method_getList" class="">getList()</a><br />                            </section>
+                            <section class="span4">                                    <a href="../classes/LibMelanie.Api.Ens.Users.Outofoffice.html#property_start" class="">$start</a><br />                                    <a href="../classes/LibMelanie.Api.Ens.Users.Outofoffice.html#property_end" class="">$end</a><br />                                    <a href="../classes/LibMelanie.Api.Ens.Users.Outofoffice.html#property_enable" class="">$enable</a><br />                                    <a href="../classes/LibMelanie.Api.Ens.Users.Outofoffice.html#property_message" class="">$message</a><br />                                    <a href="../classes/LibMelanie.Api.Ens.Users.Outofoffice.html#property_order" class="">$order</a><br />                                    <a href="../classes/LibMelanie.Api.Ens.Users.Outofoffice.html#property_type" class="">$type</a><br />                                    <a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html#property_start" class="">$start</a><br />                                    <a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html#property_end" class="">$end</a><br />                                    <a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html#property_enable" class="">$enable</a><br />                                    <a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html#property_message" class="">$message</a><br />                                    <a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html#property_order" class="">$order</a><br />                                    <a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html#property_type" class="">$type</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_start" class="">$start</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_end" class="">$end</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_enable" class="">$enable</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_message" class="">$message</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_order" class="">$order</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_type" class="">$type</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_days" class="">$days</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_hour_start" class="">$hour_start</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_hour_end" class="">$hour_end</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_offset" class="">$offset</a><br />                            </section>
+                            <section class="span4">                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#constant_TYPE_EXTERNAL" class="">TYPE_EXTERNAL</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#constant_TYPE_INTERNAL" class="">TYPE_INTERNAL</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#constant_TYPE_ALL" class="">TYPE_ALL</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#constant_HEBDO" class="">HEBDO</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#constant_DAY_SUNDAY" class="">DAY_SUNDAY</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#constant_DAY_MONDAY" class="">DAY_MONDAY</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#constant_DAY_TUESDAY" class="">DAY_TUESDAY</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#constant_DAY_WEDNESDAY" class="">DAY_WEDNESDAY</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#constant_DAY_THURSDAY" class="">DAY_THURSDAY</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#constant_DAY_FRIDAY" class="">DAY_FRIDAY</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#constant_DAY_SATURDAY" class="">DAY_SATURDAY</a><br />                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">                                    <a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html#method_setTypeInternal" class="">setTypeInternal()</a><br />                                    <a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html#method_setTypeExternal" class="">setTypeExternal()</a><br />                                    <a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html#method_setTypeAll" class="">setTypeAll()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_setMapStart" class="">setMapStart()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_setMapEnd" class="">setMapEnd()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_setMapHour_start" class="">setMapHour_start()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_getMapHour_start" class="">getMapHour_start()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_setMapHour_end" class="">setMapHour_end()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_getMapHour_end" class="">getMapHour_end()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_setMapOffset" class="">setMapOffset()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_setMapDays" class="">setMapDays()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_getMapDays" class="">getMapDays()</a><br />                                    <a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html#method_isLocalTimezone" class="">isLocalTimezone()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_getMapStart" class="">getMapStart()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_issetMapStart" class="">issetMapStart()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_getMapEnd" class="">getMapEnd()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_issetMapEnd" class="">issetMapEnd()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_issetMapDays" class="">issetMapDays()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_issetMapHour_start" class="">issetMapHour_start()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_issetMapHour_end" class="">issetMapHour_end()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_getMapOffset" class="">getMapOffset()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_issetMapOffset" class="">issetMapOffset()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_setMapEnable" class="">setMapEnable()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_getMapEnable" class="">getMapEnable()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_issetMapEnable" class="">issetMapEnable()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_setMapMessage" class="">setMapMessage()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_getMapMessage" class="">getMapMessage()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_issetMapMessage" class="">issetMapMessage()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_setMapOrder" class="">setMapOrder()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_getMapOrder" class="">getMapOrder()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_issetMapOrder" class="">issetMapOrder()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_setMapType" class="">setMapType()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_getMapType" class="">getMapType()</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#method_issetMapType" class="">issetMapType()</a><br />                            </section>
+                            <section class="span4">                                    <a href="../classes/LibMelanie.Lib.MceObject.html#property_serializedProperties" class="">$serializedProperties</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_start" class="">$start</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_end" class="">$end</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_days" class="">$days</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_hour_start" class="">$hour_start</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_hour_end" class="">$hour_end</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_offset" class="">$offset</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_enable" class="">$enable</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_message" class="">$message</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_order" class="">$order</a><br />                                    <a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html#property_type" class="">$type</a><br />                                    <a href="../classes/LibMelanie.Lib.MceObject.html#property_objectmelanie" class="">$objectmelanie</a><br />                                    <a href="../classes/LibMelanie.Lib.MceObject.html#property_get_class" class="">$get_class</a><br />                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">                                    <em>No private methods found</em>                            </section>
+                            <section class="span4">                                    <a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html#property_mapping" class="">$mapping</a><br />                                    <a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html#property_mappingDays" class="">$mappingDays</a><br />                                    <a href="../classes/LibMelanie.Lib.MceObject.html#property__namespace" class="">$_namespace</a><br />                                    <a href="../classes/LibMelanie.Lib.MceObject.html#property__cacheCallbacks" class="">$_cacheCallbacks</a><br />                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/Api.Ens.Users.Outofoffice.html"><div class="path-wrapper">Api/Ens/Users/Outofoffice.php</div></a></dd>                        <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">LibMCE\API/Ens</div></dd>                        <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                        <div class="namespace-wrapper"><a href="../classes/LibMelanie.Lib.MceObject.html">\LibMelanie\Lib\MceObject</a></div>
+                                        <div class="namespace-wrapper"><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html">\LibMelanie\Api\Defaut\Users\Outofoffice</a></div>
+                                        <div class="namespace-wrapper"><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html">\LibMelanie\Api\Mel\Users\Outofoffice</a></div>                                <div class="namespace-wrapper">\LibMelanie\Api\Ens\Users\Outofoffice</div>
+                            </dd>                    </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">                        <tr>
+                            <th>author
+                            </th>
+                            <td><p>Groupe Messagerie/MTE - Apitech</p>                            </td>
+                        </tr>                        <tr>
+                            <th>api
+                            </th>
+                            <td>                            </td>
+                        </tr>                    </table>
+                </aside>
+            </div>            <a id="constants" name="constants"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_TYPE_EXTERNAL" name="constant_TYPE_EXTERNAL" class="anchor"></a>
+            <article id="constant_TYPE_EXTERNAL" class="constant">
+                <h3 class="">TYPE_EXTERNAL</h3>
+                <pre class="signature">TYPE_EXTERNAL =&#039;ext&#039;</pre>
+                <p><em></em></p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_TYPE_INTERNAL" name="constant_TYPE_INTERNAL" class="anchor"></a>
+            <article id="constant_TYPE_INTERNAL" class="constant">
+                <h3 class="">TYPE_INTERNAL</h3>
+                <pre class="signature">TYPE_INTERNAL =&#039;int&#039;</pre>
+                <p><em></em></p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_TYPE_ALL" name="constant_TYPE_ALL" class="anchor"></a>
+            <article id="constant_TYPE_ALL" class="constant">
+                <h3 class="">TYPE_ALL</h3>
+                <pre class="signature">TYPE_ALL =&#039;all&#039;</pre>
+                <p><em></em></p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_HEBDO" name="constant_HEBDO" class="anchor"></a>
+            <article id="constant_HEBDO" class="constant">
+                <h3 class="">HEBDO</h3>
+                <pre class="signature">HEBDO =&#039;hebdo&#039;</pre>
+                <p><em></em></p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DAY_SUNDAY" name="constant_DAY_SUNDAY" class="anchor"></a>
+            <article id="constant_DAY_SUNDAY" class="constant">
+                <h3 class="">DAY_SUNDAY</h3>
+                <pre class="signature">DAY_SUNDAY =&#039;sun&#039;</pre>
+                <p><em></em></p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DAY_MONDAY" name="constant_DAY_MONDAY" class="anchor"></a>
+            <article id="constant_DAY_MONDAY" class="constant">
+                <h3 class="">DAY_MONDAY</h3>
+                <pre class="signature">DAY_MONDAY =&#039;mon&#039;</pre>
+                <p><em></em></p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DAY_TUESDAY" name="constant_DAY_TUESDAY" class="anchor"></a>
+            <article id="constant_DAY_TUESDAY" class="constant">
+                <h3 class="">DAY_TUESDAY</h3>
+                <pre class="signature">DAY_TUESDAY =&#039;tue&#039;</pre>
+                <p><em></em></p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DAY_WEDNESDAY" name="constant_DAY_WEDNESDAY" class="anchor"></a>
+            <article id="constant_DAY_WEDNESDAY" class="constant">
+                <h3 class="">DAY_WEDNESDAY</h3>
+                <pre class="signature">DAY_WEDNESDAY =&#039;wed&#039;</pre>
+                <p><em></em></p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DAY_THURSDAY" name="constant_DAY_THURSDAY" class="anchor"></a>
+            <article id="constant_DAY_THURSDAY" class="constant">
+                <h3 class="">DAY_THURSDAY</h3>
+                <pre class="signature">DAY_THURSDAY =&#039;thu&#039;</pre>
+                <p><em></em></p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DAY_FRIDAY" name="constant_DAY_FRIDAY" class="anchor"></a>
+            <article id="constant_DAY_FRIDAY" class="constant">
+                <h3 class="">DAY_FRIDAY</h3>
+                <pre class="signature">DAY_FRIDAY =&#039;fri&#039;</pre>
+                <p><em></em></p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DAY_SATURDAY" name="constant_DAY_SATURDAY" class="anchor"></a>
+            <article id="constant_DAY_SATURDAY" class="constant">
+                <h3 class="">DAY_SATURDAY</h3>
+                <pre class="signature">DAY_SATURDAY =&#039;sat&#039;</pre>
+                <p><em></em></p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>            <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_start" name="property_start" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$start</h3>
+                <pre class="signature">$start :\Datetime</pre>
+                <p><em></em></p><p>Date de début de l'absence</p>                <h4>Type</h4>\Datetime            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_end" name="property_end" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$end</h3>
+                <pre class="signature">$end :\Datetime</pre>
+                <p><em></em></p><p>Date de fin de l'absence</p>                <h4>Type</h4>\Datetime            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_enable" name="property_enable" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$enable</h3>
+                <pre class="signature">$enable :\boolean</pre>
+                <p><em></em></p><p>Est-ce que l'absence est active</p>                <h4>Type</h4>\boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_message" name="property_message" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$message</h3>
+                <pre class="signature">$message :\string</pre>
+                <p><em></em></p><p>Message d'absence a afficher</p>                <h4>Type</h4>\string            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_order" name="property_order" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$order</h3>
+                <pre class="signature">$order :\int</pre>
+                <p><em></em></p><p>Ordre de tri du message d'absence</p>                <h4>Type</h4>\int            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_type" name="property_type" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$type</h3>
+                <pre class="signature">$type :\LibMelanie\Api\Ens\Users\Outofoffice::TYPE_*</pre>
+                <p><em></em></p><p>Type d'absence (Interne, Externe)</p>                <h4>Type</h4>\LibMelanie\Api\Ens\Users\Outofoffice::TYPE_*            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_start" name="property_start" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$start</h3>
+                <pre class="signature">$start :\Datetime</pre>
+                <p><em>Date de début de l&#039;absence</em></p><p>Date de début de l'absence</p>                <h4>Type</h4>\Datetime            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Mel\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_end" name="property_end" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$end</h3>
+                <pre class="signature">$end :\Datetime</pre>
+                <p><em>Date de fin de l&#039;absence</em></p><p>Date de fin de l'absence</p>                <h4>Type</h4>\Datetime            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Mel\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_enable" name="property_enable" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$enable</h3>
+                <pre class="signature">$enable :\boolean</pre>
+                <p><em>Est-ce que l&#039;absence est active</em></p><p>Est-ce que l'absence est active</p>                <h4>Type</h4>\boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Mel\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_message" name="property_message" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$message</h3>
+                <pre class="signature">$message :\string</pre>
+                <p><em>Message d&#039;absence a afficher</em></p><p>Message d'absence a afficher</p>                <h4>Type</h4>\string            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Mel\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_order" name="property_order" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$order</h3>
+                <pre class="signature">$order :\int</pre>
+                <p><em>Ordre de tri du message d&#039;absence</em></p><p>Ordre de tri du message d'absence</p>                <h4>Type</h4>\int            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Mel\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_type" name="property_type" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$type</h3>
+                <pre class="signature">$type :\LibMelanie\Api\Mel\Users\Outofoffice::TYPE_*</pre>
+                <p><em>Type d&#039;absence (Interne, Externe)</em></p><p>Type d'absence (Interne, Externe)</p>                <h4>Type</h4>\LibMelanie\Api\Mel\Users\Outofoffice::TYPE_*            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Mel\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_start" name="property_start" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$start</h3>
+                <pre class="signature">$start :\Datetime</pre>
+                <p><em></em></p><p>Date de début de l'absence</p>                <h4>Type</h4>\Datetime            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_end" name="property_end" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$end</h3>
+                <pre class="signature">$end :\Datetime</pre>
+                <p><em></em></p><p>Date de fin de l'absence</p>                <h4>Type</h4>\Datetime            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_enable" name="property_enable" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$enable</h3>
+                <pre class="signature">$enable :boolean</pre>
+                <p><em></em></p><p>Est-ce que l'absence est active</p>                <h4>Type</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_message" name="property_message" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$message</h3>
+                <pre class="signature">$message :string</pre>
+                <p><em></em></p><p>Message d'absence a afficher</p>                <h4>Type</h4>string            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_order" name="property_order" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$order</h3>
+                <pre class="signature">$order :integer</pre>
+                <p><em></em></p><p>Ordre de tri du message d'absence</p>                <h4>Type</h4>integer            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_type" name="property_type" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$type</h3>
+                <pre class="signature">$type :\LibMelanie\Api\Defaut\Users\Outofoffice::TYPE_*</pre>
+                <p><em></em></p><p>Type d'absence (Interne, Externe)</p>                <h4>Type</h4>\LibMelanie\Api\Defaut\Users\Outofoffice::TYPE_*            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_days" name="property_days" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$days</h3>
+                <pre class="signature">$days :array&lt;mixed,\LibMelanie\Api\Defaut\Users\Outofoffice::DAY_*&gt;</pre>
+                <p><em></em></p><p>Liste des jours pour une absence hebdomadaire</p>                <h4>Type</h4>array&lt;mixed,\LibMelanie\Api\Defaut\Users\Outofoffice::DAY_*&gt;            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_hour_start" name="property_hour_start" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$hour_start</h3>
+                <pre class="signature">$hour_start :\Datetime</pre>
+                <p><em></em></p><p>Heure de début de l'absence</p>                <h4>Type</h4>\Datetime            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_hour_end" name="property_hour_end" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$hour_end</h3>
+                <pre class="signature">$hour_end :\Datetime</pre>
+                <p><em></em></p><p>Heure de fin de l'absence</p>                <h4>Type</h4>\Datetime            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_offset" name="property_offset" class="anchor"></a>
+            <article class="property">
+                <h3 class="public">$offset</h3>
+                <pre class="signature">$offset :integer</pre>
+                <p><em></em></p><p>Offset du timezone en fonction de GMT</p>                <h4>Type</h4>integer            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_serializedProperties" name="property_serializedProperties" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$serializedProperties</h3>
+                <pre class="signature">$serializedProperties :</pre>
+                <p><em>Liste des propriétés à sérialiser pour le cache</em></p>                <h4>Type</h4>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_start" name="property_start" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$start</h3>
+                <pre class="signature">$start :\Datetime</pre>
+                <p><em>Date de début de l&#039;absence</em></p>                <h4>Type</h4>\Datetime            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_end" name="property_end" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$end</h3>
+                <pre class="signature">$end :\Datetime</pre>
+                <p><em>Date de fin de l&#039;absence</em></p>                <h4>Type</h4>\Datetime            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_days" name="property_days" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$days</h3>
+                <pre class="signature">$days :array</pre>
+                <p><em>Liste des jours pour une récurrence hebdomadaire</em></p>                <h4>Type</h4>array            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_hour_start" name="property_hour_start" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$hour_start</h3>
+                <pre class="signature">$hour_start :\Datetime</pre>
+                <p><em>Heure de début pour une absence récurrente</em></p>                <h4>Type</h4>\Datetime            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_hour_end" name="property_hour_end" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$hour_end</h3>
+                <pre class="signature">$hour_end :\Datetime</pre>
+                <p><em>Heure de fin pour une absence récurrente</em></p>                <h4>Type</h4>\Datetime            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_offset" name="property_offset" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$offset</h3>
+                <pre class="signature">$offset :integer</pre>
+                <p><em>Offset du timezone en fonction de GMT</em></p>                <h4>Type</h4>integer            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_enable" name="property_enable" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$enable</h3>
+                <pre class="signature">$enable :boolean</pre>
+                <p><em>Est-ce que l&#039;absence est active</em></p>                <h4>Type</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_message" name="property_message" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$message</h3>
+                <pre class="signature">$message :string</pre>
+                <p><em>Message d&#039;absence a afficher</em></p>                <h4>Type</h4>string            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_order" name="property_order" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$order</h3>
+                <pre class="signature">$order :integer</pre>
+                <p><em>Ordre de tri du message d&#039;absence</em></p>                <h4>Type</h4>integer            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_type" name="property_type" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$type</h3>
+                <pre class="signature">$type :\LibMelanie\Api\Defaut\Users\Outofoffice::TYPE_*</pre>
+                <p><em>Type d&#039;absence (Interne, Externe)</em></p>                <h4>Type</h4>\LibMelanie\Api\Defaut\Users\Outofoffice::TYPE_*            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_objectmelanie" name="property_objectmelanie" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$objectmelanie</h3>
+                <pre class="signature">$objectmelanie :</pre>
+                <p><em>Objet Mel</em></p>                <h4>Type</h4>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_get_class" name="property_get_class" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected">$get_class</h3>
+                <pre class="signature">$get_class :string</pre>
+                <p><em>Classe courante</em></p>                <h4>Type</h4>string            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mapping" name="property_mapping" class="anchor"></a>
+            <article class="property">
+                <h3 class="private">$mapping</h3>
+                <pre class="signature">$mapping :</pre>
+                <p><em>Mapping champ ldap =&gt; fonction set</em></p>                <h4>Type</h4>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Mel\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mappingDays" name="property_mappingDays" class="anchor"></a>
+            <article class="property">
+                <h3 class="private">$mappingDays</h3>
+                <pre class="signature">$mappingDays :</pre>
+                <p><em>Mapping des jours dans l&#039;annuaire</em></p>                <h4>Type</h4>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Mel\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__namespace" name="property__namespace" class="anchor"></a>
+            <article class="property">
+                <h3 class="private">$_namespace</h3>
+                <pre class="signature">$_namespace :string</pre>
+                <p><em>Namespace de la classe courante</em></p>                <h4>Type</h4>string            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__cacheCallbacks" name="property__cacheCallbacks" class="anchor"></a>
+            <article class="property">
+                <h3 class="private">$_cacheCallbacks</h3>
+                <pre class="signature">$_cacheCallbacks :</pre>
+                <p><em>Liste des callback enregistrés pour le cache</em></p>                <h4>Type</h4>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>            <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_define" name="method_define" class="anchor"></a>
+            <article class="method">
+                <h3 class="public">define()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">define(  <span class="argument">$data</span>)</pre>
+                <p><em>Define depuis un format annuaire l&#039;entrée du message d&#039;absence</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td></td>
+                                <td>$data</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_render" name="method_render" class="anchor"></a>
+            <article class="method">
+                <h3 class="public">render()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">render()</pre>
+                <p><em>Retourne au format annuaire l&#039;entrée du message d&#039;absence</em></p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct(  <span class="argument">$data = null</span>)</pre>
+                <p><em>Constructeur permettant de parser les données</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td></td>
+                                <td>$data</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___getNamespace" name="method___getNamespace" class="anchor"></a>
+            <article class="method">
+                <h3 class="public">__getNamespace()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__getNamespace(): string</pre>
+                <p><em>Récupère le namespace de la classe courante en fonction du get_class
+L&#039;utilisateur de __NAMESPACE__ n&#039;est pas possible pour un héritage</em></p>                    <h4>Returns</h4>string                        &mdash;<p>Namespace courant</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_hasChanged" name="method_hasChanged" class="anchor"></a>
+            <article class="method">
+                <h3 class="public">hasChanged()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">hasChanged(): boolean</pre>
+                <p><em>Détermine si l&#039;objet a changé</em></p>                    <h4>Returns</h4>boolean                        &mdash;<p>true si au moins un champ de l'objet a changé, false sinon</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___toString" name="method___toString" class="anchor"></a>
+            <article class="method">
+                <h3 class="public">__toString()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__toString(): string</pre>
+                <p><em>Méthode toString pour afficher le contenu des données de la classe</em></p>                    <h4>Returns</h4>string            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_serialize" name="method_serialize" class="anchor"></a>
+            <article class="method">
+                <h3 class="public">serialize()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">serialize(): string</pre>
+                <p><em>String representation of object</em></p>                    <h4>Returns</h4>string            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_unserialize" name="method_unserialize" class="anchor"></a>
+            <article class="method">
+                <h3 class="public">unserialize()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">unserialize(string  <span class="argument">$serialized</span>): void</pre>
+                <p><em>Constructs the object</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>string</td>
+                                <td>$serialized</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_registerCache" name="method_registerCache" class="anchor"></a>
+            <article class="method">
+                <h3 class="public">registerCache()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">registerCache(  <span class="argument">$app</span>,  <span class="argument">$callback</span>)</pre>
+                <p><em>Enregistrement des methodes de gestion du cache</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td></td>
+                                <td>$app</td>
+                                <td></td>
+                            </tr>                            <tr>
+                                <td></td>
+                                <td>$callback</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_executeCache" name="method_executeCache" class="anchor"></a>
+            <article class="method">
+                <h3 class="public">executeCache()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">executeCache()</pre>
+                <p><em>Lancement des methodes de gestion du cache (nouveau contenu)</em></p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getList" name="method_getList" class="anchor"></a>
+            <article class="method">
+                <h3 class="public">getList()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getList(array&lt;mixed,String&gt;  <span class="argument">$fields = array()</span>,String  <span class="argument">$filter = &quot;&quot;</span>,array&lt;mixed,String&gt;  <span class="argument">$operators = array()</span>,String  <span class="argument">$orderby = &quot;&quot;</span>,boolean  <span class="argument">$asc = true</span>,integer  <span class="argument">$limit = null</span>,integer  <span class="argument">$offset = null</span>,array&lt;mixed,String&gt;  <span class="argument">$case_unsensitive_fields = array()</span>): array&lt;mixed,\LibMelanie\Lib\Contact&gt;</pre>
+                <p><em>Permet de récupérer la liste d&#039;objet en utilisant les données passées
+(la clause where s&#039;adapte aux données)
+Il faut donc peut être sauvegarder l&#039;objet avant d&#039;appeler cette méthode
+pour réinitialiser les données modifiées (propriété haschanged)</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>array&lt;mixed,String&gt;</td>
+                                <td>$fields</td>
+                                <td><p>Liste les champs à récupérer depuis les données</p></td>
+                            </tr>                            <tr>
+                                <td>String</td>
+                                <td>$filter</td>
+                                <td><p>Filtre pour la lecture des données en fonction des valeurs déjà passé, exemple de filtre : &quot;((#description# OR #title#) AND #start#)&quot;</p></td>
+                            </tr>                            <tr>
+                                <td>array&lt;mixed,String&gt;</td>
+                                <td>$operators</td>
+                                <td><p>Liste les propriétés par operateur (MappingMce::like, MappingMce::supp, MappingMce::inf, MappingMce::diff)</p></td>
+                            </tr>                            <tr>
+                                <td>String</td>
+                                <td>$orderby</td>
+                                <td><p>Tri par le champ</p></td>
+                            </tr>                            <tr>
+                                <td>boolean</td>
+                                <td>$asc</td>
+                                <td><p>Tri ascendant ou non</p></td>
+                            </tr>                            <tr>
+                                <td>integer</td>
+                                <td>$limit</td>
+                                <td><p>Limite le nombre de résultat (utile pour la pagination)</p></td>
+                            </tr>                            <tr>
+                                <td>integer</td>
+                                <td>$offset</td>
+                                <td><p>Offset de début pour les résultats (utile pour la pagination)</p></td>
+                            </tr>                            <tr>
+                                <td>array&lt;mixed,String&gt;</td>
+                                <td>$case_unsensitive_fields</td>
+                                <td><p>Liste des champs pour lesquels on ne sera pas sensible à la casse</p></td>
+                            </tr>                    </table>                    <h4>Returns</h4>array&lt;mixed,\LibMelanie\Lib\Contact&gt;                        &mdash;<p>Array</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Lib.MceObject.html"><div class="path-wrapper">\LibMelanie\Lib\MceObject</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setTypeInternal" name="method_setTypeInternal" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setTypeInternal()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setTypeInternal()</pre>
+                <p><em>Positionne le type Internal</em></p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Mel\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setTypeExternal" name="method_setTypeExternal" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setTypeExternal()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setTypeExternal()</pre>
+                <p><em>Positionne le type External</em></p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Mel\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setTypeAll" name="method_setTypeAll" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setTypeAll()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setTypeAll()</pre>
+                <p><em>Positionne le type All</em></p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Mel\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setMapStart" name="method_setMapStart" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setMapStart()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setMapStart(\Datetime  <span class="argument">$start</span>)</pre>
+                <p><em>Mapping start field</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>\Datetime</td>
+                                <td>$start</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setMapEnd" name="method_setMapEnd" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setMapEnd()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setMapEnd(\Datetime  <span class="argument">$end</span>)</pre>
+                <p><em>Mapping end field</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>\Datetime</td>
+                                <td>$end</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setMapHour_start" name="method_setMapHour_start" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setMapHour_start()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setMapHour_start(\Datetime  <span class="argument">$hour_start</span>)</pre>
+                <p><em>Mapping hour_start field</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>\Datetime</td>
+                                <td>$hour_start</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getMapHour_start" name="method_getMapHour_start" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">getMapHour_start()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getMapHour_start(): \Datetime</pre>
+                <p><em>Mapping hour_start field</em></p>                    <h4>Returns</h4>\Datetime                        &mdash;<p>$hour_start</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setMapHour_end" name="method_setMapHour_end" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setMapHour_end()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setMapHour_end(\Datetime  <span class="argument">$hour_end</span>)</pre>
+                <p><em>Mapping hour_end field</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>\Datetime</td>
+                                <td>$hour_end</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getMapHour_end" name="method_getMapHour_end" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">getMapHour_end()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getMapHour_end(): \Datetime</pre>
+                <p><em>Mapping hour_end field</em></p>                    <h4>Returns</h4>\Datetime                        &mdash;<p>$hour_end</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setMapOffset" name="method_setMapOffset" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setMapOffset()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setMapOffset(integer  <span class="argument">$offset</span>)</pre>
+                <p><em>Mapping offset field</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>integer</td>
+                                <td>$offset</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setMapDays" name="method_setMapDays" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setMapDays()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setMapDays(array  <span class="argument">$days</span>)</pre>
+                <p><em>Mapping days field</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>array</td>
+                                <td>$days</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getMapDays" name="method_getMapDays" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">getMapDays()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getMapDays(): array</pre>
+                <p><em>Mapping days field</em></p>                    <h4>Returns</h4>array                        &mdash;<p>$days</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isLocalTimezone" name="method_isLocalTimezone" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">isLocalTimezone()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isLocalTimezone(\DateTimeZone  <span class="argument">$timezone</span>): boolean</pre>
+                <p><em>Retourne si le timezone est local</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>\DateTimeZone</td>
+                                <td>$timezone</td>
+                                <td></td>
+                            </tr>                    </table>                    <h4>Returns</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Mel.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Mel\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getMapStart" name="method_getMapStart" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">getMapStart()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getMapStart(): \Datetime</pre>
+                <p><em>Mapping start field</em></p>                    <h4>Returns</h4>\Datetime                        &mdash;<p>$start</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_issetMapStart" name="method_issetMapStart" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">issetMapStart()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">issetMapStart(): boolean</pre>
+                <p><em>Mapping start field</em></p>                    <h4>Returns</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getMapEnd" name="method_getMapEnd" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">getMapEnd()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getMapEnd(): \Datetime</pre>
+                <p><em>Mapping end field</em></p>                    <h4>Returns</h4>\Datetime                        &mdash;<p>$end</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_issetMapEnd" name="method_issetMapEnd" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">issetMapEnd()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">issetMapEnd(): boolean</pre>
+                <p><em>Mapping end field</em></p>                    <h4>Returns</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_issetMapDays" name="method_issetMapDays" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">issetMapDays()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">issetMapDays(): boolean</pre>
+                <p><em>Mapping days field</em></p>                    <h4>Returns</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_issetMapHour_start" name="method_issetMapHour_start" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">issetMapHour_start()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">issetMapHour_start(): boolean</pre>
+                <p><em>Mapping hour_start field</em></p>                    <h4>Returns</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_issetMapHour_end" name="method_issetMapHour_end" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">issetMapHour_end()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">issetMapHour_end(): boolean</pre>
+                <p><em>Mapping hour_end field</em></p>                    <h4>Returns</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getMapOffset" name="method_getMapOffset" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">getMapOffset()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getMapOffset(): integer</pre>
+                <p><em>Mapping offset field</em></p>                    <h4>Returns</h4>integer                        &mdash;<p>$offset</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_issetMapOffset" name="method_issetMapOffset" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">issetMapOffset()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">issetMapOffset(): boolean</pre>
+                <p><em>Mapping offset field</em></p>                    <h4>Returns</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setMapEnable" name="method_setMapEnable" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setMapEnable()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setMapEnable(boolean  <span class="argument">$enable</span>)</pre>
+                <p><em>Mapping enable field</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>boolean</td>
+                                <td>$enable</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getMapEnable" name="method_getMapEnable" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">getMapEnable()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getMapEnable(): boolean</pre>
+                <p><em>Mapping enable field</em></p>                    <h4>Returns</h4>boolean                        &mdash;<p>$enable</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_issetMapEnable" name="method_issetMapEnable" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">issetMapEnable()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">issetMapEnable(): boolean</pre>
+                <p><em>Mapping enable field</em></p>                    <h4>Returns</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setMapMessage" name="method_setMapMessage" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setMapMessage()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setMapMessage(string  <span class="argument">$message</span>)</pre>
+                <p><em>Mapping message field</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>string</td>
+                                <td>$message</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getMapMessage" name="method_getMapMessage" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">getMapMessage()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getMapMessage(): string</pre>
+                <p><em>Mapping message field</em></p>                    <h4>Returns</h4>string                        &mdash;<p>$message</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_issetMapMessage" name="method_issetMapMessage" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">issetMapMessage()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">issetMapMessage(): boolean</pre>
+                <p><em>Mapping message field</em></p>                    <h4>Returns</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setMapOrder" name="method_setMapOrder" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setMapOrder()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setMapOrder(integer  <span class="argument">$order</span>)</pre>
+                <p><em>Mapping order field</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>integer</td>
+                                <td>$order</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getMapOrder" name="method_getMapOrder" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">getMapOrder()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getMapOrder(): integer</pre>
+                <p><em>Mapping order field</em></p>                    <h4>Returns</h4>integer                        &mdash;<p>$order</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_issetMapOrder" name="method_issetMapOrder" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">issetMapOrder()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">issetMapOrder(): boolean</pre>
+                <p><em>Mapping order field</em></p>                    <h4>Returns</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_setMapType" name="method_setMapType" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">setMapType()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">setMapType(\LibMelanie\Api\Defaut\Users\Outofoffice::TYPE_*  <span class="argument">$type</span>)</pre>
+                <p><em>Mapping type field</em></p>                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">                            <tr>
+                                <td>\LibMelanie\Api\Defaut\Users\Outofoffice::TYPE_*</td>
+                                <td>$type</td>
+                                <td></td>
+                            </tr>                    </table>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getMapType" name="method_getMapType" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">getMapType()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getMapType(): \LibMelanie\Api\Defaut\Users\Outofoffice::TYPE_*</pre>
+                <p><em>Mapping type field</em></p>                    <h4>Returns</h4>\LibMelanie\Api\Defaut\Users\Outofoffice::TYPE_*                        &mdash;<p>$type</p>            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_issetMapType" name="method_issetMapType" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected">issetMapType()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">issetMapType(): boolean</pre>
+                <p><em>Mapping type field</em></p>                    <h4>Returns</h4>boolean            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>            <dl>                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/LibMelanie.Api.Defaut.Users.Outofoffice.html"><div class="path-wrapper">\LibMelanie\Api\Defaut\Users\Outofoffice</div></a></dd>            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">                    <tr><td colspan="2"><em>None found</em></td></tr>            </table>
+        </aside>
+    </div>        </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">Outofoffice.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/Api/Ens/Users/Outofoffice.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">                            <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>                                        <li><a href="../namespaces/LibMelanie.html">\LibMelanie</a></li>                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">                            <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">                            <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    onApril 5th, 2024 at 15:39.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

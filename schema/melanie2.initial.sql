@@ -519,7 +519,8 @@ CREATE TABLE kronolith_events (
 	event_recurrence_json TEXT,
 	event_attachments_json TEXT,
 	event_properties_json TEXT,
-    event_version integer
+    event_version integer,
+    event_source TEXT
 );
 
 --

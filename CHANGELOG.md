@@ -1,3 +1,8 @@
+ORM M2 - 0.6.7.1
+------
+- 0008264: Ajouter le support des pj iCalendar
+- Mise à jour du schéma pg initial
+
 ORM M2 - 0.6.7
 ------
 - 0008176: Ajouter le support de l'envoi de mails depuis l'ORM

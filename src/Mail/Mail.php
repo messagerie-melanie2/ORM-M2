@@ -216,6 +216,7 @@ class Mail
      * @param string $htmlFile Chemin vers un fichier HTML pour le contenu du mail, remplace $htmlBody
      * @param string $imagesFolder Chemin vers un dossier contenant les pièces jointes images à intégrer au body en HTML
      * @param array $attachments Liste des pièces jointes à ajouter au mail, soit liste de string pour le chemin, soit liste d'array ['name' => '', 'path' => '']
+     * @param string $ical Contenu du fichier ical à ajouter au mail
      * 
      * @return boolean
      */
@@ -231,7 +232,8 @@ class Mail
             $additional_headers = [],
             $htmlFile = null,
             $imagesFolder = null,
-            $attachments = []) {
+            $attachments = [],
+            $ical = null) {
         M2Log::Log(M2Log::LEVEL_DEBUG, "Mail->Send($from, $to)");
         try {
             // Initialiser PHPMailer
@@ -258,17 +260,22 @@ class Mail
                 $cc = [$cc];
             }
 
-            foreach ($cc as $recipient) {
-                self::$_mail->addCC(self::getEmail($recipient), self::getName($recipient));
+            if (isset($cc)) {
+                foreach ($cc as $recipient) {
+                    self::$_mail->addCC(self::getEmail($recipient), self::getName($recipient));
+                }
             }
+            
 
             // Bcc
             if (is_string($bcc)) {
                 $bcc = [$bcc];
             }
 
-            foreach ($bcc as $recipient) {
-                self::$_mail->addBCC(self::getEmail($recipient), self::getName($recipient));
+            if (isset($bcc)) {
+                foreach ($bcc as $recipient) {
+                    self::$_mail->addBCC(self::getEmail($recipient), self::getName($recipient));
+                }
             }
 
             // Gestion du sujet
@@ -316,6 +323,11 @@ class Mail
                         self::$_mail->addAttachment($attachment);
                     }
                 }
+            }
+
+            // Ajout du fichier ical
+            if (isset($ical)) {
+                self::$_mail->Ical = $ical;
             }
 
             // Envoi du message

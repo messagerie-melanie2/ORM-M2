@@ -48,7 +48,17 @@ require_once '../../../digital-workplace/github/Roundcube-Mel/vendor/autoload.ph
 
 use LibMelanie\Mail\Mail;
 
-if (Mail::mail('thomas.test1@developpement-durable.gouv.fr', 'Test depuis l\'ORM', '<p>Ce message est envoyé depuis l\'ORM Mélanie2</p>', null, null, 'bnum')) {
+$ical = "BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Groupe Messagerie MTES/ORM LibMCE
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+END:VEVENT
+END:VCALENDAR";
+
+// if (Mail::mail('thomas.test1@developpement-durable.gouv.fr', 'Test depuis l\'ORM', '<p>Ce message est envoyé depuis l\'ORM Mélanie2</p>', null, null, 'bnum')) {
+if (Mail::Send('bnum', 'thomas.test1@developpement-durable.gouv.fr', 'Test depuis l\'ORM', '<p>Ce message est envoyé depuis l\'ORM Mélanie2</p>', null, null, null, null, null, null, null, null, $ical)) {
   echo "Mail envoyé\r\n\r\n";
 } else {
   echo "Erreur lors de l'envoi du mail : " . Mail::getLastError() . "\r\n\r\n";

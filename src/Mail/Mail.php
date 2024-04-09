@@ -29,6 +29,9 @@ use PHPMailer\PHPMailer\Exception;
 
 /**
  * Classe d'envoi de mail via la lib PHPMailer
+ * Pour utiliser PHPMailer, la librairie doit être installé via composer au projet qui utilise l'ORM
+ * Plus de détails ici : https://github.com/PHPMailer/PHPMailer?tab=readme-ov-file#installation--loading
+ * Si PHPMailer n'est pas trouvé, la fonction mail() de PHP sera utilisée
  * 
  * @author PNE Messagerie/Apitech
  * @package Librairie Mélanie2

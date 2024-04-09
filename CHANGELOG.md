@@ -1,3 +1,7 @@
+ORM M2 - 0.6.7.2
+------
+- 0008275: [ICS] Ajout des statuts Télétravail et Congés dans les freebusy
+
 ORM M2 - 0.6.7.1
 ------
 - 0008264: Ajouter le support des pj iCalendar

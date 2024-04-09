@@ -759,6 +759,8 @@ class EventToICS {
         'confirmed' => 'Confirmé',
         'tentative' => 'Provisoire',
         'cancelled' => 'Annulé',
+        'telework'  => 'Libre',
+        'vacation'  => 'Confirmé',
         'default'   => 'Libre'
     );
     if (isset($convert[$status])) {

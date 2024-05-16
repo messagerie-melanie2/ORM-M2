@@ -278,6 +278,7 @@ class User extends Defaut\User {
     "double_authentification_forcee"        => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => '2FA.Forcee: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => '1', MappingMce::falseLdapValue => '0'],
     "double_authentification_date_butoir"   => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => '2FA.DateButoir: ', MappingMce::type => MappingMce::dateLdap],
     "double_authentification_date_grace"    => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => '2FA.DateDeGrace: ', MappingMce::type => MappingMce::dateLdap],
+    "is_external"               => [MappingMce::name => 'dn', MappingMce::type => MappingMce::booleanLdap],
   ];
 
   /**
@@ -1066,5 +1067,15 @@ class User extends Defaut\User {
       return isset($pref['valid']) ? $pref['valid'] : null;
     }
     return null;
+  }
+
+  /**
+   * Mapping is_external field
+   * 
+   * @return boolean User is external
+   */
+  protected function getMapIs_external() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapIs_external()");
+    return strpos($this->objectmelanie->dn, 'ou=Utilisateurs,ou=BNUM,ou=applications,ou=ressources,dc=equipement,dc=gouv,dc=fr') !== false;  
   }
 }

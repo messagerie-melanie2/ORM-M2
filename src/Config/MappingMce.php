@@ -129,6 +129,24 @@ class MappingMce {
 			"email_send"             => [self::name => "mail", 		self::type => self::stringLdap],
 			"email_send_list"        => [self::name => "mail", 		self::type => self::arrayLdap],
 		  ],
+		  // Gestion de la ressource : objet ResourceMelanie
+	      "ResourceMelanie" => [
+			"dn"                     => [self::name => "dn", 			self::type => self::stringLdap],
+			"uid"                    => [self::name => "uid", 			self::type => self::stringLdap],
+			"fullname"               => [self::name => "cn", 			self::type => self::stringLdap],
+			"name"                   => [self::name => "displayname", 	self::type => self::stringLdap],
+			"email"                  => [self::name => "mail", 			self::type => self::stringLdap],
+			"email_list"             => [self::name => "mail", 			self::type => self::arrayLdap],
+		  ],
+		  // Gestion de la localite : objet LocalityMelanie
+	      "LocalityMelanie" => [
+			"dn"                     => [self::name => "dn", 			self::type => self::stringLdap],
+			"uid"                    => [self::name => "uid", 			self::type => self::stringLdap],
+			"fullname"               => [self::name => "cn", 			self::type => self::stringLdap],
+			"name"                   => [self::name => "displayname", 	self::type => self::stringLdap],
+			"email"                  => [self::name => "mail", 			self::type => self::stringLdap],
+			"email_list"             => [self::name => "mail", 			self::type => self::arrayLdap],
+		  ],
 	      // Gestion des préférences de l'utilisateur : objet UserPrefs
 	      "UserPrefs" => [
 	          "user" 	=> [self::name => "pref_uid", self::type => self::string, self::size => 255],

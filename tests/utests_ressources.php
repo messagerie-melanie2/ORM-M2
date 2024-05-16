@@ -41,44 +41,47 @@ if (!defined('CONFIGURATION_APP_LIBM2')) {
   define('CONFIGURATION_APP_LIBM2', 'roundcube');
 }
 
-// // Définition des inclusions
+// Définition des inclusions
 set_include_path(__DIR__.'/..');
-require_once 'includes/libm2.php';
-require_once '../../../digital-workplace/github/Roundcube-Mel/vendor/autoload.php';
+include_once 'includes/libm2.php';
 
-use LibMelanie\Mail\Mail;
+use LibMelanie\Log\M2Log;
 
-$ical = "BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Groupe Messagerie MTES/ORM LibMCE
-CALSCALE:GREGORIAN
-METHOD:REQUEST
-BEGIN:VEVENT
-UID:E105144D91FCCAD920978B5703AE3558-D41D8CD98F00B204
-CLASS:PUBLIC
-STATUS:CONFIRMED
-DTSTAMP:19700101T000000Z
-LAST-MODIFIED:19700101T000000Z
-CREATED:20231025T090318Z
-DTSTART;TZID=Europe/Paris:20231027T093000
-DTEND;TZID=Europe/Paris:20231027T100000
-SUMMARY:Rendez-vous avec Thomas Payen
-ORGANIZER;CN=PAYEN Thomas - SG/DNUM/UNI/DETN/GMCD/PIAP:mailto:Thomas.Payen@
- i-carre.net
-ATTENDEE;PARTSTAT=NEEDS-ACTION;ROLE=REQ-PARTICIPANT;RSVP=TRUE;CN=Payen Thom
- as:mailto:payen.thomas@gmail.com
-X-CALDAV-CALENDAR-ID:thomas.payen
-X-CALDAV-CALENDAR-OWNER:thomas.payen
-SEQUENCE:0
-TRANSP:OPAQUE
-END:VEVENT
-END:VCALENDAR";
 
-// if (Mail::mail('thomas.test1@developpement-durable.gouv.fr', 'Test depuis l\'ORM', '<p>Ce message est envoyé depuis l\'ORM Mélanie2</p>', null, null, 'bnum')) {
-if (Mail::Send('bnum', 'thomas.test1@developpement-durable.gouv.fr', 'Test depuis l\'ORM', '<p>Ce message est envoyé depuis l\'ORM Mélanie2</p>', null, null, null, null, null, null, null, null, $ical)) {
-  echo "Mail envoyé\r\n\r\n";
+$log = function ($message) {
+	echo "[LibM2] $message \r\n";
+};
+M2Log::InitDebugLog($log);
+M2Log::InitErrorLog($log);
+
+echo "########################\r\n";
+
+$locality = new LibMelanie\Api\Mel\Resources\Locality();
+
+$locality->uid = 'l-isle-d-abeau';
+
+if ($locality->load()) {
+  echo "Localité trouvée : ".$locality->name."\r\n";
+
+  $ressources = $locality->listResources(LibMelanie\Api\Mel\Resource::TYPE_FLEX_OFFICE);
+
+  if (count($ressources) == 0) {
+    echo "Aucune ressource trouvée\r\n";
+  }
+  else {
+    foreach ($ressources as $ressource) {
+      echo "Ressource '$ressource->type' trouvée : $ressource->name à l'étage $ressource->etage \r\n";
+    }
+  }
+  
 } else {
-  echo "Erreur lors de l'envoi du mail : " . Mail::getLastError() . "\r\n\r\n";
+  echo "Localité non trouvée\r\n";
+}
+
+$localities = (new LibMelanie\Api\Mel\Resources\Locality())->listAllLocalities();
+
+foreach ($localities as $locality) {
+  echo "Localité trouvée : ".$locality->name."\r\n";
 }
 
 echo "#### 1: ".(memory_get_usage()/1024/1024) . ' MiB'." ######\r\n";

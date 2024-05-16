@@ -1,3 +1,12 @@
+ORM M2 - 0.6.7.3
+------
+- 0008321: Ne pas nettoyer les delete et add dans l'historique
+- 0008322: L'invitation vers une BALR avec le en attente doit créer l'agenda s'il n'existe pas
+- 0008282: Ajouter un objet Ressource
+- 0008326: Pouvoir configurer la base DN en fonction de l'objet
+- 0008323: Ajouter un objet Locality dédié aux ressources
+- 0008296: Ajouter une propriété is_external sur l'objet User
+
 ORM M2 - 0.6.7.2
 ------
 - 0008275: [ICS] Ajout des statuts Télétravail et Congés dans les freebusy

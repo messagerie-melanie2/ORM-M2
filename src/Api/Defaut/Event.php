@@ -1001,7 +1001,7 @@ class Event extends MceObject {
               if ($attendee_uid != $this->calendarmce->owner
                   && $attendee->need_action) {
                 // Gestion du participant
-                $this->attendeeEventNeedAction($attendee_uid, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, $attendees, $attendee_key, $is_saved);
+                $this->attendeeEventNeedAction($attendee, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, $attendees, $attendee_key, $is_saved);
 
                 // Gérer le is_saved pour le participant
                 $attendees[$attendee_key]->is_saved = $is_saved ? true : null;
@@ -1102,7 +1102,7 @@ class Event extends MceObject {
           if ($listAttendee->need_action) {
             // Parcours les members et traite ceux qui ont le need_action activé
             // Gestion du participant
-            $this->attendeeEventNeedAction($listAttendee->uid, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, $attendees, null, $is_saved);
+            $this->attendeeEventNeedAction($listAttendee, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, $attendees, null, $is_saved);
             $is_list_saved &= $is_saved;
           }
         }
@@ -1132,7 +1132,7 @@ class Event extends MceObject {
   /**
    * Enregistre l'événement dans l'agenda du participant
    * 
-   * @param string $attendee_uid Uid du participant
+   * @param Attendee $attendee Participant
    * @param string $User Classe User
    * @param string $Calendar Classe Calendar
    * @param string $Event Classe Event
@@ -1142,46 +1142,55 @@ class Event extends MceObject {
    * @param int $attendee_key
    * @param boolean $is_saved
    */
-  protected function attendeeEventNeedAction($attendee_uid, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, &$attendees, $attendee_key, &$is_saved) {
+  protected function attendeeEventNeedAction($attendee, $User, $Calendar, $Event, $copyFieldsList, $needActionFieldsList, &$attendees, $attendee_key, &$is_saved) {
     $is_saved = false;
     // Creation du user melanie
     $attendee_user = new $User();
-    $attendee_user->uid = $attendee_uid;
+    $attendee_user->uid = $attendee->uid;
     // Création du calendar melanie
     $attendee_calendar = new $Calendar($attendee_user);
-    $attendee_calendar->id = $attendee_uid;
-    if ($attendee_calendar->load()) {            
-      // Creation de l'evenement melanie
-      if (strpos($this->get_class, '\Exception') === false) {
-        $attendee_event = new $Event($attendee_user, $attendee_calendar);
+    $attendee_calendar->id = $attendee->uid;
+
+    if (!$attendee_calendar->load()) {
+      if ($attendee->is_ressource) {
+        $attendee_user->createDefaultCalendar();
+        $attendee_calendar->load();
       }
       else {
-        $attendee_event = new $Event(null, $attendee_user, $attendee_calendar);
+        return false;
       }
-      // Enregistrement de la recurrence
-      if (strpos($this->get_class, '\Exception') === false) {
-        $recurrence = $this->getMapRecurrence();
-        if (isset($recurrence)) {
-          $attendee_recurrence = $attendee_event->getMapRecurrence();
-          $attendee_recurrence->type = $recurrence->type;
-          $attendee_recurrence->count = $recurrence->count;
-          $attendee_recurrence->days = $recurrence->days;
-          $attendee_recurrence->enddate = $recurrence->enddate;
-          $attendee_recurrence->interval = $recurrence->interval;
-          $attendee_event->setMapRecurrence($attendee_recurrence);
-        }
+    }
+
+    // Creation de l'evenement melanie
+    if (strpos($this->get_class, '\Exception') === false) {
+      $attendee_event = new $Event($attendee_user, $attendee_calendar);
+    }
+    else {
+      $attendee_event = new $Event(null, $attendee_user, $attendee_calendar);
+    }
+    // Enregistrement de la recurrence
+    if (strpos($this->get_class, '\Exception') === false) {
+      $recurrence = $this->getMapRecurrence();
+      if (isset($recurrence)) {
+        $attendee_recurrence = $attendee_event->getMapRecurrence();
+        $attendee_recurrence->type = $recurrence->type;
+        $attendee_recurrence->count = $recurrence->count;
+        $attendee_recurrence->days = $recurrence->days;
+        $attendee_recurrence->enddate = $recurrence->enddate;
+        $attendee_recurrence->interval = $recurrence->interval;
+        $attendee_event->setMapRecurrence($attendee_recurrence);
       }
-      else {
-        $attendee_event->recurrence_id = $this->recurrence_id;
-      }
-      $attendee_event->uid = $this->uid;
-      $save = $this->copyEventNeedAction($this, $attendee_event, $attendee_uid, $copyFieldsList, $needActionFieldsList, $attendees, $attendee_key, strpos($this->get_class, '\Exception') !== false, $attendee_event->load());
-      if ($save) {
-        $attendee_event->modified = time();
-        // Enregistre l'événement dans l'agenda du participant
-        $attendee_event->save(false);
-        $is_saved = true;
-      }
+    }
+    else {
+      $attendee_event->recurrence_id = $this->recurrence_id;
+    }
+    $attendee_event->uid = $this->uid;
+    $save = $this->copyEventNeedAction($this, $attendee_event, $attendee->uid, $copyFieldsList, $needActionFieldsList, $attendees, $attendee_key, strpos($this->get_class, '\Exception') !== false, $attendee_event->load());
+    if ($save) {
+      $attendee_event->modified = time();
+      // Enregistre l'événement dans l'agenda du participant
+      $attendee_event->save(false);
+      $is_saved = true;
     }
   }
   

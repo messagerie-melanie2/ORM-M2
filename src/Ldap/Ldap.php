@@ -331,9 +331,11 @@ class Ldap {
    *          [Optionnel] Liste des attributs ldap à retourner
    * @param string $server
    *          [Optionnel] Server LDAP utilisé pour la requête
+   * @param string $base_dn
+   *          [Optionnel] Base DN utilisé pour la requête
    * @return array
    */
-  public static function GetUserInfos($username = null, $filter = null, $ldap_attr = null, $server = null) {
+  public static function GetUserInfos($username = null, $filter = null, $ldap_attr = null, $server = null, $base_dn = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUserInfos($username)");
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
@@ -367,7 +369,7 @@ class Ldap {
       // Connexion pour lire les données
       if ($ldap->bind4lookup()) {
         // Lancement de la recherche
-        $sr = $ldap->search($ldap->getConfig("base_dn"), $filter, $ldap_attr, 0, 1);
+        $sr = $ldap->search($base_dn ?: $ldap->getConfig("base_dn"), $filter, $ldap_attr, 0, 1);
         if ($sr && $ldap->count_entries($sr) == 1) {
           $infos = $ldap->get_entries($sr);
           $infos = $infos[0];

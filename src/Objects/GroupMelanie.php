@@ -17,16 +17,6 @@
  */
 namespace LibMelanie\Objects;
 
-use LibMelanie\Sql;
-use LibMelanie\Ldap\Ldap;
-use LibMelanie\Config;
-use LibMelanie\Config\ConfigSQL;
-use LibMelanie\Config\MappingMce;
-use LibMelanie\Log\M2Log;
-use LibMelanie\Lib\MagicObject;
-use LibMelanie\Interfaces\IObjectMelanie;
-use LibMelanie\Config\DefaultConfig;
-
 /**
  * Gestion de groupe MCE
  * 
@@ -40,35 +30,15 @@ class GroupMelanie extends UserMelanie {
    * 
    * @var boolean
    */
-  private static $isInit = false;
+  protected static $isInit = false;
 
   /**
-   * Appel l'initialisation du mapping
-   * 
-   * @param array $mapping Données de mapping
-   * @return boolean
+   * Nom de la configuration du mapping dans les preferences serveur
    */
-  protected static function Init($mapping = [], $server = null) {
-    if (!self::$isInit) {
-      if (isset($server) && isset(Config\Ldap::$SERVERS[$server]['mapping_group'])) {
-        $mapping = array_merge($mapping, Config\Ldap::$SERVERS[$server]['mapping_group']);
-      }
-      else if (isset(Config\Ldap::$SERVERS[Config\Ldap::$SEARCH_LDAP]['mapping_group'])) {
-        $mapping = array_merge($mapping, Config\Ldap::$SERVERS[Config\Ldap::$SEARCH_LDAP]['mapping_group']);
-      }
-      // Traitement du mapping
-      foreach ($mapping as $key => $map) {
-        if (is_array($map)) {
-          if (!isset($map[MappingMce::type])) {
-            $mapping[$key][MappingMce::type] = MappingMce::stringLdap;
-          }
-        }
-        else {
-          $mapping[$key] = [MappingMce::name => $map, MappingMce::type => MappingMce::stringLdap];
-        }
-      }
-      self::$isInit = MappingMce::UpdateDataMapping('GroupMelanie', $mapping);
-    }
-    return self::$isInit;
-  }
+  const SERVER_MAPPING_PREF = 'mapping_group';
+
+  /**
+   * Type d'objet pour la gestion du mapping
+   */
+  const OBJECT_TYPE = 'GroupMelanie';
 }

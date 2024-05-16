@@ -117,6 +117,11 @@ class HistoryMelanie extends MagicObject implements IObjectMelanie {
 		if (!is_bool($this->isExist)) {
 		  $this->isExist = $this->exists();
 		}
+		// 0008321: Ne pas nettoyer les delete et add dans l'historique
+		if ($this->action == "delete" || $this->action == "add") {
+			// Si c'est du add ou delete, on refait toujours une insertion
+			$this->isExist = false;
+		}
 		// Si l'objet existe on fait un UPDATE
 		if ($this->isExist) {
 			// Paramètres de la requête

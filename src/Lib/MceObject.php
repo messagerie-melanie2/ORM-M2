@@ -64,13 +64,18 @@ abstract class MceObject implements Serializable {
 	 * Récupère le namespace de la classe courante en fonction du get_class
 	 * L'utilisateur de __NAMESPACE__ n'est pas possible pour un héritage
 	 * 
+	 * @param boolean $parent Récupère le namespace du parent
+	 * 
 	 * @return string Namespace courant
 	 */
-	public function __getNamespace() {
+	public function __getNamespace($parent = false) {
 		if (!isset($this->_namespace)) {
 			$class = $this->get_class;
 			$class = explode('\\', $class);
 			array_pop($class);
+			if ($parent) {
+				array_pop($class);
+			}
 			$this->_namespace = implode('\\', $class);
 		}
 		return $this->_namespace;

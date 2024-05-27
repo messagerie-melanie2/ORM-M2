@@ -66,6 +66,18 @@ class Locality extends Defaut\Resources\Locality {
    * @ignore
    */
   const LIST_RESOURCES_BY_TYPE_FILTER = "(&(objectClass=mineqMelSA)(sn=%%type%%))";
+  /**
+   * Filtre pour la méthode listResources() par uids
+   * 
+   * @ignore
+   */
+  const LIST_RESOURCES_BY_UIDS_FILTER = "(&(objectClass=mineqMelSA)%%uids%%)";
+  /**
+   * Filtre pour la méthode listResources() par emails
+   * 
+   * @ignore
+   */
+  const LIST_RESOURCES_BY_EMAILS_FILTER = "(&(objectClass=mineqMelSA)%%emails%%)";
 
   /**
    * DN a utiliser comme base pour les requetes

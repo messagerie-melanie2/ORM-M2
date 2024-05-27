@@ -207,6 +207,9 @@ class DefaultConfig {
 	const GROUP = 'group';
 	const RESOURCE = 'resource';
 	const ROOM = 'room';
+  const CAR = 'car';
+  const FLEX_OFFICE = 'flex_office';
+  const HARDWARE = 'hardware';
 	const UNKNOWN = 'unknown';
   
   /* Attendee status */

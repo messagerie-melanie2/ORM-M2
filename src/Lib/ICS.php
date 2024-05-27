@@ -442,6 +442,8 @@ class ICS {
 	const CUTYPE_RESOURCE = 'RESOURCE';
 	const CUTYPE_ROOM = 'ROOM';
 	const CUTYPE_UNKNOWN = 'UNKNOWN';
+	const CUTYPE_FLEX_OFFICE = 'X-FLEX-OFFICE';
+	const CUTYPE_HARDWARE = 'X-HARDWARE';
 	/**
 	 * Delegators (http://tools.ietf.org/html/rfc2445#section-4.2.3)
 	 */

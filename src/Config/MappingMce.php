@@ -646,25 +646,34 @@ class MappingMce {
 	const ATT_TYPE_RESOURCE = 3;
 	const ATT_TYPE_ROOM = 4;
 	const ATT_TYPE_UNKNOWN = 5;
+	const ATT_TYPE_FLEX_OFFICE = 6;
+	const ATT_TYPE_HARDWARE = 7;
+	const ATT_TYPE_CAR = 8;
 	/**
 	 * Attendee type mapping object to MCE
 	 */
 	public static $MapAttendeeTypeObjectToMce = [
-	    DefaultConfig::INDIVIDUAL => self::ATT_TYPE_INDIVIDUAL,
-	    DefaultConfig::GROUP => self::ATT_TYPE_GROUP,
-	    DefaultConfig::RESOURCE => self::ATT_TYPE_RESOURCE,
-	    DefaultConfig::ROOM => self::ATT_TYPE_ROOM,
-	    DefaultConfig::UNKNOWN => self::ATT_TYPE_UNKNOWN,
+	    DefaultConfig::INDIVIDUAL 	=> self::ATT_TYPE_INDIVIDUAL,
+	    DefaultConfig::GROUP 		=> self::ATT_TYPE_GROUP,
+	    DefaultConfig::RESOURCE 	=> self::ATT_TYPE_RESOURCE,
+	    DefaultConfig::ROOM 		=> self::ATT_TYPE_ROOM,
+	    DefaultConfig::UNKNOWN 		=> self::ATT_TYPE_UNKNOWN,
+		DefaultConfig::FLEX_OFFICE 	=> self::ATT_TYPE_FLEX_OFFICE,
+		DefaultConfig::HARDWARE 	=> self::ATT_TYPE_HARDWARE,
+		DefaultConfig::CAR 			=> self::ATT_TYPE_CAR,
 	];
 	/**
 	 * Attendee type mapping MCE to object
 	 */
 	public static $MapAttendeeTypeMceToObject = [
-	    self::ATT_TYPE_INDIVIDUAL => DefaultConfig::INDIVIDUAL,
-	    self::ATT_TYPE_GROUP => DefaultConfig::GROUP,
-	    self::ATT_TYPE_RESOURCE => DefaultConfig::RESOURCE,
-	    self::ATT_TYPE_ROOM => DefaultConfig::ROOM,
-		self::ATT_TYPE_UNKNOWN => DefaultConfig::UNKNOWN,
+	    self::ATT_TYPE_INDIVIDUAL 	=> DefaultConfig::INDIVIDUAL,
+	    self::ATT_TYPE_GROUP 		=> DefaultConfig::GROUP,
+	    self::ATT_TYPE_RESOURCE 	=> DefaultConfig::RESOURCE,
+	    self::ATT_TYPE_ROOM 		=> DefaultConfig::ROOM,
+		self::ATT_TYPE_UNKNOWN 		=> DefaultConfig::UNKNOWN,
+		self::ATT_TYPE_FLEX_OFFICE 	=> DefaultConfig::FLEX_OFFICE,
+		self::ATT_TYPE_HARDWARE 	=> DefaultConfig::HARDWARE,
+		self::ATT_TYPE_CAR 			=> DefaultConfig::CAR,
 	];
 
 	// Attendee status

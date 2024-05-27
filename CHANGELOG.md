@@ -1,3 +1,9 @@
+ORM M2 - 0.6.7.4
+------
+- 0008336: Ajouter un type flex office et un type materiel pour les participants
+- 0008337: Rechercher les ressources par uids ou emails
+- 0008341: Automatiser la récupération du type pour un participant de type ressource Bnum
+
 ORM M2 - 0.6.7.3
 ------
 - 0008321: Ne pas nettoyer les delete et add dans l'historique

@@ -63,7 +63,8 @@ $locality->uid = 'l-isle-d-abeau';
 if ($locality->load()) {
   echo "Localité trouvée : ".$locality->name."\r\n";
 
-  $ressources = $locality->listResources(LibMelanie\Api\Mel\Resource::TYPE_FLEX_OFFICE);
+  // $ressources = $locality->listResources(LibMelanie\Api\Mel\Resource::TYPE_FLEX_OFFICE);
+  $ressources = $locality->listResources(null, ['xo6enxlgmjyv8qxvim2drt1h3p3t1r8i', 'n1hoe1frr13qgpy6f1fae871g9fh0l1r', 'xo6enxlgmjyv8qxvim2drt1h3p3t1r4i']);
 
   if (count($ressources) == 0) {
     echo "Aucune ressource trouvée\r\n";

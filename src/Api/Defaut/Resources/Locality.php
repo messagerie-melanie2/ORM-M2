@@ -139,6 +139,18 @@ abstract class Locality extends MceObject {
    */
   const LIST_RESOURCES_BY_TYPE_FILTER = null;
   /**
+   * Filtre pour la méthode listResources() par uids
+   * 
+   * @ignore
+   */
+  const LIST_RESOURCES_BY_UIDS_FILTER = null;
+  /**
+   * Filtre pour la méthode listResources() par emails
+   * 
+   * @ignore
+   */
+  const LIST_RESOURCES_BY_EMAILS_FILTER = null;
+  /**
    * Filtre pour la méthode load() avec un email
    * 
    * @ignore
@@ -295,17 +307,26 @@ abstract class Locality extends MceObject {
   /**
    * Récupération de la liste des resources appartenant a une localité
    * 
+   * @param string $type Type de la resource
+   * @param array $listUids Liste des uids des resources
+   * @param array $listEmails Liste des emails des resources
+   * 
    * @return array Liste des resources
    */
-  public function listResources($type = null) {
+  public function listResources($type = null, $listUids = null, $listEmails = null) {
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = Ldap::GetInstance($this->_server);
+
+    $list = true;
 
     // Configuration du dn
     if (isset($this->dn)) {
       $dn = $this->dn;
-    } else {
+    } else if (isset($this->uid)) {
       $dn = "ou=$this->uid," . static::DN;
+    } else {
+      $dn = static::DN;
+      $list = false;
     }
 
     // Ressource dans le bon namespace
@@ -313,12 +334,32 @@ abstract class Locality extends MceObject {
 
     if (isset($type)) {
       $filter = str_replace('%%type%%', $type, static::LIST_RESOURCES_BY_TYPE_FILTER);
+    } else if (isset($listUids)) {
+      $filter = "(|";
+      foreach ($listUids as $uid) {
+        $filter .= "(uid=$uid)";
+      }
+      $filter .= ")";
+      $filter = str_replace('%%uids%%', $filter, static::LIST_RESOURCES_BY_UIDS_FILTER);
+    } else if (isset($listEmails)) {
+      $filter = "(|";
+      foreach ($listEmails as $email) {
+        $filter .= "(mail=$email)";
+      }
+      $filter .= ")";
+      $filter = str_replace('%%emails%%', $filter, static::LIST_RESOURCES_BY_EMAILS_FILTER);
     } else {
       $filter = static::LIST_RESOURCES_FILTER;
     }
 
     // Lister les localités directement sous le DN
-    $sr = $ldap->ldap_list($dn, $filter, (new $Resource())->get_mapping_attributes($Resource::LOAD_ATTRIBUTES));
+    if ($list) {
+      $sr = $ldap->ldap_list($dn, $filter, (new $Resource())->get_mapping_attributes($Resource::LOAD_ATTRIBUTES));
+    }
+    else {
+      $sr = $ldap->search($dn, $filter, (new $Resource())->get_mapping_attributes($Resource::LOAD_ATTRIBUTES));
+    }
+    
     $list = [];
 
     if ($sr && $ldap->count_entries($sr) > 0) {

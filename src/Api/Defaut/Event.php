@@ -990,7 +990,7 @@ class Event extends MceObject {
           }
           else {
             // MANTIS 0006801: [En attente] Gestion des boites partagées
-            if (!$attendee->is_individuelle) {
+            if (!$attendee->is_individuelle && !$attendee->is_ressource) {
               $clean_deleted_attendees = false;
             }
             $attendee_uid = $attendee->uid;
@@ -1267,7 +1267,8 @@ class Event extends MceObject {
               // Gestion des boites ressources
               $attendees[$attendee_key]->response = Attendee::RESPONSE_ACCEPTED;
               $attendee_event->status = self::STATUS_CONFIRMED;
-              if (!isset($attendees[$attendee_key]->type) || $attendees[$attendee_key]->type == Attendee::TYPE_INDIVIDUAL) {
+              $attendee_type = $attendees[$attendee_key]->type;
+              if (!isset($attendee_type) || $attendee_type == Attendee::TYPE_INDIVIDUAL) {
                 $attendees[$attendee_key]->type = Attendee::TYPE_RESOURCE;
               }
             }
@@ -1339,7 +1340,8 @@ class Event extends MceObject {
               // Gestion des boites ressources
               $attendees[$attendee_key]->response = Attendee::RESPONSE_ACCEPTED;
               $attendee_event->status = self::STATUS_CONFIRMED;
-              if (!isset($attendees[$attendee_key]->type) || $attendees[$attendee_key]->type == Attendee::TYPE_INDIVIDUAL) {
+              $attendee_type = $attendees[$attendee_key]->type;
+              if (!isset($attendee_type) || $attendee_type == Attendee::TYPE_INDIVIDUAL) {
                 $attendees[$attendee_key]->type = Attendee::TYPE_RESOURCE;
               }
             }
@@ -1359,7 +1361,8 @@ class Event extends MceObject {
             // Gestion des boites ressources
             $attendees[$attendee_key]->response = Attendee::RESPONSE_ACCEPTED;
             $attendee_event->status = self::STATUS_CONFIRMED;
-            if (!isset($attendees[$attendee_key]->type) || $attendees[$attendee_key]->type == Attendee::TYPE_INDIVIDUAL) {
+            $attendee_type = $attendees[$attendee_key]->type;
+            if (!isset($attendee_type) || $attendee_type == Attendee::TYPE_INDIVIDUAL) {
               $attendees[$attendee_key]->type = Attendee::TYPE_RESOURCE;
             }
           }

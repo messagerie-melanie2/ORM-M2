@@ -53,9 +53,13 @@ class SqlCalendarRequests {
 	/**
 	 * @var string SELECT
 	 * @param REPLACE {fields_list}
-	 * @param PDO :calendar_id, :event_uid
 	 */
 	const getListEvents = "SELECT {fields_list}, k2.event_creator_id as organizer_uid, k2.event_attendees as organizer_attendees, k2.calendar_id as organizer_calendar FROM kronolith_events k1 LEFT JOIN kronolith_events k2 ON k1.event_uid = k2.event_uid AND k1.organizer_calendar_id = k2.calendar_id WHERE {where_clause};";
+	/**
+	 * @var string SELECT
+	 * @param REPLACE {fields_list}
+	 */
+	const getListEventsNoMerge = "SELECT {fields_list} FROM kronolith_events k1 WHERE {where_clause};";
 	/**
 	 * @var string SELECT
 	 * @param REPLACE {fields_list}

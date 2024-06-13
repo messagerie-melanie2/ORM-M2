@@ -350,9 +350,10 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 	 * @param int $limit Limite le nombre de résultat (utile pour la pagination)
 	 * @param int $offset Offset de début pour les résultats (utile pour la pagination)
 	 * @param String[] $case_unsensitive_fields Liste des champs pour lesquels on ne sera pas sensible à la casse
+	 * @param bool $merge Utiliser la requête SQL qui fait un merge
 	 * @return EventMelanie[] Array
 	 */
-	public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
+	public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $merge = true) {
 		M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class."->getList()");
 		// Mapping pour les operateurs
 		$opmapping = [];
@@ -569,7 +570,13 @@ class EventMelanie extends MagicObject implements IObjectMelanie {
 		// Limit & offset 
 		$whereClause .= Sql\Sql::GetLimitClause($limit, $offset);
 		// Chargement de la requête
-		$query = Sql\SqlCalendarRequests::getListEvents;
+		if ($merge) {
+			$query = Sql\SqlCalendarRequests::getListEvents;
+		}
+		else {
+			$query = Sql\SqlCalendarRequests::getListEventsNoMerge;
+		}
+		
 		// Liste des champs
 		if (!is_array($fields) && strtolower($fields) == 'count') {
 			// On fait un count(*)

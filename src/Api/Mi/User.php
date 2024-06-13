@@ -87,6 +87,7 @@ class User extends Mce\User {
     "uid"                     => 'uid',                           // Identifiant de l'utilisateur
     "fullname"                => 'cn',                            // Nom complet de l'utilisateur
     "name"                    => 'cn',                            // Nom court de l'utilisateur
+    "email_local"             => 'maillocaladdress',              // Adresse e-mail locale
     "email"                   => 'mail',                          // Adresse e-mail principale de l'utilisateur en reception
     "email_list"              => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
     "email_send"              => 'mail',                          // Adresse e-mail principale de l'utilisateur en emission

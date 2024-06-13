@@ -174,8 +174,10 @@ class Exception extends Event {
    *          Offset de début pour les résultats (utile pour la pagination)
    * @param String[] $case_unsensitive_fields
    *          Liste des champs pour lesquels on ne sera pas sensible à la casse
+   * @param bool $merge
+   *          Utiliser la requête avec le merge
    */
-  function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
+  function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $merge = true) {
     throw new Exceptions\ObjectMelanieUndefinedException();
   }
   

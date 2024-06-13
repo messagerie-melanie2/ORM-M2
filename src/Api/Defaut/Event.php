@@ -870,7 +870,19 @@ class Event extends MceObject {
     if (isset($owner) && !empty($owner)) {
       $listevents->owner = $owner;
     }
-    return $listevents->getList();
+    // MANTIS 0008366: Alléger la méthode listEventsByUid
+    // getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $merge = true)
+    return $listevents->getList(
+      [],
+      "",
+      [],
+      "created",
+      true,
+      3,
+      null,
+      [],
+      false
+    );
   }
 
   /**
@@ -2046,11 +2058,13 @@ class Event extends MceObject {
    *          Offset de début pour les résultats (utile pour la pagination)
    * @param String[] $case_unsensitive_fields
    *          Liste des champs pour lesquels on ne sera pas sensible à la casse
+   * @param bool $merge
+   *          Utiliser la requête avec le merge
    * @return Event[] Array
    */
-  public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
+  public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $merge = true) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getList()");
-    $_events = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields);
+    $_events = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields, $merge);
     if (!isset($_events))
       return null;
     $events = [];

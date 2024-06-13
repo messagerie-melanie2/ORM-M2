@@ -1,3 +1,7 @@
+ORM M2 - 0.6.7.5
+------
+- 0008366: Alléger la méthode listEventsByUid
+
 ORM M2 - 0.6.7.4
 ------
 - 0008336: Ajouter un type flex office et un type materiel pour les participants

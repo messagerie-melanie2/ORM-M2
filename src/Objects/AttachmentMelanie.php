@@ -66,27 +66,7 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		if (is_bool($this->isExist) && $this->isLoaded) {
 		  return $this->isExist;
 		}
-		// Paramètres de la requête
-		$params = [];
-		$whereClause = "";
-		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
-		foreach ($this->primaryKeys as $key) {
-			if (!isset($this->$key)) return false;
-			// Récupèration des données de mapping
-			if (isset(MappingMce::$Data_Mapping[$this->objectType])
-					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
-				$mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
-			} else {
-				$mapKey = $key;
-			}
-			$params[$mapKey] = $this->$key;
-			if ($whereClause != "") $whereClause .= " AND ";
-			$whereClause .= "$mapKey = :$mapKey";
-		}
-		// Chargement de la requête
-		$query = Sql\SqlAttachmentRequests::getAttachmentData;
-		// Clause where
-		$query = str_replace("{where_clause}", $whereClause, $query);
+		
 
 		// Liste les attachments
 		$this->isExist = Sql\Sql::GetInstance()->executeQueryToObject($query, $params, $this);
@@ -211,6 +191,9 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 			// Execute
 			$this->isExist = Sql\Sql::GetInstance()->executeQuery($query, $params);
 		}
+
+
+
 		if ($this->isExist) $this->initializeHasChanged();
 		return $insert;
 	}
@@ -224,29 +207,33 @@ class AttachmentMelanie extends MagicObject implements IObjectMelanie {
 		// Si les clés primaires ne sont pas définies, impossible de supprimer l'objet
 		if (!isset($this->primaryKeys)) return false;
 		// Paramètres de la requête
-		$params = [];
-		$whereClause = "";
-		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
-		foreach ($this->primaryKeys as $key) {
-			if (!isset($key)) return false;
-			// Récupèration des données de mapping
-			if (isset(MappingMce::$Data_Mapping[$this->objectType])
-					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
-				$mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
-			} else {
-				$mapKey = $key;
-			}
-			$params[$mapKey] = $this->$key;
-			if ($whereClause != "") $whereClause .= " AND ";
-			$whereClause .= "$mapKey = :$mapKey";
-		}
+		// $params = [];
+		// $whereClause = "";
+		// // Test si les clés primaires sont bien instanciées et les ajoute en paramètres
+		// foreach ($this->primaryKeys as $key) {
+		// 	if (!isset($key)) return false;
+		// 	// Récupèration des données de mapping
+		// 	if (isset(MappingMce::$Data_Mapping[$this->objectType])
+		// 			&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+		// 		$mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
+		// 	} else {
+		// 		$mapKey = $key;
+		// 	}
+		// 	$params[$mapKey] = $this->$key;
+		// 	if ($whereClause != "") $whereClause .= " AND ";
+		// 	$whereClause .= "$mapKey = :$mapKey";
+		// }
 
-		$query = Sql\SqlAttachmentRequests::deleteAttachment;
-		// Clause where
-		$query = str_replace("{where_clause}", $whereClause, $query);
+		// $query = Sql\SqlAttachmentRequests::deleteAttachment;
+		// // Clause where
+		// $query = str_replace("{where_clause}", $whereClause, $query);
 
-		// Supprimer l'évènement
-		$ret = Sql\Sql::GetInstance()->executeQuery($query, $params);
+		// // Supprimer l'évènement
+		// $ret = Sql\Sql::GetInstance()->executeQuery($query, $params);
+
+		$ret = Storage::getStorage(Storage::LOCAL)->delete($this->path . "/" . $this->name);
+		$this->path = null;
+
 		if ($ret) {
 		  $this->initializeHasChanged();
 		  $this->isExist = false;

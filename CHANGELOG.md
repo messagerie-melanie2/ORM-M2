@@ -1,3 +1,7 @@
+ORM M2 - 0.6.7.7
+------
+- password pour le User Mél
+
 ORM M2 - 0.6.7.6
 ------
 - UUID pour le User Mél

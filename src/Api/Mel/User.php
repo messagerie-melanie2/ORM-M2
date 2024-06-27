@@ -280,6 +280,7 @@ class User extends Defaut\User {
     "double_authentification_date_grace"    => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => '2FA.DateDeGrace: ', MappingMce::type => MappingMce::dateLdap],
     "is_external"               => [MappingMce::name => 'dn', MappingMce::type => MappingMce::booleanLdap],
     "uuid"                      => "uniqueidentifier",
+    "password"                  => "userpassword",
   ];
 
   /**

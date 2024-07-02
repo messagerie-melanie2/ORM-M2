@@ -51,7 +51,7 @@ use LibMelanie\Objects\UserMelanie;
  * @property string $postalcode Adresse - Code postal de l'utilisateur
  * @property string $locality Adresse - Ville de l'utilisateur
  * @property string $title Titre de l'utilisateur
- * @property array $server_routage Champ de routage pour le serveur de message de l'utilisateur
+ * @property array $server_host Champ de routage pour le serveur de message de l'utilisateur
  * @property-read string $server_host Host du serveur de messagerie de l'utilisateur
  * @property-read string $server_user User du serveur de messagerie de l'utilisateur
  * @property Outofoffice[] $outofoffices Tableau de gestionnaire d'absence pour l'utilisateur
@@ -149,6 +149,7 @@ class User extends Defaut\User {
     "email_send"              => 'mail',                          // Adresse e-mail principale de l'utilisateur en emission
     "email_send_list"         => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
     "shares"                  => [MappingMce::name => 'mcedelegation', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
+    "server_host"             => [MappingMce::name => 'mailhost', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
     "server_routage"          => [MappingMce::name => 'mailhost', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
     "type"                    => 'mcetypecompte',                 // Type d'entrée (boite individuelle, partagée, ressource, ...)
     "street"                  => 'street',                        // Rue

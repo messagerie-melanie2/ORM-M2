@@ -277,11 +277,28 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     if (is_bool($this->isExist) && $this->isLoaded && !isset($attributes)) {
       return $this->isExist;
     }
+    
     // Mapping pour les champs
 		$attributesmapping = [];
 		if (is_array($attributes)) {
       $attributesmapping = $this->get_mapping_attributes($attributes);
 		}
+
+    // Vérifier si les attributs ne sont pas déjà chargés ?
+    if (is_bool($this->isExist) && $this->isLoaded && !empty($attributesmapping)) {
+      $loaded = true;
+      // Est-ce que les attributs sont dejà dans data ?
+      foreach ($attributesmapping as $attr) {
+        if (!isset($this->data[$attr])) {
+          $loaded = false;
+          break;
+        }
+      }
+      // Si on est déjà chargé ?
+      if ($loaded) {
+        return $this->isExist;
+      }
+    }
     // Récupération des données depuis le LDAP avec le dn, l'uid ou l'email
     if (isset($this->dn)) {
       $data = Ldap::GetUserInfosFromDn($this->dn, $attributesmapping, $this->server);

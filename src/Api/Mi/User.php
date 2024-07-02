@@ -78,6 +78,13 @@ class User extends Mce\User {
    * @ignore
    */
   const GET_BALP_GESTIONNAIRE_FILTER = "(mcedelegation=%%uid%%:G)";
+
+  /**
+   * Attributs par défauts pour la méthode load()
+   * 
+   * @ignore
+   */
+  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_routage', 'shares', 'type'];
   
   /**
    * Configuration du mapping qui surcharge la conf
@@ -94,6 +101,7 @@ class User extends Mce\User {
     "email_send_list"         => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
     "shares"                  => [MappingMce::name => 'mcedelegation', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
     "server_routage"          => 'mailhost',                      // Champ utilisé pour le routage des messages
+    "server_host"             => 'mailhost',                      // Champ utilisé pour le routage des messages
     "type"                    => 'mcetypecompte',                 // Type d'entrée (boite individuelle, partagée, ressource, ...)
     "postaladdress"           => 'postaladdress',                 // Postal address
     "street"                  => 'street',                        // Rue

@@ -72,7 +72,7 @@ class User extends Mce\User {
    * 
    * @ignore
    */
-  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_routage', 'shares', 'type','mcemailroutingaddress','outofoffices'];
+  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_host', 'shares', 'type', 'mcemailroutingaddress', 'outofoffices'];
 
 	/**
    * Configuration du mapping qui surcharge la conf
@@ -89,7 +89,7 @@ class User extends Mce\User {
     "email_send"              => 'mail',                          // Adresse e-mail principale de l'utilisateur en emission
     "email_send_list"         => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
     "shares"                  => [MappingMce::name => 'mcedelegation', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
-    "server_routage"          => [MappingMce::name => 'mailhost', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
+    "server_host"             => [MappingMce::name => 'mailhost', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
     "type"                    => 'mcetypecompte',                 // Type d'entrée (boite individuelle, partagée, ressource, ...)
     "street"                  => 'street',                        // Rue
     "postalcode"              => 'postalcode',                    // Code postal

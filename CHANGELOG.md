@@ -1,3 +1,8 @@
+ORM M2 - 0.6.7.8
+------
+- 0008386: [MI] Attributs par défaut
+- 0008385: Optimisation du chargement des attributs LDAP
+
 ORM M2 - 0.6.7.7
 ------
 - password pour le User Mél

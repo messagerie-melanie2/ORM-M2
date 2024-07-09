@@ -403,6 +403,8 @@ $tasks = $taskslist->getAllTasks();
 
 ### 1 - Post
 
+[Documentation](https://messagerie-melanie2.github.io/ORM-M2/classes/LibMelanie.Api.Defaut.Posts.Post.html)
+
 #### a. Récupération d'un Post
 
 Un post se récupère à partir de son uid
@@ -563,6 +565,9 @@ $post->countComments();
 
 ### 2 - Image
 
+[Documentation](https://messagerie-melanie2.github.io/ORM-M2/classes/LibMelanie.Api.Defaut.Posts.Image.html)
+
+
 Pour gérer le markdown, les images sont stockées dans une autre table de la base de données. Elles sont également associées à un uid pour les retrouver plus facilement.
 
 #### a. Récupération d'une Image
@@ -604,6 +609,8 @@ if ($image->delete()) {
 
 ### 3 - Tag
 
+[Documentation](https://messagerie-melanie2.github.io/ORM-M2/classes/LibMelanie.Api.Defaut.Posts.Tag.html)
+
 Les tags sont gérés par espace de travail. Chaque espace a sa propre liste de tags. Ensuite un ou plusieurs tags peuvent être associés à un post. Cela se fait donc en deux temps (création du tag > association du tag au post)
 
 #### a. Récupération d'un Tag
@@ -620,7 +627,7 @@ if ($tag->load()) {
 }
 ```
 
-#### b. Création d'un tag
+#### b. Création d'un Tag
 
 ```php
 $tag = new LibMelanie\Api\Defaut\Posts\Tag();
@@ -634,7 +641,7 @@ if (!is_null($ret)) {
 }
 ```
 
-#### c. Modification d'un tag
+#### c. Modification d'un Tag
 
 Pour modifier un tag, il faut donc dans un premier temps le charger avec son ancien nom, pour ensuite le modifier avec le nouveau
 
@@ -654,7 +661,7 @@ if ($tag->load()) {
 }
 ```
 
-#### d. Suppression d'un tag
+#### d. Suppression d'un Tag
 
 ```php
 $tag = new LibMelanie\Api\Defaut\Posts\Tag();
@@ -666,7 +673,7 @@ if ($tag->delete()) {
 }
 ```
 
-#### e. Associer un tag existant à un post
+#### e. Associer un Tag existant à un post
 
 Un tag doit être chargé (soit via un load() soit via une liste existante) pour être associé à un post (qui doit lui aussi être chargé).
 
@@ -687,7 +694,7 @@ if ($tag->load()) {
 }
 ```
 
-#### f. Enlever un tag existant d'un post
+#### f. Enlever un Tag existant d'un post
 
 ```php
 if ($post->removeTag($tag)) {
@@ -695,7 +702,9 @@ if ($post->removeTag($tag)) {
 }
 ```
 
-### 3 - Reaction
+### 4 - Reaction
+
+[Documentation](https://messagerie-melanie2.github.io/ORM-M2/classes/LibMelanie.Api.Defaut.Posts.Reaction.html)
 
 #### a. Récupération d'une Reaction
 
@@ -752,5 +761,174 @@ $post->uid = $uid;
 
 if ($post->load()) {
   $reactions = $post->listReactions();
+}
+```
+
+### 5 - Comment
+
+[Documentation](https://messagerie-melanie2.github.io/ORM-M2/classes/LibMelanie.Api.Defaut.Posts.Comment.html)
+
+#### a. Récupération d'un Commnet
+
+Le chargement d'un commentaire se fait à partir de son uid
+
+```php
+$comment = new LibMelanie\Api\Defaut\Posts\Comment();
+$comment->uid = $uid;
+
+if ($comment->load()) {
+  // Code à exécuter
+}
+```
+
+#### b. Création d'un Comment
+
+```php
+$comment = new LibMelanie\Api\Defaut\Posts\Comment();
+$comment->uid = generateRandomString(24);
+$comment->creator = $creator;
+$comment->content = $content;
+$comment->post = $post->id;
+$comment->parent = 6;
+
+$ret = $comment->save();
+
+if (!is_null($ret)) {
+  // Code à exécuter
+}
+```
+
+Pour créer un commentaire enfant d'un commentaire existant, il faut ajouter
+
+```php
+$comment->parent = $comment_parent->id;
+```
+
+#### c. Modification d'un Comment
+
+Pour modifier un tag, il faut donc dans un premier temps le charger avec son ancien nom, pour ensuite le modifier avec le nouveau
+
+```php
+$comment = new LibMelanie\Api\Defaut\Posts\Comment();
+$comment->uid = $uid;
+
+if ($comment->load()) {
+  $comment->content = $content;
+  $comment->modified = date('Y-m-d H:i:s');
+
+  $ret = $comment->save();
+
+  if (!is_null($ret)) {
+    // Code à exécuter
+  }
+}
+```
+
+#### d. Suppression d'un Comment
+
+```php
+$comment = new LibMelanie\Api\Defaut\Posts\Comment();
+$comment->uid = $uid;
+
+if ($comment->load()) {
+  // Code à exécuter
+}
+```
+
+#### e. Lister les Comment d'un Post
+
+Un Post chargé peut directement charger les commentaires avec la méthode listComments()
+
+```php
+$post = new LibMelanie\Api\Defaut\Posts\Post();
+$post->uid = $uid;
+
+if ($post->load()) {
+  $comments = $post->listComments();
+}
+```
+
+Comme pour la méthode list() la méthode listComments() prend plusieurs paramètres pour combiner les recherches.
+
+Pour ne lister que les commentaires au niveau racine :
+
+```php
+$comments = $post->listComments(true);
+```
+
+Pour chercher des commentaires qui contiennent le mot "test" :
+
+```php
+$comments = $post->listComments(false, "test");
+```
+
+Pour chercher les commentaires créés par thomas.test1 :
+
+```php
+$comments = $post->listComments(false, "creator:thomas.test1");
+```
+
+Pour trier les commentaires par nombre de likes :
+
+```php
+$comments = $post->listComments(true, null, 'likes', false);
+```
+
+Pour trier les commentaires par nombre d'enfants :
+
+```php
+$comments = $post->listComments(false, null, 'children');
+```
+
+### 6 - Like
+
+[Documentation](https://messagerie-melanie2.github.io/ORM-M2/classes/LibMelanie.Api.Defaut.Posts.Comments.Like.html)
+
+Les likes se positionnent sur les commentaires
+
+#### a. Récupération d'un Like
+
+Le chargement d'un like se fait à partir du commentaire, du créateur et de son type.
+
+```php
+$like = new LibMelanie\Api\Defaut\Posts\Comments\Like();
+$like->comment = $comment->id;
+$like->creator = $creator;
+$like->type = $type;
+
+if ($like->load()) {
+  // Code à exécuter
+}
+```
+
+#### b. Création d'un Like
+
+```php
+$like = new LibMelanie\Api\Defaut\Posts\Comments\Like();
+$like->comment = $comment->id;
+$like->creator = $creator;
+$like->type = $type;
+
+$ret = $like->save();
+
+if (!is_null($ret)) {
+  // Code à exécuter
+}
+```
+
+#### c. Modification d'un Like
+
+Comme pour les réactions, la modification d'un Like n'est pas prévue. Il faut passer par la suppression puis création si besoin.
+
+#### d. Suppression d'un Like
+
+```php
+$like = new LibMelanie\Api\Defaut\Posts\Comments\Like();
+$like->comment = $comment->id;
+$like->creator = $creator;
+$like->type = $type;
+
+if ($like->delete()) {
+  // Code à exécuter
 }
 ```

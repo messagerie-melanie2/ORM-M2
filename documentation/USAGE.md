@@ -702,6 +702,35 @@ if ($post->removeTag($tag)) {
 }
 ```
 
+#### g. Lister des Tag
+
+Lister tous les tags associés à un espace de travail :
+
+```php
+$tag = new LibMelanie\Api\Defaut\Posts\Tag();
+$tag->workspace = $workspace_uid;
+$tags = $tag->list();
+```
+
+Rechercher les tags associés à un espace de travail, par exemple rechercher ici les tags avec le mot "réponse" :
+
+```php
+$tag = new LibMelanie\Api\Defaut\Posts\Tag();
+$tag->workspace = $workspace_uid;
+$tags = $tag->list('réponse');
+```
+
+Lister tous les tags associés à un post
+
+```php
+$post = new LibMelanie\Api\Defaut\Posts\Post();
+$post->uid = $uid;
+
+if ($post->load()) {
+  $tags = $post->listTags();
+}
+```
+
 ### 4 - Reaction
 
 [Documentation](https://messagerie-melanie2.github.io/ORM-M2/classes/LibMelanie.Api.Defaut.Posts.Reaction.html)

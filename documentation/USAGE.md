@@ -398,3 +398,359 @@ Depuis une liste de tâches il est possible de récupérer toutes les tâches as
 ```php
 $tasks = $taskslist->getAllTasks();
 ```
+
+## D/ Gestion des articles
+
+### 1 - Post
+
+#### a. Récupération d'un Post
+
+Un post se récupère à partir de son uid
+
+```php
+$post = new LibMelanie\Api\Defaut\Posts\Post();
+$post->uid = $uid;
+
+if ($post->load()) {
+  // Code à exécuter
+}
+```
+
+#### b. Création d'un nouveau Post
+
+```php
+$post = new LibMelanie\Api\Defaut\Posts\Post();
+$post->uid = $uid;
+$post->creator = $creator;
+$post->title = $title;
+$post->summary = $summary;
+$post->content = $content;
+$post->workspace = $workspace_uid;
+
+$ret = $post->save();
+
+if (!is_null($ret)) {
+  // Code à exécuter
+}
+```
+
+La fonction save() retourne une valeur null en cas d'erreur.
+
+Les propriétés created et modified ne nécessite pas d'être positionnés à la création car elles sont automatiquement alimentées par la base de données lors de l'insert.
+
+La génération de l'uid du Post peut passer par une fonction de génération aléatoire, par exemple :
+
+```php
+function generateRandomString($length = 10) {
+  $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  $charactersLength = strlen($characters);
+  $randomString = '';
+  for ($i = 0; $i < $length; $i++) {
+    $randomString .= $characters[random_int(0, $charactersLength - 1)];
+  }
+  return $randomString;
+}
+
+$post->uid = generateRandomString(24);
+```
+
+#### c. Mise à jour d'un Post existant
+
+```php
+$post = new LibMelanie\Api\Defaut\Posts\Post();
+$post->uid = $uid;
+
+if ($post->load()) {
+  $post->title = $newtitle;
+  $post->modified = date('Y-m-d H:i:s');
+
+  $ret = $post->save();
+
+  if (!is_null($ret)) {
+    // Code à exécuter
+  }
+}
+```
+
+Dans le cas d'une mise à jour il faut bien penser à alimenter le champ modified.
+
+#### d. Suppression d'un Post
+
+```php
+$post = new LibMelanie\Api\Defaut\Posts\Post();
+$post->uid = $uid;
+
+if ($post->delete()) {
+  // Code à exécuter
+}
+```
+
+L'ORM ne gère pas les droits, que ce soit pour la création, modification ou suppression. Il faut donc bien s'assurer que l'utilisateur qui fait appelle à delete() est autorisé à le faire avant le lancement de la fonction.
+
+#### e. Lister les Post d'un espace de travail
+
+La fonction list() permet de lister tous les Post d'un espace de travail. Elle permet également de rechercher, trier et paginer. Tous les critères (recherche, tri, pagination) peuvent se combiner.
+
+##### Lister tous les Post de l'espace
+
+```php
+$post = new LibMelanie\Api\Defaut\Posts\Post();
+$post->workspace = $workspace_uid;
+$posts = $post->list();
+```
+
+##### Lister les Post contenant "test" dans leur titre
+
+```php
+$posts = $post->list("test");
+```
+
+##### Lister les Post créés par thomas.test1
+
+```php
+$posts = $post->list("creator:thomas.test1");
+```
+
+##### Lister les Post créés par thomas.test1 contenant "article" dans leur titre
+
+```php
+$posts = $post->list("creator:thomas.test1 article");
+```
+
+##### Lister les Post associés au tag "Blog"
+
+```php
+$tag = new LibMelanie\Api\Defaut\Posts\Tag();
+$tag->name = "Blog";
+$tag->workspace = $workspace_uid;
+
+if ($tag->load()) {
+  $post = new LibMelanie\Api\Defaut\Posts\Post();
+  $post->workspace = $workspace_uid;
+  $posts = $post->list(null, [$tag]);
+}
+```
+
+##### Lister tous les Post de l'espace, triés par nombre de commentaires (décroissant)
+
+```php
+$posts = $post->list(null, [], 'comments', false);
+```
+
+##### Lister tous les Post de l'espace, triés par nombre de réactions (décroissant), en affichant la 2eme page avec 10 posts par page
+
+```php
+$posts = $post->list(null, [], 'reactions', false, 10, 10);
+```
+
+#### f. Informations supplémentaires pour un Post
+
+##### Nombre de réactions sur un Post
+
+Cette donnée est automatiquement chargée au moment du list(), sinon elle sera récupérée depuis la base
+
+```php
+$post->countReactions();
+```
+
+##### Nombre de commentaires sur un Post
+
+Cette donnée est automatiquement chargée au moment du list(), sinon elle sera récupérée depuis la base
+
+```php
+$post->countComments();
+```
+
+### 2 - Image
+
+Pour gérer le markdown, les images sont stockées dans une autre table de la base de données. Elles sont également associées à un uid pour les retrouver plus facilement.
+
+#### a. Récupération d'une Image
+
+```php
+$image = new LibMelanie\Api\Defaut\Posts\Image();
+$image->uid = $uid;
+
+if ($image->load()) {
+  // Code à exécuter
+}
+```
+
+#### b. Création d'une image
+
+```php
+$image = new LibMelanie\Api\Defaut\Posts\Image();
+$image->uid = generateRandomString(24);
+$image->post = $post->id;
+$image->data = $data;
+
+$ret = $image->save();
+
+if (!is_null($ret)) {
+  // Code à exécuter
+}
+```
+
+#### c. Suppression d'une image
+
+```php
+$image = new LibMelanie\Api\Defaut\Posts\Image();
+$image->uid = $uid;
+
+if ($image->delete()) {
+  // Code à exécuter
+}
+```
+
+### 3 - Tag
+
+Les tags sont gérés par espace de travail. Chaque espace a sa propre liste de tags. Ensuite un ou plusieurs tags peuvent être associés à un post. Cela se fait donc en deux temps (création du tag > association du tag au post)
+
+#### a. Récupération d'un Tag
+
+Le chargement d'un tag se fait à partir de l'espace de travail et se son nom
+
+```php
+$tag = new LibMelanie\Api\Defaut\Posts\Tag();
+$tag->name = $name;
+$tag->workspace = $workspace_uid;
+
+if ($tag->load()) {
+  // Code à exécuter
+}
+```
+
+#### b. Création d'un tag
+
+```php
+$tag = new LibMelanie\Api\Defaut\Posts\Tag();
+$tag->name = $name;
+$tag->workspace = $workspace_uid;
+
+$ret = $tag->save();
+
+if (!is_null($ret)) {
+  // Code à exécuter
+}
+```
+
+#### c. Modification d'un tag
+
+Pour modifier un tag, il faut donc dans un premier temps le charger avec son ancien nom, pour ensuite le modifier avec le nouveau
+
+```php
+$tag = new LibMelanie\Api\Defaut\Posts\Tag();
+$tag->name = $name;
+$tag->workspace = $workspace_uid;
+
+if ($tag->load()) {
+  $tag->name = $newname;
+
+  $ret = $tag->save();
+
+  if (!is_null($ret)) {
+    // Code à exécuter
+  }
+}
+```
+
+#### d. Suppression d'un tag
+
+```php
+$tag = new LibMelanie\Api\Defaut\Posts\Tag();
+$tag->name = $name;
+$tag->workspace = $workspace_uid;
+
+if ($tag->delete()) {
+  // Code à exécuter
+}
+```
+
+#### e. Associer un tag existant à un post
+
+Un tag doit être chargé (soit via un load() soit via une liste existante) pour être associé à un post (qui doit lui aussi être chargé).
+
+```php
+$tag = new LibMelanie\Api\Defaut\Posts\Tag();
+$tag->name = $name;
+$tag->workspace = $workspace_uid;
+
+if ($tag->load()) {
+  $post = new LibMelanie\Api\Defaut\Posts\Post();
+  $post->uid = $uid;
+
+  if ($post->load()) {
+    if ($post->addTag($tag)) {
+      // Code à exécuter
+    }
+  }
+}
+```
+
+#### f. Enlever un tag existant d'un post
+
+```php
+if ($post->removeTag($tag)) {
+  // Code à exécuter
+}
+```
+
+### 3 - Reaction
+
+#### a. Récupération d'une Reaction
+
+Le chargement d'une réaction se fait à partir du post, du type de réaction et du createur
+
+```php
+$reaction = new LibMelanie\Api\Defaut\Posts\Reaction();
+$reaction->post = $post->id;
+$reaction->creator = $creator;
+$reaction->type = $type;
+
+if ($reaction->load()) {
+  // Code à exécuter
+}
+```
+
+#### b. Création d'une Reaction
+
+```php
+$reaction = new LibMelanie\Api\Defaut\Posts\Reaction();
+$reaction->post = $post->id;
+$reaction->creator = $creator;
+$reaction->type = $type;
+
+$ret = $reaction->save();
+
+if (!is_null($ret)) {
+  // Code à exécuter
+}
+```
+
+#### c. Modification d'une Reaction
+
+La modification d'une réaction n'est pas vraiment prévue, il semble préférable de passer par la suppression puis la création d'une nouvelle réaction.
+
+#### d. Suppression d'une Reaction
+
+```php
+$reaction = new LibMelanie\Api\Defaut\Posts\Reaction();
+$reaction->post = $post->id;
+$reaction->creator = $creator;
+$reaction->type = $type;
+
+if ($reaction->delete()) {
+  // Code à exécuter
+}
+```
+
+#### e. Lister les Reaction d'un Post
+
+```php
+$post = new LibMelanie\Api\Defaut\Posts\Post();
+$post->uid = $uid;
+
+if ($post->load()) {
+  $reactions = $post->listReactions();
+}
+```

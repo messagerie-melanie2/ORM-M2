@@ -491,32 +491,32 @@ L'ORM ne gère pas les droits, que ce soit pour la création, modification ou su
 
 #### e. Lister les Post d'un espace de travail
 
-La fonction list() permet de lister tous les Post d'un espace de travail. Elle permet également de rechercher, trier et paginer. Tous les critères (recherche, tri, pagination) peuvent se combiner.
+La fonction listPosts() permet de lister tous les Post d'un espace de travail. Elle permet également de rechercher, trier et paginer. Tous les critères (recherche, tri, pagination) peuvent se combiner.
 
 ##### Lister tous les Post de l'espace
 
 ```php
 $post = new LibMelanie\Api\Defaut\Posts\Post();
 $post->workspace = $workspace_uid;
-$posts = $post->list();
+$posts = $post->listPosts();
 ```
 
 ##### Lister les Post contenant "test" dans leur titre
 
 ```php
-$posts = $post->list("test");
+$posts = $post->listPosts("test");
 ```
 
 ##### Lister les Post créés par thomas.test1
 
 ```php
-$posts = $post->list("creator:thomas.test1");
+$posts = $post->listPosts("creator:thomas.test1");
 ```
 
 ##### Lister les Post créés par thomas.test1 contenant "article" dans leur titre
 
 ```php
-$posts = $post->list("creator:thomas.test1 article");
+$posts = $post->listPosts("creator:thomas.test1 article");
 ```
 
 ##### Lister les Post associés au tag "Blog"
@@ -529,27 +529,27 @@ $tag->workspace = $workspace_uid;
 if ($tag->load()) {
   $post = new LibMelanie\Api\Defaut\Posts\Post();
   $post->workspace = $workspace_uid;
-  $posts = $post->list(null, [$tag]);
+  $posts = $post->listPosts(null, [$tag]);
 }
 ```
 
 ##### Lister tous les Post de l'espace, triés par nombre de commentaires (décroissant)
 
 ```php
-$posts = $post->list(null, [], 'comments', false);
+$posts = $post->listPosts(null, [], 'comments', false);
 ```
 
 ##### Lister tous les Post de l'espace, triés par nombre de réactions (décroissant), en affichant la 2eme page avec 10 posts par page
 
 ```php
-$posts = $post->list(null, [], 'reactions', false, 10, 10);
+$posts = $post->listPosts(null, [], 'reactions', false, 10, 10);
 ```
 
 #### f. Informations supplémentaires pour un Post
 
 ##### Nombre de réactions sur un Post
 
-Cette donnée est automatiquement chargée au moment du list(), sinon elle sera récupérée depuis la base
+Cette donnée est automatiquement chargée au moment du listPosts(), sinon elle sera récupérée depuis la base
 
 ```php
 $post->countReactions();
@@ -557,7 +557,7 @@ $post->countReactions();
 
 ##### Nombre de commentaires sur un Post
 
-Cette donnée est automatiquement chargée au moment du list(), sinon elle sera récupérée depuis la base
+Cette donnée est automatiquement chargée au moment du listPosts(), sinon elle sera récupérée depuis la base
 
 ```php
 $post->countComments();
@@ -709,7 +709,7 @@ Lister tous les tags associés à un espace de travail :
 ```php
 $tag = new LibMelanie\Api\Defaut\Posts\Tag();
 $tag->workspace = $workspace_uid;
-$tags = $tag->list();
+$tags = $tag->listTags();
 ```
 
 Rechercher les tags associés à un espace de travail, par exemple rechercher ici les tags avec le mot "réponse" :
@@ -717,7 +717,7 @@ Rechercher les tags associés à un espace de travail, par exemple rechercher ic
 ```php
 $tag = new LibMelanie\Api\Defaut\Posts\Tag();
 $tag->workspace = $workspace_uid;
-$tags = $tag->list('réponse');
+$tags = $tag->listTags('réponse');
 ```
 
 Lister tous les tags associés à un post
@@ -877,7 +877,7 @@ if ($post->load()) {
 }
 ```
 
-Comme pour la méthode list() la méthode listComments() prend plusieurs paramètres pour combiner les recherches.
+Comme pour la méthode listPosts() la méthode listComments() prend plusieurs paramètres pour combiner les recherches.
 
 Pour ne lister que les commentaires au niveau racine :
 

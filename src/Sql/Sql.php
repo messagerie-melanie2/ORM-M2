@@ -679,5 +679,36 @@ class Sql {
     }
     return $orderby_clause;
   }
+
+  /**
+   * Récupérer la clause de order by
+   * 
+   * @param string $objectType Type d'objet pour le mapping
+   * 
+   * @param string $groupby Nom du champ pour le group by
+   * 
+   * @return string $groupby_clause
+   */
+  public static function GetGroupByClause($objectType = null, $groupby = [], $join = null) {
+    $groupby_clause = '';
+    // Tri
+		if (!empty($groupby)) {
+      $group = [];
+      foreach ($groupby as $value) {
+        // Récupèration des données de mapping
+        if (isset(MappingMce::$Data_Mapping[$objectType])
+            && isset(MappingMce::$Data_Mapping[$objectType][$value])) {
+          if (isset($join) && MappingMce::$Table_Name[$objectType] == MappingMce::$Table_Name[$join]) {
+            $group[] = "table1." . MappingMce::$Data_Mapping[$objectType][$value][MappingMce::name];
+          }
+          else {
+            $group[] = MappingMce::$Table_Name[$objectType] . "." . MappingMce::$Data_Mapping[$objectType][$value][MappingMce::name];
+          }
+        }
+      }
+      $groupby_clause .= " GROUP BY " . implode(", ", $group);
+    }
+    return $groupby_clause;
+  }
 }
 ?>

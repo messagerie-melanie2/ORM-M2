@@ -551,6 +551,15 @@ class ICSToEvent {
               case ICS::CUTYPE_ROOM:
                 $_attendee->type = $Attendee::TYPE_ROOM;
                 break;
+              case ICS::CUTYPE_CAR:
+                $_attendee->type = $Attendee::TYPE_CAR;
+                break;
+              case ICS::CUTYPE_FLEX_OFFICE:
+                $_attendee->type = $Attendee::TYPE_FLEX_OFFICE;
+                break;
+              case ICS::CUTYPE_HARDWARE:
+                $_attendee->type = $Attendee::TYPE_HARDWARE;
+                break;
               case ICS::CUTYPE_UNKNOWN:
               default:
                 $_attendee->type = $Attendee::TYPE_UNKNOWN;

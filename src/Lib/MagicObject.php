@@ -370,6 +370,12 @@ abstract class MagicObject implements Serializable {
                       $value = doubleval($value);
                     }
                     break;
+                // JSON
+                case MappingMce::json:
+                  if (is_array($value)) { 
+                    $value = json_encode($value);
+                  }
+                  break;
                 // STRING LDAP
                 case MappingMce::stringLdap:
                     // Gestion d'un prefix ?
@@ -561,6 +567,10 @@ abstract class MagicObject implements Serializable {
 		      && isset(MappingMce::$Data_Mapping[$this->objectType][$name])
 		      && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type])) {
         switch (MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type]) {
+          // JSON
+          case MappingMce::json:
+            $value = json_decode($value, true);
+            break;
 		      // STRING LDAP
 		      case MappingMce::stringLdap:
 		        if (is_array($value)) {
@@ -737,6 +747,12 @@ abstract class MagicObject implements Serializable {
         && isset(MappingMce::$Data_Mapping[$this->objectType][$name])
         && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type])
         && MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type] == MappingMce::booleanLdap) {
+      $isset = true;
+    }
+    else if (isset(MappingMce::$Data_Mapping[$this->objectType])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$name])
+        && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type])
+        && MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type] == MappingMce::json) {
       $isset = true;
     }
     else {

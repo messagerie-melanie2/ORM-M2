@@ -37,6 +37,12 @@ class MappingMce {
 	public static $Table_Name = [];
 
 	/**
+	 * Jointures associées aux objets
+	 * @var array
+	 */
+	public static $Joins = [];
+
+	/**
 	 * Clés primaires des tables Melanie2
 	 * @var array
 	*/
@@ -78,6 +84,20 @@ class MappingMce {
 		  "Rss"					=> "dwp_rss",
 		  "NewsShare"			=> "dwp_news_share",
 		  "Notification"		=> "dwp_notifications",
+		  "Post"				=> "dwp_posts",
+		  "Post/Image"			=> "dwp_posts_images",
+		  "Post/Comment"		=> "dwp_posts_comments",
+		  "Post/Comment/Like"	=> "dwp_posts_comments_like",
+		  "Post/Reaction"		=> "dwp_posts_reactions",
+		  "Post/Tag"			=> "dwp_posts_tags",
+		  "Post/TagByPost" 		=> "dwp_posts_tagbypost",
+		  "Post/PostsByTag" 	=> "dwp_posts",
+		  "Post/TagsByPost" 	=> "dwp_posts_tags",
+	  ];
+	  // Init Inner Joins
+	  self::$Joins = [
+		  "Post/PostsByTag" 	=> [self::table_join => "dwp_posts_tagbypost", self::using => "post_id", self::prefix => "dwp_posts"],
+		  "Post/TagsByPost" 	=> [self::table_join => "dwp_posts_tagbypost", self::using => "tag_id", self::prefix => "dwp_posts_tags"],
 	  ];
 	  // Init Primary Keys
 	  self::$Primary_Keys = [
@@ -105,6 +125,15 @@ class MappingMce {
 		  "Rss"					=> ["uid"],
 		  "NewsShare"			=> ["user", "service"],
 		  "Notification"		=> ["uid", "owner"],
+		  "Post"				=> ["uid"],
+		  "Post/Image"			=> ["uid"],
+		  "Post/Comment"		=> ["uid"],
+		  "Post/Comment/Like"	=> ["comment", "type", "creator"],
+		  "Post/Reaction"		=> ["post", "type", "creator"],
+		  "Post/Tag"			=> ["workspace", "name"],
+		  "Post/TagByPost" 		=> ["post", "tag"],
+		  "Post/PostsByTag" 	=> ["uid"],
+		  "Post/TagsByPost" 	=> ["workspace", "name"],
 	  ];
 	  // Init Data Mapping
 	  self::$Data_Mapping = [
@@ -469,6 +498,82 @@ class MappingMce {
 				"isread"		=> [self::name => "notification_isread", self::type => self::integer],
 				"isdeleted"		=> [self::name => "notification_isdeleted", self::type => self::integer],
 		  ],
+		  // Gestion des posts dans le bureau numérique
+		  "Post"				=> [
+				"id" 			=> [self::name => "post_id", self::type => self::integer],
+				"uid" 			=> [self::name => "post_uid", self::size => 64],
+				"title" 		=> [self::name => "post_title"],
+				"summary" 		=> [self::name => "post_summary"],
+				"content" 		=> [self::name => "post_content"],
+				"created" 	    => [self::name => "created", self::type => self::date],
+				"modified" 	    => [self::name => "updated", self::type => self::date],
+				"workspace" 	=> [self::name => "workspace_uid", self::size => 40],
+				"creator" 		=> [self::name => "user_uid", self::size => 64],
+				"settings" 		=> [self::name => "post_settings", self::type => self::json, self::defaut => []],
+				"history" 		=> [self::name => "post_history", self::type => self::json, self::defaut => []],
+		  ],
+		  // Gestion des posts dans le bureau numérique
+		  "Post/PostsByTag"				=> [
+			"id" 			=> [self::name => "post_id", self::type => self::integer],
+			"tag" 			=> [self::name => "tag_id", self::type => self::integer],
+	      ],
+		  // Gestion des posts dans le bureau numérique
+		  "Post/TagsByPost"				=> [
+			"id" 			=> [self::name => "tag_id", self::type => self::integer],
+			"post" 			=> [self::name => "post_id", self::type => self::integer],
+	      ],
+		  // Gestion des images dans les posts dans le bureau numérique
+		  "Post/Image"			=> [
+				"id" 			=> [self::name => "image_id", self::type => self::integer],
+				"post" 			=> [self::name => "post_id", self::type => self::integer],
+				"uid" 			=> [self::name => "image_uid", self::size => 64],
+				"data" 			=> [self::name => "image_data"],
+		  ],
+		  // Gestion des commentaires dans les posts dans le bureau numérique
+		  "Post/Comment"		=> [
+				"id" 			=> [self::name => "comment_id", self::type => self::integer],
+				"post" 			=> [self::name => "post_id", self::type => self::integer],
+				"uid" 			=> [self::name => "comment_uid", self::size => 64],
+				"content" 		=> [self::name => "comment_content"],
+				"creator" 		=> [self::name => "user_uid", self::size => 64],
+				"created" 	    => [self::name => "created", self::type => self::date],
+				"modified" 	    => [self::name => "updated", self::type => self::date],
+				"parent"		=> [self::name => "parent_comment_id", self::type => self::integer],
+		  ],
+		  // Gestion des likes dans les commentaires de posts dans le bureau numérique
+		  "Post/Comment/Like"	=> [
+				"id" 			=> [self::name => "like_id", self::type => self::integer],
+				"type" 			=> [self::name => "like_type"],
+				"creator" 		=> [self::name => "user_uid", self::size => 64],
+				"modified" 	    => [self::name => "updated", self::type => self::date],
+				"comment" 		=> [self::name => "comment_id", self::type => self::integer],
+		  ],
+		  // Gestion des réactions dans les posts dans le bureau numérique
+		  "Post/Reaction"		=> [
+				"id" 			=> [self::name => "reaction_id", self::type => self::integer],
+				"type" 			=> [self::name => "reaction_type"],
+				"creator" 		=> [self::name => "user_uid", self::size => 64],
+				"modified" 	    => [self::name => "updated", self::type => self::date],
+				"post" 			=> [self::name => "post_id", self::type => self::integer],
+		  ],
+		  // Gestion du lien entre un tag et un post
+		  "Post/TagByPost" 		=> [
+				"post" 			=> [self::name => "post_id", self::type => self::integer],
+				"tag" 			=> [self::name => "tag_id", self::type => self::integer],
+		  ],
+		  // Gestion des tags dans les posts dans le bureau numérique
+		  "Post/Tag"			=> [
+				"id" 			=> [self::name => "tag_id", self::type => self::integer],
+				"name" 			=> [self::name => "tag_name"],
+				"workspace" 	=> [self::name => "workspace_uid", self::size => 40],
+		  ],
+		  // Gestion des tags dans les posts dans le bureau numérique
+		  "Post/TagsByPost"			=> [
+				"id" 			=> [self::name => "tag_id", self::type => self::integer, self::prefix => "dwp_posts_tags"],
+				"name" 			=> [self::name => "tag_name", self::prefix => "dwp_posts_tags"],
+				"workspace" 	=> [self::name => "workspace_uid", self::size => 40, self::prefix => "dwp_posts_tags"],
+				"post" 			=> [self::name => "post_id", self::type => self::integer, self::prefix => "dwp_posts_tagbypost"],
+	  	  ],
 	  ];
 	}
 
@@ -490,10 +595,14 @@ class MappingMce {
 	}
 
 	// Mapping constants
+	const table_join		= "table_join";
+	const using				= "using";
 	const name 				= "name";
+	const prefix 			= "prefix";
 	const type 				= "type";
 	const size 				= "size";
 	const format 			= "format";
+	const json	 			= "json";
 	const string 			= "string";
 	const integer 			= "integer";
 	const double 			= "double";

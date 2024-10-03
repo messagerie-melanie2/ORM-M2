@@ -130,7 +130,7 @@ class MappingMce {
 		  "Post/Comment"		=> ["uid"],
 		  "Post/Comment/Like"	=> ["comment", "type", "creator"],
 		  "Post/Reaction"		=> ["post", "type", "creator"],
-		  "Post/Tag"			=> ["workspace", "name"],
+		  "Post/Tag"			=> ["id"],
 		  "Post/TagByPost" 		=> ["post", "tag"],
 		  "Post/PostsByTag" 	=> ["uid"],
 		  "Post/TagsByPost" 	=> ["workspace", "name"],

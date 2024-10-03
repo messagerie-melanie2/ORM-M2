@@ -1,3 +1,11 @@
+ORM M2 - 0.6.8
+------
+- 0008507: [ICS] DTSTART sans DTEND
+- 0008509: [Mel] Pouvoir determiner si un groupe est de l'agriculture
+- 0008397: Backend pour les communautés dans le Bnum
+- 0008511: Compter les réactions de commentaire par type
+- 0008535: Trier les commentaires enfants
+- 
 ORM M2 - 0.6.7.8
 ------
 - 0008386: [MI] Attributs par défaut

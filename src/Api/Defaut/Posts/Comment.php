@@ -47,6 +47,14 @@ use LibMelanie\Objects\ObjectMelanie;
  * @method bool delete() Supprime le commentaire de la base de données
  */
 class Comment extends MceObject {
+
+  /**
+   * Nombre de réactions associées au Post
+   * 
+   * @var array
+   */
+  protected $_countLikes;
+
   /**
    * Constructeur de l'objet
    * 
@@ -68,21 +76,59 @@ class Comment extends MceObject {
   /**
    * Récupère la liste des likes associées au commentaire du post
    * 
+   * @param string $type Type de réaction
+   * 
    * @return Comments\Like[] Liste des réactions
    */
-  public function listLikes() {
+  public function listLikes($type = null) {
     $like = new Comments\Like($this);
-    return $like->getList();
+
+    if (isset($type)) {
+      $like->type = $type;        
+    }
+
+    $likes = $like->getList();
+    $this->objectmelanie->likes = count($likes);
+
+    // Gérer les countLikes
+    foreach ($likes as $like) {
+      if (!isset($this->_countLikes)) {
+        $this->_countLikes = [];
+      }
+
+      if (!isset($this->_countLikes[$like->type])) {
+        $this->_countLikes[$like->type] = 0;
+      }
+
+      $this->_countLikes[$like->type]++;
+    }
+
+    return $likes;
   }
 
   /**
    * Compte le nombre de réactions associées au post
    * 
+   * @param string $type Type de réaction
+   * 
    * @return integer Nombre de réactions
    */
-  public function countLikes() {
-    if (!isset($this->objectmelanie->likes)) {
+  public function countLikes($type = null) {
+    if (!isset($this->objectmelanie->likes) || isset($type)) {
       $like = new Comments\Like($this);
+
+      if (isset($type)) {
+        if (!isset($this->_countLikes)) {
+          $this->_countLikes = [];
+        }
+
+        if (isset($this->_countLikes[$type])) {
+          return $this->_countLikes[$type];
+        }
+
+        $like->type = $type;
+      }
+
       $res = $like->getList('count');
       $this->objectmelanie->likes = isset($res[0]) ? $res[0]->count : 0;
     }
@@ -94,10 +140,61 @@ class Comment extends MceObject {
    * 
    * @return Comment[] Liste des commentaires
    */
-  public function listChildren() {
-    $comment = new Comment($this);
+  public function listChildren($search = null, $orderby = 'created', $asc = true) {
+    $comment = new Comment();
+    $filter = '';
+    $fields = [];
+    $operators = [];
+    $case_unsensitive_fields = [];
+
+    // Gestion de la recherche
+    if (isset($search)) {
+      // Creator ?
+      if (strpos($search, 'creator:') !== false) {
+        preg_match('/creator:(.*)/', $search, $matches);
+        if (!empty($matches[1])) {
+          $comment->creator = $matches[1];
+          $operators = [
+            'creator' => \LibMelanie\Config\MappingMce::eq
+          ];
+        }
+        $search = preg_replace('/creator:(.*)/', '', $search);
+      }
+
+      $comment->content = '%'.$search.'%';
+      $operators = [
+        'content' => \LibMelanie\Config\MappingMce::like
+      ];
+      $case_unsensitive_fields = ['content'];
+    }
+
+    // N'afficher que les commentaires parents ?
     $comment->parent = $this->id;
-    return $comment->getList();
+  
+    switch ($orderby) {
+      case 'children':
+        $comments = $comment->getList($fields, $filter, $operators, $orderby, $asc, null, null, $case_unsensitive_fields, 'Post/Comment', 'LEFT', ['id', 'parent'], 'Post/Comment', ['id'], 'children', [
+          // Subrequest likes
+          ['likes', 'count', 'Post/Comment/Like', 'comment']
+        ]);
+        break;
+      case 'likes':
+        $comments = $comment->getList($fields, $filter, $operators, $orderby, $asc, null, null, $case_unsensitive_fields, 'Post/Comment/Like', 'LEFT', 'comment', 'Post/Comment', ['id'], 'likes', [
+          // Subrequest children
+          ['children', 'count', 'Post/Comment', ['parent', 'id']]
+        ]);
+        break;
+      default:
+        $comments = $comment->getList($fields, $filter, $operators, $orderby, $asc, null, null, $case_unsensitive_fields, null, null, null, null, null, null, [
+          // Subrequest likes
+          ['likes', 'count', 'Post/Comment/Like', 'comment'],
+          // Subrequest children
+          ['children', 'count', 'Post/Comment', ['parent', 'id']]
+        ]);
+        break;
+    }
+
+    return $comments;
   }
 
   /**
@@ -113,5 +210,23 @@ class Comment extends MceObject {
       $this->objectmelanie->children = isset($res[0]) ? $res[0]->count : 0;
     }
     return $this->objectmelanie->children;
+  }
+
+  /**
+   * children en lecture seule
+   * 
+   * @ignore
+   */
+  public function setMapChildren($children) {
+    return;
+  }
+
+  /**
+   * likes en lecture seule
+   * 
+   * @ignore
+   */
+  public function setMapLikes($likes) {
+    return;
   }
 }

@@ -93,6 +93,7 @@ class Group extends Defaut\Group {
         "restrictions"            => [MappingMce::name => 'mineqmelrestrictions', MappingMce::type => MappingMce::arrayLdap], // Restrictions de remise pour la liste
         "remise"                  => 'mineqmelremise',                // Type de remise pour la liste
         "liens_import"            => 'mineqliensimport',              // Lien d'import autres annuaires
+        "is_agriculture"          => 'mineqliensimport',              // Calcul si le groupe appartient à l'agriculture
         "unique_identifier"       => 'uniqueidentifier',              // Identifier unique pour le groupe
         "mdrive"                  => [MappingMce::name => 'info', MappingMce::prefixLdap => 'MDRIVE: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'oui', MappingMce::falseLdapValue => 'non', MappingMce::emptyLdapValue => 'non'],
         "gestion"                 => [MappingMce::name => 'info', MappingMce::prefixLdap => 'GESTION: ', MappingMce::type => MappingMce::stringLdap],
@@ -148,6 +149,26 @@ class Group extends Defaut\Group {
      * @return boolean false non supporté
      */
     protected function setMapIs_dynamic($is_dynamic) {
+        return false;
+    }
+
+    /**
+     * Mapping is_agriculture field
+     * 
+     * @return boolean $is_agriculture Est-ce que l'utilisateur appartient au MAA (calcul sur le liens import)
+     */
+    protected function getMapIs_agriculture() {
+        return strpos($this->liens_import, 'AGRI.Lien: ') === 0;
+    }
+
+    /**
+     * Mapping is_agriculture field
+     * 
+     * @param boolean $is_agriculture Est-ce que l'utilisateur appartient au MAA (calcul sur le liens import)
+     * 
+     * @return boolean false non supporté
+     */
+    protected function setMapIs_agriculture($is_agriculture) {
         return false;
     }
 }

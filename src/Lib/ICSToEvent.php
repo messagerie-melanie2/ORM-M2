@@ -151,6 +151,19 @@ class ICSToEvent {
         $startDate = $vevent->DTSTART->getDateTime();
         $endDate = $vevent->DTEND->getDateTime();
       }
+      else if (isset($vevent->DTSTART) 
+          && !isset($vevent->DTEND)) {
+        $startDate = $vevent->DTSTART->getDateTime();
+        $endDate = clone $startDate;
+        //  For cases where a "VEVENT" calendar component specifies a "DTSTART" property with a DATE value type 
+        // but no "DTEND" nor "DURATION" property, the event's duration is taken to be one day. 
+        // For cases where a "VEVENT" calendar component specifies a "DTSTART" property with a DATE-TIME value type 
+        // but no "DTEND" property, the event ends on the same calendar date and time of day specified by the "DTSTART" property.
+        if (isset($vevent->DTSTART->parameters[ICS::VALUE]) 
+            && $vevent->DTSTART->parameters[ICS::VALUE] == ICS::VALUE_DATE) {
+          $endDate->modify('+1 day');
+        }
+      }
       else if (isset($vevent->DTSTART) && isset($vevent->DURATION)) {
         $startDate = $vevent->DTSTART->getDateTime();
         $endDate = clone $startDate;

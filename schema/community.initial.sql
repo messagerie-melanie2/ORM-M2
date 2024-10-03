@@ -21,7 +21,7 @@ CREATE TABLE dwp_posts (
     "created" timestamp without time zone DEFAULT now() not null,
     "updated" timestamp without time zone DEFAULT now() not null,
     "user_uid" varchar(64) not null,
-    "post_settings" text not null,
+    "post_settings" text,
     "workspace_uid" varchar(40) not null,
     "post_history" text
 );

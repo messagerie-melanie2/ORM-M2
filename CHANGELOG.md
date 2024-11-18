@@ -1,3 +1,9 @@
+ORM M2 - 0.6.9
+------
+- 0008549: [ICS] Problème avec DURATION sans DTEND
+- 0008601: Propager la confidentialité via le en attente
+- 0008585: Problème d'utilisation des bases J-1 et J-2
+- 0008571: Rendre le mapping non obligatoire pour un objet ldap
 ORM M2 - 0.6.8
 ------
 - 0008507: [ICS] DTSTART sans DTEND
@@ -5,9 +11,6 @@ ORM M2 - 0.6.8
 - 0008397: Backend pour les communautés dans le Bnum
 - 0008511: Compter les réactions de commentaire par type
 - 0008535: Trier les commentaires enfants
-- 0008601: Propager la confidentialité via le en attente
-- 0008585: Problème d'utilisation des bases J-1 et J-2
-- 0008571: Rendre le mapping non obligatoire pour un objet ldap
 
 ORM M2 - 0.6.7.8
 ------

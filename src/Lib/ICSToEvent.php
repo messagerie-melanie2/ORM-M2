@@ -147,9 +147,17 @@ class ICSToEvent {
         }        
       }
       // DTSTART & DTEND
-      if (isset($vevent->DTSTART) && isset($vevent->DTEND)) {
+      if (isset($vevent->DTSTART) 
+          && isset($vevent->DTEND)) {
         $startDate = $vevent->DTSTART->getDateTime();
         $endDate = $vevent->DTEND->getDateTime();
+      }
+      else if (isset($vevent->DTSTART) 
+          && isset($vevent->DURATION)) {
+        $startDate = $vevent->DTSTART->getDateTime();
+        $endDate = clone $startDate;
+        $duration = new \DateInterval(strval($vevent->DURATION));
+        $endDate->add($duration);
       }
       else if (isset($vevent->DTSTART) 
           && !isset($vevent->DTEND)) {
@@ -164,12 +172,7 @@ class ICSToEvent {
           $endDate->modify('+1 day');
         }
       }
-      else if (isset($vevent->DTSTART) && isset($vevent->DURATION)) {
-        $startDate = $vevent->DTSTART->getDateTime();
-        $endDate = clone $startDate;
-        $duration = new \DateInterval(strval($vevent->DURATION));
-        $endDate->add($duration);
-      }
+
       if (isset($startDate)) {
         $object->all_day = isset($vevent->DTSTART->parameters[ICS::VALUE]) && $vevent->DTSTART->parameters[ICS::VALUE] == ICS::VALUE_DATE;
         $object->dtstart = $startDate;

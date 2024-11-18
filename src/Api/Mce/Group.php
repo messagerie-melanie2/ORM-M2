@@ -62,8 +62,12 @@ class Group extends Defaut\Group {
         "lastname"                => 'sn',                              // Last name de la liste
         "email"                   => 'mail',                          // Adresse e-mail principale de la liste en reception
         "email_list"              => [MappingMce::name => 'mailalternateaddress', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
+        "email_owner"             => 'mcemaillistowner',                // Adresse e-mail du propriétaire de la liste
+        "email_owner_return_path" => 'mcemaillistownerreturnpath',      // Adresse e-mail du propriétaire de la liste
+        "delegation"              => 'mceportaildelegation',            // Delegation
         "service"                 => 'departmentnumber',                // Department Number
         "type"                    => 'mcetypeentree',                   // Type d'entrée (boite individuelle, partagée, ressource, ...)
+        "server_routage"          => [MappingMce::name => 'mailhost', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
         "members"                 => [MappingMce::name => 'memberuid', MappingMce::type => MappingMce::arrayLdap], // Liste des membres du groupes
         "members_email"           => [MappingMce::name => 'mcemelmembres', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses mails de la liste
         "owners"                  => [MappingMce::name => 'owner', MappingMce::type => MappingMce::arrayLdap], // Liste des propriétaires du groupes

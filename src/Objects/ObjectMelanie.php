@@ -248,9 +248,15 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 					$mapKey = $key;
 				}
 
-				$params[$mapKey] = $this->$key;
+				if ($this->haschanged[$mapKey]) {
+					$params["where_$mapKey"] = $this->oldData[$mapKey];
+				}
+				else {
+					$params["where_$mapKey"] = $this->$key;
+				}
+				
 				if ($whereClause != "") $whereClause .= " AND ";
-				$whereClause .= "$mapKey = :$mapKey";
+				$whereClause .= "$mapKey = :where_$mapKey";
 			}
 			
 			// Liste les modification à faire
@@ -442,72 +448,72 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		// Mapping pour les operateurs
 		$opmapping = [];
 		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
-    if (is_array($operators)) {
-      foreach ($operators as $key => $operator) {
-        // Récupèration des données de mapping
-        if (isset(MappingMce::$Data_Mapping[$this->objectType])
-            && isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
-          $key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
-        }
-        $opmapping[$key] = $operator;
-      }
-    }
+		if (is_array($operators)) {
+			foreach ($operators as $key => $operator) {
+				// Récupèration des données de mapping
+				if (isset(MappingMce::$Data_Mapping[$this->objectType])
+						&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+					$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
+				}
+				$opmapping[$key] = $operator;
+			}
+		}
 		
 		// Mapping pour les champs
 		$fieldsmapping = [];
 		if (is_array($fields)) {
 			// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
 			foreach ($fields as $key) {
-        $prefix = '';
+        		$prefix = '';
 				// Récupèration des données de mapping
 				if (isset(MappingMce::$Data_Mapping[$this->objectType])
 				    	&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
-					$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
-
 					if (isset(MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::prefix])) {
 						$prefix = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::prefix] . '.';
 					}
+
+					$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
 				}
 				$fieldsmapping[] = $prefix.$key;
 			}
 
-      // Ajout du count
-      if (isset($groupby_count) && count($fieldsmapping) > 0) {
-        $count = "COUNT(*)";
-        if (isset($join) && !is_array($using) && isset(MappingMce::$Table_Name[$join]) && isset(MappingMce::$Data_Mapping[$join][$using])) {
-          $count = "COUNT(" . MappingMce::$Table_Name[$join]. "." . MappingMce::$Data_Mapping[$join][$using][MappingMce::name] . ")";
-        }
-        $fieldsmapping[] = "$count as \"$groupby_count\"";
-      }
+			// Ajout du count
+			if (isset($groupby_count) && count($fieldsmapping) > 0) {
+				$count = "COUNT(*)";
+				if (isset($join) && !is_array($using) && isset(MappingMce::$Table_Name[$join]) && isset(MappingMce::$Data_Mapping[$join][$using])) {
+					$count = "COUNT(" . MappingMce::$Table_Name[$join]. "." . MappingMce::$Data_Mapping[$join][$using][MappingMce::name] . ")";
+				}
+				$fieldsmapping[] = "$count as \"$groupby_count\"";
+			}
 
-      // Ajout des sous requêtes
-      if (!empty($subqueries) && count($fieldsmapping) > 0) {
-        foreach ($subqueries as $subquery) {
-          $fieldsmapping[] = "(" . $this->_getSubquery($subquery[1], $subquery[2], $subquery[3], $join) . ") as \"$subquery[0]\"";
-        }
-      }
+			// Ajout des sous requêtes
+			if (!empty($subqueries) && count($fieldsmapping) > 0) {
+				foreach ($subqueries as $subquery) {
+					$fieldsmapping[] = "(" . $this->_getSubquery($subquery[1], $subquery[2], $subquery[3], $join) . ") as \"$subquery[0]\"";
+				}
+			}
 		}
 
-    // Mapping pour les champs non case sensitive
-    foreach ($case_unsensitive_fields as $i => $key) {
-      // Récupèration des données de mapping
-      if (isset(MappingMce::$Data_Mapping[$this->objectType])
-          && isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
-        $key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
-      }
-      $case_unsensitive_fields[$i] = $key;
-    }
+		// Mapping pour les champs non case sensitive
+		foreach ($case_unsensitive_fields as $i => $key) {
+			// Récupèration des données de mapping
+			if (isset(MappingMce::$Data_Mapping[$this->objectType])
+					&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+				$key = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
+			}
+			$case_unsensitive_fields[$i] = $key;
+		}
 
 		// Paramètres de la requête
 		$whereClause = "";
 		$params = [];
 
-    // Prefix de champ ?
-    $keyprefix = '';
+		// Prefix de champ ?
+		$keyprefix = '';
 
-    if (isset($join) && isset(MappingMce::$Table_Name[$join]) && MappingMce::$Table_Name[$join] == $this->tableName) {
-      $keyprefix = "table1.";
-    }
+		if (isset($join) && isset(MappingMce::$Table_Name[$join]) && MappingMce::$Table_Name[$join] == $this->tableName) {
+			$keyprefix = "table1.";
+		}
 
 		// Est-ce qu'un filtre est activé
 		if ($filter != "") {
@@ -520,23 +526,23 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 				foreach ($matches[1] as $key) {
 					// Récupèration des données de mapping
 					if (isset(MappingMce::$Data_Mapping[$this->objectType])
-					    && isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
+					    	&& isset(MappingMce::$Data_Mapping[$this->objectType][$key])) {
 						$mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::name];
 
-            if (isset(MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::prefix])) {
-              $mapKey = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::prefix] . ".$mapKey";
-            }
+						if (isset(MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::prefix])) {
+							$keyprefix = MappingMce::$Data_Mapping[$this->objectType][$key][MappingMce::prefix] . ".";
+						}
 					} else {
 						$mapKey = $key;
 					}
 
-          // Est-ce que le champ courant est non case sensitive
+          			// Est-ce que le champ courant est non case sensitive
 					$is_case_unsensitive = in_array($mapKey, $case_unsensitive_fields);
 
 					if (isset($opmapping[$mapKey])) {
 						if (is_array($this->$mapKey)) {
 							if ($opmapping[$mapKey] == MappingMce::in 
-							    || $opmapping[$mapKey] == MappingMce::notin) {
+							    	|| $opmapping[$mapKey] == MappingMce::notin) {
 
 								// Filtre personnalisé, valeur multiple, pas de like, on utilise IN
 								if ($is_case_unsensitive)
@@ -627,8 +633,8 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 			// N'ajoute que les paramètres qui ont changé
 			foreach ($this->haschanged as $key => $value) {
 				if ($value) {
-          // Est-ce que le champ courant est non case sensitive
-          $is_case_unsensitive = in_array($key, $case_unsensitive_fields);
+					// Est-ce que le champ courant est non case sensitive
+					$is_case_unsensitive = in_array($key, $case_unsensitive_fields);
 
 					if (isset($opmapping[$key])) {
 						if (is_array($this->$key)) {
@@ -826,19 +832,19 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
     }
 
     // Mapping pour les champs
-		if (is_array($fields)) {
-      $fieldsmapping = [];
-			// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
-			foreach ($fields as $key) {
-				// Récupèration des données de mapping
-				if (isset(MappingMce::$Data_Mapping[$object])
-				    	&& isset(MappingMce::$Data_Mapping[$object][$key])) {
-					$key = MappingMce::$Data_Mapping[$object][$key][MappingMce::name];
-				}
-				$fieldsmapping[] = $prefix.$key;
+	if (is_array($fields)) {
+      	$fieldsmapping = [];
+		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
+		foreach ($fields as $key) {
+			// Récupèration des données de mapping
+			if (isset(MappingMce::$Data_Mapping[$object])
+					&& isset(MappingMce::$Data_Mapping[$object][$key])) {
+				$key = MappingMce::$Data_Mapping[$object][$key][MappingMce::name];
 			}
-      $fields = implode(', ', $fieldsmapping);
+			$fieldsmapping[] = $prefix.$key;
 		}
+      	$fields = implode(', ', $fieldsmapping);
+	}
     else if ($fields == 'count') {
       $fields = "count($prefix*)";
     }
@@ -852,6 +858,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 
     // Clause where
     // Récupèration des données de mapping
+	$filter3 = '';
     if (is_array($filter)) {
       if (isset(MappingMce::$Data_Mapping[$object])
           && isset(MappingMce::$Data_Mapping[$object][$filter[0]])) {
@@ -865,6 +872,23 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
       
       $filter1 = $filter[0];
       $filter2 = $filter[1];
+
+	  // Pouvoir filtrer sur des valeurs
+	  if (isset($filter[2]) && is_array($filter[2])) {
+		foreach ($filter[2] as $key => $value) {
+			if (isset(MappingMce::$Data_Mapping[$object])
+					&& isset(MappingMce::$Data_Mapping[$object][$key])) {
+				$key = MappingMce::$Data_Mapping[$object][$key][MappingMce::name];
+			}
+
+			if (is_int($value)) {
+				$filter3 .= " AND $key = $value";
+			}
+			else {
+				$filter3 .= " AND $key = '$value'";
+			}
+		}
+	  }
     }
     else {
       if (isset(MappingMce::$Data_Mapping[$object])
@@ -877,10 +901,10 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
     }
 
     if (isset($join) && isset(MappingMce::$Table_Name[$join]) && MappingMce::$Table_Name[$join] == $this->tableName) {
-      $query = str_replace("{where_clause}", " WHERE $filter1 = table1.$filter2", $query);
+      $query = str_replace("{where_clause}", " WHERE $filter1 = table1.$filter2$filter3", $query);
     }
     else {
-      $query = str_replace("{where_clause}", " WHERE $filter1 = " . MappingMce::$Table_Name[$this->objectType] . ".$filter2", $query);
+      $query = str_replace("{where_clause}", " WHERE $filter1 = " . MappingMce::$Table_Name[$this->objectType] . ".$filter2$filter3", $query);
     }
 
     return $query;

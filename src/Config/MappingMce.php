@@ -101,7 +101,6 @@ class MappingMce {
 	  ];
 	  // Init Primary Keys
 	  self::$Primary_Keys = [
-	      "UserMelanie" 		=> ["uid", "email"],
 	      "EventMelanie" 		=> ["uid", "calendar"],
 	      "HistoryMelanie" 		=> ["uid", "action"],
 	      "TaskMelanie" 		=> ["uid", "taskslist"],
@@ -130,52 +129,13 @@ class MappingMce {
 		  "Post/Comment"		=> ["uid"],
 		  "Post/Comment/Like"	=> ["comment", "type", "creator"],
 		  "Post/Reaction"		=> ["post", "type", "creator"],
-		  "Post/Tag"			=> ["id"],
+		  "Post/Tag"			=> ["workspace", "name"],
 		  "Post/TagByPost" 		=> ["post", "tag"],
 		  "Post/PostsByTag" 	=> ["uid"],
 		  "Post/TagsByPost" 	=> ["workspace", "name"],
 	  ];
 	  // Init Data Mapping
 	  self::$Data_Mapping = [
-	      // Gestion de l'utilisateur : objet UserMelanie
-	      "UserMelanie" => [
-	          "dn"                     => [self::name => "dn", 			self::type => self::stringLdap],
-	          "uid"                    => [self::name => "uid", 		self::type => self::stringLdap],
-	          "fullname"               => [self::name => "cn", 			self::type => self::stringLdap],
-	          "name"                   => [self::name => "displayname", self::type => self::stringLdap],
-	          "email"                  => [self::name => "mail", 		self::type => self::stringLdap],
-	          "email_list"             => [self::name => "mail", 		self::type => self::arrayLdap],
-	          "email_send"             => [self::name => "mail", 		self::type => self::stringLdap],
-	          "email_send_list"        => [self::name => "mail", 		self::type => self::arrayLdap],
-		  ],
-		  // Gestion des groupes : objet GroupMelanie
-	      "GroupMelanie" => [
-			"dn"                     => [self::name => "dn", self::type => self::stringLdap],
-			"fullname"               => [self::name => "cn", self::type => self::stringLdap],
-			"name"                   => [self::name => "displayname", self::type => self::stringLdap],
-			"email"                  => [self::name => "mail", 		self::type => self::stringLdap],
-			"email_list"             => [self::name => "mail", 		self::type => self::arrayLdap],
-			"email_send"             => [self::name => "mail", 		self::type => self::stringLdap],
-			"email_send_list"        => [self::name => "mail", 		self::type => self::arrayLdap],
-		  ],
-		  // Gestion de la ressource : objet ResourceMelanie
-	      "ResourceMelanie" => [
-			"dn"                     => [self::name => "dn", 			self::type => self::stringLdap],
-			"uid"                    => [self::name => "uid", 			self::type => self::stringLdap],
-			"fullname"               => [self::name => "cn", 			self::type => self::stringLdap],
-			"name"                   => [self::name => "displayname", 	self::type => self::stringLdap],
-			"email"                  => [self::name => "mail", 			self::type => self::stringLdap],
-			"email_list"             => [self::name => "mail", 			self::type => self::arrayLdap],
-		  ],
-		  // Gestion de la localite : objet LocalityMelanie
-	      "LocalityMelanie" => [
-			"dn"                     => [self::name => "dn", 			self::type => self::stringLdap],
-			"uid"                    => [self::name => "uid", 			self::type => self::stringLdap],
-			"fullname"               => [self::name => "cn", 			self::type => self::stringLdap],
-			"name"                   => [self::name => "displayname", 	self::type => self::stringLdap],
-			"email"                  => [self::name => "mail", 			self::type => self::stringLdap],
-			"email_list"             => [self::name => "mail", 			self::type => self::arrayLdap],
-		  ],
 	      // Gestion des préférences de l'utilisateur : objet UserPrefs
 	      "UserPrefs" => [
 	          "user" 	=> [self::name => "pref_uid", self::type => self::string, self::size => 255],
@@ -505,10 +465,10 @@ class MappingMce {
 				"title" 		=> [self::name => "post_title"],
 				"summary" 		=> [self::name => "post_summary"],
 				"content" 		=> [self::name => "post_content"],
-				"created" 	    => [self::name => "created", self::type => self::date],
-				"modified" 	    => [self::name => "updated", self::type => self::date],
+				"created" 	    => [self::name => "created", self::type => self::date, self::prefix => "dwp_posts"],
+				"modified" 	    => [self::name => "updated", self::type => self::date, self::prefix => "dwp_posts"],
 				"workspace" 	=> [self::name => "workspace_uid", self::size => 40],
-				"creator" 		=> [self::name => "user_uid", self::size => 64],
+				"creator" 		=> [self::name => "user_uid", self::size => 64, self::prefix => "dwp_posts"],
 				"settings" 		=> [self::name => "post_settings", self::type => self::json, self::defaut => []],
 				"history" 		=> [self::name => "post_history", self::type => self::json, self::defaut => []],
 		  ],
@@ -587,11 +547,12 @@ class MappingMce {
 	 * @return boolean true si les valeurs sont OK, false sinon
 	 */
 	public static function UpdateDataMapping($object, $dataMapping) {
-		if (isset(self::$Data_Mapping[$object])) {
-			self::$Data_Mapping[$object] = array_merge(self::$Data_Mapping[$object], $dataMapping);
-			return true;
+		if (!isset(self::$Data_Mapping[$object])) {
+			self::$Data_Mapping[$object] = [];
 		}
-		return false;
+
+		self::$Data_Mapping[$object] = array_merge(self::$Data_Mapping[$object], $dataMapping);
+		return true;
 	}
 
 	// Mapping constants

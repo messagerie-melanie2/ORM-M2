@@ -50,6 +50,14 @@ use LibMelanie\Objects\ObjectMelanie;
  * @method bool delete() Supprime le post de la base de données
  */
 class Post extends MceObject {
+
+  /**
+   * Nombre de réactions associées au Post
+   * 
+   * @var array
+   */
+  protected $_countReactions;
+
   /**
    * Constructeur de l'objet
    * 
@@ -162,11 +170,42 @@ class Post extends MceObject {
   /**
    * Récupère la liste des réactions associées au post
    * 
+   * @param string $type Type de réaction
+   * 
    * @return Reaction[] Liste des réactions
    */
-  public function listReactions() {
+  public function listReactions($type = null) {
     $reaction = new Reaction($this);
-    return $reaction->getList();
+
+    if (isset($type)) {
+      $reaction->type = $type;        
+    }
+
+    $reactions = $reaction->getList();
+    $this->objectmelanie->reactions = count($reactions);
+    $this->objectmelanie->setFieldHasChanged('reactions', false);
+
+    // Gérer les countReactions
+    foreach ($reactions as $reaction) {
+      if (!isset($this->_countReactions)) {
+        $this->_countReactions = [];
+      }
+
+      if (!isset($this->_countReactions[$reaction->type])) {
+        $this->_countReactions[$reaction->type] = 0;
+      }
+
+      $this->_countReactions[$reaction->type]++;
+    }
+
+    // Compter les likes et les dislikes
+    $this->objectmelanie->likes = $this->_countReactions['like'] ?? 0;
+    $this->objectmelanie->setFieldHasChanged('likes', false);
+    $this->objectmelanie->dislikes = $this->_countReactions['dislike'] ?? 0;
+    $this->objectmelanie->setFieldHasChanged('dislikes', false);
+
+    return $reactions;
+
   }
 
   /**
@@ -176,20 +215,57 @@ class Post extends MceObject {
    */
   public function listImages() {
     $image = new Image($this);
-    return $image->getList();
+    return $image->getList(['id', 'uid', 'post']);
+  }
+
+  /**
+   * Récupère la première image associée au post
+   * 
+   * @return Image Première image
+   */
+  public function firstImage() {
+    $image = new Image($this);
+    $images = $image->getList(['id', 'uid', 'post'], '', [], 'id', false, 1);
+    return count($images) ? array_pop($images) : null;
   }
 
   /**
    * Compte le nombre de réactions associées au post
    * 
+   * @param string $type Type de réaction
+   * 
    * @return integer Nombre de réactions
    */
-  public function countReactions() {
-    if (!isset($this->objectmelanie->reactions)) {
+  public function countReactions($type = null) {
+    if (!isset($this->objectmelanie->reactions) || isset($type)) {
       $reaction = new Reaction($this);
+
+      if (isset($type)) {
+        if (!isset($this->_countReactions)) {
+          $this->_countReactions = [];
+        }
+
+        if (isset($this->_countReactions[$type])) {
+          return $this->_countReactions[$type];
+        }
+
+        $reaction->type = $type;
+      }
+      
       $res = $reaction->getList('count');
-      $this->objectmelanie->reactions = isset($res[0]) ? $res[0]->count : 0;
-      $this->objectmelanie->setFieldHasChanged('reactions', false);
+
+      if (!isset($type)) {
+        $this->objectmelanie->reactions = isset($res[0]) ? $res[0]->count : 0;
+        $this->objectmelanie->setFieldHasChanged('reactions', false);
+      }
+      else if ($type == 'like') {
+        $this->objectmelanie->likes = $this->objectmelanie->reactions;
+        $this->objectmelanie->setFieldHasChanged('likes', false);
+      }
+      else if ($type == 'dislike') {
+        $this->objectmelanie->dislikes = $this->objectmelanie->reactions;
+        $this->objectmelanie->setFieldHasChanged('dislikes', false);
+      }
     }
     return $this->objectmelanie->reactions;
   }
@@ -289,36 +365,81 @@ class Post extends MceObject {
    * @param bool $asc Tri ascendant ou descendant
    * @param integer $limit Limite de résultats
    * @param integer $offset Offset de résultats
+   * @param array $uids Liste des uids
    * 
    * @return Post[] Liste des posts
    */
-  public function listPosts($search = null, $tags = [], $orderby = 'created', $asc = true, $limit = null, $offset = null) {
+  public function listPosts($search = null, $tags = [], $orderby = 'created', $asc = true, $limit = null, $offset = null, $uids = null) {
     $post = new static();
     $post->workspace = $this->workspace;
-    $fields = [];
+    $fields = ['id', 'uid', 'title', 'summary', 'created', 'modified', 'creator', 'workspace'];
     $filter = "";
     $operators = [];
     $case_unsensitive_fields = [];
 
     // Gestion de la recherche
     if (isset($search)) {
+      $search = strtolower($search);
+
+      // HashTags ?
+      if (strpos($search, '#') !== false) {
+        preg_match_all('/#(\w+)/', $search, $matches);
+        if (!empty($matches[1])) {
+          $_posts = (new Tag())->listPostsByTagsName($matches[1], $this->workspace, ['post']);
+
+          $ids = [];
+          foreach ($_posts as $_post) {
+            $ids[] = $_post->post;
+          }
+
+          $post->id = $ids;
+
+          // Gestion du filtre
+          if (!empty($filter)) {
+            $filter .= " AND ";
+          }
+          $filter .= "#id#";
+          $operators['id'] = \LibMelanie\Config\MappingMce::in;
+        }
+        $search = preg_replace('/#(\w+)/', '', $search);
+        $search = trim($search);
+      }
+
       // Creator ?
       if (strpos($search, 'creator:') !== false) {
         preg_match('/creator:(.*)/', $search, $matches);
         if (!empty($matches[1])) {
-          $post->creator = $matches[1];
-          $operators = [
-            'creator' => \LibMelanie\Config\MappingMce::eq
-          ];
+          $post->creator = strtolower($matches[1]);
+          $operators['creator'] = \LibMelanie\Config\MappingMce::eq;
+          $case_unsensitive_fields[] = 'creator';
         }
         $search = preg_replace('/creator:(.*)/', '', $search);
+
+        // Gestion du filtre
+        if (!empty($filter)) {
+          $filter .= " AND ";
+        }
+        $filter .= "#creator#";
       }
 
-      $post->title = '%'.$search.'%';
-      $operators = [
-        'title' => \LibMelanie\Config\MappingMce::like
-      ];
-      $case_unsensitive_fields = ['title'];
+      // cleaned search
+      if (!empty($search)) {
+        $search = trim($search);
+        
+        // Recherche dans le title et summary
+        $operators['title'] = \LibMelanie\Config\MappingMce::like;
+        $operators['summary'] = \LibMelanie\Config\MappingMce::like;
+        $case_unsensitive_fields[] = 'title';
+        $case_unsensitive_fields[] = 'summary';        
+        $post->title = '%'.$search.'%';
+        $post->summary = '%'.$search.'%';
+
+        // Gestion du filtre
+        if (!empty($filter)) {
+          $filter .= " AND ";
+        }
+        $filter .= "(#title# OR #summary#)";
+      }
     }
 
     // Gestion des tags
@@ -330,6 +451,25 @@ class Post extends MceObject {
         $ids[] = $_post->id;
       }
       $post->id = $ids;
+
+      // Gestion du filtre
+      if (!empty($filter)) {
+        $filter .= " AND ";
+      }
+      $filter .= "#id#";
+      $operators['id'] = \LibMelanie\Config\MappingMce::in;
+    }
+
+    // Lister par uid
+    if (isset($uids)) {
+      $post->uid = $uids;
+
+      // Gestion du filtre
+      if (!empty($filter)) {
+        $filter .= " AND ";
+      }
+      $filter .= "#uid#";
+      $operators['uid'] = \LibMelanie\Config\MappingMce::in;
     }
 
     // Gestion du tri
@@ -337,19 +477,25 @@ class Post extends MceObject {
       case 'comments':
         $posts = $post->getList($fields, $filter, $operators, "comments", $asc, $limit, $offset, $case_unsensitive_fields, 'Post/Comment', 'LEFT', 'post', 'Post', ['id'], "comments", [
           // Subrequest reactions
-          ['reactions', 'count', 'Post/Reaction', 'post']]);
+          ['reactions', 'count', 'Post/Reaction', 'post'],
+          ['likes', 'count', 'Post/Reaction', ['post', 'post', ['type' => 'like']]],
+          ['dislikes', 'count', 'Post/Reaction', ['post', 'post', ['type' => 'dislike']]]]);
         break;
       case 'reactions':
         $posts = $post->getList($fields, $filter, $operators, "reactions", $asc, $limit, $offset, $case_unsensitive_fields, 'Post/Reaction', 'LEFT', 'post', 'Post', ['id'], "reactions", [
           // Subrequest comments
-          ['comments', 'count', 'Post/Comment', 'post']]);
+          ['comments', 'count', 'Post/Comment', 'post'],
+          ['likes', 'count', 'Post/Reaction', ['post', 'post', ['type' => 'like']]],
+          ['dislikes', 'count', 'Post/Reaction', ['post', 'post', ['type' => 'dislike']]]]);
         break;
       default:
         $posts = $post->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields, null, null, null, null, null, null, [
           // Subrequest comments
           ['comments', 'count', 'Post/Comment', 'post'], 
           // Subrequest reactions
-          ['reactions', 'count', 'Post/Reaction', 'post']]);
+          ['reactions', 'count', 'Post/Reaction', 'post'],
+          ['likes', 'count', 'Post/Reaction', ['post', 'post', ['type' => 'like']]],
+          ['dislikes', 'count', 'Post/Reaction', ['post', 'post', ['type' => 'dislike']]]]);
         break;
     }
 

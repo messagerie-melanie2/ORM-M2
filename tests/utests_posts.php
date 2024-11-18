@@ -60,8 +60,6 @@ M2Log::InitErrorLog($log);
 
 echo "########################\r\n";
 
-
-
 function generateRandomString($length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
@@ -72,82 +70,31 @@ function generateRandomString($length = 10) {
     return $randomString;
 }
 
-// Enregistrer un nouveau post
-
-// $post = new LibMelanie\Api\Defaut\Posts\Post();
-// $post->uid = generateRandomString(24);
-// $post->creator = 'thomas.test2';
-// $post->title = 'Post de test 2';
-// $post->summary = 'Ceci est un post de test 2';
-// $post->content = 'Ceci est un post de test 2';
-// $post->workspace = 'un-espace-2';
-
-// $post->save();
-
-
-// Charger tous les posts
-
 $post = new \LibMelanie\Api\Defaut\Posts\Post();
 $post->workspace = 'un-espace-2';
+// $post->id = 2;
+// $image = $post->firstImage();
 
-$posts = $post->getList();
+// echo "Image: ".$image->uid."\r\n";
 
-if (!empty($posts)) {
-	header('Content-Type: application/json');
-	// Préparer les données des posts pour la réponse JSON
-	$posts_array = [];
-	foreach ($posts as $post) {
-		$posts_array[] = [
-			'uid' => $post->uid,
-			'title' => $post->title,
-			'summary' => $post->summary,
-			'content' => $post->content,
-			'creator' => $post->creator,
-			'workspace' => $post->workspace
-		];
+$posts = $post->listPosts('#livre #manga creator:damien.cotton.i', [], 'comments', false, 10, 0, ['la4YyVqydAX83U6YOVIQ0kGs', 'VLoLXqikjC3I0RqFlhNtbgu9']);
 
-		$uids[] = $post->uid;
-	}
-	echo "Posts trouvés: " . implode(",", $uids) . "\r\n";
-} else {
-	echo 'Aucun post trouvé.';
+foreach ($posts as $post) {
+  echo "Post: ".$post->id."\r\n";
+  echo "Uid: ".$post->uid."\r\n";
+  echo "Title: ".$post->title."\r\n";
+  echo "Summary: ".$post->summary."\r\n";
+  echo "Created: ".$post->created."\r\n";
+  echo "Modified: ".$post->modified."\r\n";
+  echo "Creator: ".$post->creator."\r\n";
+  echo "Workspace: ".$post->workspace."\r\n";
+  echo "Reactions: ". $post->reactions."\r\n";
+  echo "Commentaires: ". $post->comments."\r\n";
+  echo "Likes: ". $post->likes."\r\n";
+  echo "Dislikes: ".$post->dislikes."\r\n";
+  echo "########################\r\n";
 }
 
-// Charger un post
-
-$post = new LibMelanie\Api\Defaut\Posts\Post();
-$post->uid = "ndWtChyQ4IwabbWjWwlM7Qo9";
-if ($post->load()) {
-  	echo "Post trouvé: " . $post->title . "\r\n";
-
-
-	// Enregistrer un commentaire
-
-	// $comment = new LibMelanie\Api\Defaut\Posts\Comment($post);
-	// $comment->uid = generateRandomString(24);
-	// $comment->creator = 'thomas.test3';
-	// $comment->content = 'C\'est ma réponse au commentaire';
-	// $comment->parent = 1;
-	// $comment->save();
-
-	echo "Nombre de commentaires : " . $post->countComments() . "\r\n";
-	echo "Nombre de réactions : " . $post->countReactions() . "\r\n";
-
-	foreach ($post->listComments() as $comment) {
-		echo "Commentaire trouvé: " . $comment->content . "\r\n";
-		echo "Nombre de like sur le commentaire : " . $comment->countLikes() . "\r\n";
-
-		// Ajouter un like
-
-		// $like = new LibMelanie\Api\Defaut\Posts\Comments\Like($comment);
-		// $like->type = 'like';
-		// $like->creator = 'thomas.test1';
-
-		// $like->save();
-	}
-} else {
-  echo "Post non trouvé\r\n";
-}
 
 echo "#### 1: ".(memory_get_usage()/1024/1024) . ' MiB'." ######\r\n";
 echo "#### Cycles: ".gc_collect_cycles()." ######\r\n";

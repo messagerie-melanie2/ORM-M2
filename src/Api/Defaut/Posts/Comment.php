@@ -89,6 +89,7 @@ class Comment extends MceObject {
 
     $likes = $like->getList();
     $this->objectmelanie->likes = count($likes);
+    $this->objectmelanie->setFieldHasChanged('likes', false);
 
     // Gérer les countLikes
     foreach ($likes as $like) {
@@ -131,6 +132,7 @@ class Comment extends MceObject {
 
       $res = $like->getList('count');
       $this->objectmelanie->likes = isset($res[0]) ? $res[0]->count : 0;
+      $this->objectmelanie->setFieldHasChanged('likes', false);
     }
     return $this->objectmelanie->likes;
   }
@@ -208,6 +210,7 @@ class Comment extends MceObject {
       $comment->parent = $this->id;
       $res = $comment->getList('count');
       $this->objectmelanie->children = isset($res[0]) ? $res[0]->count : 0;
+      $this->objectmelanie->setFieldHasChanged('children', false);
     }
     return $this->objectmelanie->children;
   }

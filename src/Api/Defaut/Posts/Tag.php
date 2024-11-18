@@ -111,6 +111,44 @@ class Tag extends MceObject {
   }
 
   /**
+   * Récupère la liste des posts associés au tag
+   * 
+   * @param string[] $tagsNameList Liste des noms des tags
+   * @param string $workspace_uid Uid du workspace
+   * @param string[] $fields Liste des champs à récupérer
+   * 
+   * @return Post[] Liste des posts
+   */
+  public function listPostsByTagsName($tagsNameList = [], $workspace_uid = null, $fields = []) {
+    $object = new ObjectMelanie('Post/TagsByPost');
+
+    $object->name = $tagsNameList;
+    $object->workspace = $workspace_uid;
+    
+    $_objects = $object->getList($fields, "", [], "", true, null, null, ['name']);
+
+    if (!isset($_objects)) {
+			return null;
+		}
+
+		$objects = [];
+		foreach ($_objects as $_object) {
+			$_object->setIsExist();
+			$_object->setIsLoaded();
+			$object = new Post();
+			$object->setObjectMelanie($_object);
+			
+			if (isset($_object->id)) {
+				$objects[$_object->id] = $object;
+			}
+			else {
+				$objects[] = $object;
+			}
+		}
+		return $objects;
+  }
+
+  /**
    * Associer un post au tag courant
    * 
    * @param Post $post Post à associer

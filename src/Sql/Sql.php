@@ -28,6 +28,7 @@ use LibMelanie\Lib\Selaforme;
 use LibMelanie\Exceptions;
 use LibMelanie\Config\Config;
 use LibMelanie\Config\MappingMce;
+use LibMelanie\Config\ConfigSQL;
 
 /**
  * Gestion de la connexion Sql
@@ -154,23 +155,28 @@ class Sql {
    */
   public static function GetInstance($server = null) {
     if (!isset($server)) {
-      $server = \LibMelanie\Config\ConfigSQL::$SGBD_SERVER;
+      if (!empty(ConfigSQL::$CURRENT_BACKEND) && isset(ConfigSQL::$SERVERS[ConfigSQL::$CURRENT_BACKEND])) {
+        $server = ConfigSQL::$CURRENT_BACKEND;
+      }
+      else {
+        $server = ConfigSQL::$SGBD_SERVER;
+      }
     }
     if (!isset(self::$instances[$server])) {
-      if (!isset(\LibMelanie\Config\ConfigSQL::$SERVERS[$server])) {
+      if (!isset(ConfigSQL::$SERVERS[$server])) {
         M2Log::Log(M2Log::LEVEL_ERROR, "Sql->GetInstance() Erreur la configuration du serveur '$server' n'existe pas");
         return false;
       }
-      $conf = \LibMelanie\Config\ConfigSQL::$SERVERS[$server];
+      $conf = ConfigSQL::$SERVERS[$server];
       // Lecture du read
       $conf_read = null;
-      if (isset(\LibMelanie\Config\ConfigSQL::$SERVERS[$server."_read"])) {
-        $conf_read = \LibMelanie\Config\ConfigSQL::$SERVERS[$server."_read"];
+      if (isset(ConfigSQL::$SERVERS[$server."_read"])) {
+        $conf_read = ConfigSQL::$SERVERS[$server."_read"];
       }
       else if (isset($conf['read'])) {
         $conf_read = $conf['read'];
       }
-      self::$instances[$server] = new self($server === \LibMelanie\Config\ConfigSQL::$SGBD_SERVER, $conf, $conf_read);
+      self::$instances[$server] = new self($server === ConfigSQL::$SGBD_SERVER, $conf, $conf_read);
     }
     return self::$instances[$server];
   }
@@ -182,7 +188,7 @@ class Sql {
    */
   public function ForceDisconnectAllInstances() {
     // Rechercher toutes les instances existantes
-    foreach (\LibMelanie\Config\ConfigSQL::$SERVERS as $server => $conf) {
+    foreach (ConfigSQL::$SERVERS as $server => $conf) {
       // si l'instance existe, on la déconnecte
       if (isset(self::$instances[$server])) {
         self::$instances[$server]->disconnect();

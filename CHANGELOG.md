@@ -1,3 +1,7 @@
+ORM M2 - 0.6.10
+------
+- Fix sur la version du composer.json
+
 ORM M2 - 0.6.9
 ------
 - 0008549: [ICS] Problème avec DURATION sans DTEND

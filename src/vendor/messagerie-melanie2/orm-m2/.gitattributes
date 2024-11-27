@@ -1,0 +1,8 @@
+bin export-ignore
+config export-ignore
+docs export-ignore
+documentation export-ignore
+schema export-ignore
+scripts export-ignore
+tests export-ignore
+example.php export-ignore

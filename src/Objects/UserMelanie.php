@@ -822,6 +822,58 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     // Liste les calendriers de l'utilisateur
     return Sql\Sql::GetInstance()->executeQuery($query, $params, 'LibMelanie\\Objects\\WorkspaceMelanie', 'Workspace');
   }
+
+  /**
+   * Est-ce que l'utilisateur est admin de l'espace de travail
+   * 
+   * @param string|WorkspaceMelanie $workspace Espace de travail à tester
+   * 
+   * @return boolean
+   */
+  public function isWorkspaceOwner($workspace) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->isWorkspaceOwner()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
+    if (!isset($this->uid)) {
+      return false;
+    }
+    $query = Sql\SqlWorkspaceRequests::isWorkspaceOwner;
+    // Params
+    $params = [
+        "user_uid"      => $this->uid,
+        "workspace_uid" => is_string($workspace) ? $workspace : $workspace->uid,
+    ];
+    // Liste les calendriers de l'utilisateur
+    $result = Sql\Sql::GetInstance()->executeQuery($query, $params);
+
+    return count($result) && isset($result[0]['count']) && $result[0]['count'] >= 1;
+  }
+
+  /**
+   * Est-ce que l'utilisateur est membre de l'espace de travail
+   * 
+   * @param string|WorkspaceMelanie $workspace Espace de travail à tester
+   * 
+   * @return boolean
+   */
+  public function isWorkspaceMember($workspace) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->isWorkspaceMember()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
+    if (!isset($this->uid)) {
+      return false;
+    }
+    $query = Sql\SqlWorkspaceRequests::isWorkspaceMember;
+    // Params
+    $params = [
+        "user_uid"      => $this->uid,
+        "workspace_uid" => is_string($workspace) ? $workspace : $workspace->uid,
+    ];
+    // Liste les calendriers de l'utilisateur
+    $result = Sql\Sql::GetInstance()->executeQuery($query, $params);
+
+    return count($result) && isset($result[0]['count']) && $result[0]['count'] >= 1;
+  }
   
   // -- CALENDAR
   /**

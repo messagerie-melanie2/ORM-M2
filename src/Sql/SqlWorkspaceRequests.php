@@ -52,6 +52,18 @@ class SqlWorkspaceRequests {
 
 	/**
 	 * @var string SELECT
+	 * @param PDO :user_id, :workspace_uid
+	 */
+	const isWorkspaceOwner = "SELECT count(*) FROM dwp_workspaces INNER JOIN dwp_shares USING (workspace_id) WHERE user_uid = :user_uid AND workspace_uid = :workspace_uid AND rights = 'o';";
+
+	/**
+	 * @var string SELECT
+	 * @param PDO :user_id, :workspace_uid
+	 */
+	const isWorkspaceMember = "SELECT count(*) FROM dwp_workspaces INNER JOIN dwp_shares USING (workspace_id) WHERE user_uid = :user_uid AND workspace_uid = :workspace_uid;";
+
+	/**
+	 * @var string SELECT
 	 * @param REPLACE {order_by}, {limit}
 	 * @param PDO :hashtag
 	 */

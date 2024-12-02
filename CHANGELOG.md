@@ -1,3 +1,7 @@
+ORM M2 - 0.6.11
+------
+- 0008623: Méthodes pour connaitre les accès d'un user sur un workspace
+
 ORM M2 - 0.6.10
 ------
 - Fix sur la version du composer.json
@@ -8,6 +12,7 @@ ORM M2 - 0.6.9
 - 0008601: Propager la confidentialité via le en attente
 - 0008585: Problème d'utilisation des bases J-1 et J-2
 - 0008571: Rendre le mapping non obligatoire pour un objet ldap
+
 ORM M2 - 0.6.8
 ------
 - 0008507: [ICS] DTSTART sans DTEND

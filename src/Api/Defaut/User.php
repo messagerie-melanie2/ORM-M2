@@ -1278,6 +1278,68 @@ abstract class User extends MceObject {
   }
 
   /**
+   * Est-ce que l'utilisateur est admin de l'espace de travail
+   * 
+   * @param string|WorkspaceMelanie $workspace Espace de travail à tester
+   * 
+   * @return boolean
+   */
+  public function isWorkspaceOwner($workspace) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->isWorkspaceOwner()");
+
+    // Si la liste des workspaces n'est pas encore chargée
+    if (isset($this->_userWorkspaces)) {
+      if (is_string($workspace)) {
+        $ret = false;
+        foreach ($this->_userWorkspaces as $_work) {
+          if ($_work->uid == $workspace) {
+            $ret = true;
+            break;
+          }
+        }
+        return $ret;
+      }
+      else {
+        return isset($this->_userWorkspaces[$workspace->id]);
+      }
+    }
+    else {
+      return $this->objectmelanie->isWorkspaceOwner($workspace);
+    }
+  }
+
+  /**
+   * Est-ce que l'utilisateur est membre de l'espace de travail
+   * 
+   * @param string|WorkspaceMelanie $workspace Espace de travail à tester
+   * 
+   * @return boolean
+   */
+  public function isWorkspaceMember($workspace) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->isWorkspaceMember()");
+
+    // Si la liste des workspaces n'est pas encore chargée
+    if (isset($this->_sharedWorkspaces)) {
+      if (is_string($workspace)) {
+        $ret = false;
+        foreach ($this->_sharedWorkspaces as $_work) {
+          if ($_work->uid == $workspace) {
+            $ret = true;
+            break;
+          }
+        }
+        return $ret;
+      }
+      else {
+        return isset($this->_sharedWorkspaces[$workspace->id]);
+      }
+    }
+    else {
+      return $this->objectmelanie->isWorkspaceOwner($workspace);
+    }
+  }
+
+  /**
    * Nettoyer les donnés en cache 
    * (appelé lors de la modification d'un workspace)
    */

@@ -66,6 +66,18 @@ echo "########################\r\n";
 $user = new User();
 $user->uid = 'thomas.payen';
 
+$workspaces = $user->getSharedWorkspaces();
+
+foreach ($workspaces as $workspace) {
+	echo $workspace->modified . ': ' . $workspace->title . ' / ' . $workspace->description . " \r\n\r\n";
+}
+
+if ($user->isWorkspaceMember($workspace)) {
+	echo "Je suis admin de l'espace de travail \r\n";
+} else {
+	echo "Je ne suis pas admin de l'espace de travail \r\n";
+}
+
 // $workspace = new Workspace($user);
 // $workspace->uid = "86ffb2fcdf76c9b183e6e1ad39e6a31b603e54ad";
 // if ($workspace->load()) {
@@ -105,19 +117,19 @@ $user->uid = 'thomas.payen';
 // 	echo $workspace->modified . ': ' . $workspace->title . ' / ' . $workspace->description . " \r\n\r\n";
 // }
 
-$hashtags = (new Hashtag())->getList();
+// $hashtags = (new Hashtag())->getList();
 
-$hashtags = (new Hashtag())->getList(null, null, null, "label");
+// $hashtags = (new Hashtag())->getList(null, null, null, "label");
 
-$hash = new Hashtag();
-$hash->label = "a%";
-$operators = ["label" => \LibMelanie\Config\MappingMce::like];
-$hashtags = $hash->getList(null, null, $operators, "label", true, 5);
+// $hash = new Hashtag();
+// $hash->label = "a%";
+// $operators = ["label" => \LibMelanie\Config\MappingMce::like];
+// $hashtags = $hash->getList(null, null, $operators, "label", true, 5);
 
 
-foreach ($hashtags as $hashtag) {
-	echo $hashtag->label . " \r\n\r\n";
-}
+// foreach ($hashtags as $hashtag) {
+// 	echo $hashtag->label . " \r\n\r\n";
+// }
 
 // if (count($workspaces) === 0) {
 // 	$workspace = new Workspace($user);

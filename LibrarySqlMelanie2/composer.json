@@ -1,0 +1,38 @@
+{
+	"name" : "messagerie-melanie2/orm-m2",
+	"description" : "ORM pour l'accès aux données Mél",
+	"keywords" : [
+		"ORM",
+		"Calendar",
+		"Addressbook",
+		"Tasks",
+		"SQL",
+		"LDAP"
+	],
+	"homepage" : "https://github.com/messagerie-melanie2/orm-m2",
+	"license" : "GPL-3.0-or-later",
+	"type" : "library",
+	"require" : {
+		"php" : ">=5.3.1",
+		"ext-ldap" : "*",
+		"ext-pgsql" : "*"
+	},
+	"require-dev" : {
+		"composer/composer" : "*"
+	},
+	"autoload" : {
+		"files" : [
+			"includes/includes_conf.php"
+		],
+		"psr-4" : {
+			"LibMelanie\\" : "src/"
+		}
+	},
+	"authors" : [{
+			"name" : "Thomas Payen",
+			"email" : "thomas.payen@i-carre.net",
+			"homepage" : "https://github.com/tpayen",
+			"role" : "Developer"
+		}
+	]
+}

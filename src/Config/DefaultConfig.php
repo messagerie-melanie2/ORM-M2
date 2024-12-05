@@ -386,6 +386,18 @@ class DefaultConfig {
    * Liste serveur de Distribution à ABonnement
    */
   const LDAP_TYPE_LISTAB = 'LDAB';
+    /**
+   * Dossier de groupement
+   */
+  const LDAP_TYPE_FOLDER_GROUPEMENT = 'NGRO';
+  /**
+   * Dossier d'unité
+   */
+  const LDAP_TYPE_FOLDER_UNITE = 'NUNI';
+  /**
+   * Dossier de service
+   */
+  const LDAP_TYPE_FOLDER_SERVICE = 'NSER';
 
   /**
    * Est-ce que le en attente est activé ou désactivé par défaut ?
@@ -412,4 +424,11 @@ class DefaultConfig {
    * @var boolean
    */
   const USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES = false;
+
+  /**
+   * Récupère le chemin LDAP par défaut
+   * 
+   * @var string
+   */
+  CONST DEFAULT_LDAP_DN = 'ou=organisation,dc=equipement,dc=gouv,dc=fr';
 }

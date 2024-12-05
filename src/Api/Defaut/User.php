@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Ce fichier est développé pour la gestion de la lib MCE
  * 
@@ -18,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace LibMelanie\Api\Defaut;
 
 use LibMelanie\Lib\MceObject;
@@ -68,7 +70,8 @@ use LibMelanie\Config\MappingMce;
  * 
  * @method bool save() Enregistrement de l'utilisateur dans l'annuaire
  */
-abstract class User extends MceObject {
+abstract class User extends MceObject
+{
   /**
    * Objet de partage associé a l'utilisateur courant si nécessaire
    * 
@@ -330,7 +333,7 @@ abstract class User extends MceObject {
   /**
    * Droits d'envoi de messages sur la boite
    */
-  protected static $_sharesSend = ['G', 'C']; 
+  protected static $_sharesSend = ['G', 'C'];
 
   /**
    * Droits de niveau administrateur ou gestionnaire sur la boite
@@ -464,7 +467,7 @@ abstract class User extends MceObject {
    * 
    * @ignore
    */
-  const GET_GROUPS_ATTRIBUTES = ['dn','fullname','type','email','members'];
+  const GET_GROUPS_ATTRIBUTES = ['dn', 'fullname', 'type', 'email', 'members'];
   /**
    * Filtre pour la méthode getGroupsIsMember()
    * 
@@ -501,10 +504,11 @@ abstract class User extends MceObject {
    * @param string $server Serveur d'annuaire a utiliser en fonction de la configuration
    * @param string $itemName Nom de l'objet associé dans la configuration LDAP
    */
-  public function __construct($server = null, $itemName = null) {
+  public function __construct($server = null, $itemName = null)
+  {
     // Défini la classe courante
     $this->get_class = get_class($this);
-    
+
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->__construct($server)");
 
     // Récupération de l'itemName
@@ -520,15 +524,16 @@ abstract class User extends MceObject {
   }
 
   /**
-	 * Récupère le délimiteur d'un objet de partage
-	 * 
-	 * @return string ObjectShare::DELIMITER
-	 */
-	protected function getObjectShareDelimiter() {
+   * Récupère le délimiteur d'un objet de partage
+   * 
+   * @return string ObjectShare::DELIMITER
+   */
+  protected function getObjectShareDelimiter()
+  {
     $class = $this->__getNamespace() . '\\ObjectShare';
-		return $class::DELIMITER;
-	}
-   
+    return $class::DELIMITER;
+  }
+
   /**
    * ***************************************************
    * METHOD MAPPING
@@ -539,7 +544,8 @@ abstract class User extends MceObject {
    * 
    * @return null si erreur, boolean sinon (true insert, false update)
    */
-  public function save() {
+  public function save()
+  {
     $ret = $this->objectmelanie->save();
     $this->executeCache();
     return $ret;
@@ -551,7 +557,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function delete() {
+  public function delete()
+  {
     $ret = $this->objectmelanie->delete();
     $this->executeCache();
     return $ret;
@@ -568,7 +575,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function authentification($password = null, $master = false, $user_dn = null, $gssapi = false, $itemName = null) {
+  public function authentification($password = null, $master = false, $user_dn = null, $gssapi = false, $itemName = null)
+  {
     if ($master) {
       $this->_server = \LibMelanie\Config\Ldap::$MASTER_LDAP;
     }
@@ -582,13 +590,14 @@ abstract class User extends MceObject {
   }
 
   /**
-   * Charge les données de l'utilisateur depuis l'annuaire (en fonction de l'uid ou l'email)
+   * Charge les données de l'utilisateur depuis l'annuaire (en fonction de l'uid ou l'email ou dn)
    * 
    * @param array $attributes [Optionnal] List of attributes to load
    * 
    * @return boolean true si l'objet existe dans l'annuaire false sinon
    */
-  public function load($attributes = null) {
+  public function load($attributes = null)
+  {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->load() [" . $this->_server . "]");
     if (isset($attributes) && is_string($attributes)) {
       $attributes = [$attributes];
@@ -604,8 +613,7 @@ abstract class User extends MceObject {
       }
       $filter = static::LOAD_OBJECTSHARE_FILTER;
       $filterFromEmail = static::LOAD_OBJECTSHARE_FROM_EMAIL_FILTER;
-    }
-    else {
+    } else {
       if (!isset($attributes)) {
         $attributes = static::LOAD_ATTRIBUTES;
       }
@@ -635,7 +643,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean true si l'objet existe dans l'annuaire false sinon
    */
-  public function exists($attributes = null) {
+  public function exists($attributes = null)
+  {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->exists() [" . $this->_server . "]");
     if (!isset($this->_isExist)) {
       if (!isset($attributes)) {
@@ -664,7 +673,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function asRight($username, $right) {
+  public function asRight($username, $right)
+  {
     foreach ($this->getMapShares() as $share) {
       if ($share->user == $username) {
         switch ($right) {
@@ -693,7 +703,8 @@ abstract class User extends MceObject {
    *
    * @return ObjectShare[] Liste d'objets
    */
-  public function getObjectsShared($attributes = null) {
+  public function getObjectsShared($attributes = null)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getObjectsShared() [" . $this->_server . "]");
     if (!isset($this->_objectsShared)) {
       if (isset($attributes) && is_string($attributes)) {
@@ -703,8 +714,10 @@ abstract class User extends MceObject {
         $attributes = static::GET_BALP_ATTRIBUTES;
       }
       $filter = static::GET_BALP_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
-          && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_partagees_filter'])) {
+      if (
+        isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
+        && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_partagees_filter'])
+      ) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_partagees_filter'];
       }
       $list = $this->objectmelanie->getBalp($attributes, $filter);
@@ -726,7 +739,8 @@ abstract class User extends MceObject {
    *
    * @return User[] Liste de boites
    */
-  public function getShared($attributes = null) {
+  public function getShared($attributes = null)
+  {
     M2Log::Log(M2Log::LEVLEVEL_TRACEEL_DEBUG, $this->get_class . "->getShared() [" . $this->_server . "]");
     if (!isset($this->_shared)) {
       if (isset($attributes) && is_string($attributes)) {
@@ -736,8 +750,10 @@ abstract class User extends MceObject {
         $attributes = static::GET_BALP_ATTRIBUTES;
       }
       $filter = static::GET_BALP_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
-          && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_partagees_filter'])) {
+      if (
+        isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
+        && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_partagees_filter'])
+      ) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_partagees_filter'];
       }
       $list = $this->objectmelanie->getBalp($attributes, $filter);
@@ -758,7 +774,8 @@ abstract class User extends MceObject {
    *
    * @return ObjectShare[] Liste d'objets
    */
-  public function getObjectsSharedEmission($attributes = null) {
+  public function getObjectsSharedEmission($attributes = null)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getObjectsSharedEmission() [" . $this->_server . "]");
     if (!isset($this->_objectsSharedEmission)) {
       if (isset($attributes) && is_string($attributes)) {
@@ -768,8 +785,10 @@ abstract class User extends MceObject {
         $attributes = static::GET_BALP_EMISSION_ATTRIBUTES;
       }
       $filter = static::GET_BALP_EMISSION_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
-          && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_emission_filter'])) {
+      if (
+        isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
+        && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_emission_filter'])
+      ) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_emission_filter'];
       }
       $list = $this->objectmelanie->getBalpEmission($attributes, $filter);
@@ -791,7 +810,8 @@ abstract class User extends MceObject {
    *
    * @return User[] Liste d'objets
    */
-  public function getSharedEmission($attributes = null) {
+  public function getSharedEmission($attributes = null)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getSharedEmission() [" . $this->_server . "]");
     if (!isset($this->_sharedEmission)) {
       if (isset($attributes) && is_string($attributes)) {
@@ -801,8 +821,10 @@ abstract class User extends MceObject {
         $attributes = static::GET_BALP_EMISSION_ATTRIBUTES;
       }
       $filter = static::GET_BALP_EMISSION_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
-          && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_emission_filter'])) {
+      if (
+        isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
+        && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_emission_filter'])
+      ) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_emission_filter'];
       }
       $list = $this->objectmelanie->getBalpEmission($attributes, $filter);
@@ -823,7 +845,8 @@ abstract class User extends MceObject {
    *
    * @return ObjectShare[] Liste d'objets
    */
-  public function getObjectsSharedGestionnaire($attributes = null) {
+  public function getObjectsSharedGestionnaire($attributes = null)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getObjectsSharedGestionnaire() [" . $this->_server . "]");
     if (!isset($this->_objectsSharedGestionnaire)) {
       if (isset($attributes) && is_string($attributes)) {
@@ -833,8 +856,10 @@ abstract class User extends MceObject {
         $attributes = static::GET_BALP_GESTIONNAIRE_ATTRIBUTES;
       }
       $filter = static::GET_BALP_GESTIONNAIRE_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
-          && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_gestionnaire_filter'])) {
+      if (
+        isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
+        && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_gestionnaire_filter'])
+      ) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_gestionnaire_filter'];
       }
       $list = $this->objectmelanie->getBalpGestionnaire($attributes, $filter);
@@ -856,7 +881,8 @@ abstract class User extends MceObject {
    *
    * @return User[] Liste d'objets
    */
-  public function getSharedGestionnaire($attributes = null) {
+  public function getSharedGestionnaire($attributes = null)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getSharedGestionnaire() [" . $this->_server . "]");
     if (!isset($this->_sharedGestionnaire)) {
       if (isset($attributes) && is_string($attributes)) {
@@ -866,8 +892,10 @@ abstract class User extends MceObject {
         $attributes = static::GET_BALP_GESTIONNAIRE_ATTRIBUTES;
       }
       $filter = static::GET_BALP_GESTIONNAIRE_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
-          && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_gestionnaire_filter'])) {
+      if (
+        isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
+        && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_gestionnaire_filter'])
+      ) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_bal_gestionnaire_filter'];
       }
       $list = $this->objectmelanie->getBalpGestionnaire($attributes, $filter);
@@ -888,7 +916,8 @@ abstract class User extends MceObject {
    *
    * @return Group[] Liste d'objets
    */
-  public function getGroups($attributes = null) {
+  public function getGroups($attributes = null)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getGroups() [" . $this->_server . "]");
     if (!isset($this->_lists)) {
       if (isset($attributes) && is_string($attributes)) {
@@ -898,8 +927,10 @@ abstract class User extends MceObject {
         $attributes = static::GET_GROUPS_ATTRIBUTES;
       }
       $filter = static::GET_GROUPS_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
-          && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_groups_filter'])) {
+      if (
+        isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
+        && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_groups_filter'])
+      ) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_user_groups_filter'];
       }
       $list = $this->objectmelanie->getGroups($attributes, $filter);
@@ -921,7 +952,8 @@ abstract class User extends MceObject {
    *
    * @return Group[] Liste d'objets
    */
-  public function getGroupsIsMember($attributes = null) {
+  public function getGroupsIsMember($attributes = null)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getGroupsIsMember() [" . $this->_server . "]");
     if (!isset($this->_lists)) {
       if (isset($attributes) && is_string($attributes)) {
@@ -931,8 +963,10 @@ abstract class User extends MceObject {
         $attributes = static::GET_GROUPS_IS_MEMBER_ATTRIBUTES;
       }
       $filter = static::GET_GROUPS_IS_MEMBER_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
-          && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_groups_user_member_filter'])) {
+      if (
+        isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
+        && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_groups_user_member_filter'])
+      ) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_groups_user_member_filter'];
       }
       $list = $this->objectmelanie->getGroupsIsMember($attributes, $filter);
@@ -954,7 +988,8 @@ abstract class User extends MceObject {
    *
    * @return Group[] Liste d'objets
    */
-  public function getListsIsMember($attributes = null) {
+  public function getListsIsMember($attributes = null)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getListsIsMember() [" . $this->_server . "]");
     if (!isset($this->_lists)) {
       if (isset($attributes) && is_string($attributes)) {
@@ -964,8 +999,10 @@ abstract class User extends MceObject {
         $attributes = static::GET_LISTS_IS_MEMBER_ATTRIBUTES;
       }
       $filter = static::GET_LISTS_IS_MEMBER_FILTER;
-      if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
-          && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_lists_user_member_filter'])) {
+      if (
+        isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
+        && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_lists_user_member_filter'])
+      ) {
         $filter = \LibMelanie\Config\Ldap::$SERVERS[$this->_server]['get_lists_user_member_filter'];
       }
       $list = $this->objectmelanie->getListsIsMember($attributes, $filter);
@@ -988,7 +1025,8 @@ abstract class User extends MceObject {
    * 
    * @return string La valeur de la préférence si elle existe, null sinon
    */
-  public function getPreference($scope, $name) {
+  public function getPreference($scope, $name)
+  {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getPreference($scope, $name)");
     if (!isset($this->_preferences)) {
       $this->_get_preferences();
@@ -1006,7 +1044,8 @@ abstract class User extends MceObject {
    * 
    * @return string La valeur de la préférence si elle existe, null sinon
    */
-  public function getDefaultPreference($name) {
+  public function getDefaultPreference($name)
+  {
     return $this->getPreference(self::PREF_SCOPE_DEFAULT, $name);
   }
   /**
@@ -1016,7 +1055,8 @@ abstract class User extends MceObject {
    * 
    * @return string La valeur de la préférence si elle existe, null sinon
    */
-  public function getCalendarPreference($name) {
+  public function getCalendarPreference($name)
+  {
     return $this->getPreference(self::PREF_SCOPE_CALENDAR, $name);
   }
   /**
@@ -1026,7 +1066,8 @@ abstract class User extends MceObject {
    * 
    * @return string La valeur de la préférence si elle existe, null sinon
    */
-  public function getTaskslistPreference($name) {
+  public function getTaskslistPreference($name)
+  {
     return $this->getPreference(self::PREF_SCOPE_TASKSLIST, $name);
   }
   /**
@@ -1036,14 +1077,16 @@ abstract class User extends MceObject {
    * 
    * @return string La valeur de la préférence si elle existe, null sinon
    */
-  public function getAddressbookPreference($name) {
+  public function getAddressbookPreference($name)
+  {
     return $this->getPreference(self::PREF_SCOPE_ADDRESSBOOK, $name);
   }
 
   /**
    * Liste les préférences de l'utilisateur et les conserves en mémoire
    */
-  protected function _get_preferences() {
+  protected function _get_preferences()
+  {
     if (isset($this->_preferences)) {
       return;
     }
@@ -1052,7 +1095,7 @@ abstract class User extends MceObject {
     $preferences = (new $UserPrefs($this))->getList();
     if (is_array($preferences)) {
       foreach ($preferences as $pref) {
-        $this->_preferences[$pref->scope.":".$pref->name] = $pref;
+        $this->_preferences[$pref->scope . ":" . $pref->name] = $pref;
       }
     }
   }
@@ -1066,7 +1109,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function savePreference($scope, $name, $value) {
+  public function savePreference($scope, $name, $value)
+  {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->savePreference($scope, $name)");
     if (!isset($this->_preferences)) {
       $this->_get_preferences();
@@ -1080,7 +1124,7 @@ abstract class User extends MceObject {
     $this->_preferences["$scope:$name"]->value = $value;
     $ret = $this->_preferences["$scope:$name"]->save();
     $this->executeCache();
-    return !is_null($ret);  
+    return !is_null($ret);
   }
   /**
    * Enregistre la préférence de l'utilisateur avec le scope Default
@@ -1090,7 +1134,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function saveDefaultPreference($name, $value) {
+  public function saveDefaultPreference($name, $value)
+  {
     return $this->savePreference(self::PREF_SCOPE_DEFAULT, $name, $value);
   }
   /**
@@ -1101,7 +1146,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function saveCalendarPreference($name, $value) {
+  public function saveCalendarPreference($name, $value)
+  {
     return $this->savePreference(self::PREF_SCOPE_CALENDAR, $name, $value);
   }
   /**
@@ -1112,7 +1158,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function saveTaskslistPreference($name, $value) {
+  public function saveTaskslistPreference($name, $value)
+  {
     return $this->savePreference(self::PREF_SCOPE_TASKSLIST, $name, $value);
   }
   /**
@@ -1123,7 +1170,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function saveAddressbookPreference($name, $value) {
+  public function saveAddressbookPreference($name, $value)
+  {
     return $this->savePreference(self::PREF_SCOPE_ADDRESSBOOK, $name, $value);
   }
 
@@ -1135,7 +1183,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function deletePreference($scope, $name) {
+  public function deletePreference($scope, $name)
+  {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->savePreference($scope, $name)");
     if (!isset($this->_preferences)) {
       $this->_get_preferences();
@@ -1149,7 +1198,7 @@ abstract class User extends MceObject {
     $ret = $this->_preferences["$scope:$name"]->delete();
     unset($this->_preferences["$scope:$name"]);
     $this->executeCache();
-    return !is_null($ret);  
+    return !is_null($ret);
   }
 
   /**
@@ -1162,7 +1211,8 @@ abstract class User extends MceObject {
    * 
    * @return Workspace[]
    */
-  public function getUserWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
+  public function getUserWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserWorkspaces()");
     // Si on charge par orderby, limit ou offset
     if (isset($orderby) || isset($limit) || isset($offset)) {
@@ -1210,8 +1260,7 @@ abstract class User extends MceObject {
         }
       }
       $this->executeCache();
-    }
-    else {
+    } else {
       foreach ($this->_userWorkspaces as $_key => $_work) {
         if (!is_object($this->_userWorkspaces[$_key])) {
           $this->_userWorkspaces = null;
@@ -1233,7 +1282,8 @@ abstract class User extends MceObject {
    * 
    * @return Workspace[]
    */
-  public function getSharedWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null) {
+  public function getSharedWorkspaces($orderby = null, $asc = true, $limit = null, $offset = null)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getSharedWorkspaces()");
     // Si on charge par orderby, limit ou offset
     if (isset($orderby) || isset($limit) || isset($offset)) {
@@ -1264,8 +1314,7 @@ abstract class User extends MceObject {
         $this->_sharedWorkspaces[$_workspace->id] = $workspace;
       }
       $this->executeCache();
-    }
-    else {
+    } else {
       foreach ($this->_sharedWorkspaces as $_key => $_work) {
         if (!is_object($this->_sharedWorkspaces[$_key])) {
           $this->_sharedWorkspaces = null;
@@ -1372,7 +1421,8 @@ abstract class User extends MceObject {
    * Nettoyer les donnés en cache 
    * (appelé lors de la modification d'un workspace)
    */
-  public function cleanWorkspaces() {
+  public function cleanWorkspaces()
+  {
     $this->_userWorkspaces = null;
     $this->_sharedWorkspaces = null;
     $this->executeCache();
@@ -1383,7 +1433,8 @@ abstract class User extends MceObject {
    * 
    * @return News\NewsShare[]
    */
-  public function getUserNewsShares() {
+  public function getUserNewsShares()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserNewsShares()");
     // Si le DN de l'utilisateur n'est pas positionné
     if (!isset($this->uid)) {
@@ -1400,7 +1451,8 @@ abstract class User extends MceObject {
    * Nettoyer les donnés en cache 
    * (appelé lors de la modification d'un NewsShare)
    */
-  public function cleanNewsShare() {
+  public function cleanNewsShare()
+  {
     $this->_userNewsShares = null;
     $this->executeCache();
   }
@@ -1412,13 +1464,15 @@ abstract class User extends MceObject {
    * 
    * @return array Liste des services de l'utilisateur
    */
-  protected function _get_user_services($sharedServices = true) {
+  protected function _get_user_services($sharedServices = true)
+  {
     // Supprimer la base dn du dn pour limiter les services
-    if (isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]) 
-        && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['base_dn'])) {
+    if (
+      isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server])
+      && isset(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['base_dn'])
+    ) {
       $userDn = trim(str_replace(\LibMelanie\Config\Ldap::$SERVERS[$this->_server]['base_dn'], '', $this->dn), ',');
-    }
-    else {
+    } else {
       $userDn = $this->dn;
     }
 
@@ -1447,7 +1501,8 @@ abstract class User extends MceObject {
    * 
    * @param News\News[]|News\Rss[] [in/out]
    */
-  protected function _set_news_is_publisher(&$news) {
+  protected function _set_news_is_publisher(&$news)
+  {
     // Ajouter une informations pour les news publisher
     $shares = $this->getUserNewsShares();
     $publisherServices = [];
@@ -1461,8 +1516,7 @@ abstract class User extends MceObject {
     foreach ($news as $k => $n) {
       if ($this->_is_in_services($n->service, $publisherServices)) {
         $news[$k]->publisher = true;
-      }
-      else {
+      } else {
         $news[$k]->publisher = false;
       }
     }
@@ -1473,7 +1527,8 @@ abstract class User extends MceObject {
    * 
    * @param News\News|News\Rss [in/out]
    */
-  public function isNewsPublisher(&$news) {
+  public function isNewsPublisher(&$news)
+  {
     // Ajouter une informations pour les news publisher
     $shares = $this->getUserNewsShares();
     $publisherServices = [];
@@ -1486,8 +1541,7 @@ abstract class User extends MceObject {
     // Si le service de la news fait parti des services publisher du User
     if ($this->_is_in_services($news->service, $publisherServices)) {
       $news->publisher = true;
-    }
-    else {
+    } else {
       $news->publisher = false;
     }
   }
@@ -1501,7 +1555,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  protected function _is_in_services($service, $servicesList) {
+  protected function _is_in_services($service, $servicesList)
+  {
     foreach ($servicesList as $s) {
       if (strpos($service, $s) !== false) {
         return true;
@@ -1515,7 +1570,8 @@ abstract class User extends MceObject {
    * 
    * @return News\News[]
    */
-  public function getUserNews() {
+  public function getUserNews()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserNews()");
     // Si le DN de l'utilisateur n'est pas positionné
     if (!isset($this->dn)) {
@@ -1537,7 +1593,8 @@ abstract class User extends MceObject {
    * 
    * @return News\News
    */
-  public function getUserLastNews() {
+  public function getUserLastNews()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserLastNews()");
     // Si le DN de l'utilisateur n'est pas positionné
     if (!isset($this->dn)) {
@@ -1563,7 +1620,8 @@ abstract class User extends MceObject {
    * 
    * @return array 2 news au maximum, la plus proche et la plus loin
    */
-  public function getUserLastTwoNews() {
+  public function getUserLastTwoNews()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserLastTwoNews()");
 
     // Récupère les services associés à l'utilisateur
@@ -1580,7 +1638,7 @@ abstract class User extends MceObject {
     }
 
     // Récupérer la première et la dernière news
-    $first = null; 
+    $first = null;
     $last = null;
 
     foreach ($newsByService as $news) {
@@ -1589,8 +1647,7 @@ abstract class User extends MceObject {
       }
       if (!isset($first)) {
         $first = $news;
-      }
-      else {
+      } else {
         $last = $news;
       }
     }
@@ -1601,7 +1658,8 @@ abstract class User extends MceObject {
    * Nettoyer les donnés en cache 
    * (appelé lors de la modification d'une news)
    */
-  public function cleanNews() {
+  public function cleanNews()
+  {
     $this->_userNews = null;
     $this->_userLastNews = null;
     $this->executeCache();
@@ -1612,7 +1670,8 @@ abstract class User extends MceObject {
    * 
    * @return News\Rss
    */
-  public function getUserRss() {
+  public function getUserRss()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserRss()");
     // Si le DN de l'utilisateur n'est pas positionné
     if (!isset($this->dn)) {
@@ -1633,7 +1692,8 @@ abstract class User extends MceObject {
    * Nettoyer les donnés en cache 
    * (appelé lors de la modification d'un rss)
    */
-  public function cleanRss() {
+  public function cleanRss()
+  {
     $this->_userRss = null;
     $this->executeCache();
   }
@@ -1646,7 +1706,8 @@ abstract class User extends MceObject {
    * 
    * @return Notification[] Liste des notifications de l'utilisateur
    */
-  public function getNotifications($last = null) {
+  public function getNotifications($last = null)
+  {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getNotifications($last)");
 
     // Initialisation de l'objet pour récupérer les notifications
@@ -1658,7 +1719,7 @@ abstract class User extends MceObject {
       $_notif->modified = $last;
       $_operators['modified'] = MappingMce::supeq;
     }
-    
+
     return $_notif->getList(null, null, $_operators, 'created', false);
   }
 
@@ -1670,7 +1731,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function readNotification($notification, $read = true) {
+  public function readNotification($notification, $read = true)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->readNotification()");
 
     // La notification est un uid
@@ -1699,7 +1761,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function deleteNotification($notification) {
+  public function deleteNotification($notification)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->deleteNotification()");
 
     // La notification est un uid
@@ -1719,7 +1782,8 @@ abstract class User extends MceObject {
    * 
    * @return string|boolean Uid de la nouvelle notification si Ok, false sinon
    */
-  public function addNotification($notification) {
+  public function addNotification($notification)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->addNotification()");
 
     // Positionne le owner de la notification
@@ -1753,7 +1817,8 @@ abstract class User extends MceObject {
    * 
    * @return Calendar Calendrier par défaut de l'utilisateur, null s'il n'existe pas
    */
-  public function getDefaultCalendar() {
+  public function getDefaultCalendar()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getDefaultCalendar()");
     // Si le calendrier n'est pas déjà chargé
     if (!isset($this->_defaultCalendar) || !is_object($this->_defaultCalendar)) {
@@ -1761,8 +1826,7 @@ abstract class User extends MceObject {
       $_calendar = $this->objectmelanie->getDefaultCalendar();
       if (!$_calendar || !isset($_calendar)) {
         $this->_defaultCalendar = null;
-      }
-      else {
+      } else {
         $Calendar = $this->__getNamespace() . '\\Calendar';
         $this->_defaultCalendar = new $Calendar($this);
         $this->_defaultCalendar->setObjectMelanie($_calendar);
@@ -1778,8 +1842,7 @@ abstract class User extends MceObject {
         }
       }
       $this->executeCache();
-    }
-    else {
+    } else {
       $this->_defaultCalendar->setUserMelanie($this);
     }
     return $this->_defaultCalendar;
@@ -1792,22 +1855,20 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function setDefaultCalendar($calendar) {
+  public function setDefaultCalendar($calendar)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setDefaultCalendar()");
     if (is_object($calendar)) {
       $calendar_id = $calendar->id;
-    }
-    else if (is_string($calendar)) {
+    } else if (is_string($calendar)) {
       $calendar_id = $calendar;
-    }
-    else {
+    } else {
       return false;
     }
     if ($this->savePreference(self::PREF_SCOPE_CALENDAR, \LibMelanie\Config\ConfigMelanie::CALENDAR_PREF_DEFAULT_NAME, $calendar_id)) {
       if (is_object($calendar)) {
         $this->_defaultCalendar = $calendar;
-      }
-      else {
+      } else {
         $this->_defaultCalendar = null;
       }
       $this->executeCache();
@@ -1823,7 +1884,8 @@ abstract class User extends MceObject {
    * 
    * @return true si la création est OK, false sinon
    */
-  public function createDefaultCalendar($calendarName = null) {
+  public function createDefaultCalendar($calendarName = null)
+  {
     // Gestion du nom du calendrier
     if (isset($calendarName)) {
       $calendarName = str_replace('%%fullname%%', $this->fullname, $calendarName);
@@ -1853,7 +1915,8 @@ abstract class User extends MceObject {
    * 
    * @return Calendar[]
    */
-  public function getUserCalendars() {
+  public function getUserCalendars()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserCalendars()");
     // Si la liste des calendriers n'est pas encore chargée
     if (!isset($this->_userCalendars)) {
@@ -1886,8 +1949,7 @@ abstract class User extends MceObject {
         }
       }
       $this->executeCache();
-    }
-    else {
+    } else {
       foreach ($this->_userCalendars as $_key => $_cal) {
         if (!is_object($this->_userCalendars[$_key])) {
           $this->_userCalendars = null;
@@ -1904,7 +1966,8 @@ abstract class User extends MceObject {
    * 
    * @return Calendar[]
    */
-  public function getSharedCalendars() {
+  public function getSharedCalendars()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getSharedCalendars()");
     // Si la liste des calendriers n'est pas encore chargée on liste depuis la base
     if (!isset($this->_sharedCalendars)) {
@@ -1920,8 +1983,7 @@ abstract class User extends MceObject {
         $this->_sharedCalendars[$_calendar->id] = $calendar;
       }
       $this->executeCache();
-    }
-    else {
+    } else {
       foreach ($this->_sharedCalendars as $_key => $_cal) {
         if (!is_object($this->_sharedCalendars[$_key])) {
           $this->_sharedCalendars = null;
@@ -1937,19 +1999,21 @@ abstract class User extends MceObject {
    * Nettoyer les donnés en cache 
    * (appelé lors de la modification d'un calendrier)
    */
-  public function cleanCalendars() {
+  public function cleanCalendars()
+  {
     $this->_defaultCalendar = null;
     $this->_userCalendars = null;
     $this->_sharedCalendars = null;
     $this->executeCache();
   }
-  
+
   /**
    * Retourne la liste de tâches par défaut
    * 
    * @return Taskslist
    */
-  public function getDefaultTaskslist() {
+  public function getDefaultTaskslist()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getDefaultTaskslist()");
     // Si la liste de taches n'est pas déjà chargée
     if (!isset($this->_defaultTaskslist) || !is_object($this->_defaultTaskslist)) {
@@ -1957,8 +2021,7 @@ abstract class User extends MceObject {
       $_taskslist = $this->objectmelanie->getDefaultTaskslist();
       if (!$_taskslist || !isset($_taskslist)) {
         $this->_defaultTaskslist = null;
-      }
-      else {
+      } else {
         $Taskslist = $this->__getNamespace() . '\\Taskslist';
         $this->_defaultTaskslist = new $Taskslist($this);
         $this->_defaultTaskslist->setObjectMelanie($_taskslist);
@@ -1974,8 +2037,7 @@ abstract class User extends MceObject {
         }
       }
       $this->executeCache();
-    }
-    else {
+    } else {
       $this->_defaultTaskslist->setUserMelanie($this);
     }
     return $this->_defaultTaskslist;
@@ -1988,22 +2050,20 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function setDefaultTaskslist($taskslist) {
+  public function setDefaultTaskslist($taskslist)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setDefaultTaskslist()");
     if (is_object($taskslist)) {
       $taskslist_id = $taskslist->id;
-    }
-    else if (is_string($taskslist)) {
+    } else if (is_string($taskslist)) {
       $taskslist_id = $taskslist;
-    }
-    else {
+    } else {
       return false;
     }
     if ($this->savePreference(self::PREF_SCOPE_TASKSLIST, \LibMelanie\Config\ConfigMelanie::TASKSLIST_PREF_DEFAULT_NAME, $taskslist_id)) {
       if (is_object($taskslist)) {
         $this->_defaultTaskslist = $taskslist;
-      }
-      else {
+      } else {
         $this->_defaultTaskslist = null;
       }
       $this->executeCache();
@@ -2019,7 +2079,8 @@ abstract class User extends MceObject {
    * 
    * @return true si la création est OK, false sinon
    */
-  public function createDefaultTaskslist($taskslistName = null) {
+  public function createDefaultTaskslist($taskslistName = null)
+  {
     // Gestion du nom de la liste de taches
     if (isset($taskslistName)) {
       $taskslistName = str_replace('%%fullname%%', $this->fullname, $taskslistName);
@@ -2047,7 +2108,8 @@ abstract class User extends MceObject {
    * 
    * @return Taskslist[]
    */
-  public function getUserTaskslists() {
+  public function getUserTaskslists()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserTaskslists()");
     // Si la liste des listes de taches n'est pas encore chargée
     if (!isset($this->_userTaskslists)) {
@@ -2065,8 +2127,7 @@ abstract class User extends MceObject {
             $this->_userTaskslists[$_key] = $_list;
           }
         }
-      }
-      else {
+      } else {
         $_taskslists = $this->objectmelanie->getUserTaskslists();
         if (!isset($_taskslists)) {
           return null;
@@ -2079,8 +2140,7 @@ abstract class User extends MceObject {
         }
       }
       $this->executeCache();
-    }
-    else {
+    } else {
       foreach ($this->_userTaskslists as $_key => $_list) {
         if (!is_object($this->_userTaskslists[$_key])) {
           $this->_userTaskslists = null;
@@ -2097,7 +2157,8 @@ abstract class User extends MceObject {
    * 
    * @return Taskslist[]
    */
-  public function getSharedTaskslists() {
+  public function getSharedTaskslists()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getSharedTaskslists()");
     // Si la liste des listes de tâches n'est pas encore chargée on liste depuis la base
     if (!isset($this->_sharedTaskslists)) {
@@ -2113,8 +2174,7 @@ abstract class User extends MceObject {
         $this->_sharedTaskslists[$_taskslist->id] = $taskslist;
       }
       $this->executeCache();
-    }
-    else {
+    } else {
       foreach ($this->_sharedTaskslists as $_key => $_list) {
         if (!is_object($this->_sharedTaskslists[$_key])) {
           $this->_sharedTaskslists = null;
@@ -2130,19 +2190,21 @@ abstract class User extends MceObject {
    * Nettoyer les donnés en cache 
    * (appelé lors de la modification d'un calendrier)
    */
-  public function cleanTaskslists() {
+  public function cleanTaskslists()
+  {
     $this->_defaultTaskslist = null;
     $this->_userTaskslists = null;
     $this->_sharedTaskslists = null;
     $this->executeCache();
   }
-  
+
   /**
    * Retourne la liste de contacts par défaut
    * 
    * @return Addressbook
    */
-  public function getDefaultAddressbook() {
+  public function getDefaultAddressbook()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getDefaultAddressbook()");
     // Si le carnet n'est pas déjà chargé
     if (!isset($this->_defaultAddressbook)) {
@@ -2150,8 +2212,7 @@ abstract class User extends MceObject {
       $_addressbook = $this->objectmelanie->getDefaultAddressbook();
       if (!$_addressbook) {
         $this->_defaultAddressbook = null;
-      }
-      else {
+      } else {
         $Addressbook = $this->__getNamespace() . '\\Addressbook';
         $this->_defaultAddressbook = new $Addressbook($this);
         $this->_defaultAddressbook->setObjectMelanie($_addressbook);
@@ -2166,8 +2227,7 @@ abstract class User extends MceObject {
         }
       }
       $this->executeCache();
-    }
-    else {
+    } else {
       $this->_defaultAddressbook->setUserMelanie($this);
     }
     return $this->_defaultAddressbook;
@@ -2180,22 +2240,20 @@ abstract class User extends MceObject {
    * 
    * @return boolean
    */
-  public function setDefaultAddressbook($addressbook) {
+  public function setDefaultAddressbook($addressbook)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setDefaultAddressbook()");
     if (is_object($addressbook)) {
       $addressbook_id = $addressbook->id;
-    }
-    else if (is_string($addressbook)) {
+    } else if (is_string($addressbook)) {
       $addressbook_id = $addressbook;
-    }
-    else {
+    } else {
       return false;
     }
     if ($this->savePreference(self::PREF_SCOPE_ADDRESSBOOK, \LibMelanie\Config\ConfigMelanie::ADDRESSBOOK_PREF_DEFAULT_NAME, $addressbook_id)) {
       if (is_object($addressbook)) {
         $this->_defaultAddressbook = $addressbook;
-      }
-      else {
+      } else {
         $this->_defaultAddressbook = null;
       }
       $this->executeCache();
@@ -2211,7 +2269,8 @@ abstract class User extends MceObject {
    * 
    * @return true si la création est OK, false sinon
    */
-  public function createDefaultAddressbook($addressbookName = null) {
+  public function createDefaultAddressbook($addressbookName = null)
+  {
     // Gestion du nom du carnet d'adresses
     if (isset($addressbookName)) {
       $addressbookName = str_replace('%%fullname%%', $this->fullname, $addressbookName);
@@ -2239,7 +2298,8 @@ abstract class User extends MceObject {
    * 
    * @return Addressbook[]
    */
-  public function getUserAddressbooks() {
+  public function getUserAddressbooks()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getUserAddressbooks()");
     // Si la liste des carnets n'est pas encore chargée
     if (!isset($this->_userAddressbooks)) {
@@ -2257,8 +2317,7 @@ abstract class User extends MceObject {
             $this->_userAddressbooks[$_key] = $_book;
           }
         }
-      }
-      else {
+      } else {
         $_addressbooks = $this->objectmelanie->getUserAddressbooks();
         if (!isset($_addressbooks)) {
           return null;
@@ -2271,8 +2330,7 @@ abstract class User extends MceObject {
         }
       }
       $this->executeCache();
-    }
-    else {
+    } else {
       foreach ($this->_userAddressbooks as $_key => $_book) {
         if (!is_object($this->_userAddressbooks[$_key])) {
           $this->_userAddressbooks = null;
@@ -2288,7 +2346,8 @@ abstract class User extends MceObject {
    * 
    * @return Addressbook[]
    */
-  public function getSharedAddressbooks() {
+  public function getSharedAddressbooks()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getSharedAddressbooks()");
     // Si la liste des carnets n'est pas encore chargée on liste depuis la base
     if (!isset($this->_sharedAddressbooks)) {
@@ -2304,8 +2363,7 @@ abstract class User extends MceObject {
         $this->_sharedAddressbooks[$_addressbook->id] = $addressbook;
       }
       $this->executeCache();
-    }
-    else {
+    } else {
       foreach ($this->_sharedAddressbooks as $_key => $_book) {
         if (!is_object($this->_sharedAddressbooks[$_key])) {
           $this->_sharedAddressbooks = null;
@@ -2321,13 +2379,36 @@ abstract class User extends MceObject {
    * Nettoyer les donnés en cache 
    * (appelé lors de la modification d'un calendrier)
    */
-  public function cleanAddressbooks() {
+  public function cleanAddressbooks()
+  {
     $this->_defaultAddressbook = null;
     $this->_userAddressbooks = null;
     $this->_sharedAddressbooks = null;
     $this->executeCache();
   }
-  
+
+  public function formatPhoneNumber($phoneNumber)
+  {
+    if (isset($phoneNumber)) {
+      $phoneNumber = preg_replace('/\s+|-/', '', $phoneNumber); // Remplace un ou plusieurs espace | un tiret par un seul espace
+
+      $formats = ["+33(0)","+33", "+590", "+594", "+596", "+262", "+508", "+681", "+689", "+687"];
+
+      foreach ($formats as $format) {
+        if (strpos($phoneNumber, $format) === 0) // si le début d'une num de tel === un des format, alors il est remplacé par un unique 0
+        {
+          $phoneNumber = '0' . substr($phoneNumber, strlen($format));
+          break;
+        }
+      }
+
+      $lastEdit = preg_replace('/(..)/', '$1 ', $phoneNumber);
+      return $lastEdit;
+    } else {
+      return $phoneNumber;
+    }
+  }
+
   /**
    * ***************************************************
    * DATA MAPPING
@@ -2337,15 +2418,16 @@ abstract class User extends MceObject {
    * 
    * @return boolean true s'il s'agit d'un objet de partage, false sinon
    */
-  protected function getMapIs_objectshare() {
+  protected function getMapIs_objectshare()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapIs_objectshare()");
 
     if (empty($this->getObjectShareDelimiter())) {
       return false;
     }
 
-    return isset($this->uid) && strpos($this->uid, $this->getObjectShareDelimiter()) !== false 
-        || isset($this->email) && strpos($this->email, $this->getObjectShareDelimiter()) !== false;
+    return isset($this->uid) && strpos($this->uid, $this->getObjectShareDelimiter()) !== false
+      || isset($this->email) && strpos($this->email, $this->getObjectShareDelimiter()) !== false;
   }
 
   /**
@@ -2354,7 +2436,8 @@ abstract class User extends MceObject {
    * 
    * @return ObjectShare Objet de partage associé, null si pas d'objet de partage
    */
-  protected function getMapObjectshare() {
+  protected function getMapObjectshare()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapObjectshare()");
 
     if (empty($this->getObjectShareDelimiter())) {
@@ -2362,8 +2445,10 @@ abstract class User extends MceObject {
     }
 
     if (!isset($this->objectshare)) {
-      if (isset($this->uid) && strpos($this->uid, $this->getObjectShareDelimiter()) !== false 
-          || isset($this->email) && strpos($this->email, $this->getObjectShareDelimiter()) !== false) {
+      if (
+        isset($this->uid) && strpos($this->uid, $this->getObjectShareDelimiter()) !== false
+        || isset($this->email) && strpos($this->email, $this->getObjectShareDelimiter()) !== false
+      ) {
         $class = $this->__getNamespace() . '\\ObjectShare';
         $this->objectshare = new $class($this->_server, $this->_itemName);
         $this->objectshare->setObjectMelanie($this->objectmelanie);
@@ -2377,7 +2462,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean true si la synchronisation est activée pour l'utilisateur
    */
-  protected function getMapIs_synchronisation_enable() {
+  protected function getMapIs_synchronisation_enable()
+  {
     return true;
   }
 
@@ -2388,7 +2474,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean false non supporté
    */
-  protected function setMapIs_synchronisation_enable($is_synchronisation_enable) {
+  protected function setMapIs_synchronisation_enable($is_synchronisation_enable)
+  {
     return false;
   }
 
@@ -2397,7 +2484,8 @@ abstract class User extends MceObject {
    * 
    * @return string Profil de synchronisation de l'utilisateur
    */
-  protected function getMapSynchronisation_profile() {
+  protected function getMapSynchronisation_profile()
+  {
     return 'STANDARD';
   }
 
@@ -2408,7 +2496,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean false non supporté
    */
-  protected function setMapSynchronisation_profile($synchronisation_profile) {
+  protected function setMapSynchronisation_profile($synchronisation_profile)
+  {
     return false;
   }
 
@@ -2417,7 +2506,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean true si la boite est individuelle
    */
-  protected function getMapIs_individuelle() {
+  protected function getMapIs_individuelle()
+  {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_INDIVIDUELLE);
   }
 
@@ -2426,7 +2516,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean true si la boite est partagée
    */
-  protected function getMapIs_partagee() {
+  protected function getMapIs_partagee()
+  {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_PARTAGEE);
   }
 
@@ -2435,7 +2526,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean true si la boite est fonctionnelle
    */
-  protected function getMapIs_fonctionnelle() {
+  protected function getMapIs_fonctionnelle()
+  {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_FONCTIONNELLE);
   }
 
@@ -2444,16 +2536,18 @@ abstract class User extends MceObject {
    * 
    * @return boolean true si la boite est une ressource
    */
-  protected function getMapIs_ressource() {
+  protected function getMapIs_ressource()
+  {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_RESSOURCE);
   }
-  
+
   /**
    * Mapping is_unite field
    * 
    * @return boolean true si la boite est une unite
    */
-  protected function getMapIs_unite() {
+  protected function getMapIs_unite()
+  {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_UNITE);
   }
 
@@ -2462,7 +2556,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean true si la boite est un service
    */
-  protected function getMapIs_service() {
+  protected function getMapIs_service()
+  {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_SERVICE);
   }
 
@@ -2471,7 +2566,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean true si la boite est une personne
    */
-  protected function getMapIs_personne() {
+  protected function getMapIs_personne()
+  {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_PERSONNE);
   }
 
@@ -2480,7 +2576,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean true si la boite est une application
    */
-  protected function getMapIs_applicative() {
+  protected function getMapIs_applicative()
+  {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_APPLICATIVE);
   }
 
@@ -2489,7 +2586,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean true si la boite est une list
    */
-  protected function getMapIs_list() {
+  protected function getMapIs_list()
+  {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_LIST);
   }
 
@@ -2499,7 +2597,8 @@ abstract class User extends MceObject {
    * 
    * @return Group Groupe associé, null si pas une liste
    */
-  protected function getMapList() {
+  protected function getMapList()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapList()");
 
     if ($this->getMapIs_list()) {
@@ -2516,8 +2615,49 @@ abstract class User extends MceObject {
    * 
    * @return boolean true si la boite est une listab
    */
-  protected function getMapIs_listab() {
+  protected function getMapIs_listab()
+  {
     return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_LISTAB);
+  }
+
+  /**
+   * Mapping is_folder_groupement
+   * 
+   * @return boolean true si la boite est un dossier de groupement
+   */
+  protected function getMapIs_folder_groupement()
+  {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_FOLDER_GROUPEMENT);
+  }
+
+  /**
+   * Mapping is_folder_service
+   * 
+   * @return boolean true si la boite est un dossier de service
+   */
+  protected function getMapIs_folder_service()
+  {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_FOLDER_SERVICE);
+  }
+
+  /**
+   * Mapping is_folder_unite
+   * 
+   * @return boolean true si la boite est un dossier d'unité
+   */
+  protected function getMapIs_folder_unite()
+  {
+    return $this->objectmelanie->type == Config::get(Config::LDAP_TYPE_FOLDER_UNITE);
+  }
+
+  /**
+   * Mapping is_folder
+   * 
+   * @return boolean true si la boite est un dossier
+   */
+  protected function getMapIs_folder()
+  {
+    return $this->getMapIs_folder_unite() || $this->getMapIs_folder_service() || $this->getMapIs_folder_groupement();
   }
 
   /**
@@ -2525,7 +2665,8 @@ abstract class User extends MceObject {
    * 
    * @return boolean true s'il s'agit bien d'une boite (valeur par défaut pour la MCE)
    */
-  protected function getMapIs_mailbox() {
+  protected function getMapIs_mailbox()
+  {
     return true;
   }
 
@@ -2534,11 +2675,128 @@ abstract class User extends MceObject {
    * 
    * @return Share[] Liste des partages de l'objet
    */
-  protected function getMapShares() {
+  protected function getMapShares()
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapShares()");
     if (!isset($this->_shares)) {
       $this->_shares = [];
     }
     return $this->_shares;
+  }
+
+  /**
+   * Mapping order field
+   * 
+   * @return string Ordre du user
+   */
+  protected function getMapOrder()
+  {
+    if (isset($this->objectmelanie->order)) {
+      return str_pad($this->objectmelanie->order, 4, '0');
+    } else {
+      return "N000";
+    }
+  }
+
+  /**
+   * Mapping observation or description field
+   * 
+   * @return string Description ou observation du user
+   */
+  protected function getMapWork()
+  {
+    if (isset($this->objectmelanie->observation)) {
+      return $this->objectmelanie->observation;
+    } else if (isset($this->objectmelanie->description)) {
+      return $this->objectmelanie->description;
+    } else {
+      return "";
+    }
+  }
+
+  /**
+   * Récupère le numéro de téléphone formaté de l'utilisateur
+   * 
+   * @return String numéro de téléphone
+   */
+  protected function getMapPhoneformat()
+  {
+    return $this->formatPhoneNumber($this->objectmelanie->phonenumber);
+  }
+
+  /**
+   * Récupère le numéro de mobile formaté de l'utilisateur
+   * 
+   * @return String numéro de téléphone
+   */
+  protected function getMapMobileformat()
+  {
+    return $this->formatPhoneNumber($this->objectmelanie->mobilephone);
+  }
+
+  /**
+   * Découpe le dn pour retourner un tableau de dn avec le chemin correspondant 
+   * 
+   * @return Array Tableau de dn
+   */
+  protected function getMapDnarray()
+  {
+    $dn = $this->objectmelanie->dn;
+    $fullname = $this->objectmelanie->fullname;
+
+    $dnLength = explode(",", $dn);
+    
+    $dnArray = [];
+    
+    for ($i = 0; $i < count($dnLength); $i++) {
+      $parts = explode(",", $dn, 2);
+      
+      if ($dn === Config::get(Config::DEFAULT_LDAP_DN)) {
+        break;
+      }
+      
+      $name = explode("=", $parts[0])[1];
+      if ($dn === $this->objectmelanie->dn) {
+        $dnArray[] = ['name' => strtoupper($name), 'dn' => $dn, 'fullname' => $fullname];
+      } else {
+        $dnArray[] = ['name' => strtoupper($name), 'dn' => $dn];
+      }
+      
+      $dn = $parts[1] ?? [];
+    }
+
+    return array_reverse($dnArray);
+  }
+
+  protected function getMapObject_type()
+  {
+    if ($this->getMapIs_individuelle()) {
+      return 'user';
+    } else if ($this->getMapIs_fonctionnelle() || $this->getMapIs_ressource() || $this->getMapIs_applicative()) {
+      return 'fonction';
+    } else if ($this->getMapIs_folder()) {
+      return 'folder';
+    } else if ($this->getMapIs_list() || $this->getMapIs_listab()) {
+      return 'group';
+    } else {
+      return 'other';
+    }
+  }
+
+  protected function getMapObject()
+  {
+    $object_class = 'User';
+    if ($this->getMapIs_folder()) {
+      $object_class = 'Folder';
+    } else if ($this->getMapIs_list() || $this->getMapIs_listab()) {
+      $object_class = 'Group';
+    } else {
+      return $this;
+    }
+
+    $class = $this->__getNamespace() . '\\' . $object_class;
+    $class_object = new $class($this->_server, $this->_itemName);
+    $class_object->getObjectMelanie()->__set_data($this->objectmelanie->__get_data());
+    return $class_object;
   }
 }

@@ -244,8 +244,10 @@ class User extends Defaut\User {
     "locality"                => 'l',                             // Ville
     "description"             => 'description',                   // Description
     "phonenumber"             => 'telephonenumber',               // Numéro de téléphone
+    "phoneformat"             => 'telephonenumber',               // Numéro de téléphone
     "faxnumber"               => 'facsimiletelephonenumber',      // Numéro de fax
     "mobilephone"             => 'mobile',                        // Numéro de mobile
+    "mobileformat"            => 'mobile',                        // Numéro de mobile
     "roomnumber"              => 'roomnumber',                    // Numéro de bureau
     "title"                   => 'title',                         // Titre
     "business_category"       => [MappingMce::name => 'businesscategory', MappingMce::type => MappingMce::arrayLdap], // Cetégorie
@@ -281,6 +283,8 @@ class User extends Defaut\User {
     "is_external"               => [MappingMce::name => 'dn', MappingMce::type => MappingMce::booleanLdap],
     "uuid"                      => "uniqueidentifier",
     "password"                  => "userpassword",
+    "order"                     => "mineqordreaffichage",
+    "alias"                     => [MappingMce::name => 'seeAlso', MappingMce::type => MappingMce::arrayLdap],
   ];
 
   /**

@@ -902,7 +902,7 @@ class Ldap {
       $filter = $ldap->getConfig("get_lists_user_member_filter"); 
     }
     if (isset($filter)) {
-      if (isset($username)) {
+      if (isset($email)) {
         $filter = str_replace('%%email%%', $email, $filter);
       }
     } else {
@@ -950,7 +950,8 @@ class Ldap {
    *          [Optionnel] Liste des attributs ldap à retourner
    * @param string $server
    *          [Optionnel] Server LDAP utilisé pour la requête
-   * @return mixed dn cn uid
+   * 
+   * @return array
    */
   public static function GetUserInfosFromEmail($email = null, $filter = null, $ldap_attr = null, $server = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUserInfosFromEmail($email)");
@@ -1001,6 +1002,206 @@ class Ldap {
     // Retourne les données, null si vide
     return $infos;
   }
+  
+  /**
+   * Retourne les informations complémentaire d'une ou 
+   * Ne retourne qu'une seule entrée
+   * 
+   * @param string $base_dn
+   *          [Optionnel] dn de l'ou
+   * @param string $type
+   *          [Optionnel] Type de boite au lettre à récupérer
+   * @param array $mapping
+   *          [Optionnel] Liste des attributs ldap à retourner
+   * @param string $server
+   *          [Optionnel] Server LDAP utilisé pour la requête
+   * 
+   * @return array
+   */
+  public static function getFolderBalInfos($base_dn, $type, $mapping, $server = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getFolderBalInfos($base_dn)");
+
+    if (!isset($server)) {
+      $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+    }
+
+    $ldap = self::GetInstance($server);
+
+    $filter = $ldap->getConfig("get_folder_bal_infos_filter");
+
+    if (isset($type) && !isset($filter)) {
+        $filter = "(mineqtypeentree=$type)";
+    }
+
+    // Récupération des données en cache
+    $keycache = "getFolderBalInfos:$server:" . md5($filter) . ":$base_dn";
+    $infos = $ldap->getCache($keycache);
+    if (!isset($infos)) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
+        // Lancement de la recherche
+        $sr = $ldap->ldap_list($base_dn, $filter, $mapping);
+        if ($sr && $ldap->count_entries($sr) > 0) {
+          $infos = $ldap->get_entries($sr);
+          $ldap->setCache($keycache, $infos);
+        } else {
+          $ldap->deleteCache($keycache);
+        }
+      }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+      }
+    }
+    // Retourne les données, null si vide
+    return $infos;
+  }
+
+  /**
+   * Retourne les enfants d'un dossier depuis le LDAP
+   * 
+   * @param string $base_dn dn du dossier
+   * @param array $type type d'objet à récupérer (folder,user,group)
+   * @param array $mapping liste des attributs à récupérer
+   * @param string $scope
+   *          [Optionnel] Scope pour la recherche dans le ldap (one,subtree)
+   * @param string server serveur ldap à utiliser
+   * 
+   * @return array 
+   */
+  public static function getFolderChildrenInfos($base_dn, $type, $mapping, $scope = 'one', $server = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getFolderChildrenInfos($base_dn)");
+
+    if (!isset($server)) {
+      $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+    }
+
+    $ldap = self::GetInstance($server);
+
+    $filter = $ldap->getConfig("get_folder_children_infos_filter");
+
+    if (isset($type) && !isset($filter)) {
+        $filter = "(&(objectclass=$type)(mineqPortee>=40))";
+    } else {
+      $filter = "(&(objectclass=*)(mineqPortee>=40))";
+    }
+
+    // Récupération des données en cache
+    $keycache = "getFolderChildrenInfos:$server:" . md5($filter) . ":$base_dn";
+    $infos = $ldap->getCache($keycache);
+    if (!isset($infos)) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
+        // Lancement de la recherche
+        if ($scope == "one") {
+          $sr = $ldap->list_alias($base_dn, $filter, $mapping);
+        } 
+        else if($scope == "subtree") {
+          $sr = $ldap->search_alias($base_dn, $filter, $mapping);
+        }
+        if ($sr && $ldap->count_entries($sr) > 0) {
+          $infos = $ldap->get_entries($sr);
+          $ldap->setCache($keycache, $infos);
+        } else {
+          $ldap->deleteCache($keycache);
+        }
+      }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+      }
+    }
+    // Retourne les données, null si vide
+    return $infos;
+  }
+
+  /**
+   * Retourne les résultats d'une recherche par mot clé dans le LDAP
+   * 
+   * @param string $query Recherche à effectuer
+   * @param array $mapping liste des attributs à récupérer
+   * @return string server serveur ldap à utiliser
+   * 
+   * @return array 
+   */
+  public static function getFolderSearch($query, $mapping, $server = null) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getFolderSearch($query)");
+
+    if (!isset($server)) {
+      $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+    }
+
+    $ldap = self::GetInstance($server);
+
+    $search_filter = $ldap->getConfig("get_folder_search_filter");
+
+    if(!isset($filter)) {
+      $search_filter = "(&(objectclass=*)(mineqPortee>=40))";
+    }
+
+    $searchFields = $ldap->getConfig("search_fields");
+    $searchFilter = $ldap->getConfig("search_filter");
+    $searchEqualFields = $ldap->getConfig("search_equal_fields");
+    $searchBeforeFields = $ldap->getConfig("search_before_fields");
+    
+    if (!is_array($searchEqualFields)) {
+      $searchEqualFields = [$searchEqualFields];
+    }
+    if (is_array($searchFields)) {
+      $filter = "";
+      foreach ($searchFields as $field) {
+        if (in_array($field, $searchEqualFields)) {
+          $filter .= "($field=$query)";
+        }
+        else if(in_array($field, $searchBeforeFields)) {
+          $filter .= "($field=*$query)";
+        }
+        else {
+          $filter .= "($field=$query*)";
+        }
+        
+      }
+      if (isset($searchFilter)) {
+        $filter = $searchFilter . $filter;
+      }
+      $filter = "(|$filter)";
+    }
+    else if (in_array($searchFields, $searchEqualFields)) {
+      $filter = "$searchFields=$query";
+      if (isset($searchFilter)) {
+        $filter = "(|$searchFilter(".$filter."))";
+      }
+    }
+    else {
+      $filter = "$searchFields=$query*";
+      if (isset($searchFilter)) {
+        $filter = "(|$searchFilter(".$filter."))";
+      }
+    }
+
+    $filter = "(&".$search_filter.$filter.")";
+
+    // Récupération des données en cache
+    $keycache = "getFolderChildrenInfos:$server:" . md5($filter);
+    $infos = $ldap->getCache($keycache);
+    if (!isset($infos)) {
+      // Connexion pour lire les données
+      if ($ldap->bind4lookup()) {
+        // Lancement de la recherche
+        $sr = $ldap->search(LibMelanie\Config\Config::get(LibMelanie\Config\Config::DEFAULT_LDAP_DN), $filter, $mapping);
+        if ($sr && $ldap->count_entries($sr) > 0) {
+          $infos = $ldap->get_entries($sr);
+          $ldap->setCache($keycache, $infos);
+        } else {
+          $ldap->deleteCache($keycache);
+        }
+      }
+      else {
+        throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+      }
+    }
+    // Retourne les données, null si vide
+    return $infos;
+  }
+
   /**
    * Retourne le nom du champ mappé configuré pour le serveur LDAP (par défault SEARCH)
    * 

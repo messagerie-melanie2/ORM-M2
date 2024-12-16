@@ -1,1 +1,4 @@
-LibrarySqlMelanie2/.vscode/
+.vscode/
+.settings/
+.project
+.buildpath

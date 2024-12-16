@@ -225,7 +225,7 @@ class Post extends MceObject {
    */
   public function firstImage() {
     $image = new Image($this);
-    $images = $image->getList(['id', 'uid', 'post'], '', [], 'id', false, 1);
+    $images = $image->getList(['id', 'uid', 'post'], '', [], 'id', true, 1);
     return count($images) ? array_pop($images) : null;
   }
 
@@ -372,7 +372,7 @@ class Post extends MceObject {
   public function listPosts($search = null, $tags = [], $orderby = 'created', $asc = true, $limit = null, $offset = null, $uids = null) {
     $post = new static();
     $post->workspace = $this->workspace;
-    $fields = ['id', 'uid', 'title', 'summary', 'created', 'modified', 'creator', 'workspace'];
+    $fields = ['id', 'uid', 'title', 'summary', 'created', 'modified', 'creator', 'workspace', 'settings'];
     $filter = "";
     $operators = [];
     $case_unsensitive_fields = [];

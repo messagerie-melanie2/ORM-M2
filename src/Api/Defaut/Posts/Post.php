@@ -461,7 +461,7 @@ class Post extends MceObject {
     }
 
     // Lister par uid
-    if (isset($uids)) {
+    if (isset($uids) && !empty($uids)) {
       $post->uid = $uids;
 
       // Gestion du filtre

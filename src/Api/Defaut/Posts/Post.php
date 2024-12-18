@@ -377,6 +377,11 @@ class Post extends MceObject {
     $operators = [];
     $case_unsensitive_fields = [];
 
+    // Si uids est vide, on retourne un tableau vide
+    if (isset($uids) && empty($uids)) {
+      return [];
+    }
+
     // Gestion de la recherche
     if (isset($search)) {
       $search = strtolower($search);
@@ -461,7 +466,7 @@ class Post extends MceObject {
     }
 
     // Lister par uid
-    if (isset($uids) && !empty($uids)) {
+    if (isset($uids)) {
       $post->uid = $uids;
 
       // Gestion du filtre

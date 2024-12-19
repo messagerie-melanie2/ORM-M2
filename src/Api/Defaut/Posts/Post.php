@@ -259,12 +259,14 @@ class Post extends MceObject {
         $this->objectmelanie->setFieldHasChanged('reactions', false);
       }
       else if ($type == 'like') {
-        $this->objectmelanie->likes = $this->objectmelanie->reactions;
+        $this->objectmelanie->likes = isset($res[0]) ? $res[0]->count : 0;
         $this->objectmelanie->setFieldHasChanged('likes', false);
+        return $this->objectmelanie->likes;
       }
       else if ($type == 'dislike') {
-        $this->objectmelanie->dislikes = $this->objectmelanie->reactions;
+        $this->objectmelanie->dislikes = isset($res[0]) ? $res[0]->count : 0;
         $this->objectmelanie->setFieldHasChanged('dislikes', false);
+        return $this->objectmelanie->dislikes;
       }
     }
     return $this->objectmelanie->reactions;

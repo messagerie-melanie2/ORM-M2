@@ -390,10 +390,14 @@ class Post extends MceObject {
 
       // HashTags ?
       if (strpos($search, '#') !== false) {
-        preg_match_all('/#(\w+)/', $search, $matches);
+        preg_match_all('/#(\w+)/u', $search, $matches);
         if (!empty($matches[1])) {
           $_posts = (new Tag())->listPostsByTagsName($matches[1], $this->workspace, ['post']);
 
+          if (empty($_posts)) {
+            return [];
+          }
+          
           $ids = [];
           foreach ($_posts as $_post) {
             $ids[] = $_post->post;
@@ -408,7 +412,7 @@ class Post extends MceObject {
           $filter .= "#id#";
           $operators['id'] = \LibMelanie\Config\MappingMce::in;
         }
-        $search = preg_replace('/#(\w+)/', '', $search);
+        $search = preg_replace('/#(\w+)/u', '', $search);
         $search = trim($search);
       }
 

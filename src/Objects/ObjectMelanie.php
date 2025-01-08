@@ -431,14 +431,14 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 	* @param int $limit Limite le nombre de résultat (utile pour la pagination)
 	* @param int $offset Offset de début pour les résultats (utile pour la pagination)
 	* @param string[] $case_unsensitive_fields Liste des champs pour lesquels on ne sera pas sensible à la casse
-  * @param string $join Nom de la table à joindre
-  * @param string $type_join Type de jointure
-  * @param string $using Clause using
-  * @param string $prefix Prefix des champs
-  * @param array $groupby Sur quel champ on fait le group by
-  * @param string $groupby_count Champ utilisé pour compter le group by
-  * @param array $subqueries (tableau de tableaux) Liste des sous requêtes array(name, fields, object, filter)
-  *
+	* @param string $join Nom de la table à joindre
+	* @param string $type_join Type de jointure
+	* @param string $using Clause using
+	* @param string $prefix Prefix des champs
+	* @param array $groupby Sur quel champ on fait le group by
+	* @param string $groupby_count Champ utilisé pour compter le group by
+	* @param array $subqueries (tableau de tableaux) Liste des sous requêtes array(name, fields, object, filter)
+	*
 	* @return ObjectMelanie[] Array
 	*/
 	public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = []) {

@@ -97,30 +97,31 @@ class TaskProperty extends MceObject {
    * METHOD MAPPING
    */
   /**
-   * Permet de récupérer la liste d'objet en utilisant les données passées
-   * (la clause where s'adapte aux données)
-   * Il faut donc peut être sauvegarder l'objet avant d'appeler cette méthode
-   * pour réinitialiser les données modifiées (propriété haschanged)
-   * 
-   * @param String[] $fields
-   *          Liste les champs à récupérer depuis les données
-   * @param String $filter
-   *          Filtre pour la lecture des données en fonction des valeurs déjà passé, exemple de filtre : "((#description# OR #title#) AND #start#)"
-   * @param String[] $operators
-   *          Liste les propriétés par operateur (MappingMce::like, MappingMce::supp, MappingMce::inf, MappingMce::diff)
-   * @param String $orderby
-   *          Tri par le champ
-   * @param bool $asc
-   *          Tri ascendant ou non
-   * @param int $limit
-   *          Limite le nombre de résultat (utile pour la pagination)
-   * @param int $offset
-   *          Offset de début pour les résultats (utile pour la pagination)
-   * @param String[] $case_unsensitive_fields
-   *          Liste des champs pour lesquels on ne sera pas sensible à la casse
-   * @return TaskProperty[] Array
-   */
-  function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = []) {
+	 * Permet de récupérer la liste d'objet en utilisant les données passées
+	 * (la clause where s'adapte aux données)
+	 * Il faut donc peut être sauvegarder l'objet avant d'appeler cette méthode
+	 * pour réinitialiser les données modifiées (propriété haschanged)
+	 * 
+	 * @param String[] $fields
+	 *          Liste les champs à récupérer depuis les données
+	 * @param String $filter
+	 *          Filtre pour la lecture des données en fonction des valeurs déjà passé, exemple de filtre : "((#description# OR #title#) AND #start#)"
+	 * @param String[] $operators
+	 *          Liste les propriétés par operateur (MappingMce::like, MappingMce::supp, MappingMce::inf, MappingMce::diff)
+	 * @param String $orderby
+	 *          Tri par le champ
+	 * @param bool $asc
+	 *          Tri ascendant ou non
+	 * @param int $limit
+	 *          Limite le nombre de résultat (utile pour la pagination)
+	 * @param int $offset
+	 *          Offset de début pour les résultats (utile pour la pagination)
+	 * @param String[] $case_unsensitive_fields
+	 *          Liste des champs pour lesquels on ne sera pas sensible à la casse
+	 * 
+	 * @return MceObject[] Array
+	 */
+	public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = []) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getList()");
     $_taskproperties = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields);
     if (!isset($_taskproperties))

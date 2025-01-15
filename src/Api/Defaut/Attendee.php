@@ -710,6 +710,8 @@ class Attendee extends MceObject {
       if (!$this->_is_list) {
         $this->_uid = $this->_user->uid;
       }
+      // MANTIS 0008706: Dans le cas d'un participant avec plusieurs adresses remettre l'adresse email principale comme email de participation
+      $this->_email = $this->_user->email;
       $this->_name = $this->_user->fullname;
       $this->_is_ressource = $this->_user->is_ressource;
       $this->_is_individuelle = $this->_user->is_individuelle || $this->_user->is_applicative;

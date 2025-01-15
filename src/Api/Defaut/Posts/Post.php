@@ -375,8 +375,8 @@ class Post extends MceObject {
     $post = new static();
     $post->workspace = $this->workspace;
     $fields = ['id', 'uid', 'title', 'summary', 'created', 'modified', 'creator', 'workspace', 'settings'];
-    $filter = "";
-    $operators = [];
+    $filter = "#workspace#";
+    $operators = ['workspace' => \LibMelanie\Config\MappingMce::eq];
     $case_unsensitive_fields = [];
 
     // Si uids est vide, on retourne un tableau vide

@@ -368,10 +368,12 @@ class Post extends MceObject {
    * @param integer $limit Limite de résultats
    * @param integer $offset Offset de résultats
    * @param array $uids Liste des uids
+   * @param array $pins Liste des uids de posts épinglés
    * 
    * @return Post[] Liste des posts
    */
-  public function listPosts($search = null, $tags = [], $orderby = 'created', $asc = true, $limit = null, $offset = null, $uids = null) {
+  public function listPosts($search = null, $tags = [], $orderby = 'created', $asc = true, $limit = null, $offset = null, $uids = null, $pins = null) {
+    $pins_posts = [];
     $post = new static();
     $post->workspace = $this->workspace;
     $fields = ['id', 'uid', 'title', 'summary', 'created', 'modified', 'creator', 'workspace', 'settings'];
@@ -382,6 +384,28 @@ class Post extends MceObject {
     // Si uids est vide, on retourne un tableau vide
     if (isset($uids) && empty($uids)) {
       return [];
+    }
+
+    // Gestion des posts épinglés
+    if (isset($pins) 
+        && empty($search) && empty($tags) && empty($uids)) {
+      
+      // Sur la première page, on retourne les épinglés
+      if (empty($offset)) {
+        $pins_posts = $this->listPosts(null, [], $orderby, $asc, null, null, $pins);
+      }
+
+      // Les epinglés sont à part, donc ne pas les ajouter dans les résultats
+      $post->uid = $pins;
+
+      // Gestion du filtre
+      if (!empty($filter)) {
+        $filter .= " AND ";
+      }
+
+      $filter .= "#uid#";
+      $operators['uid'] = \LibMelanie\Config\MappingMce::notin;
+
     }
 
     // Gestion de la recherche
@@ -510,7 +534,7 @@ class Post extends MceObject {
         break;
     }
 
-    return $posts;
+    return array_merge($pins_posts, $posts);
   }
 
   /**

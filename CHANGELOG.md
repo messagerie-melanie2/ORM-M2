@@ -1,3 +1,10 @@
+ORM M2 - 0.6.12
+------
+- 0008708: Ajouter les uid de posts épinglés dans listPosts()
+- 0008707: Problème d'utilisation du workspace dans listPosts
+- 0008706: Dans le cas d'un participant avec plusieurs adresses remettre l'adresse email principale comme email de participation
+- 0008694: Support VCard4
+
 ORM M2 - 0.6.11
 ------
 - 0008623: Méthodes pour connaitre les accès d'un user sur un workspace

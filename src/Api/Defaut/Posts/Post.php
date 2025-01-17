@@ -211,21 +211,33 @@ class Post extends MceObject {
   /**
    * Récupère la liste des images associées au post
    * 
+   * @param bool $data Récupérer les données de l'image
+   * 
    * @return Image[] Liste des images
    */
-  public function listImages() {
+  public function listImages($data = false) {
     $image = new Image($this);
-    return $image->getList(['id', 'uid', 'post']);
+    $attributes = ['id', 'uid', 'post'];
+    if ($data) {
+      $attributes[] = 'data';
+    }
+    return $image->getList($attributes);
   }
 
   /**
    * Récupère la première image associée au post
    * 
+   * @param bool $data Récupérer les données de l'image
+   * 
    * @return Image Première image
    */
-  public function firstImage() {
+  public function firstImage($data = false) {
     $image = new Image($this);
-    $images = $image->getList(['id', 'uid', 'post'], '', [], 'id', true, 1);
+    $attributes = ['id', 'uid', 'post'];
+    if ($data) {
+      $attributes[] = 'data';
+    }
+    $images = $image->getList($attributes, '', [], 'id', true, 1);
     return count($images) ? array_pop($images) : null;
   }
 

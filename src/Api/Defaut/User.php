@@ -1281,11 +1281,20 @@ abstract class User extends MceObject {
    * Est-ce que l'utilisateur est admin de l'espace de travail
    * 
    * @param string|WorkspaceMelanie $workspace Espace de travail à tester
+   * @param boolean $force_reload_cache [Optionnel] Forcer le rechargement des données
    * 
    * @return boolean
    */
-  public function isWorkspaceOwner($workspace) {
-    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->isWorkspaceOwner()");
+  public function isWorkspaceOwner($workspace, $force_reload_cache = false) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->isWorkspaceOwner($workspace, $force_reload_cache)");
+
+    $ret = false;
+
+    // Recharger le cache avant de chercher le membre
+    if ($force_reload_cache) {
+      $this->cleanWorkspaces();
+      $this->getUserWorkspaces();
+    }
 
     // Si la liste des workspaces n'est pas encore chargée
     if (isset($this->_userWorkspaces)) {
@@ -1297,46 +1306,66 @@ abstract class User extends MceObject {
             break;
           }
         }
-        return $ret;
       }
       else {
-        return isset($this->_userWorkspaces[$workspace->id]);
+        $ret = isset($this->_userWorkspaces[$workspace->id]);
       }
     }
     else {
-      return $this->objectmelanie->isWorkspaceOwner($workspace);
+      $ret = $this->objectmelanie->isWorkspaceOwner($workspace);
     }
+
+    // Redemander sans le cache au cas où
+    if (!$ret && !$force_reload_cache) {
+      $ret = $this->isWorkspaceOwner($workspace, true);
+    }
+
+    return $ret;
   }
 
   /**
    * Est-ce que l'utilisateur est membre de l'espace de travail
    * 
    * @param string|WorkspaceMelanie $workspace Espace de travail à tester
+   * @param boolean $force_reload_cache [Optionnel] Forcer le rechargement des données
    * 
    * @return boolean
    */
-  public function isWorkspaceMember($workspace) {
-    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->isWorkspaceMember()");
+  public function isWorkspaceMember($workspace, $force_reload_cache = false) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->isWorkspaceMember($workspace, $force_reload_cache)");
+
+    $ret = false;
+
+    // Recharger le cache avant de chercher le membre
+    if ($force_reload_cache) {
+      $this->cleanWorkspaces();
+      $this->getSharedWorkspaces();
+    }
 
     // Si la liste des workspaces n'est pas encore chargée
     if (isset($this->_sharedWorkspaces)) {
       if (is_string($workspace)) {
-        $ret = false;
         foreach ($this->_sharedWorkspaces as $_work) {
           if ($_work->uid == $workspace) {
             $ret = true;
             break;
           }
         }
-        return $ret;
       }
       else {
-        return isset($this->_sharedWorkspaces[$workspace->id]);
+        $ret = isset($this->_sharedWorkspaces[$workspace->id]);
       }
     }
     else {
-      return $this->objectmelanie->isWorkspaceOwner($workspace);
+      $ret = $this->objectmelanie->isWorkspaceOwner($workspace);
     }
+
+    // Redemander depuis le cache au cas où
+    if (!$ret && !$force_reload_cache) {
+      $ret = $this->isWorkspaceMember($workspace, true);
+    }
+
+    return $ret;
   }
 
   /**

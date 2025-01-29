@@ -1,3 +1,8 @@
+ORM M2 - 0.6.13
+------
+- 0008714: Pouvoir charger les data depuis firstImage ou listImages
+- 0008773: Problème avec les updates dans ObjectMelanie
+
 ORM M2 - 0.6.12
 ------
 - 0008708: Ajouter les uid de posts épinglés dans listPosts()

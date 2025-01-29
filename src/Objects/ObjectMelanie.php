@@ -248,7 +248,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 					$mapKey = $key;
 				}
 
-				if ($this->haschanged[$mapKey]) {
+				if ($this->haschanged[$mapKey] && !empty($this->oldData[$mapKey])) {
 					$params["where_$mapKey"] = $this->oldData[$mapKey];
 				}
 				else {

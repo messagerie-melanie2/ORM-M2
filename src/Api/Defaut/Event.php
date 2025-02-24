@@ -1546,6 +1546,7 @@ class Event extends MceObject {
       }
     }
   }
+
   /**
    * Charge les attributs en mémoire
    */
@@ -1583,6 +1584,7 @@ class Event extends MceObject {
     }
     $this->attributes_loaded = true;
   }
+
   /**
    * Supprime les attributs
    */
@@ -1605,7 +1607,7 @@ class Event extends MceObject {
    * 
    * @return boolean
    */
-  private function loadExceptions() {
+  protected function loadExceptions() {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->loadExceptions()");
     $event = new static($this->user, $this->calendarmce);
     $event->realuid = $this->uid;
@@ -1628,7 +1630,7 @@ class Event extends MceObject {
    * 
    * @return boolean
    */
-  private function notException() {
+  protected function notException() {
     return $this->get_class == $this->__getNamespace() . '\\Event';
   }
   
@@ -1638,7 +1640,7 @@ class Event extends MceObject {
    * 
    * @return boolean True si tout est OK, false sinon 
    */
-  private function checkRecurrence() {
+  protected function checkRecurrence() {
     // Tableau permettant de recuperer toutes les valeurs de la recurrence
     if (isset($this->objectmelanie->recurrence_json)) {
       $recurrence = json_decode($this->objectmelanie->recurrence_json, true);
@@ -1665,6 +1667,35 @@ class Event extends MceObject {
     }
     return true;
   }
+
+  /**
+   * Vérifie si l'événement est un doublon
+   * 
+   * @return boolean true si l'événement est un doublon, false sinon
+   */
+  protected function checkDuplicate() {
+    // Rechercher un doublons avec un uid différent
+    $event = new self();
+    $event->calendar = $this->calendar;
+    $event->realuid = $this->realuid;
+    $event->title = $this->title;
+    $event->start = $this->start;
+    $event->end = $this->end;
+    $event->location = $this->location;
+
+    $operators = [
+      'calendar'  => \LibMelanie\Config\MappingMce::eq,
+      'realuid'   => \LibMelanie\Config\MappingMce::diff,
+      'title'     => \LibMelanie\Config\MappingMce::eq,
+      'start'     => \LibMelanie\Config\MappingMce::eq,
+      'end'       => \LibMelanie\Config\MappingMce::eq,
+      'location'  => \LibMelanie\Config\MappingMce::eq,
+    ];
+
+    $events = $event->getList([], "", $operators);
+
+    return count($events) > 0;
+  }
   
   /**
    * ***************************************************
@@ -1688,6 +1719,12 @@ class Event extends MceObject {
     // MANTIS 0005125: Bloquer les répétitions "récursives"
     if (!$this->checkRecurrence()) {
       M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() La recurrence ne respecte pas les regles d'usage (duree de l'evenement plus longue que la repetition)");
+      return null;
+    }
+
+    // 0008824: Bloquer la création de doublons d'événement
+    if ($this->checkDuplicate()) {
+      M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->save() L'evenement est un doublon");
       return null;
     }
 

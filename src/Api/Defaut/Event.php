@@ -805,7 +805,7 @@ class Event extends MceObject {
     $organizer_event->addException($organizer_event_exception);
     $organizer_event->modified = time();
     // Enregistre l'évenement de l'organisateur
-    $organizer_event->save(false);
+    $organizer_event->save();
 
     return $organizer_event_exception;
   }

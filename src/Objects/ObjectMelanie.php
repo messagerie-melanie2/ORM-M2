@@ -157,8 +157,17 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		$params = [];
 		$whereClause = "";
 
-		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
+		// 0008825: [ObjectMelanie] Pouvoir faire un load par id
+		$primaryKeys = $this->primaryKeys;
 		foreach ($this->primaryKeys as $key) {
+			if (!isset($this->$key) && !in_array('id', $primaryKeys)) {
+				$primaryKeys = ['id'];
+				break;
+			}
+		}
+
+		// Test si les clés primaires sont bien instanciées et les ajoute en paramètres
+		foreach ($primaryKeys as $key) {
 			if (!isset($this->$key)) return false;
 			// Récupèration des données de mapping
 			if (isset(MappingMce::$Data_Mapping[$this->objectType])
@@ -177,7 +186,7 @@ class ObjectMelanie extends MagicObject implements IObjectMelanie {
 		// Liste des champs
 		$query = str_replace("{fields_list}", $this->_getAllFields(), $query);
 		// Nom de la table
-    $query = str_replace("{table_name}", $this->_getTableName(), $query);
+    	$query = str_replace("{table_name}", $this->_getTableName(), $query);
 		// Clause where
 		$query = str_replace("{where_clause}", ' WHERE ' . $whereClause, $query);
 		

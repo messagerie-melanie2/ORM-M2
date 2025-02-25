@@ -1,3 +1,11 @@
+ORM M2 - 0.6.14
+------
+
+- 0008786: Lorsqu'un participant modifie sa réponse pour une seule occurrence, l'occurrence est supprimé pour les autres participants
+- 0008823: Problème de compte pour les réactions après un listReactions
+- 0008825: [ObjectMelanie] Pouvoir faire un load par id
+- 0008824: Bloquer la création de doublons d'événement
+
 ORM M2 - 0.6.13
 ------
 - 0008714: Pouvoir charger les data depuis firstImage ou listImages

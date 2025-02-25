@@ -178,7 +178,16 @@ class Post extends MceObject {
     $reaction = new Reaction($this);
 
     if (isset($type)) {
-      $reaction->type = $type;        
+      $reaction->type = $type;
+      
+      if (!isset($this->_countReactions)) {
+        $this->_countReactions = [];
+      }
+
+      $this->_countReactions[$type] = 0;
+    }
+    else {
+      $this->_countReactions = [];
     }
 
     $reactions = $reaction->getList();
@@ -187,10 +196,6 @@ class Post extends MceObject {
 
     // Gérer les countReactions
     foreach ($reactions as $reaction) {
-      if (!isset($this->_countReactions)) {
-        $this->_countReactions = [];
-      }
-
       if (!isset($this->_countReactions[$reaction->type])) {
         $this->_countReactions[$reaction->type] = 0;
       }

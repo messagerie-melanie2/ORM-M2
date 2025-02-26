@@ -499,6 +499,11 @@ abstract class User extends MceObject
   const MAPPING = [];
 
   /**
+   * Prefix pour le formatage des numéros de téléphone
+   */
+  const PHONE_PREFIX = ["+33(0)","+33", "+590", "+594", "+596", "+262", "+508", "+681", "+689", "+687"];
+
+  /**
    * Constructeur de l'objet
    * 
    * @param string $server Serveur d'annuaire a utiliser en fonction de la configuration
@@ -2387,14 +2392,20 @@ abstract class User extends MceObject
     $this->executeCache();
   }
 
+  /**
+   * Formate un numéro de téléphone en supprimant les espaces et les tirets,
+   * puis en remplaçant le préfixe par un 0 si nécessaire, et enfin en ajoutant
+   * des espaces tous les deux chiffres.
+   *
+   * @param string $phoneNumber Le numéro de téléphone à formater.
+   * @return string Le numéro de téléphone formaté.
+   */
   public function formatPhoneNumber($phoneNumber)
   {
     if (isset($phoneNumber)) {
       $phoneNumber = preg_replace('/\s+|-/', '', $phoneNumber); // Remplace un ou plusieurs espace | un tiret par un seul espace
 
-      $formats = ["+33(0)","+33", "+590", "+594", "+596", "+262", "+508", "+681", "+689", "+687"];
-
-      foreach ($formats as $format) {
+      foreach (static::PHONE_PREFIX as $format) {
         if (strpos($phoneNumber, $format) === 0) // si le début d'une num de tel === un des format, alors il est remplacé par un unique 0
         {
           $phoneNumber = '0' . substr($phoneNumber, strlen($format));
@@ -2768,6 +2779,11 @@ abstract class User extends MceObject
     return array_reverse($dnArray);
   }
 
+  /**
+   * Retourne le type d'objet de fonction de ses propriétés.
+   *
+   * @return string Le type d'objet. Peut être 'user', 'fonction', 'folder', 'group' ou 'other'.
+   */
   protected function getMapObject_type()
   {
     if ($this->getMapIs_individuelle()) {
@@ -2783,6 +2799,11 @@ abstract class User extends MceObject
     }
   }
 
+  /**
+   * Récupère l'objet mappé en fonction de certains critères.
+   *
+   * @return object L'objet mappé correspondant aux critères ou l'objet courant.
+   */
   protected function getMapObject()
   {
     $object_class = 'User';

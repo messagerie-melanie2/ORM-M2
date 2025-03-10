@@ -1,6 +1,10 @@
+ORM M2 - 0.6.15
+------
+- 0008797: Support des brouillons pour les articles
+- 0008834: Pour une ressource, supprimer l'événement via le en attente, peu importe le statut
+
 ORM M2 - 0.6.14
 ------
-
 - 0008786: Lorsqu'un participant modifie sa réponse pour une seule occurrence, l'occurrence est supprimé pour les autres participants
 - 0008823: Problème de compte pour les réactions après un listReactions
 - 0008825: [ObjectMelanie] Pouvoir faire un load par id

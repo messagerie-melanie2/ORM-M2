@@ -1052,23 +1052,29 @@ class Event extends MceObject {
           $listAttendee->uid = $_e->calendar;
 
           if ($listAttendee->need_action) {
-            // 0008072: [En attente] Ne plus supprimer les événements des participants
-            // Copier l'événement même pour une annulation
-            $this->copyEventNeedAction($this, $_e, null, $copyFieldsList, $needActionFieldsList, null, null, false, true);
-            // Doit on annuler l'événement pour le participant ?
-            if ($clean_deleted_attendees) {
-              $_e->status = self::STATUS_CANCELLED;
-
-              // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
-              if (!empty($_e->sequence)) {
-                $_e->sequence = $_e->sequence + 1;
-              }
-              else {
-                $_e->sequence = 1;
-              }
+            // 0008834: Pour une ressource, supprimer l'événement via le en attente, peu importe le statut
+            if ($listAttendee->is_ressource) {
+              $_e->delete();
             }
-            $_e->modified = time();
-            $_e->save(false);
+            else {
+              // 0008072: [En attente] Ne plus supprimer les événements des participants
+              // Copier l'événement même pour une annulation
+              $this->copyEventNeedAction($this, $_e, null, $copyFieldsList, $needActionFieldsList, null, null, false, true);
+              // Doit on annuler l'événement pour le participant ?
+              if ($clean_deleted_attendees) {
+                $_e->status = self::STATUS_CANCELLED;
+
+                // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
+                if (!empty($_e->sequence)) {
+                  $_e->sequence = $_e->sequence + 1;
+                }
+                else {
+                  $_e->sequence = 1;
+                }
+              }
+              $_e->modified = time();
+              $_e->save(false);
+            }
           }
         }
       }
@@ -1455,11 +1461,15 @@ class Event extends MceObject {
               $attendee_event->recurrence_id = $this->recurrence_id;
             }
             $attendee_event->uid = $this->uid;
-            if ($attendee_event->load()) {
+
+            // 0008834: Pour une ressource, supprimer l'événement via le en attente, peu importe le statut
+            if ($attendee->is_ressource) {
+              $attendee_event->delete();
+            }
+            else if ($attendee_event->load()) {
               // 0008072: [En attente] Ne plus supprimer les événements des participants
               // Modification en annulé
               $attendee_event->status = self::STATUS_CANCELLED;
-              $save = true;
 
               // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
               if (!empty($attendee_event->sequence)) {
@@ -1468,11 +1478,10 @@ class Event extends MceObject {
               else {
                 $attendee_event->sequence = 1;
               }
-              if ($save) {
-                $attendee_event->modified = time();
-                // Enregistre l'événement dans l'agenda du participant
-                $attendee_event->save(false);
-              }              
+              
+              $attendee_event->modified = time();
+              // Enregistre l'événement dans l'agenda du participant
+              $attendee_event->save(false);
             }
           }
         }

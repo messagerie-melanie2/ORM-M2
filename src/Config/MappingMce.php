@@ -467,6 +467,7 @@ class MappingMce {
 				"content" 		=> [self::name => "post_content"],
 				"created" 	    => [self::name => "created", self::type => self::date, self::prefix => "dwp_posts"],
 				"modified" 	    => [self::name => "updated", self::type => self::date, self::prefix => "dwp_posts"],
+				"isdraft"		=> [self::name => "post_isdraft", self::type => self::integer, self::defaut => 0],
 				"workspace" 	=> [self::name => "workspace_uid", self::size => 40],
 				"creator" 		=> [self::name => "user_uid", self::size => 64, self::prefix => "dwp_posts"],
 				"settings" 		=> [self::name => "post_settings", self::type => self::json, self::defaut => []],

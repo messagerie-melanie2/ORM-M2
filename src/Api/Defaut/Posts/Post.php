@@ -23,6 +23,7 @@ namespace LibMelanie\Api\Defaut\Posts;
 use LibMelanie\Lib\MceObject;
 use LibMelanie\Log\M2Log;
 use LibMelanie\Objects\ObjectMelanie;
+use \LibMelanie\Config\MappingMce;
 
 /**
  * Classe de gestion des Posts
@@ -41,8 +42,9 @@ use LibMelanie\Objects\ObjectMelanie;
  * @property string $modified timestamp de modification du post (format Y-m-d H:i:s)
  * @property string $creator uid de l'utilisateur qui a créé le post
  * @property string $workspace uid de l'espace de travail associé au post
- * @property array $settings Paramètres du post
- * @property array $history Historique en JSON du post
+ * @property bool   $isdraft Est-ce que le post est un brouillon
+ * @property array  $settings Paramètres du post
+ * @property array  $history Historique en JSON du post
  * 
  * @method bool load() Charge les données du post depuis la base de données
  * @method bool exists() Est-ce que le post existe dans la base de données ?
@@ -106,7 +108,7 @@ class Post extends MceObject {
         if (!empty($matches[1])) {
           $comment->creator = $matches[1];
           $operators = [
-            'creator' => \LibMelanie\Config\MappingMce::eq
+            'creator' => MappingMce::eq
           ];
         }
         $search = preg_replace('/creator:(.*)/', '', $search);
@@ -114,7 +116,7 @@ class Post extends MceObject {
 
       $comment->content = '%'.$search.'%';
       $operators = [
-        'content' => \LibMelanie\Config\MappingMce::like
+        'content' => MappingMce::like
       ];
       $case_unsensitive_fields = ['content'];
     }
@@ -123,7 +125,7 @@ class Post extends MceObject {
     if ($onlyParent) {
       $filter = "#post# AND #parent# IS NULL";
       $comment->parent = null;
-      $operators['post'] = \LibMelanie\Config\MappingMce::eq;
+      $operators['post'] = MappingMce::eq;
     }
     
     switch ($orderby) {
@@ -388,14 +390,26 @@ class Post extends MceObject {
     $pins_posts = [];
     $post = new static();
     $post->workspace = $this->workspace;
-    $fields = ['id', 'uid', 'title', 'summary', 'created', 'modified', 'creator', 'workspace', 'settings'];
+    $fields = ['id', 'uid', 'title', 'summary', 'created', 'modified', 'isdraft', 'creator', 'workspace', 'settings'];
     $filter = "#workspace#";
-    $operators = ['workspace' => \LibMelanie\Config\MappingMce::eq];
+    $operators = ['workspace' => MappingMce::eq];
     $case_unsensitive_fields = [];
 
     // Si uids est vide, on retourne un tableau vide
     if (isset($uids) && empty($uids)) {
       return [];
+    }
+
+    // Gestion des drafts
+    $post->isdraft = true;
+    $filter .= " AND #isdraft#";
+    $operators['isdraft'] = $this->isdraft ? MappingMce::eq : MappingMce::diff;
+
+    // Gestion du createur
+    if (isset($this->creator)) {
+      $post->creator = $this->creator;
+      $filter .= " AND #creator#";
+      $operators['creator'] = MappingMce::eq;
     }
 
     // Gestion des posts épinglés
@@ -416,7 +430,7 @@ class Post extends MceObject {
       }
 
       $filter .= "#uid#";
-      $operators['uid'] = \LibMelanie\Config\MappingMce::notin;
+      $operators['uid'] = MappingMce::notin;
 
     }
 
@@ -446,18 +460,18 @@ class Post extends MceObject {
             $filter .= " AND ";
           }
           $filter .= "#id#";
-          $operators['id'] = \LibMelanie\Config\MappingMce::in;
+          $operators['id'] = MappingMce::in;
         }
         $search = preg_replace('/#(\w+)/u', '', $search);
         $search = trim($search);
       }
 
       // Creator ?
-      if (strpos($search, 'creator:') !== false) {
+      if (strpos($search, 'creator:') !== false && !isset($this->creator)) {
         preg_match('/creator:(.*)/', $search, $matches);
         if (!empty($matches[1])) {
           $post->creator = strtolower($matches[1]);
-          $operators['creator'] = \LibMelanie\Config\MappingMce::eq;
+          $operators['creator'] = MappingMce::eq;
           $case_unsensitive_fields[] = 'creator';
         }
         $search = preg_replace('/creator:(.*)/', '', $search);
@@ -474,8 +488,8 @@ class Post extends MceObject {
         $search = trim($search);
         
         // Recherche dans le title et summary
-        $operators['title'] = \LibMelanie\Config\MappingMce::like;
-        $operators['summary'] = \LibMelanie\Config\MappingMce::like;
+        $operators['title'] = MappingMce::like;
+        $operators['summary'] = MappingMce::like;
         $case_unsensitive_fields[] = 'title';
         $case_unsensitive_fields[] = 'summary';        
         $post->title = '%'.$search.'%';
@@ -504,7 +518,7 @@ class Post extends MceObject {
         $filter .= " AND ";
       }
       $filter .= "#id#";
-      $operators['id'] = \LibMelanie\Config\MappingMce::in;
+      $operators['id'] = MappingMce::in;
     }
 
     // Lister par uid
@@ -516,7 +530,7 @@ class Post extends MceObject {
         $filter .= " AND ";
       }
       $filter .= "#uid#";
-      $operators['uid'] = \LibMelanie\Config\MappingMce::in;
+      $operators['uid'] = MappingMce::in;
     }
 
     // Gestion du tri

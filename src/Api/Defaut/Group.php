@@ -20,6 +20,7 @@
  */
 namespace LibMelanie\Api\Defaut;
 
+use LibMelanie\Config\Config;
 use LibMelanie\Lib\MceObject;
 use LibMelanie\Objects\GroupMelanie;
 use LibMelanie\Log\M2Log;
@@ -238,6 +239,50 @@ abstract class Group extends MceObject {
       $this->_isExist = $this->objectmelanie->exists($attributes, $filter);
     }
     return $this->_isExist;
+  }
+
+  /**
+   * Découpe le dn pour retourner un tableau de dn avec le chemin correspondant 
+   * 
+   * @return Array Tableau de dn
+   */
+  protected function getMapDnarray()
+  {
+    $dn = $this->objectmelanie->dn;
+    $fullname = $this->objectmelanie->fullname;
+
+    $dnLength = explode(",", $dn);
+    
+    $dnArray = [];
+    
+    for ($i = 0; $i < count($dnLength); $i++) {
+      $parts = explode(",", $dn, 2);
+      
+      if ($dn === Config::get(Config::DEFAULT_LDAP_DN)) {
+        break;
+      }
+      
+      $name = explode("=", $parts[0])[1];
+      if ($dn === $this->objectmelanie->dn) {
+        $dnArray[] = ['name' => strtoupper($name), 'dn' => $dn, 'fullname' => $fullname];
+      } else {
+        $dnArray[] = ['name' => strtoupper($name), 'dn' => $dn];
+      }
+      
+      $dn = $parts[1] ?? [];
+    }
+
+    return array_reverse($dnArray);
+  }
+
+    /**
+   * Retourne le type d'objet de fonction de ses propriétés.
+   *
+   * @return string Le type d'objet. Peut être 'user', 'fonction', 'folder', 'group' ou 'other'.
+   */
+  protected function getMapObject_type()
+  {
+    return "group";
   }
 
   /**

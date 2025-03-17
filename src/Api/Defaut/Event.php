@@ -871,17 +871,24 @@ class Event extends MceObject {
       $listevents->owner = $owner;
     }
     // MANTIS 0008366: Alléger la méthode listEventsByUid
-    // getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $merge = true)
+    // getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = [], $merge = true)
     return $listevents->getList(
-      [],
-      "",
-      [],
-      "created",
-      true,
-      3,
-      null,
-      [],
-      false
+      [], // fields
+      "", // filter
+      [], // operators
+      "created", // orderby
+      true, // asc
+      3, // limit
+      null, // offset
+      [], // case_unsensitive_fields
+      null, // join
+      'INNER', // type_join
+      null, // using
+      null, // prefix
+      [], // groupby
+      null, // groupby_count
+      [], // subqueries
+      false // merge
     );
   }
 
@@ -2110,7 +2117,7 @@ class Event extends MceObject {
 	 * 
 	 * @return MceObject[] Array
 	 */
-	public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = []) {
+	public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = [], $merge = true) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->getList()");
     $_events = $this->objectmelanie->getList($fields, $filter, $operators, $orderby, $asc, $limit, $offset, $case_unsensitive_fields, $merge);
     if (!isset($_events))

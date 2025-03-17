@@ -1,3 +1,7 @@
+ORM M2 - 0.6.16
+------
+- 0008870: Régression sur getList et merge
+
 ORM M2 - 0.6.15
 ------
 - 0008797: Support des brouillons pour les articles

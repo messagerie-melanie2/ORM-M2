@@ -226,6 +226,7 @@ class User extends Defaut\User {
     "email_list"              => [MappingMce::name => 'mail', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
     "email_send"              => 'mineqmelmailemissionpr',        // Adresse e-mail principale de l'utilisateur en emission
     "email_send_list"         => [MappingMce::name => 'mineqmelmailemission', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
+    "email_extern"            => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Bnum.mail.ext:', MappingMce::type => MappingMce::stringLdap], // MANTIS 0008880: Ajouter un champ email_extern mappé sur info
     "service"                 => 'departmentnumber',              // Department Number
     "password_need_change"    => 'mineqpassworddoitchanger',      // Message pour indiquer que le mot de passe de l'utilisateur doit changer
     "shares"                  => [MappingMce::name => 'mineqmelpartages', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite

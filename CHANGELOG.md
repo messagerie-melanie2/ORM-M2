@@ -1,3 +1,10 @@
+ORM M2 - 0.6.17
+------
+- 0008879: Pouvoir récupérer la liste de tout les tags de l'espace
+- 0008881: Modifier le filtre de recherche sur mail pour un User Mel
+- 0008880: Ajouter un champ email_extern mappé sur info
+- 0008889: Ajouter un filtre sur objectClass=calEntry dans le load
+
 ORM M2 - 0.6.16
 ------
 - 0008870: Régression sur getList et merge

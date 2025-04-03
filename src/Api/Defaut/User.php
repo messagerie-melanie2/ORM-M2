@@ -2408,16 +2408,17 @@ abstract class User extends MceObject
       foreach (static::PHONE_PREFIX as $format) {
         if (strpos($phoneNumber, $format) === 0) // si le début d'une num de tel === un des format, alors il est remplacé par un unique 0
         {
-          $phoneNumber = '0' . substr($phoneNumber, strlen($format));
-          break;
+          if ($format === '+33' || $format === '+33(0)') {
+            $phoneNumber = '0' . substr($phoneNumber, strlen($format));
+            return preg_replace('/(..)/', '$1 ', $phoneNumber);
+          } else {
+            $phoneNumber = substr($phoneNumber, strlen($format));
+            return $format . ' ' .  preg_replace('/(..)/', '$1 ', $phoneNumber);
+          }
         }
       }
-
-      $lastEdit = preg_replace('/(..)/', '$1 ', $phoneNumber);
-      return $lastEdit;
-    } else {
-      return $phoneNumber;
     }
+    return $phoneNumber;
   }
 
   /**

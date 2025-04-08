@@ -136,9 +136,11 @@ class User extends Defaut\User {
   /**
    * Filtre pour la méthode load() avec un email
    * 
+   * Cherche les boites mails, les utilisateurs externes bnum (champ info) et les listes (voir mantis 0008910)
+   * 
    * @ignore
    */
-  const LOAD_FROM_EMAIL_FILTER = "(&(|(mail=%%email%%)(mineqmelmailemission=%%email%%)(info=Bnum.mail.ext:%%email%%))(objectClass=calEntry))";
+  const LOAD_FROM_EMAIL_FILTER = "(&(|(mail=%%email%%)(mineqmelmailemission=%%email%%)(info=Bnum.mail.ext:%%email%%))(|(objectClass=calEntry)(objectClass=mineqMelListe)))";
   /**
    * Attributs par défauts pour la méthode load()
    * 

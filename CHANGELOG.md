@@ -1,3 +1,7 @@
+ORM m2 - 0.6.18
+------
+- 0008910: Ajouter dans le filtre email la recherche pour les listes
+
 ORM M2 - 0.6.17
 ------
 - 0008879: Pouvoir récupérer la liste de tout les tags de l'espace

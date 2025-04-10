@@ -1126,7 +1126,7 @@ class Ldap {
     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getFolderSearch($query)");
 
     if (!isset($server)) {
-      $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+      $server = LibMelanie\Config\Ldap::$AUTOCOMPLETE_LDAP;
     }
 
     $ldap = self::GetInstance($server);

@@ -123,6 +123,14 @@ class Attendee extends MceObject {
   protected $_is_ressource;
 
   /**
+   * Ressource associée a l'attendee
+   * 
+   * @var Resource
+   * @ignore
+   */
+  protected $_resource;
+
+  /**
    * Réponse du participant
    * 
    * @var string $response Attendee::RESPONSE_*
@@ -598,6 +606,55 @@ class Attendee extends MceObject {
         }
     }
     return $this->_is_ressource;
+  }
+
+  /**
+   * Mapping is_resource field
+   * 
+   * @return boolean true si la boite est une ressource
+   */
+  protected function getMapIs_resource() {
+    return $this->getMapIs_ressource();
+  }
+
+  /**
+   * Mapping resource field
+   * 
+   * @return Resource|null
+   */
+  protected function getMapResource() {
+    if (isset($this->_resource)) {
+      return $this->_resource;
+    }
+
+    // Si l'email n'est pas set ou si c'est un externe ce n'est pas une ressource (en tout cas ça nous concerne pas)
+    if (!isset($this->_email) || isset($this->_is_external) && $this->_is_external) {
+      return null;
+    }
+
+    // Doit-on rechercher dans l'annuaire ?
+    if (!isset($this->_is_ressource)) {
+        $this->_setAttendeeFromUser();
+
+        if ($this->_is_external) {
+          return null;
+        }
+    }
+
+    $Resource = $this->__getNamespace() . '\\Resource';
+    $this->_resource = new $Resource();
+    $this->_resource->getObjectMelanie()->__set_data($this->_user->getObjectMelanie()->__get_data());
+
+    return $this->_resource;
+  }
+
+  /**
+   * Mapping ressource field
+   * 
+   * @return Resource|null
+   */
+  protected function getMapRessource() {
+    return $this->getMapResource();
   }
 
   /**

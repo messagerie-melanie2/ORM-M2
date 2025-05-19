@@ -146,7 +146,7 @@ class User extends Defaut\User {
    * 
    * @ignore
    */
-  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'server_routage', 'internet_access_user', 'shares', 'type'];
+  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'email_send', 'email_send_list', 'info', 'server_routage', 'internet_access_user', 'shares', 'type'];
   /**
    * Filtre pour la méthode load() si c'est un objet de partage
    * 

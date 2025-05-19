@@ -169,6 +169,13 @@ if ($cfg_trace) {
 
 // Binding
 $bs = ldap_bind ($ds);
+if (!$bs) {
+  // erreur de connexion au ldap
+  $message = "Erreur de connexion au LDAP";
+  pg_close($dbconn);
+  log_error($message);
+  die();
+}
 
 if ($cfg_trace) {
   echo "Bind<br />";

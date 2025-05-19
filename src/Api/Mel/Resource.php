@@ -106,6 +106,13 @@ class Resource extends Defaut\Resource {
     "capacite"                => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Capacite: ', MappingMce::type => MappingMce::stringLdap],
     "caracteristiques"        => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Caracteristiques: ', MappingMce::type => MappingMce::stringLdap],
     "batiment"                => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Batiment: ', MappingMce::type => MappingMce::stringLdap],
+
+    // Zoom Room
+    "is_zoom_room"            => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Type: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'Zoom Room'],
+    "zoom_account_id"         => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.ZoomRoom.AccountID: ', MappingMce::type => MappingMce::stringLdap],
+    "zoom_client_id"          => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.ZoomRoom.ClientID: ', MappingMce::type => MappingMce::stringLdap],
+    "zoom_internal_email"     => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.ZoomRoom.InternalEmail: ', MappingMce::type => MappingMce::stringLdap],
+
     "modifiedtime"            => 'mineqmodifiedtimestamp',
   ];
 }

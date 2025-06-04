@@ -301,9 +301,11 @@ class User extends Defaut\User {
   /**
    * Mapping shares field
    * 
+   * @param array $supported_shares Liste des partages supportés par cette boite ([Share::TYPE_*])
+   * 
    * @return boolean false non supporté
    */
-  protected function setMapSupported_shares() {
+  protected function setMapSupported_shares($supported_shares) {
     return false;
   }
 

@@ -391,6 +391,12 @@ abstract class User extends MceObject
    */
   const LOAD_FILTER = null;
   /**
+   * Filtre pour la méthode load()
+   * 
+   * @ignore
+   */
+  const LOAD_USERS_FILTER = '%%filter%%';
+  /**
    * Filtre pour la méthode load() avec un email
    * 
    * @ignore
@@ -501,7 +507,7 @@ abstract class User extends MceObject
   /**
    * Prefix pour le formatage des numéros de téléphone
    */
-  const PHONE_PREFIX = ["+33(0)","+33", "+590", "+594", "+596", "+262", "+508", "+681", "+689", "+687"];
+  const PHONE_PREFIX = ["+33(0)", "+33", "+590", "+594", "+596", "+262", "+508", "+681", "+689", "+687"];
 
   /**
    * Constructeur de l'objet
@@ -1339,7 +1345,8 @@ abstract class User extends MceObject
    * 
    * @return boolean
    */
-  public function isWorkspaceOwner($workspace, $force_reload_cache = false) {
+  public function isWorkspaceOwner($workspace, $force_reload_cache = false)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->isWorkspaceOwner($workspace, $force_reload_cache)");
 
     $ret = false;
@@ -1360,12 +1367,10 @@ abstract class User extends MceObject
             break;
           }
         }
-      }
-      else {
+      } else {
         $ret = isset($this->_userWorkspaces[$workspace->id]);
       }
-    }
-    else {
+    } else {
       $ret = $this->objectmelanie->isWorkspaceOwner($workspace);
     }
 
@@ -1385,7 +1390,8 @@ abstract class User extends MceObject
    * 
    * @return boolean
    */
-  public function isWorkspaceMember($workspace, $force_reload_cache = false) {
+  public function isWorkspaceMember($workspace, $force_reload_cache = false)
+  {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->isWorkspaceMember($workspace, $force_reload_cache)");
 
     $ret = false;
@@ -1405,12 +1411,10 @@ abstract class User extends MceObject
             break;
           }
         }
-      }
-      else {
+      } else {
         $ret = isset($this->_sharedWorkspaces[$workspace->id]);
       }
-    }
-    else {
+    } else {
       $ret = $this->objectmelanie->isWorkspaceOwner($workspace);
     }
 
@@ -2757,23 +2761,23 @@ abstract class User extends MceObject
     $fullname = $this->objectmelanie->fullname;
 
     $dnLength = explode(",", $dn);
-    
+
     $dnArray = [];
-    
     for ($i = 0; $i < count($dnLength); $i++) {
+
       $parts = explode(",", $dn, 2);
-      
+
       if ($dn === Config::get(Config::DEFAULT_LDAP_DN)) {
         break;
       }
-      
+
       $name = explode("=", $parts[0])[1];
       if ($dn === $this->objectmelanie->dn) {
         $dnArray[] = ['name' => strtoupper($name), 'dn' => $dn, 'fullname' => $fullname];
       } else {
         $dnArray[] = ['name' => strtoupper($name), 'dn' => $dn];
       }
-      
+
       $dn = $parts[1] ?? [];
     }
 
@@ -2820,5 +2824,64 @@ abstract class User extends MceObject
     $class_object = new $class($this->_server, $this->_itemName);
     $class_object->getObjectMelanie()->__set_data($this->objectmelanie->__get_data());
     return $class_object;
+  }
+  
+  /**
+	 * Permet de récupérer la liste d'objet en utilisant les données passées
+	 * (la clause where s'adapte aux données)
+	 * Il faut donc peut être sauvegarder l'objet avant d'appeler cette méthode
+	 * pour réinitialiser les données modifiées (propriété haschanged)
+	 * 
+	 * @param String[] $fields
+	 *          Liste les champs à récupérer depuis les données
+	 * @param String $filter
+	 *          Filtre pour la lecture des données en fonction des valeurs déjà passé, exemple de filtre : "((#description# OR #title#) AND #start#)"
+	 * @param String[] $operators
+	 *          Liste les propriétés par operateur (MappingMce::like, MappingMce::supp, MappingMce::inf, MappingMce::diff)
+	 * @param String $orderby
+	 *          Tri par le champ
+	 * @param bool $asc
+	 *          Tri ascendant ou non
+	 * @param int $limit
+	 *          Limite le nombre de résultat (utile pour la pagination)
+	 * @param int $offset
+	 *          Offset de début pour les résultats (utile pour la pagination)
+	 * @param String[] $case_unsensitive_fields
+	 *          Liste des champs pour lesquels on ne sera pas sensible à la casse
+	 * 
+	 * @return MceObject[] Array
+	 */
+  public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = [])
+  {
+    $data = $this->objectmelanie->getList(empty($fields) ? static::LOAD_ATTRIBUTES : $fields, static::LOAD_USERS_FILTER, [], '', true, 500);
+
+    $newData = [];
+    foreach ($data as $value) {
+      if (is_array($value)) {
+        $class = $this->__getNamespace() . '\\User';
+        $user = new $class();
+        $user->getObjectMelanie()->__set_data($value);
+        $newData[] = $user;
+      }
+    }
+    return self::sortListByName($newData);
+  }
+
+  /**
+   * Trie une liste d'utilisateurs par nom complet (fullname) en ordre naturel.
+   *
+   * @param array $users Tableau d'objets utilisateurs à trier.
+   * @return array Liste triée d'utilisateurs par nom complet, ou la valeur d'origine si ce n'est pas un tableau.
+   */
+  protected function sortListByName($users) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->sortListByName()");
+    // Gestion du mapping global
+    if (!is_array($users)) {
+      return $users;
+    }
+    usort($users, function ($a, $b) {
+      return strnatcmp($a->fullname, $b->fullname);
+    });
+    return $users;
   }
 }

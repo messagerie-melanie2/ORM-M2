@@ -768,6 +768,47 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
   }
 
   /**
+   * Chargement de l'objet UserMelanie
+   * need: $this->dn
+   * need: $this->uid
+   * need: $this->email
+   * 
+   * @param array $attributes [Optionnal] List of attributes to load
+   * @param string $filter [Optionnal] Filter to load data
+   * @param string $filterFromEmail [Optionnal] Filter to load data
+   * 
+   * @see IObjectMelanie::load()
+   *
+   * @return boolean isExist
+   */
+  public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = []) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->load()");
+    // Gestion du mapping global
+    static::Init($this->mapping, $this->server);
+    
+    // Mapping pour les champs
+		$attributesmapping = [];
+		if (is_array($fields)) {
+      $attributesmapping = $this->get_mapping_attributes($fields);
+		}
+
+    $filters = [];
+    
+    foreach ($this->haschanged as $key => $value) {
+				if ($value) {
+          $val = $this->$key;
+          $val = is_array($val) ? $val[0] : $val;
+          $filters[] = "($key=$val*)";
+        }
+    }
+    $filter = str_replace('%%filter%%', '&'.implode('',$filters), $filter);
+      
+    $data = Ldap::GetUsersList($filter, $attributesmapping, null, $limit);
+  
+    return $data;
+  }
+
+  /**
    * Récupère la liste des workspaces dont l'utilisateur est owner
    * 
    * @param string $orderby [Optionnel] nom du champ a trier

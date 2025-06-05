@@ -134,6 +134,12 @@ class User extends Defaut\User {
    */
   const LOAD_FILTER = "(&(uid=%%uid%%)(mineqTypeentree=*))";
   /**
+   * Filtre pour la méthode load()
+   * 
+   * @ignore
+   */
+  const LOAD_USERS_FILTER = "(&(%%filter%%)(mineqTypeentree=BALI))";
+  /**
    * Filtre pour la méthode load() avec un email
    * 
    * @ignore
@@ -285,6 +291,7 @@ class User extends Defaut\User {
     "password"                  => "userpassword",
     "order"                     => "mineqordreaffichage",
     "alias"                     => [MappingMce::name => 'seeAlso', MappingMce::type => MappingMce::arrayLdap],
+    "portee"                     => "mineqportee",
   ];
 
   /**
@@ -601,17 +608,6 @@ class User extends Defaut\User {
       
     }
     return $this->ministere;
-  }
-
-  /**
-   * Mapping ministere field
-   * 
-   * @param string $ministere Nom du ministère de l'utilisateur
-   * 
-   * @return boolean false non supporté
-   */
-  protected function setMapMinistere($ministere) {
-    return false;
   }
 
   /**
@@ -1083,5 +1079,70 @@ class User extends Defaut\User {
   protected function getMapIs_external() {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapIs_external()");
     return strpos($this->objectmelanie->dn, 'ou=Utilisateurs,ou=BNUM,ou=applications,ou=ressources,dc=equipement,dc=gouv,dc=fr') !== false;  
+  }
+
+  
+  /**
+   * Sets and returns the full name (fullname) of the user by combining several user properties.
+   *
+   * The full name is constructed using the following properties:
+   * - `lastname`: the user's last name.
+   * - `firstname`: the user's first name.
+   * - `description` (optional): additional description if defined.
+   * - `service` (optional): the service the user belongs to, if defined.
+   */
+  protected function setFullname() {
+    $fullname = $this->objectmelanie->lastname . ' ' . $this->objectmelanie->firstname;
+    if(isset($this->objectmelanie->description)) {
+        $fullname = $fullname . ' (' . $this->objectmelanie->description . ')';
+    }
+    if(isset($this->objectmelanie->service)) {
+        $fullname = $fullname . ' - ' . $this->objectmelanie->service;
+    }
+    $this->objectmelanie->fullname = $fullname;    
+  }
+
+  /**
+   * Sets the first name in the Melanie object by applying capitalization to the first letter and updates the full name.
+   *
+   * @param string $firstname The firstname to set.
+   */
+  protected function setMapFirstname($firstname) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapFirstname()");
+    $this->objectmelanie->firstname = ucfirst($firstname);
+    $this->setFullname();
+  }
+
+  /**
+   * Sets the first name in the Melanie object by applying capitalization on all letters and updates the full name.
+   *
+   * @param string $lastname The lastname to set.
+   */
+  protected function setMapLastname($lastname) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapLastname()");
+    $this->objectmelanie->lastname = ucfirst($lastname);
+    $this->setFullname();
+  }
+
+  /**
+   * Sets the description in the Melanie object and updates the full name.
+   *
+   * @param string $description The description to set.
+   */
+  protected function setMapDescription($description) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapDescription()");
+    $this->objectmelanie->description = $description;
+    $this->setFullname();
+  }
+
+  /**
+   * Sets the service in the Melanie object and updates the full name.
+   *
+   * @param string $service The service to set.
+   */
+  protected function setMapService($service) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapService()");
+    $this->objectmelanie->service = $service;
+    $this->setFullname();
   }
 }

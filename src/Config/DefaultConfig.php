@@ -431,4 +431,11 @@ class DefaultConfig {
    * @var string
    */
   CONST DEFAULT_LDAP_DN = 'ou=organisation,dc=equipement,dc=gouv,dc=fr';
+
+  /**
+   * Récupère le chemin LDAP des ressources
+   * 
+   * @var string
+   */
+  CONST DEFAULT_RESSOURCES_LDAP_DN = 'ou=nomenclatures,ou=ressources,dc=equipement,dc=gouv,dc=fr';
 }

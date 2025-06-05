@@ -144,7 +144,7 @@ abstract class Folder extends User
 
     return $this->sortByAlphaAndQuery($this->formatDataType($data), $query);
   }
-
+  
   /**
    * Récupère les enfants du dossier
    * 

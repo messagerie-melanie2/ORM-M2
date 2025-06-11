@@ -2825,6 +2825,33 @@ abstract class User extends MceObject
     $class_object->getObjectMelanie()->__set_data($this->objectmelanie->__get_data());
     return $class_object;
   }
+
+  /**
+   * Récupère la liste des businessCategory dans les ressources de l'annuaire
+   *
+   * @return Array liste des businessCategory
+   */
+  protected function getMapList_business_categories() {
+    return \LibMelanie\Ldap\Ldap::getNomenclatureField('businessCategory');
+  }
+
+   /**
+   * Récupère la liste des mineqMission dans les ressources de l'annuaire
+   *
+   * @return Array liste des mineqMission
+   */
+  protected function getMapList_mineq_mission() {
+    return \LibMelanie\Ldap\Ldap::getNomenclatureField('mineqMission');
+  }
+
+  /**
+   * Récupère la liste des title dans les ressources de l'annuaire
+   *
+   * @return Array liste des title
+   */
+  protected function getMapList_title() {
+    return \LibMelanie\Ldap\Ldap::getNomenclatureField('title');
+  }
   
   /**
 	 * Permet de récupérer la liste d'objet en utilisant les données passées
@@ -2853,7 +2880,7 @@ abstract class User extends MceObject
 	 */
   public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = [])
   {
-    $data = $this->objectmelanie->getList(empty($fields) ? static::LOAD_ATTRIBUTES : $fields, static::LOAD_USERS_FILTER, [], '', true, 500);
+    $data = $this->objectmelanie->getList(empty($fields) ? static::LOAD_ATTRIBUTES : $fields, static::LOAD_USERS_FILTER, [], '', true, 300);
 
     $newData = [];
     foreach ($data as $value) {

@@ -138,7 +138,7 @@ class User extends Defaut\User {
    * 
    * @ignore
    */
-  const LOAD_USERS_FILTER = "(&(%%filter%%)(mineqTypeentree=BALI))";
+  const LOAD_USERS_FILTER = "(&(%%filter%%)(mineqTypeentree=BALI)(mineqPortee>=40))";
   /**
    * Filtre pour la méthode load() avec un email
    * 

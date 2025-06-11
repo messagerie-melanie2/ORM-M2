@@ -492,6 +492,58 @@ class Ldap {
       // Retourne les données, null si vide
       return $infos;
   }
+
+  /**
+   * Retourne une liste de champ depuis les nomenclatures du LDAP
+   *
+   * @param $type Nom de la ressource recherchée
+   * 
+   * @return array|null
+   * @throws Exceptions\Melanie2LdapException
+   */
+  public static function getNomenclatureField($type) {
+     M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getNomenclatureField($type)");
+
+      $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
+
+      // Récupération de l'instance LDAP en fonction du serveur
+      $ldap = self::GetInstance($server);
+
+      $base_dn = "ou=$type," . LibMelanie\Config\Config::get(LibMelanie\Config\Config::DEFAULT_RESSOURCES_LDAP_DN);
+
+      $filter = "(objectClass=*)";
+
+      // Liste des attributes
+      $ldap_attr = [$type];
+
+      $data = [];
+      // Récupération des données en cache
+      $keycache = "getNomenclatureField:$server:" . md5($filter) . ":" . md5(serialize($ldap_attr)) . ":$filter";
+      $infos = $ldap->getCache($keycache);
+      if (!isset($infos)) {
+          // Connexion pour lire les données
+          if ($ldap->bind4lookup()) {
+              // Lancement de la recherche
+              $sr = $ldap->search($base_dn, $filter, $ldap_attr);
+              if ($sr && $ldap->count_entries($sr) > 0) {
+                  $infos = $ldap->get_entries($sr);
+                  $ldap->setCache($keycache, $infos);
+
+                  foreach ($infos as $key => $value) {
+                    if(isset($value[strtolower($type)][0])) {
+                     $data[] = $value[strtolower($type)][0];
+                   }
+                  }
+              } else {
+                  $ldap->deleteCache($keycache);
+              }
+          } else {
+              throw new Exceptions\Melanie2LdapException('Connexion anonyme impossible au serveur LDAP. Erreur : ' . $ldap->getError());
+          }
+      }
+      // Retourne les données, null si vide
+      return $data;
+  }
   
   /**
    * Retourne les boites partagées accessible pour un utilisateur depuis le LDAP
@@ -1180,7 +1232,7 @@ class Ldap {
     $filter = "(&".$search_filter.$filter.")";
 
     // Récupération des données en cache
-    $keycache = "getFolderChildrenInfos:$server:" . md5($filter);
+    $keycache = "getFolderSearch:$server:" . md5($filter);
     $infos = $ldap->getCache($keycache);
     if (!isset($infos)) {
       // Connexion pour lire les données
@@ -1201,6 +1253,9 @@ class Ldap {
     // Retourne les données, null si vide
     return $infos;
   }
+
+ 
+
 
   /**
    * Retourne le nom du champ mappé configuré pour le serveur LDAP (par défault SEARCH)

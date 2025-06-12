@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Ce fichier est développé pour la gestion de la librairie Mélanie2
  * Cette Librairie permet d'accèder aux données sans avoir à implémenter de couche SQL
@@ -19,6 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace LibMelanie\Config;
 
 /**
@@ -28,7 +30,8 @@ namespace LibMelanie\Config;
  * @package Librairie Mélanie2
  * @subpackage Config
  */
-class DefaultConfig {
+class DefaultConfig
+{
   /**
    * Configuraton du mode ORM
    * false = Ancien schéma Horde
@@ -36,7 +39,7 @@ class DefaultConfig {
    * @var boolean
    */
   const USE_NEW_MODE = false;
-  
+
   /** Configuration générale */
   /**
    * Configuration du nom de l'application pour la table Histories
@@ -110,7 +113,7 @@ class DefaultConfig {
    * @var string
    */
   const ATTACHMENT_DOWNLOAD_URL = "http://monserveur.com/download/?action=download_file&file=%f&vfsKey=%p&fn=%f";
-  
+
   /** Configuration du cache */
   /**
    * Activer le cache
@@ -132,7 +135,7 @@ class DefaultConfig {
    * @var string
    */
   const CACHE_MEMCACHE_HOST = 'localhost:11211';
-  
+
   /* Informations générales (normalement des changements ne sont pas nécessaire */
   const ATTRIBUTE_OWNER = 'owner';
   const ATTRIBUTE_NAME_NAME = 'name';
@@ -141,39 +144,39 @@ class DefaultConfig {
   const PREF_SCOPE = 'horde';
   const TZ_PREF_NAME = 'timezone';
   const GENERAL_PREF_SCOPE = "horde";
-  
+
   /* Calendar config */
   const CALENDAR_PREF_SCOPE = "kronolith";
   const CALENDAR_GROUP_UID = 'horde.shares.kronolith';
   const CALENDAR_PREF_DEFAULT_NAME = "default_share";
-  
+
   /* Tasklist config */
   const TASKSLIST_PREF_SCOPE = "nag";
   const TASKSLIST_GROUP_UID = 'horde.shares.nag';
   const TASKSLIST_PREF_DEFAULT_NAME = "default_tasklist";
-  
+
   /* Addressbook config */
   const ADDRESSBOOK_PREF_SCOPE = "turba";
   const ADDRESSBOOK_GROUP_UID = 'horde.shares.turba';
   const ADDRESSBOOK_PREF_DEFAULT_NAME = "default_dir";
-  
+
   /* History config */
   const HISTORY_ADD = "add";
   const HISTORY_MODIFY = "modify";
   const HISTORY_DELETE = "delete";
-  
+
   /* ACL config */
   const PRIV = "private";
   const FREEBUSY = "freebusy";
   const READ = "read";
   const DELETE = "delete";
   const WRITE = "write";
-  
+
   /* Class configuration */
   // const PRIV = "private";
   const PUB = "public";
   const CONFIDENTIAL = "confidential";
-  
+
   /* Status configuration */
   const TENTATIVE = "tentative";
   const CONFIRMED = "confirmed";
@@ -181,7 +184,7 @@ class DefaultConfig {
   const NONE = "none";
   const TELEWORK = "telework";
   const VACATION = "vacation";
-  
+
   /* Recurrence days */
   const NODAY = "";
   const SUNDAY = "SU";
@@ -191,7 +194,7 @@ class DefaultConfig {
   const THURSDAY = "TH";
   const FRIDAY = "FR";
   const SATURDAY = "SA";
-  
+
   /* Recurrence type */
   const NORECUR = "";
   const DAILY = "daily";
@@ -204,14 +207,14 @@ class DefaultConfig {
   /* Cutypes */
   const CUTYPE = "cutype";
   const INDIVIDUAL = 'individual';
-	const GROUP = 'group';
-	const RESOURCE = 'resource';
-	const ROOM = 'room';
+  const GROUP = 'group';
+  const RESOURCE = 'resource';
+  const ROOM = 'room';
   const CAR = 'car';
   const FLEX_OFFICE = 'flex_office';
   const HARDWARE = 'hardware';
-	const UNKNOWN = 'unknown';
-  
+  const UNKNOWN = 'unknown';
+
   /* Attendee status */
   const RESPONSE = "response";
   const NEED_ACTION = "need_action";
@@ -230,7 +233,7 @@ class DefaultConfig {
   const DELEGATED_FROM = "delegated-from";
   const DELEGATED_TO = "delegated-to";
   // const TENTATIVE = "tentative"; // -> see Status
-  
+
   /* Attendee role */
   const ROLE = "attendance";
   const CHAIR = "chair";
@@ -238,7 +241,7 @@ class DefaultConfig {
   const OPT_PARTICIPANT = "opt_participant";
   const NON_PARTICIPANT = "non_participant";
   const NAME = "name";
-  
+
   /* Priority */
   const NO_PRIORITY = "no_priority";
   const VERY_HIGH = "very_high";
@@ -246,18 +249,18 @@ class DefaultConfig {
   const NORMAL = "normal";
   const LOW = "low";
   const VERY_LOW = "very_low";
-  
+
   /* VFS Folder */
   const TYPE_FILE = 1;
   const TYPE_FOLDER = 2;
-  
+
   /* Completed */
   const COMPLETED = "completed";
   const NOTCOMPLETED = "notcompleted";
-  
+
   /* Content type par défaut */
   const DEFAULT_ATTACHMENT_CONTENTTYPE = "application/binary";
-  
+
   /* Défini si le timezone doit être ajouté à l'ICS */
   const ICS_ADD_TIMEZONE = true;
 
@@ -265,10 +268,10 @@ class DefaultConfig {
   const USE_SHARED_INVITATION = true;
 
   /* Quel caractère est remplacé dans le nom utilisateur pour le via */
-	const SHARED_INVITATION_REPLACE_CHAR = ' - ';
+  const SHARED_INVITATION_REPLACE_CHAR = ' - ';
 
   /* Quel texte utilisé pour le via, mots clés : %%creator_name%%, %%creator_fullname%%, %%owner_name%%, %%owner_fullname%% */
-	const SHARED_INVITATION_TEXT = ' (via %%creator_name%%) - ';
+  const SHARED_INVITATION_TEXT = ' (via %%creator_name%%) - ';
 
   /**
    * Toujours afficher le créateur de l'événement même si ce n'est pas un événement partagé ?
@@ -292,27 +295,27 @@ class DefaultConfig {
    * Format à utiliser pour la date de création de l'événement
    */
   const SHARED_EVENT_CREATION_DATE_FORMAT = 'd/m/Y à H\hi';
-  
+
   /**
    * Droits sur les objets Melanie2
    *
    * @var array
    */
   public static $PERMS = array(
-      self::PRIV => 1,
-      self::FREEBUSY => 2,
-      self::READ => 4,
-      self::DELETE => 8,
-      self::WRITE => 16
+    self::PRIV => 1,
+    self::FREEBUSY => 2,
+    self::READ => 4,
+    self::DELETE => 8,
+    self::WRITE => 16
   );
-  
+
   /**
    * Optimisation des prepares statements
    * true pour réutiliser au maximum les prepares statements
    * @var boolean
    */
   const REUSE_PREPARE_STATEMENT = true;
-  
+
   /** Gestion des selaformes */
   /**
    * Utiliser les selaformes pour protéger les connexions SQL
@@ -386,7 +389,7 @@ class DefaultConfig {
    * Liste serveur de Distribution à ABonnement
    */
   const LDAP_TYPE_LISTAB = 'LDAB';
-    /**
+  /**
    * Dossier de groupement
    */
   const LDAP_TYPE_FOLDER_GROUPEMENT = 'NGRO';
@@ -430,12 +433,19 @@ class DefaultConfig {
    * 
    * @var string
    */
-  CONST DEFAULT_LDAP_DN = 'ou=organisation,dc=equipement,dc=gouv,dc=fr';
+  const DEFAULT_LDAP_DN = 'ou=organisation,dc=equipement,dc=gouv,dc=fr';
 
   /**
    * Récupère le chemin LDAP des ressources
    * 
    * @var string
    */
-  CONST DEFAULT_RESSOURCES_LDAP_DN = 'ou=nomenclatures,ou=ressources,dc=equipement,dc=gouv,dc=fr';
+  const DEFAULT_RESSOURCES_LDAP_DN = 'ou=nomenclatures,ou=ressources,dc=equipement,dc=gouv,dc=fr';
+
+  /**
+   * Récupère la valeur maximale par défaut du nombre de résultats d'une recherche
+   * 
+   * @var string
+   */
+  const DEFAULT_ADVANCED_SEARCH_MAX_RESULTS = 300;
 }

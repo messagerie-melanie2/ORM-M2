@@ -83,6 +83,61 @@ class HTTPRequest {
     }
 
     /**
+     * Permet d'effectuer une requête PATCH
+     * 
+     * @param string $url URL de la requête
+     * @param string $postfields [Optionnel] Données à envoyer dans le corps de la requête
+     * @param array $headers [Optionnel] En-têtes HTTP à envoyer
+     * @param string|null $curl_cafile [Optionnel] Chemin vers le fichier CA pour la vérification SSL
+     * @param string|null $curl_proxy [Optionnel] Proxy à utiliser pour la requête cURL
+     * 
+     * @return array Contient le code HTTP et le contenu de la réponse
+     */
+    public static function Patch($url, $postfields = '', $headers = [], $curl_cafile = null, $curl_proxy = null) {
+        M2Log::Log(M2Log::LEVEL_DEBUG, "HTTPRequest::Patch($url)");
+                
+        // Options list
+        $options = [
+            CURLOPT_POST            => true,
+            CURLOPT_POSTFIELDS      => $postfields,
+            CURLOPT_CUSTOMREQUEST   => 'PATCH',
+        ];
+        
+        return self::_curl($url, $options, $headers, $curl_cafile, $curl_proxy);
+    }
+
+    /**
+     * Permet d'effectuer une requête DELETE
+     * 
+     * @param string $url URL de la requête
+     * @param array $params [Optionnel] Paramètres à ajouter à l'URL
+     * @param array $headers [Optionnel] En-têtes HTTP à envoyer
+     * @param string|null $curl_cafile [Optionnel] Chemin vers le fichier CA pour la vérification SSL
+     * @param string|null $curl_proxy [Optionnel] Proxy à utiliser pour la requête cURL
+     * 
+     * @return array Contient le code HTTP et le contenu de la réponse
+     */
+    public static function Delete($url, $params = null, $headers = [], $curl_cafile = null, $curl_proxy = null) {
+        M2Log::Log(M2Log::LEVEL_DEBUG, "HTTPRequest::Delete($url)");
+        
+        // Gestion des paramètres
+        if (isset($params)) {
+            $_p = [];
+            foreach ($params as $key => $param) {
+                $_p[] = "$key=$param";
+            }
+            $url .= '?' . implode('&', $_p);
+        }
+
+        // Options list
+        $options = [
+            CURLOPT_CUSTOMREQUEST   => 'DELETE',
+        ];
+        
+        return self::_curl($url, $options, $headers, $curl_cafile, $curl_proxy);
+    }
+
+    /**
      * Permet d'effectuer une requête cURL générique
      * 
      * @param string $url URL de la requête

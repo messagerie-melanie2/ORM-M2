@@ -79,6 +79,7 @@ use LibMelanie\Config\DefaultConfig;
  * @property-read VObject\Component\VCalendar $vcalendar Object VCalendar associé à l'évènement, peut permettre des manipulations sur les récurrences
  * @property boolean $move Il s'ajout d'un MOVE, les participants sont conservés
  * @property integer $version Version de schéma pour l'événement
+ * @property string $zoom_meeting_id Identifiant du meeting Zoom associé à l'évènement
  * 
  * @method bool load() Chargement l'évènement, en fonction du calendar et de l'uid
  * @method bool exists() Test si l'évènement existe, en fonction du calendar et de l'uid
@@ -3177,5 +3178,27 @@ class Event extends MceObject {
   protected function getMapMove() {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapMove()");
     return $this->move;
+  }
+
+  /**
+   * Map zoom_meeting_id param
+   * 
+   * @ignore
+   *
+   */
+  protected function setMapZoom_meeting_id($zoom_meeting_id) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapZoom_meeting_id($zoom_meeting_id)");
+    $this->setAttributeJson('zoom_meeting_id', $zoom_meeting_id);
+  }
+  /**
+   * Map zoom_meeting_id param
+   * 
+   * @return string $zoom_meeting_id
+   * @ignore
+   *
+   */
+  protected function getMapZoom_meeting_id() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapZoom_meeting_id()");
+    return $this->getAttribute('zoom_meeting_id');
   }
 }

@@ -3201,4 +3201,23 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapZoom_meeting_id()");
     return $this->getAttribute('zoom_meeting_id');
   }
+  /**
+   * Map zoom_json to current event
+   * 
+   * @ignore
+   */
+  protected function setMapZoom_json($zoom_json) {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->setMapZoom_json()");
+    \LibMelanie\Lib\JsonZoomToEvent::Convert($zoom_json, $this);
+  }
+  /**
+   * Map current event to zoom_json
+   * 
+   * @return string $zoom_json
+   * @ignore
+   */
+  protected function getMapZoom_json() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapZoom_json()");
+    return \LibMelanie\Lib\EventToJsonZoom::Convert($this);
+  }
 }

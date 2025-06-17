@@ -291,7 +291,8 @@ class User extends Defaut\User {
     "password"                  => "userpassword",
     "order"                     => "mineqordreaffichage",
     "alias"                     => [MappingMce::name => 'seeAlso', MappingMce::type => MappingMce::arrayLdap],
-    "portee"                     => "mineqportee",
+    "portee"                    => "mineqportee",
+    "work"                      => "observation"
   ];
 
   /**

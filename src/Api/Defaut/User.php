@@ -2725,7 +2725,10 @@ abstract class User extends MceObject
       return $this->objectmelanie->observation;
     } else if (isset($this->objectmelanie->description)) {
       return $this->objectmelanie->description;
-    } else {
+    } else if (isset($this->objectmelanie->business_category[0])) {
+      return $this->objectmelanie->business_category[0];
+    } 
+    else {
       return "";
     }
   }

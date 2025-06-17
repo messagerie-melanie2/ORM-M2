@@ -22,7 +22,6 @@
  */
 namespace LibMelanie\Lib;
 
-use LibMelanie\Api\Defaut\Resource;
 use LibMelanie\Api\Defaut\Event;
 
 /**
@@ -43,31 +42,34 @@ class EventToJsonZoom {
   protected static $agenda = 'Bnum';
 
   /**
+   * Type de l'évènement Zoom
+   * @var int $type
+   */
+  protected static $type = 2;
+
+  /**
    * Constructeur privé pour ne pas instancier la classe
    */
-  private function __construct() {
-  }
+  private function __construct() {}
 
   /**
    * Génére un JSON compatible Zoom.us en fonction de l'évènement passé en paramètre
    * L'évènement doit être de type Event de la librairie LibM2
    *
    * @param Event $event
-   * @param Resource $resource
    * 
    * @return string $json
    */
-  public static function Convert($event, $resource = null) {
+  public static function Convert($event) {
     $json = [
-      'agenda'        => self::$agenda,
-      'start_time'    => self::GetStartTime($event),
-      'duration'      => self::GetDuration($event),
-      'schedule_for'  => $resource->email,
-      'timezone'      => $event->timezone,
-      'settings'      => [
-        'alternative_hosts'                     => $resource->zoom_internal_email,
-        'alternative_hosts_email_notification'  => false,
-      ],
+      'agenda'            => self::$agenda,
+      'start_time'        => self::GetStartTime($event),
+      'duration'          => self::GetDuration($event),
+      'timezone'          => $event->timezone,
+      'default_password'  => false,
+      'pre_schedule'      => false,
+      'topic'             => $event->title,
+      'type'              => self::$type,
     ];
     return json_encode($json);
   }

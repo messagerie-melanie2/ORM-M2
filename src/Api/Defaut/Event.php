@@ -80,6 +80,7 @@ use LibMelanie\Config\DefaultConfig;
  * @property boolean $move Il s'ajout d'un MOVE, les participants sont conservés
  * @property integer $version Version de schéma pour l'événement
  * @property string $zoom_meeting_id Identifiant du meeting Zoom associé à l'évènement
+ * @property string $zoom_meeting_url URL du meeting Zoom associé à l'évènement
  * 
  * @method bool load() Chargement l'évènement, en fonction du calendar et de l'uid
  * @method bool exists() Test si l'évènement existe, en fonction du calendar et de l'uid
@@ -3201,6 +3202,29 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapZoom_meeting_id()");
     return $this->getAttribute('zoom_meeting_id');
   }
+
+  /**
+   * Map zoom_meeting_url param
+   * 
+   * @ignore
+   *
+   */
+  protected function setMapZoom_meeting_url($zoom_meeting_url) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapZoom_meeting_url($zoom_meeting_url)");
+    $this->setAttributeJson('zoom_meeting_url', $zoom_meeting_url);
+  }
+  /**
+   * Map zoom_meeting_url param
+   * 
+   * @return string $zoom_meeting_id
+   * @ignore
+   *
+   */
+  protected function getMapZoom_meeting_url() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapZoom_meeting_url()");
+    return $this->getAttribute('zoom_meeting_url');
+  }
+
   /**
    * Map zoom_json to current event
    * 

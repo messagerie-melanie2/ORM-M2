@@ -19,7 +19,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-namespace LibMelanie\Lib;
+namespace LibMelanie\HTTP;
 
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\Config;
@@ -32,7 +32,7 @@ use LibMelanie\Config\Config;
 * @subpackage Lib Mélanie2
 *
 */
-class HTTPRequest {
+class Request {
     /**
      * Permet d'effectuer une requête GET
      * 
@@ -45,7 +45,7 @@ class HTTPRequest {
      * @return array Contient le code HTTP et le contenu de la réponse
      */
     public static function Get($url, $params = null, $headers = [], $curl_cafile = null, $curl_proxy = null) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, "HTTPRequest::Get($url)");
+        M2Log::Log(M2Log::LEVEL_DEBUG, "HTTP/Request::Get($url)");
         
         // Gestion des paramètres
         if (isset($params)) {
@@ -71,7 +71,7 @@ class HTTPRequest {
      * @return array Contient le code HTTP et le contenu de la réponse
      */
     public static function Post($url, $postfields = '', $headers = [], $curl_cafile = null, $curl_proxy = null) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, "HTTPRequest::Post($url)");
+        M2Log::Log(M2Log::LEVEL_DEBUG, "HTTP/Request::Post($url)");
                 
         // Options list
         $options = [
@@ -94,7 +94,7 @@ class HTTPRequest {
      * @return array Contient le code HTTP et le contenu de la réponse
      */
     public static function Patch($url, $postfields = '', $headers = [], $curl_cafile = null, $curl_proxy = null) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, "HTTPRequest::Patch($url)");
+        M2Log::Log(M2Log::LEVEL_DEBUG, "HTTP/Request::Patch($url)");
                 
         // Options list
         $options = [
@@ -118,7 +118,7 @@ class HTTPRequest {
      * @return array Contient le code HTTP et le contenu de la réponse
      */
     public static function Delete($url, $params = null, $headers = [], $curl_cafile = null, $curl_proxy = null) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, "HTTPRequest::Delete($url)");
+        M2Log::Log(M2Log::LEVEL_DEBUG, "HTTP/Request::Delete($url)");
         
         // Gestion des paramètres
         if (isset($params)) {
@@ -150,8 +150,6 @@ class HTTPRequest {
      */
     protected static function _curl($url, $options = [], $headers = [], $curl_cafile = null, $curl_proxy = null) {
         
-        $fp = fopen('/var/log/roundcube/bnum/curl_errors.log', 'w');
-
         // Options list
         $options = [
             CURLOPT_RETURNTRANSFER  => true, // return web page
@@ -162,8 +160,8 @@ class HTTPRequest {
             CURLOPT_SSL_VERIFYPEER  => Config::get('CURLOPT_SSL_VERIFYPEER', 0),
             CURLOPT_SSL_VERIFYHOST  => Config::get('CURLOPT_SSL_VERIFYHOST', 0),
             CURLOPT_HTTPHEADER      => $headers,
-            CURLOPT_VERBOSE         => true,
-            CURLOPT_STDERR          => fopen('/var/log/roundcube/bnum/curl_errors.log', 'w'),
+            CURLOPT_VERBOSE         => false,
+            // CURLOPT_STDERR          => fopen('/var/log/roundcube/bnum/curl_errors.log', 'w'),
         ] + $options;
         
         // CA File
@@ -188,7 +186,7 @@ class HTTPRequest {
         
         // Get error
         if ($content === false) {
-            M2Log::Log(M2Log::LEVEL_ERROR, "HTTPRequest::_curl($url) Error " . curl_errno($ch) . " : " . curl_error($ch));
+            M2Log::Log(M2Log::LEVEL_ERROR, "HTTP/Request::_curl($url) Error " . curl_errno($ch) . " : " . curl_error($ch));
         }
         
         // Get the HTTP Code

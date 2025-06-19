@@ -19,7 +19,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-namespace LibMelanie\Lib;
+namespace LibMelanie\Lib\Zoom;
 
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\Config;
@@ -32,7 +32,7 @@ use LibMelanie\Config\Config;
  * @subpackage Lib Mélanie2
  *
  */
-class ZoomMeeting {
+class Meeting {
 
     public static function save($event) {
 

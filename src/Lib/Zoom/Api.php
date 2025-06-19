@@ -19,10 +19,11 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-namespace LibMelanie\Lib;
+namespace LibMelanie\Lib\Zoom;
 
 use LibMelanie\Log\M2Log;
 use LibMelanie\Config\Config;
+use LibMelanie\HTTP;
 
 /**
  * Classe de gestion des API de Zoom
@@ -32,7 +33,7 @@ use LibMelanie\Config\Config;
  * @subpackage Lib Mélanie2
  *
  */
-class ZoomApi {
+class Api {
 
     /**
      * Tableau statique pour stocker les tokens d'accès
@@ -91,12 +92,12 @@ class ZoomApi {
      * @return string Le token d'accès OAuth
      */
     public static function GetToken($account_id) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, "ZoomApi::GetToken($account_id)");
+        M2Log::Log(M2Log::LEVEL_DEBUG, "Zoom/Api::GetToken($account_id)");
 
         $accounts = Config::Get('ZOOM_ACCOUNTS');
 
         if (!isset($accounts[$account_id])) {
-            M2Log::Log(M2Log::LEVEL_ERROR, "ZoomApi::GetToken - Account ID $account_id not found in configuration");
+            M2Log::Log(M2Log::LEVEL_ERROR, "Zoom/Api::GetToken - Account ID $account_id not found in configuration");
             throw new \Exception("Zoom account ID not found in configuration");
         }
 
@@ -115,14 +116,14 @@ class ZoomApi {
                 'Authorization: Basic ' . base64_encode("$client_id:$client_secret")
             ];
             
-            $ret = HTTPRequest::Post(self::GET_TOKEN_URL, $params, $headers);
+            $ret = HTTP\Request::Post(self::GET_TOKEN_URL, $params, $headers);
 
             if ($ret['httpCode'] == 200) {
                 $response = json_decode($ret['content'], true);
                 self::$tokens[$client_id] = $response['access_token'];
-                M2Log::Log(M2Log::LEVEL_DEBUG, "ZoomApi::GetToken - Token retrieved successfully");
+                M2Log::Log(M2Log::LEVEL_DEBUG, "Zoom/Api::GetToken - Token retrieved successfully");
             } else {
-                M2Log::Log(M2Log::LEVEL_ERROR, "ZoomApi::GetToken - Failed to retrieve token: " . $ret['content']);
+                M2Log::Log(M2Log::LEVEL_ERROR, "Zoom/Api::GetToken - Failed to retrieve token: " . $ret['content']);
                 throw new \Exception("Failed to retrieve Zoom API token");
             }
         }
@@ -139,7 +140,7 @@ class ZoomApi {
      * @return array La liste des réunions de l'utilisateur
      */
     public static function ListMeetings($account_id, $username, $params = []) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, "ZoomApi::ListMeetings($account_id, $username)");
+        M2Log::Log(M2Log::LEVEL_DEBUG, "Zoom/Api::ListMeetings($account_id, $username)");
 
         $token = self::GetToken($account_id);
         $url = self::_getUrl(self::LIST_MEETINGS_URL, ['%%username%%' => $username]);
@@ -149,12 +150,12 @@ class ZoomApi {
             'Content-Type: application/json',
         ];
 
-        $ret = HTTPRequest::Get($url, $params, $headers);
+        $ret = HTTP\Request::Get($url, $params, $headers);
 
         if ($ret['httpCode'] == 200) {
             return json_decode($ret['content'], true);
         } else {
-            M2Log::Log(M2Log::LEVEL_ERROR, "ZoomApi::ListMeetings - Failed to list meetings: " . $ret['content']);
+            M2Log::Log(M2Log::LEVEL_ERROR, "Zoom/Api::ListMeetings - Failed to list meetings: " . $ret['content']);
             throw new \Exception("Failed to list Zoom meetings");
         }
     }
@@ -168,7 +169,7 @@ class ZoomApi {
      * @return array Les détails de la réunion
      */
     public static function GetMeeting($account_id, $meeting_id) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, "ZoomApi::GetMeeting($account_id, $meeting_id)");
+        M2Log::Log(M2Log::LEVEL_DEBUG, "Zoom/Api::GetMeeting($account_id, $meeting_id)");
 
         $token = self::GetToken($account_id);
         $url = self::_getUrl(self::GET_MEETING_URL, ['%%meeting_id%%' => $meeting_id]);
@@ -178,12 +179,12 @@ class ZoomApi {
             'Content-Type: application/json',
         ];
 
-        $ret = HTTPRequest::Get($url, null, $headers);
+        $ret = HTTP\Request::Get($url, null, $headers);
 
         if ($ret['httpCode'] == 200) {
             return json_decode($ret['content'], true);
         } else {
-            M2Log::Log(M2Log::LEVEL_ERROR, "ZoomApi::GetMeeting - Failed to retrieve meeting: " . $ret['content']);
+            M2Log::Log(M2Log::LEVEL_ERROR, "Zoom/Api::GetMeeting - Failed to retrieve meeting: " . $ret['content']);
             throw new \Exception("Failed to retrieve Zoom meeting");
         }
     }
@@ -198,7 +199,7 @@ class ZoomApi {
      * @return array Les détails de la réunion créée
      */
     public static function CreateMeeting($account_id, $username, $meeting_data) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, "ZoomApi::CreateMeeting($account_id, $username)");
+        M2Log::Log(M2Log::LEVEL_DEBUG, "Zoom/Api::CreateMeeting($account_id, $username)");
 
         $token = self::GetToken($account_id);
         $url = self::_getUrl(self::CREATE_MEETING_URL, ['%%username%%' => $username]);
@@ -210,12 +211,12 @@ class ZoomApi {
 
         $postfields = json_encode($meeting_data);
 
-        $ret = HTTPRequest::Post($url, $postfields, $headers);
+        $ret = HTTP\Request::Post($url, $postfields, $headers);
 
         if ($ret['httpCode'] == 201) {
             return json_decode($ret['content'], true);
         } else {
-            M2Log::Log(M2Log::LEVEL_ERROR, "ZoomApi::CreateMeeting - Failed to create meeting: " . $ret['content']);
+            M2Log::Log(M2Log::LEVEL_ERROR, "Zoom/Api::CreateMeeting - Failed to create meeting: " . $ret['content']);
             throw new \Exception("Failed to create Zoom meeting");
         }
     }
@@ -230,7 +231,7 @@ class ZoomApi {
      * @return bool True si la mise à jour a réussi, sinon une exception est levée
      */
     public static function UpdateMeeting($account_id, $meeting_id, $meeting_data) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, "ZoomApi::UpdateMeeting($account_id, $meeting_id)");
+        M2Log::Log(M2Log::LEVEL_DEBUG, "Zoom/Api::UpdateMeeting($account_id, $meeting_id)");
 
         $token = self::GetToken($account_id);
         $url = self::_getUrl(self::UPDATE_MEETING_URL, ['%%meeting_id%%' => $meeting_id]);
@@ -242,12 +243,12 @@ class ZoomApi {
 
         $postfields = json_encode($meeting_data);
 
-        $ret = HTTPRequest::Patch($url, $postfields, $headers);
+        $ret = HTTP\Request::Patch($url, $postfields, $headers);
 
         if ($ret['httpCode'] == 204) {
             return true; // No content returned on success
         } else {
-            M2Log::Log(M2Log::LEVEL_ERROR, "ZoomApi::UpdateMeeting - Failed to update meeting: " . $ret['content']);
+            M2Log::Log(M2Log::LEVEL_ERROR, "Zoom/Api::UpdateMeeting - Failed to update meeting: " . $ret['content']);
             throw new \Exception("Failed to update Zoom meeting");
         }
     }
@@ -261,7 +262,7 @@ class ZoomApi {
      * @return bool True si la suppression a réussi, sinon une exception est levée
      */
     public static function DeleteMeeting($account_id, $meeting_id) {
-        M2Log::Log(M2Log::LEVEL_DEBUG, "ZoomApi::DeleteMeeting($account_id, $meeting_id)");
+        M2Log::Log(M2Log::LEVEL_DEBUG, "Zoom/Api::DeleteMeeting($account_id, $meeting_id)");
 
         $token = self::GetToken($account_id);
         $url = self::_getUrl(self::DELETE_MEETING_URL, ['%%meeting_id%%' => $meeting_id]);
@@ -271,12 +272,12 @@ class ZoomApi {
             'Content-Type: application/json',
         ];
 
-        $ret = HTTPRequest::Delete($url, null, $headers);
+        $ret = HTTP\Request::Delete($url, null, $headers);
 
         if ($ret['httpCode'] == 204) {
             return true; // No content returned on success
         } else {
-            M2Log::Log(M2Log::LEVEL_ERROR, "ZoomApi::DeleteMeeting - Failed to delete meeting: " . $ret['content']);
+            M2Log::Log(M2Log::LEVEL_ERROR, "Zoom/Api::DeleteMeeting - Failed to delete meeting: " . $ret['content']);
             throw new \Exception("Failed to delete Zoom meeting");
         }
     }

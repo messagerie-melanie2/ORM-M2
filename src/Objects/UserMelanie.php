@@ -793,12 +793,17 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
 		}
 
     $filters = [];
+    $no_wildcard = ['mineqmission'];
     
     foreach ($this->haschanged as $key => $value) {
 				if ($value && $key != 'cn') {
           $val = $this->$key;
           $val = is_array($val) ? $val[0] : $val;
-          $filters[] = "($key=$val*)";
+          if (in_array($key, $no_wildcard)) {
+            $filters[] = "($key=$val)";
+          } else {
+            $filters[] = "($key=$val*)";
+          }
         }
     }
     $filter = str_replace('%%filter%%', '&'.implode('',$filters), $filter);

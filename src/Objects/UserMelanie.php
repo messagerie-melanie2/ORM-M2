@@ -795,7 +795,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     $filters = [];
     
     foreach ($this->haschanged as $key => $value) {
-				if ($value) {
+				if ($value && $key != 'cn') {
           $val = $this->$key;
           $val = is_array($val) ? $val[0] : $val;
           $filters[] = "($key=$val*)";

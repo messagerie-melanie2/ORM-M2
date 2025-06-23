@@ -448,4 +448,11 @@ class DefaultConfig
    * @var string
    */
   const DEFAULT_ADVANCED_SEARCH_MAX_RESULTS = 300;
+
+  /**
+   * Mapping de la portée pour le ldap
+   * 
+   * @var string
+   */
+  const MINEQ_PORTEE_MAPPING = ['00' => 'Cachée (00)', '20' => 'Service (20)', '40' => 'Ministère (40)', '50' => 'Administration française (50)'];
 }

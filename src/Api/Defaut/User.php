@@ -2855,6 +2855,15 @@ abstract class User extends MceObject
   protected function getMapList_title() {
     return \LibMelanie\Ldap\Ldap::getNomenclatureField('title');
   }
+
+  /**
+   * Récupère la liste des title dans les ressources de l'annuaire
+   *
+   * @return Array liste des title
+   */
+  protected function getMapMineq_portee() {
+    return \LibMelanie\Ldap\Ldap::getNomenclatureField('mineqPortee');
+  }
   
   /**
 	 * Permet de récupérer la liste d'objet en utilisant les données passées

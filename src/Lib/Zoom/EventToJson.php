@@ -71,7 +71,7 @@ class EventToJson {
       'topic'             => $event->title,
       'type'              => self::$type,
     ];
-    return json_encode($json);
+    return json_encode($json, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
   }
 
   /**

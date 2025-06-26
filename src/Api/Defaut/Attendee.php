@@ -641,6 +641,11 @@ class Attendee extends MceObject {
         }
     }
 
+    // L'utilisateur n'est pas chargé (c'est du cache)
+    if (!isset($this->_user)) {
+      $this->_setAttendeeFromUser();
+    }
+
     $Resource = $this->__getNamespace() . '\\Resource';
     $this->_resource = new $Resource();
     $this->_resource->getObjectMelanie()->__set_data($this->_user->getObjectMelanie()->__get_data());

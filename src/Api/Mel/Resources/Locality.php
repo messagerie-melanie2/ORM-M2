@@ -88,7 +88,8 @@ class Locality extends Defaut\Resources\Locality {
    * Configuration du mapping qui surcharge la conf
    */
   const MAPPING = [
-    "uid"      => 'ou',             // Identifiant de la localite
-    "name"     => 'description',    // Name de la ressource
+    "uid"         => 'ou',             // Identifiant de la localite
+    "name"        => 'description',    // Name de la ressource
+    "postalcode"  => 'postalcode',                    // Code postal
   ];
 }

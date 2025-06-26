@@ -209,9 +209,7 @@ class Api {
             'Content-Type: application/json',
         ];
 
-        $postfields = json_encode($meeting_data);
-
-        $ret = HTTP\Request::Post($url, $postfields, $headers);
+        $ret = HTTP\Request::Post($url, $meeting_data, $headers);
 
         if ($ret['httpCode'] == 201) {
             return json_decode($ret['content'], true);
@@ -241,9 +239,7 @@ class Api {
             'Content-Type: application/json',
         ];
 
-        $postfields = json_encode($meeting_data);
-
-        $ret = HTTP\Request::Patch($url, $postfields, $headers);
+        $ret = HTTP\Request::Patch($url, $meeting_data, $headers);
 
         if ($ret['httpCode'] == 204) {
             return true; // No content returned on success

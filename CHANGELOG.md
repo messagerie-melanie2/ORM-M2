@@ -1,3 +1,15 @@
+ORM m2 - 0.6.19
+------
+- 0009052: Gestion du X-CM2V3-ACTION: COPY dans un FAKED-MASTER
+- 0009018: Ajouter une lib HTTPRequest pour faire des appels http
+- 0008994: Ajouter une classe ZoomApi
+- 0008993: [Event] Nouvelle propriété jsonzoom
+- 0008991: Ajouter une classe EventToJsonZoom
+- 0009058: [Event] Nouvelle propriété zoom_meeting_id
+- 0009054: Ajouter une lib ZoomMeeting
+- 0009072: [Event] Nouvelle propriété zoom_meeting_url
+- 0009084: [Locality] Ajouter le code postal
+
 ORM m2 - 0.6.18
 ------
 - 0008910: Ajouter dans le filtre email la recherche pour les listes

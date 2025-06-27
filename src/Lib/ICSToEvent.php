@@ -91,6 +91,7 @@ class ICSToEvent {
     // Ajouter les options FORGIVING et IGNORE_INVALID_LINES au parser ICS
     $vcalendar = VObject\Reader::read($ics, VObject\Reader::OPTION_FORGIVING + VObject\Reader::OPTION_IGNORE_INVALID_LINES);
     $exceptions = [];
+    $master_copy = false;
     // 0005907: [ICS] Prendre en compte le X-WR-TIMEZONE
     $x_wr_timezone = $vcalendar->{ICS::X_WR_TIMEZONE};
     if (isset($x_wr_timezone)) {
@@ -231,6 +232,11 @@ class ICSToEvent {
           if (!isset($object->created)) {
             $object->created = time();
           }
+        }
+
+        // 0009052: Gestion du X-CM2V3-ACTION: COPY dans un FAKED-MASTER
+        if (isset($vevent->{ICS::X_CM2V3_ACTION})) {
+          $master_copy = strtolower($vevent->{ICS::X_CM2V3_ACTION}) == 'copy';
         }
         
         $object->deleted = true;
@@ -424,7 +430,7 @@ class ICSToEvent {
 
       // ATTENDEE
       // MANTIS 0007564: [ICS] Lors d'un copier/coller supprimer les participants
-      if (isset($vevent->ATTENDEE) && !$copy) {
+      if (isset($vevent->ATTENDEE) && !$copy && !$master_copy) {
         // 0005064: [ICS] si l'organisateur existe, ne pas le modifier depuis l'ICS
         $organizer = $object->organizer;
         $organizer_email = isset($organizer) ? $organizer->email : null;

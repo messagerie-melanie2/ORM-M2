@@ -76,6 +76,9 @@ class Meeting {
                 $event->zoom_meeting_url = $result['join_url'] ?? '';
                 $event->zoom_meeting_password = $result['password'] ?? '';
 
+                // Pour l'instant, pas de recurrence
+                $event->recurrence->type = \LibMelanie\Api\Defaut\Recurrence::RECURTYPE_NORECUR;
+
                 if (strpos($event->location, $event->zoom_meeting_url) === false) {
                     $event->location .= ' ' . $event->zoom_meeting_url;
                 }

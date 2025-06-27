@@ -909,6 +909,64 @@ class Event extends MceObject {
     return (strtolower($organizer_uid) == strtolower($user_uid) 
         || strpos(strtolower($organizer_uid), strtolower($user_uid) . $delimiter) !== false);
   }
+
+  /**
+   * Enregistrer les ressources externes
+   * 
+   * @param Attendee[] $attendees Liste des participants
+   * 
+   * @return boolean true si l'enregistrement s'est bien passé, false sinon
+   */
+  protected function saveExternalRessources($attendees) {
+    $ret = true;
+    foreach ($attendees as $attendee) {
+      if ($attendee->is_ressource) {
+        if ($attendee->ressource->is_zoom_room) {
+          $ret = $ret & $this->saveZoomRoomRessource($attendee);
+        }
+      }
+    }
+    return $ret;
+  }
+
+  /**
+   * Enregistrer une ressource Zoom Room
+   * 
+   * @param Attendee $attendee
+   * 
+   * @return boolean true si l'enregistrement s'est bien passé, false sinon
+   */
+  protected function saveZoomRoomRessource($attendee) {
+    return \LibMelanie\Lib\Zoom\Meeting::save($this, $attendee->ressource->zoom_internal_email, $attendee->ressource->zoom_account_id);
+  }
+
+  /**
+   * Supprimer une ressource externe
+   * 
+   * @param Attendee $attendee
+   * 
+   * @return boolean true si la suppression s'est bien passée, false sinon
+   */
+  protected function deleteExternalRessource($attendee) {
+    $ret = true;
+    if ($attendee->is_ressource) {
+      if ($attendee->ressource->is_zoom_room) {
+        $ret = $this->deleteZoomRoomRessource($attendee);
+      }
+    }
+    return $ret;
+  }
+
+  /**
+   * Supprimer une ressource Zoom Room
+   * 
+   * @param Attendee $attendee
+   * 
+   * @return boolean true si la suppression s'est bien passée, false sinon
+   */
+  protected function deleteZoomRoomRessource($attendee) {
+    return \LibMelanie\Lib\Zoom\Meeting::delete($this, $attendee->ressource->zoom_account_id);
+  }
   
   /**
    * Enregistrer l'événement en attente dans l'agenda des participants
@@ -999,6 +1057,9 @@ class Event extends MceObject {
         $Event = $this->__getNamespace() . '\\Exception';
       }
 
+      // Ajouter ici un appel à une fonction pour les enregistrements vers des ressources externes
+      $this->saveExternalRessources($attendees);
+
       if (is_array($attendees) && count($attendees) > 0) {
         foreach ($attendees as $attendee_key => $attendee) {
           // MANTIS 0006052: [En attente] Problème avec les non participants
@@ -1063,7 +1124,10 @@ class Event extends MceObject {
           if ($listAttendee->need_action) {
             // 0008834: Pour une ressource, supprimer l'événement via le en attente, peu importe le statut
             if ($listAttendee->is_ressource) {
-              $_e->delete();
+              if ($this->deleteExternalRessource($listAttendee)) {
+                // Supprimer l'événement de la ressource
+                $_e->delete();
+              }
             }
             else {
               // 0008072: [En attente] Ne plus supprimer les événements des participants
@@ -1473,7 +1537,10 @@ class Event extends MceObject {
 
             // 0008834: Pour une ressource, supprimer l'événement via le en attente, peu importe le statut
             if ($attendee->is_ressource) {
-              $attendee_event->delete();
+              if ($this->deleteExternalRessource($attendee)) {
+                // Supprimer l'événement de la ressource
+                $attendee_event->delete();
+              }
             }
             else if ($attendee_event->load()) {
               // 0008072: [En attente] Ne plus supprimer les événements des participants
@@ -3202,6 +3269,18 @@ class Event extends MceObject {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapZoom_meeting_id()");
     return $this->getAttribute('zoom_meeting_id');
   }
+  /**
+   * Map zoom_meeting_id param
+   * 
+   * @return boolean
+   * @ignore
+   *
+   */
+  protected function issetMapZoom_meeting_id() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->issetMapZoom_meeting_id()");
+    $value = $this->getAttribute('zoom_meeting_id');
+    return isset($value);
+  }
 
   /**
    * Map zoom_meeting_url param
@@ -3216,13 +3295,59 @@ class Event extends MceObject {
   /**
    * Map zoom_meeting_url param
    * 
-   * @return string $zoom_meeting_id
+   * @return string $zoom_meeting_url
    * @ignore
    *
    */
   protected function getMapZoom_meeting_url() {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapZoom_meeting_url()");
     return $this->getAttribute('zoom_meeting_url');
+  }
+  /**
+   * Map zoom_meeting_url param
+   * 
+   * @return boolean
+   * @ignore
+   *
+   */
+  protected function issetMapZoom_meeting_url() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->issetMapZoom_meeting_url()");
+    $value = $this->getAttribute('zoom_meeting_url');
+    return isset($value);
+  }
+
+  /**
+   * Map zoom_meeting_password param
+   * 
+   * @ignore
+   *
+   */
+  protected function setMapZoom_meeting_password($zoom_meeting_password) {
+    M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->setMapZoom_meeting_password($zoom_meeting_password)");
+    $this->setAttributeJson('zoom_meeting_password', $zoom_meeting_password);
+  }
+  /**
+   * Map zoom_meeting_password param
+   * 
+   * @return string $zoom_meeting_password
+   * @ignore
+   *
+   */
+  protected function getMapZoom_meeting_password() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapZoom_meeting_password()");
+    return $this->getAttribute('zoom_meeting_password');
+  }
+  /**
+   * Map zoom_meeting_password param
+   * 
+   * @return boolean
+   * @ignore
+   *
+   */
+  protected function issetMapZoom_meeting_password() {
+    M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->issetMapZoom_meeting_password()");
+    $value = $this->getAttribute('zoom_meeting_password');
+    return isset($value);
   }
 
   /**

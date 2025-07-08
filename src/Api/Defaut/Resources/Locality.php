@@ -161,7 +161,7 @@ abstract class Locality extends MceObject {
    * 
    * @ignore
    */
-  const LOAD_ATTRIBUTES = ['uid', 'name'];
+  const LOAD_ATTRIBUTES = ['uid', 'name', 'postalcode', 'dn'];
 
   /**
    * Configuration du mapping qui surcharge la conf

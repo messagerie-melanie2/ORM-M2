@@ -325,6 +325,10 @@ class Organizer extends MceObject {
         if ($user->is_objectshare) {
           $this->objectmelanie->organizer_uid = $user->objectshare->uid;
           $name = $user->objectshare->mailbox->fullname;
+          // MANTIS 0009108: Avoir une configuration pour utiliser les emails de BALF plutôt que les objets de partage
+          if (Config::get(Config::INVITATION_FORCE_SHARED_MAILBOX_EMAIL, false)) {
+            $email = $user->objectshare->mailbox->email;
+          }
           // MANTIS 0006314: Le en attente ne fonctionne pas lorsque l'invitation part d'une BALP
           $this->extern = false;
         }

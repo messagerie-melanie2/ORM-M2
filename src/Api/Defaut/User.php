@@ -2864,6 +2864,15 @@ abstract class User extends MceObject
   protected function getMapMineq_portee() {
     return \LibMelanie\Ldap\Ldap::getNomenclatureField('mineqPortee');
   }
+
+  /**
+   * Récupère la liste des champs SMTP dans les ressources de l'annuaire
+   *
+   * @return Array liste des title
+   */
+  protected function getMapMineq_Domaines_SMTP() {
+    return \LibMelanie\Ldap\Ldap::getNomenclatureField('mineqDomainesSMTP');
+  }
   
   /**
 	 * Permet de récupérer la liste d'objet en utilisant les données passées

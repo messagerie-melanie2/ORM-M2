@@ -1146,4 +1146,20 @@ class User extends Defaut\User {
     $this->objectmelanie->service = $service;
     $this->setFullname();
   }
+
+  /**
+   * Récupère la liste des champs SMTP dans les ressources de l'annuaire
+   *
+   * @return Array liste des title
+   */
+  protected function getMapMineq_Domaines_SMTP() {
+    $domains = array_values(
+        array_filter(
+            \LibMelanie\Ldap\Ldap::getNomenclatureField('mineqDomainesSMTP'),
+            static fn(string $item): bool => strpos($item, '*') === false
+        )
+    );
+    return $domains;
+  }
+  
 }

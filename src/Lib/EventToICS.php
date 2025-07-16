@@ -454,6 +454,9 @@ class EventToICS {
       // Traitement participants
       $organizer_attendees = $event->attendees;
       if (!is_null($organizer_attendees) && is_array($organizer_attendees) && count($organizer_attendees) > 0 && isset($organizer_email) && !empty($organizer_email)) {
+        // MANTIS 0009107: [ICS] Pour une réunion, si l'utilisateur n'est ni organisateur ni participant, l'ajouté en tant que participant
+        $_user_found = false;
+
         // Add organizer
         $params = [];
         $org_role = $event->organizer->role;
@@ -481,6 +484,12 @@ class EventToICS {
           $params[ICS::X_M2_ORG_MAIL] = 'mailto:' . $org_owner_email;
         }
         $vevent->add(ICS::ORGANIZER, 'mailto:' . $organizer_email, $params);
+
+        // MANTIS 0009107: [ICS] Pour une réunion, si l'utilisateur n'est ni organisateur ni participant, l'ajouté en tant que participant
+        if (isset($user) && strtolower($user->email) == strtolower($organizer_email)) {
+          $_user_found = true;
+        }
+
         foreach ($organizer_attendees as $attendee) {
           // RSVP
           $rsvp = 'TRUE';
@@ -576,6 +585,22 @@ class EventToICS {
           }
           // Add attendee
           $vevent->add(ICS::ATTENDEE, 'mailto:' . $attendee->email, $params);
+
+          // MANTIS 0009107: [ICS] Pour une réunion, si l'utilisateur n'est ni organisateur ni participant, l'ajouté en tant que participant
+          if (isset($user) && strtolower($user->email) == strtolower($attendee->email)) {
+            $_user_found = true;
+          }
+        }
+
+        // MANTIS 0009107: [ICS] Pour une réunion, si l'utilisateur n'est ni organisateur ni participant, l'ajouté en tant que participant
+        if (!$_user_found && isset($user) && !empty($user->email)) {
+          // Ajouter l'utilisateur en tant que participant
+          $params = [
+              ICS::PARTSTAT => $event->status == Event::STATUS_CANCELLED ? ICS::PARTSTAT_DECLINED : ICS::PARTSTAT_NEEDS_ACTION,
+              ICS::ROLE => ICS::ROLE_OPT_PARTICIPANT,
+              ICS::CN => self::cleanUTF8String($user->name)
+          ];
+          $vevent->add(ICS::ATTENDEE, 'mailto:' . $user->email, $params);
         }
       }
       // Calendar infos

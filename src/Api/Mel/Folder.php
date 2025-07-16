@@ -67,10 +67,6 @@ class Folder extends Defaut\Folder
      */
     const LOAD_ATTRIBUTES = ['dn', 'fullname', 'email', 'description'];
 
-    /**
-     * Configuration du mapping qui surcharge la conf
-     */
-    const MAPPING = User::MAPPING;
 
     /**
      * Configuration du mapping pour récupérer bon type de boite
@@ -86,4 +82,84 @@ class Folder extends Defaut\Folder
      * Configuration du mapping pour l'ordre de l'annuaire
      */
     const CHILDREN_ORDER_TYPE_MAPPING = ['folder' => '0', 'user' => '1', 'fonction' => '2', 'group' => '3', 'other' => '4'];
+
+    /**
+     * Configuration du mapping qui surcharge la conf
+     */
+    const MAPPING =
+    [
+        'entityname'              => 'ou',
+        'smtp'                    => [MappingMce::name => 'mineqDomainesSMTP', MappingMce::type => MappingMce::arrayLdap],
+        "dn"                      => 'dn',                            // DN de l'utilisateur
+        "uid"                     => 'uid',                           // Identifiant de l'utilisateur
+        "fullname"                => 'cn',                            // Nom complet de l'utilisateur
+        "name"                    => 'displayname',                   // Display name de l'utilisateur
+        "lastname"                => 'sn',                            // Last name de l'utilisateur
+        "firstname"               => 'givenname',                     // First name de l'utilisateur
+        "email"                   => 'mailpr',                        // Adresse e-mail principale de l'utilisateur en reception
+        "email_list"              => [MappingMce::name => 'mail', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
+        "email_send"              => 'mineqmelmailemissionpr',        // Adresse e-mail principale de l'utilisateur en emission
+        "email_send_list"         => [MappingMce::name => 'mineqmelmailemission', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en émission pour l'utilisateur
+        "service"                 => 'departmentnumber',              // Department Number
+        "password_need_change"    => 'mineqpassworddoitchanger',      // Message pour indiquer que le mot de passe de l'utilisateur doit changer
+        "shares"                  => [MappingMce::name => 'mineqmelpartages', MappingMce::type => MappingMce::arrayLdap], // Liste des partages pour cette boite
+        "server_routage"          => [MappingMce::name => 'mineqmelroutage', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
+        "server_host"             => [MappingMce::name => 'mineqmelroutage', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
+        "type"                    => 'mineqtypeentree',               // Type d'entrée (boite individuelle, partagée, ressource, ...)
+        "internet_access_admin"   => [MappingMce::name => 'mineqmelaccesinterneta', MappingMce::defaut => false, MappingMce::type => MappingMce::booleanLdap],        // Droit d'accès depuis internet donné par l'administrateur
+        "internet_access_user"    => [MappingMce::name => 'mineqmelaccesinternetu', MappingMce::defaut => false, MappingMce::type => MappingMce::booleanLdap],        // Droit d'accès depuis internet accepté par l'utilisateur
+        "internet_access_enable"  => ['mineqmelaccesinterneta', 'mineqmelaccesinternetu'],
+        "use_photo_ader"          => 'mineqpublicationphotoader',     // Flag publier la photo de l'utilisateur sur Ader
+        "use_photo_intranet"      => 'mineqpublicationphotointranet', // Flag publier la photo de l'utilisateur sur l'intranet
+        "employee_number"         => [MappingMce::name => 'employeenumber', MappingMce::defaut => 'non renseigné'],                // Matricule de l'utilisateur
+        "ministere"               => 'mineqzone',                     // Zone de l'utilisateur
+        "street"                  => 'street',                        // Rue
+        "postalcode"              => 'postalcode',                    // Code postal
+        "locality"                => 'l',                             // Ville
+        "description"             => 'description',                   // Description
+        "phonenumber"             => 'telephonenumber',               // Numéro de téléphone
+        "phoneformat"             => 'telephonenumber',               // Numéro de téléphone
+        "faxnumber"               => 'facsimiletelephonenumber',      // Numéro de fax
+        "mobilephone"             => 'mobile',                        // Numéro de mobile
+        "mobileformat"            => 'mobile',                        // Numéro de mobile
+        "roomnumber"              => 'roomnumber',                    // Numéro de bureau
+        "title"                   => 'title',                         // Titre
+        "business_category"       => [MappingMce::name => 'businesscategory', MappingMce::type => MappingMce::arrayLdap], // Cetégorie
+        "vpn_profile_name"        => 'mineqvpnprofil',                // Nom du profil VPN associé
+        "has_bureautique"         => 'sambasid',                      // SID Samba
+        "update_personnal_info"   => [MappingMce::name => 'mineqmajinfoperso', MappingMce::defaut => true, MappingMce::trueLdapValue => '1', MappingMce::falseLdapValue => '0', MappingMce::type => MappingMce::booleanLdap],             // Droit pour l'utilisateur de modifier ses infos perso dans l'annuaire
+        "remise"                  => 'mineqmelremise',                // Remise
+        "mission"                 => [MappingMce::name => 'mineqmission', MappingMce::type => MappingMce::arrayLdap], // Mission
+        "photo_src"               => 'jpegphoto',                     // Photo de l'utilisateur
+        "gender"                  => 'gender',                        // Genre
+        "liens_import"            => 'mineqliensimport',              // Lien d'import autres annuaires
+        "is_agriculture"          => 'mineqliensimport',              // Calcul si l'utilisateur appartient à l'agriculture
+        "supported_shares"        => 'mineqliensimport',              // Liste des droits supportés en fonction du lien import
+        "observation"             => [MappingMce::name => 'info', MappingMce::prefixLdap => 'OBSERVATION:', MappingMce::type => MappingMce::stringLdap],
+        "acces_internet_profil"   => [MappingMce::name => 'info', MappingMce::prefixLdap => 'AccesInternet.Profil: ', MappingMce::type => MappingMce::stringLdap],
+        "acces_internet_ts"       => [MappingMce::name => 'info', MappingMce::prefixLdap => 'AccesInternet.AcceptationCGUts: ', MappingMce::type => MappingMce::stringLdap],
+        "mdrive"                  => [MappingMce::name => 'info', MappingMce::prefixLdap => 'MDRIVE: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'oui', MappingMce::falseLdapValue => 'non'],
+        "mdrive_quota"            => 'mineqmelmdrivequota', // Quota du MDrive
+        "outofoffices"            => [MappingMce::name => 'mineqmelreponse', MappingMce::type => MappingMce::arrayLdap], // Affichage du message d'absence de l'utilisateur
+        "acces_synchro_admin_profil"    => 'mineqmelaccessynchroa',       // Profil de synchro administrateur
+        "acces_synchro_admin_datetime"  => 'mineqmelaccessynchroa',       // Date de synchro administrateur
+        "acces_synchro_user_profil"     => 'mineqmelaccessynchrou',       // Profil de synchro administrateur
+        "acces_synchro_user_datetime"   => 'mineqmelaccessynchrou',       // Profil de synchro administrateur
+        "is_synchronisation_enable"     => 'mineqmelaccessynchrou',       // Est-ce que la synchronisation de l'utilisateur est activée ?
+        "synchronisation_profile"       => 'mineqmelaccessynchrou',       // Retourne le profil de synchronisation
+        "cerbere"                   => [MappingMce::name => 'info', MappingMce::prefixLdap => 'AUTH.Cerbere:', MappingMce::type => MappingMce::stringLdap],
+        "double_authentification"   => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => 'DoubleAuth.Obligatoire: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'oui', MappingMce::falseLdapValue => 'non'],
+        "is_mailbox"                => [MappingMce::name => 'objectclass', MappingMce::trueLdapValue => 'mineqMelBoite', MappingMce::type => MappingMce::booleanLdap],             // Est-ce qu'il s'agit bien d'une boite Mél
+        "modifiedtime"              => 'mineqmodifiedtimestamp',
+        "double_authentification_forcee"        => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => '2FA.Forcee: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => '1', MappingMce::falseLdapValue => '0'],
+        "double_authentification_date_butoir"   => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => '2FA.DateButoir: ', MappingMce::type => MappingMce::dateLdap],
+        "double_authentification_date_grace"    => [MappingMce::name => 'mineqinfosec', MappingMce::prefixLdap => '2FA.DateDeGrace: ', MappingMce::type => MappingMce::dateLdap],
+        "is_external"               => [MappingMce::name => 'dn', MappingMce::type => MappingMce::booleanLdap],
+        "uuid"                      => "uniqueidentifier",
+        "password"                  => "userpassword",
+        "order"                     => "mineqordreaffichage",
+        "alias"                     => [MappingMce::name => 'seeAlso', MappingMce::type => MappingMce::arrayLdap],
+        "portee"                    => "mineqportee",
+        "work"                      => "observation"
+    ];
 }

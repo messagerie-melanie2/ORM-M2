@@ -1,3 +1,9 @@
+ORM m2 - 0.6.20
+------
+- 0009105: [Locality] Ajouter le code postal dans les load attributes
+- 0009108: Avoir une configuration pour utiliser les emails de BALF plutôt que les objets de partage
+- 0009107: [ICS] Pour une réunion, si l'utilisateur n'est ni organisateur ni participant, l'ajouté en tant que participant
+
 ORM m2 - 0.6.19
 ------
 - 0009052: Gestion du X-CM2V3-ACTION: COPY dans un FAKED-MASTER

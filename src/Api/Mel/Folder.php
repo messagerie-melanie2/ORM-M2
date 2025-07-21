@@ -88,7 +88,7 @@ class Folder extends Defaut\Folder
      */
     const MAPPING =
     [
-        'entityname'              => 'ou',
+        'ou'              => 'ou',
         'smtp'                    => [MappingMce::name => 'mineqDomainesSMTP', MappingMce::type => MappingMce::arrayLdap],
         "dn"                      => 'dn',                            // DN de l'utilisateur
         "uid"                     => 'uid',                           // Identifiant de l'utilisateur
@@ -160,6 +160,8 @@ class Folder extends Defaut\Folder
         "order"                     => "mineqordreaffichage",
         "alias"                     => [MappingMce::name => 'seeAlso', MappingMce::type => MappingMce::arrayLdap],
         "portee"                    => "mineqportee",
-        "work"                      => "observation"
+        "work"                      => "observation",
+        "manager"                   => "manager",
+        "wifi"                      => "mineqAccesWifiA"
     ];
 }

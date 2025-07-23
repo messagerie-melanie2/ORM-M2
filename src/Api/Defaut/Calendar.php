@@ -40,6 +40,8 @@ use LibMelanie\Config\Config;
  * @property string $ctag CTag du calendrier
  * @property int $synctoken SyncToken du calendrier
  * @property-read string $caldavurl URL CalDAV pour le calendrier
+ * @property-read string $owner_email Adresse email du propriétaire du calendrier
+ * @property-read string $owner_fullname Nom complet du propriétaire du calendrier
  * 
  * @method bool load() Charge les données du calendrier depuis la base de données
  * @method bool exists() Non implémentée
@@ -59,6 +61,30 @@ class Calendar extends MceObject {
    *
    */
   protected $user;
+
+  /**
+   * Utilisateur associé au propriétaire du calendrier
+   * 
+   * @var User
+   * @ignore
+   */
+  protected $_owner_user;
+
+  /**
+   * Nom complet du propriétaire du calendrier
+   * 
+   * @var string
+   * @ignore
+   */
+  protected $_owner_fullname;
+
+  /**
+   * Adresse email du propriétaire du calendrier
+   * 
+   * @var string
+   * @ignore
+   */
+  protected $_owner_email;
   
   /**
    * Constructeur de l'objet
@@ -100,6 +126,63 @@ class Calendar extends MceObject {
    * ***************************************************
    * METHOD MAPPING
    */
+  /**
+   * Map owner_email field
+   * 
+   * @return string|null
+   * @ignore
+   */
+  public function getMapOwner_email() {
+    if (!isset($this->_owner_user) && isset($this->objectmelanie->owner)) {
+      $User = $this->__getNamespace() . '\\User';
+      $this->_owner_user = new $User();
+      $this->_owner_user->uid = $this->objectmelanie->owner;
+
+      if ($this->_owner_user->load()) {
+        $this->_owner_email = $this->_owner_user->email;
+        $this->_owner_fullname = $this->_owner_user->fullname;
+      } else {
+        $this->_owner_email = null;
+        $this->_owner_fullname = null;
+      }
+    }
+
+    return $this->_owner_email;
+  }
+
+  /**
+   * Map owner_email field isset
+   * 
+   * @return boolean
+   * @ignore
+   */
+  public function issetMapOwner_email() {
+    $this->getMapOwner_email();
+    return isset($this->_owner_email);
+  }
+
+  /**
+   * Map owner_fullname field
+   * 
+   * @return string|null
+   * @ignore
+   */
+  public function getMapOwner_fullname() {
+    $this->getMapOwner_email();
+    return $this->_owner_fullname;
+  }
+
+  /**
+   * Map owner_fullname field isset
+   * 
+   * @return boolean
+   * @ignore
+   */
+  public function issetMapOwner_fullname() {
+    $this->getMapOwner_email();
+    return isset($this->_owner_fullname);
+  }
+
   /**
    * Enregistrement de l'objet
    * Nettoie le cache du user

@@ -1,3 +1,8 @@
+ORM m2 - 0.6.21
+------
+- 0009119: [Calendar] Ajouter deux propriétés owner_email et owner_fullname en lecture seule
+- 0009120: [ICS] Ajouter l'email du propriétaire de l'agenda en tant que participant
+
 ORM m2 - 0.6.20
 ------
 - 0009105: [Locality] Ajouter le code postal dans les load attributes

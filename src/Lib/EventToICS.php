@@ -486,7 +486,7 @@ class EventToICS {
         $vevent->add(ICS::ORGANIZER, 'mailto:' . $organizer_email, $params);
 
         // MANTIS 0009107: [ICS] Pour une réunion, si l'utilisateur n'est ni organisateur ni participant, l'ajouté en tant que participant
-        if (isset($user) && strtolower($user->email) == strtolower($organizer_email)) {
+        if (isset($calendar) && isset($calendar->owner_email) && strtolower($calendar->owner_email) == strtolower($organizer_email)) {
           $_user_found = true;
         }
 
@@ -587,20 +587,20 @@ class EventToICS {
           $vevent->add(ICS::ATTENDEE, 'mailto:' . $attendee->email, $params);
 
           // MANTIS 0009107: [ICS] Pour une réunion, si l'utilisateur n'est ni organisateur ni participant, l'ajouté en tant que participant
-          if (isset($user) && strtolower($user->email) == strtolower($attendee->email)) {
+          if (isset($calendar) && isset($calendar->owner_email) && strtolower($calendar->owner_email) == strtolower($attendee->email)) {
             $_user_found = true;
           }
         }
 
         // MANTIS 0009107: [ICS] Pour une réunion, si l'utilisateur n'est ni organisateur ni participant, l'ajouté en tant que participant
-        if (!$_user_found && isset($user) && !empty($user->email)) {
+        if (!$_user_found && isset($calendar) && isset($calendar->owner_email)) {
           // Ajouter l'utilisateur en tant que participant
           $params = [
               ICS::PARTSTAT => $event->status == Event::STATUS_CANCELLED ? ICS::PARTSTAT_DECLINED : ICS::PARTSTAT_NEEDS_ACTION,
               ICS::ROLE => ICS::ROLE_OPT_PARTICIPANT,
-              ICS::CN => self::cleanUTF8String($user->name)
+              ICS::CN => self::cleanUTF8String($calendar->owner_fullname)
           ];
-          $vevent->add(ICS::ATTENDEE, 'mailto:' . $user->email, $params);
+          $vevent->add(ICS::ATTENDEE, 'mailto:' . $calendar->owner_email, $params);
         }
       }
       // Calendar infos

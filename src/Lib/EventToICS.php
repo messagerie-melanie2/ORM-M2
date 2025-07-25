@@ -478,10 +478,20 @@ class EventToICS {
         $org_sent_by = $event->organizer->sent_by;
         if (isset($org_sent_by)) {
           $params[ICS::SENT_BY] = $org_sent_by;
+
+          // MANTIS 0009107: [ICS] Pour une réunion, si l'utilisateur n'est ni organisateur ni participant, l'ajouté en tant que participant
+          if (isset($calendar) && isset($calendar->owner_email) && strtolower($calendar->owner_email) == str_replace('mailto', '', strtolower($org_sent_by))) {
+            $_user_found = true;
+          }
         }
         $org_owner_email = $event->organizer->owner_email;
         if (isset($org_owner_email)) {
           $params[ICS::X_M2_ORG_MAIL] = 'mailto:' . $org_owner_email;
+
+          // MANTIS 0009107: [ICS] Pour une réunion, si l'utilisateur n'est ni organisateur ni participant, l'ajouté en tant que participant
+          if (isset($calendar) && isset($calendar->owner_email) && strtolower($calendar->owner_email) == strtolower($org_owner_email)) {
+            $_user_found = true;
+          }
         }
         $vevent->add(ICS::ORGANIZER, 'mailto:' . $organizer_email, $params);
 

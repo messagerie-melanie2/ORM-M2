@@ -292,7 +292,8 @@ class User extends Defaut\User {
     "order"                     => "mineqordreaffichage",
     "alias"                     => [MappingMce::name => 'seeAlso', MappingMce::type => MappingMce::arrayLdap],
     "portee"                    => "mineqportee",
-    "work"                      => "observation"
+    "work"                      => "observation",
+    "smtp"                      => [MappingMce::name => 'mineqDomainesSMTP', MappingMce::type => MappingMce::arrayLdap],
   ];
 
   /**

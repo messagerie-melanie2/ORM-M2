@@ -88,8 +88,8 @@ class Folder extends Defaut\Folder
      */
     const MAPPING =
     [
-        'ou'              => 'ou',
-        'smtp'                    => [MappingMce::name => 'mineqDomainesSMTP', MappingMce::type => MappingMce::arrayLdap],
+        'ou'                      => 'ou',
+        'smtp'                    => [MappingMce::name => 'mineqdomainessmtp', MappingMce::type => MappingMce::arrayLdap],
         "dn"                      => 'dn',                            // DN de l'utilisateur
         "uid"                     => 'uid',                           // Identifiant de l'utilisateur
         "fullname"                => 'cn',                            // Nom complet de l'utilisateur

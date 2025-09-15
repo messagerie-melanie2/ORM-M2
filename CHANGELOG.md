@@ -1,3 +1,7 @@
+ORM m2 - 0.6.22
+------
+- 0009123: [ICS] Ne pas ajouter l'email s'il est dans sentby ou orgmail
+
 ORM m2 - 0.6.21
 ------
 - 0009119: [Calendar] Ajouter deux propriétés owner_email et owner_fullname en lecture seule

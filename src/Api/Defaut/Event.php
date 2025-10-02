@@ -1134,7 +1134,6 @@ class Event extends MceObject {
               $_e->delete();
             }
             else {
-              // 0008072: [En attente] Ne plus supprimer les événements des participants
               // Copier l'événement même pour une annulation
               $this->copyEventNeedAction($this, $_e, null, $copyFieldsList, $needActionFieldsList, null, null, false, true);
               // Doit on annuler l'événement pour le participant ?
@@ -1546,27 +1545,28 @@ class Event extends MceObject {
                 $attendee_event->delete();
               }
             }
-            else if ($attendee_event->status == self::STATUS_TENTATIVE
-                  && $attendee->response == $Attendee::RESPONSE_NEED_ACTION) {
-              // Supprimer l'événement qui est en en attente
-              $attendee_event->delete();
-            }
             else if ($attendee_event->load()) {
-              // 0008072: [En attente] Ne plus supprimer les événements des participants
-              // Modification en annulé
-              $attendee_event->status = self::STATUS_CANCELLED;
-
-              // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
-              if (!empty($attendee_event->sequence)) {
-                $attendee_event->sequence = $attendee_event->sequence + 1;
+              if ($attendee_event->status == self::STATUS_TENTATIVE
+                  && $attendee->response == $Attendee::RESPONSE_NEED_ACTION) {
+                // Supprimer l'événement qui est en en attente
+                $attendee_event->delete();
               }
               else {
-                $attendee_event->sequence = 1;
+                // Modification en annulé
+                $attendee_event->status = self::STATUS_CANCELLED;
+
+                // 0006698: Incrémenter la séquence des participants dans le cas d'une suppression par l'organisateur
+                if (!empty($attendee_event->sequence)) {
+                  $attendee_event->sequence = $attendee_event->sequence + 1;
+                }
+                else {
+                  $attendee_event->sequence = 1;
+                }
+
+                $attendee_event->modified = time();
+                // Enregistre l'événement dans l'agenda du participant
+                $attendee_event->save(false);
               }
-              
-              $attendee_event->modified = time();
-              // Enregistre l'événement dans l'agenda du participant
-              $attendee_event->save(false);
             }
           }
         }

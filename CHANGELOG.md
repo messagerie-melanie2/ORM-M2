@@ -1,3 +1,7 @@
+ORM m2 - 0.6.24
+------
+- 0009221: Problème de composer
+
 ORM m2 - 0.6.23
 ------
 - 0009155: [En attente] re-Supprimer les événements des participants

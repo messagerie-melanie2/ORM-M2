@@ -50,7 +50,7 @@ if (CONFIGURATION_TYPE_LIBM2 == TYPE_EXTERNAL) {
         // Chargement de la configuration dans le répertoire de conf de l'ORM
         require_once(CONFIGURATION_PATH_LIBM2.'/includes.php');
     }
-    else if (CONFIGURATION_MODE_LIBM2 == MODE_MULTIPLE) {
+    else if (CONFIGURATION_MODE_LIBM2 == MODE_MULTIPLE && defined('CONFIGURATION_APP_LIBM2')) {
         require_once(CONFIGURATION_PATH_LIBM2.'/'.CONFIGURATION_APP_LIBM2.'/includes.php');
     }
 }

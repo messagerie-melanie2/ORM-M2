@@ -1129,6 +1129,10 @@ class Event extends MceObject {
                 $_e->delete();
               }
             }
+            else if ($_e->status == self::STATUS_TENTATIVE) {
+              // Si on est en provisoire on le supprime directement
+              $_e->delete();
+            }
             else {
               // 0008072: [En attente] Ne plus supprimer les événements des participants
               // Copier l'événement même pour une annulation
@@ -1541,6 +1545,11 @@ class Event extends MceObject {
                 // Supprimer l'événement de la ressource
                 $attendee_event->delete();
               }
+            }
+            else if ($attendee_event->status == self::STATUS_TENTATIVE
+                  && $attendee->response == $Attendee::RESPONSE_NEED_ACTION) {
+              // Supprimer l'événement qui est en en attente
+              $attendee_event->delete();
             }
             else if ($attendee_event->load()) {
               // 0008072: [En attente] Ne plus supprimer les événements des participants

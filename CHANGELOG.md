@@ -1,3 +1,8 @@
+ORM m2 - 0.6.23
+------
+- 0009155: [En attente] re-Supprimer les événements des participants
+- 0009220: Corriger l'erreur getList dans les logs
+
 ORM m2 - 0.6.22
 ------
 - 0009123: [ICS] Ne pas ajouter l'email s'il est dans sentby ou orgmail

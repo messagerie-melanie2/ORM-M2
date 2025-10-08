@@ -351,7 +351,7 @@ abstract class MagicObject implements Serializable {
         $lname = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::name];
         // Typage
         if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::regexp]) && !preg_match(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::regexp], $value)) {
-          throw new \Exception("Regexp not matching");
+          throw new \LibMelanie\Exceptions\RegexpException("Regexp not matching with field : " . $name);
         }
         if (!is_null($value) /* MANTIS 3642: Impossible de remettre à zéro le champ "event_recurenddate" */
                 && isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::type])) {

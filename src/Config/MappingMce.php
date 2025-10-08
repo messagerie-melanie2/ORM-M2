@@ -589,6 +589,7 @@ class MappingMce {
 	const notin 			= "NOT IN";
 	const between 			= "BETWEEN";
 	const notbetween 		= "NOT BETWEEN";
+	const regexp			= "";
 
 	// DATA MAPPING
 	// Class

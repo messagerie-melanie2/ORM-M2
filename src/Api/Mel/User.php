@@ -225,9 +225,9 @@ class User extends Defaut\User {
     "dn"                      => 'dn',                            // DN de l'utilisateur
     "uid"                     => 'uid',                           // Identifiant de l'utilisateur
     "fullname"                => 'cn',                            // Nom complet de l'utilisateur
-    "name"                    => 'displayname',                   // Display name de l'utilisateur
-    "lastname"                => 'sn',                            // Last name de l'utilisateur
-    "firstname"               => 'givenname',                     // First name de l'utilisateur
+    "name"                    => [MappingMce::name => 'displayname', MappingMce::regexp => "/^[a-zA-Z0-9 _-]+$/"],                   // Display name de l'utilisateur
+    "lastname"                => [MappingMce::name => 'sn', MappingMce::regexp => "/^[a-zA-Z0-9 _-]+$/"],                            // Last name de l'utilisateur
+    "firstname"               => [MappingMce::name => 'givenname', MappingMce::regexp => "/^[a-zA-Z0-9 _-]+$/"], // First name de l'utilisateur
     "email"                   => 'mailpr',                        // Adresse e-mail principale de l'utilisateur en reception
     "email_list"              => [MappingMce::name => 'mail', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses e-mail en reception pour l'utilisateur
     "email_send"              => 'mineqmelmailemissionpr',        // Adresse e-mail principale de l'utilisateur en emission

@@ -130,6 +130,10 @@ abstract class Resource extends MceObject {
    */
   const TYPE_SALLE = 'Salle';
   /**
+   * Type de ressource : Salle
+   */
+  const TYPE_VROOM = 'VRoom';
+  /**
    * Type de ressource : Véhicule
    */
   const TYPE_VEHICULE = 'Véhicule';

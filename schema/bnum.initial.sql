@@ -266,6 +266,11 @@ CREATE INDEX dwp_hashtags_hashtag_idx ON dwp_hashtags (hashtag);
 CREATE INDEX dwp_shares_user_idx ON dwp_shares (user_uid);
 
 --
+-- Name: dwp_shares_workspace_idx; Type: INDEX
+--
+CREATE INDEX dwp_shares_workspace_idx ON dwp_shares (workspace_id);
+
+--
 -- Name: dwp_workspaces_modified_idx; Type: INDEX
 --
 CREATE INDEX dwp_workspaces_modified_idx ON dwp_workspaces (modified DESC);
@@ -274,6 +279,11 @@ CREATE INDEX dwp_workspaces_modified_idx ON dwp_workspaces (modified DESC);
 -- Name: dwp_workspaces_uid_idx; Type: INDEX
 --
 CREATE INDEX dwp_workspaces_uid_idx ON dwp_workspaces (workspace_uid);
+
+--
+-- Name: dwp_hashtags_workspaces_workspace_idx; Type: INDEX
+--
+CREATE INDEX dwp_hashtags_workspaces_workspace_idx ON dwp_hashtags_workspaces (workspace_id);
 
 ----- FORUM
 

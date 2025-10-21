@@ -1,3 +1,8 @@
+ORM m2 - 0.6.26
+------
+- 0009257: Ajouter un type de ressource VRoom
+- 0009221: Problème de composer
+
 ORM m2 - 0.6.25
 ------
 - 0009155: Fix [En attente] re-Supprimer les événements des participants

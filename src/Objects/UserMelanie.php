@@ -781,7 +781,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    *
    * @return boolean isExist
    */
-  public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = []) {
+  public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = [], $base_dn = null) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->load()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
@@ -801,14 +801,15 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
           $val = is_array($val) ? $val[0] : $val;
           if (in_array($key, $no_wildcard)) {
             $filters[] = "($key=$val)";
-          } else {
+          }
+          else {
             $filters[] = "($key=$val*)";
           }
         }
     }
     $filter = str_replace('%%filter%%', '&'.implode('',$filters), $filter);
       
-    $data = Ldap::GetUsersList($filter, $attributesmapping, null, $limit);
+    $data = Ldap::GetUsersList($filter, $attributesmapping, null, $limit, $base_dn);
   
     return $data;
   }

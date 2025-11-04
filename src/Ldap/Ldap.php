@@ -451,7 +451,7 @@ class Ldap {
    * @return array|null
    * @throws Exceptions\Melanie2LdapException
    */
-  public static function GetUsersList($filter , $ldap_attr = null, $server = null, $sizelimit = 100)
+  public static function GetUsersList($filter , $ldap_attr = null, $server = null, $sizelimit = 100, $base_dn = null)
   {
       M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUsersList($filter)");
       if (!isset($server)) {
@@ -473,9 +473,11 @@ class Ldap {
           // Connexion pour lire les données
           if ($ldap->bind4lookup()) {
               // Base de recherche ?
-              $base_dn = $ldap->getConfig("personne_base_dn");
-              if (!isset($base_dn)) {
-                  $base_dn = $ldap->getConfig("base_dn");
+              if (!isset($base_dn) || $base_dn == "") {
+                $base_dn = $ldap->getConfig("personne_base_dn");
+                if (!isset($base_dn)) {
+                    $base_dn = $ldap->getConfig("base_dn");
+                }
               }
               // Lancement de la recherche
               $sr = $ldap->search($base_dn, $filter, $ldap_attr, 0, $sizelimit);

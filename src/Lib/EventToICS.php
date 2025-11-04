@@ -565,6 +565,9 @@ class EventToICS {
               case Attendee::TYPE_ROOM:
                 $params[ICS::CUTYPE] = ICS::CUTYPE_ROOM;
                 break;
+              case Attendee::TYPE_VROOM:
+                $params[ICS::CUTYPE] = ICS::CUTYPE_VROOM;
+                break;
               case Attendee::TYPE_UNKNOWN:
                 $params[ICS::CUTYPE] = ICS::CUTYPE_UNKNOWN;
                 break;

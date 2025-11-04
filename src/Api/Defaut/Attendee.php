@@ -207,6 +207,7 @@ class Attendee extends MceObject {
 	const TYPE_GROUP = DefaultConfig::GROUP;
 	const TYPE_RESOURCE = DefaultConfig::RESOURCE;
 	const TYPE_ROOM = DefaultConfig::ROOM;
+  const TYPE_VROOM = DefaultConfig::VROOM;
   const TYPE_CAR = DefaultConfig::CAR;
   const TYPE_FLEX_OFFICE = DefaultConfig::FLEX_OFFICE;
   const TYPE_HARDWARE = DefaultConfig::HARDWARE;

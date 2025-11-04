@@ -1,3 +1,7 @@
+ORM m2 - 0.6.27
+------
+- 0009265: Ajouter le cutype VRoom pour les participants
+
 ORM m2 - 0.6.26
 ------
 - 0009257: Ajouter un type de ressource VRoom

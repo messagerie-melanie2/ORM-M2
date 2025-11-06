@@ -1,3 +1,7 @@
+ORM m2 - 0.6.28
+------
+- 0009285: Il manque la gestion des vroom dans MappingMCE
+
 ORM m2 - 0.6.27
 ------
 - 0009265: Ajouter le cutype VRoom pour les participants

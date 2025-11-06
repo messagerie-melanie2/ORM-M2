@@ -720,6 +720,7 @@ class MappingMce {
 	const ATT_TYPE_FLEX_OFFICE = 6;
 	const ATT_TYPE_HARDWARE = 7;
 	const ATT_TYPE_CAR = 8;
+	const ATT_TYPE_VROOM = 9;
 	/**
 	 * Attendee type mapping object to MCE
 	 */
@@ -732,6 +733,7 @@ class MappingMce {
 		DefaultConfig::FLEX_OFFICE 	=> self::ATT_TYPE_FLEX_OFFICE,
 		DefaultConfig::HARDWARE 	=> self::ATT_TYPE_HARDWARE,
 		DefaultConfig::CAR 			=> self::ATT_TYPE_CAR,
+		DefaultConfig::VROOM 		=> self::ATT_TYPE_VROOM,
 	];
 	/**
 	 * Attendee type mapping MCE to object
@@ -745,6 +747,7 @@ class MappingMce {
 		self::ATT_TYPE_FLEX_OFFICE 	=> DefaultConfig::FLEX_OFFICE,
 		self::ATT_TYPE_HARDWARE 	=> DefaultConfig::HARDWARE,
 		self::ATT_TYPE_CAR 			=> DefaultConfig::CAR,
+		self::ATT_TYPE_VROOM 		=> DefaultConfig::VROOM,
 	];
 
 	// Attendee status

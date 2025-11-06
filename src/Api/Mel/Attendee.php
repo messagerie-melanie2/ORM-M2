@@ -132,6 +132,9 @@ class Attendee extends Defaut\Attendee {
         case 'Salle':
           $this->_type = MappingMce::$MapAttendeeTypeObjectToMce[DefaultConfig::ROOM];
           break;
+        case 'VRoom':
+          $this->_type = MappingMce::$MapAttendeeTypeObjectToMce[DefaultConfig::VROOM];
+          break;
         case 'Voiture':
           $this->_type = MappingMce::$MapAttendeeTypeObjectToMce[DefaultConfig::CAR];
           break;

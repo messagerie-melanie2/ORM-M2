@@ -139,11 +139,6 @@ abstract class Export extends MceObject
       if(is_array($value)){
         $tempUser = new $user();
         $tempUser->getObjectMelanie()->__set_data($value);
-        if ($tempUser->is_individuelle) {
-          $tempUser->type = 'user';
-        } else {
-          $tempUser->type = 'other_user';
-        }
         $newData[$key] = $tempUser;
       }
     }

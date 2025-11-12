@@ -452,6 +452,10 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     $this->initializeHasChanged();
   }
 
+  public function setBaseDn($base_dn) {
+    $this->_baseDN = $base_dn;
+  }
+
   /**
    * Récupère l'entrée générée suite au changement de valeur
    * 
@@ -781,7 +785,7 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
    *
    * @return boolean isExist
    */
-  public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = [], $base_dn = null) {
+  public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = []) {
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->load()");
     // Gestion du mapping global
     static::Init($this->mapping, $this->server);
@@ -808,6 +812,8 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
         }
     }
     $filter = str_replace('%%filter%%', '&'.implode('',$filters), $filter);
+
+    $base_dn = $this->_baseDN;
       
     $data = Ldap::GetUsersList($filter, $attributesmapping, null, $limit, $base_dn);
   

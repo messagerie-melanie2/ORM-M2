@@ -1162,5 +1162,14 @@ class User extends Defaut\User {
     );
     return $domains;
   }
+
+  protected function setMapEmployee_number($number) {
+    $prefixe = \LibMelanie\Ldap\Ldap::getNomenclatureField('employeeNumber', ['mineqZone']);
+      foreach ($prefixe as $key => $value) {
+        if($value['mineqzone'] === $this->objectmelanie->mineqzone[0]) {
+          $this->objectmelanie->employee_number = $value['employeenumber'] . ':' . $number;
+        }
+      }
+  }
   
 }

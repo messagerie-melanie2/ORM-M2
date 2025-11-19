@@ -503,7 +503,7 @@ class Ldap {
    * @return array|null
    * @throws Exceptions\Melanie2LdapException
    */
-  public static function getNomenclatureField($type) {
+  public static function getNomenclatureField($type, $fields = null) {
      M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getNomenclatureField($type)");
 
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
@@ -516,7 +516,7 @@ class Ldap {
       $filter = "(objectClass=*)";
 
       // Liste des attributes
-      $ldap_attr = [$type];
+      $ldap_attr = array_merge([$type], $fields ?? []);
 
       $data = [];
       // Récupération des données en cache
@@ -533,7 +533,15 @@ class Ldap {
 
                   foreach ($infos as $key => $value) {
                     if(isset($value[strtolower($type)][0])) {
-                     $data[] = $value[strtolower($type)][0];
+                     if ($fields) {
+                      foreach ($ldap_attr as $field) {
+                          if (isset($value[strtolower($field)][0])) {
+                            $data[$key][strtolower($field)] = $value[strtolower($field)][0];
+                          }
+                        }
+                      } else {
+                        $data[] = $value[strtolower($type)][0];
+                      }
                    }
                   }
               } else {

@@ -223,11 +223,11 @@ class User extends Defaut\User {
    */
   const MAPPING = [
     "dn"                      => 'dn',                                                                                         // DN de l'utilisateur
-    "uid"                     => [MappingMce::name => 'uid', MappingMce::regexp => "/^[[a-z0-9.\-]{1,34}$/"],                  // Identifiant de l'utilisateur
+    "uid"                     => [MappingMce::name => 'uid', MappingMce::regexp => "/^[a-z0-9.\-]{1,34}$/"],                   // Identifiant de l'utilisateur
     "fullname"                => 'cn',                                                                                         // Nom complet de l'utilisateur
     "name"                    => [MappingMce::name => 'displayname', MappingMce::regexp => "/^[a-zA-Z0-9 _-]*$/"],             // Display name de l'utilisateur
     "lastname"                => [MappingMce::name => 'sn', MappingMce::regexp => "/^[a-zA-Z0-9 _-]*$/"],                      // Last name de l'utilisateur
-    "firstname"               => [MappingMce::name => 'givenname', MappingMce::regexp => "/^[a-zA-Z0-9àâèéêëîñïôùûç _-]*$/"],  // First name de l'utilisateur
+    "firstname"               => [MappingMce::name => 'givenname', MappingMce::regexp => "/^[a-zA-Z0-9ÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç _-]*$/"], // First name de l'utilisateur
     "email"                   => 'mailpr',                                                                                     // Adresse e-mail principale de l'utilisateur en reception
     "email_list"              => [MappingMce::name => 'mail', MappingMce::type => MappingMce::arrayLdap],                      // Liste d'adresses e-mail en reception pour l'utilisateur
     "email_send"              => 'mineqmelmailemissionpr',                                                                     // Adresse e-mail principale de l'utilisateur en emission
@@ -245,15 +245,15 @@ class User extends Defaut\User {
     "use_photo_intranet"      => 'mineqpublicationphotointranet',                                                              // Flag publier la photo de l'utilisateur sur l'intranet
     "employee_number"         => [MappingMce::name => 'employeenumber', MappingMce::defaut => 'non renseigné'],                // Matricule de l'utilisateur
     "ministere"               => 'mineqzone',                                                                                  // Zone de l'utilisateur
-    "street"                  => [MappingMce::name => 'street', MappingMce::regexp => "/^[a-zA-Zàâèéêëîïñôùûç\s]*(?:$\n?^[a-zA-Zàâèéêëîïñôùûç\s]*)*$/um"],// Rue
+    "street"                  => [MappingMce::name => 'street', MappingMce::regexp => "/^[a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç\s]*(?:$\n?^[a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç\s]*)*$/um"],// Rue
     "postalcode"              => [MappingMce::name => 'postalcode', MappingMce::regexp => "/^[0-9]*$/"],                       // Code postal
     "locality"                => [MappingMce::name => 'l', MappingMce::regexp => "/^[a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç0-9 _-]*$/u"],// Ville
     "description"             => 'description',                                                                                // Description
-    "phonenumber"             => [MappingMce::name => 'telephonenumber', MappingMce::regexp => "/^[^a-zA-Zàâèéêëîïñôùûç]*$/"], // Numéro de téléphone
-    "phoneformat"             => [MappingMce::name => 'telephonenumber', MappingMce::regexp => "/^[^a-zA-Zàâèéêëîïñôùûç]*$/"], // Numéro de téléphone
-    "faxnumber"               => [MappingMce::name => 'facsimiletelephonenumber', MappingMce::regexp => "/^[^a-zA-Zàâèéêëîïñôùûç]*$/"],// Numéro de fax
-    "mobilephone"             => [MappingMce::name => 'mobile', MappingMce::regexp => "/^[^a-zA-ZZàâèéêëîïñôùûç]*$/"],          // Numéro de mobile
-    "mobileformat"            => [MappingMce::name => 'mobile', MappingMce::regexp => "/^[^a-zA-ZZàâèéêëîïñôùûç]*$/"],          // Numéro de mobile
+    "phonenumber"             => [MappingMce::name => 'telephonenumber', MappingMce::regexp => "/^[^a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç]*$/"], // Numéro de téléphone
+    "phoneformat"             => [MappingMce::name => 'telephonenumber', MappingMce::regexp => "/^[^a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç]*$/"], // Numéro de téléphone
+    "faxnumber"               => [MappingMce::name => 'facsimiletelephonenumber', MappingMce::regexp => "/^[^a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç]*$/"],// Numéro de fax
+    "mobilephone"             => [MappingMce::name => 'mobile', MappingMce::regexp => "/^[^a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç]*$/"], // Numéro de mobile
+    "mobileformat"            => [MappingMce::name => 'mobile', MappingMce::regexp => "/^[^a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç]*$/"], // Numéro de mobile
     "roomnumber"              => 'roomnumber',                                                                                 // Numéro de bureau
     "title"                   => 'title',                                                                                      // Titre
     "business_category"       => [MappingMce::name => 'businesscategory', MappingMce::type => MappingMce::arrayLdap],          // Cetégorie
@@ -289,7 +289,7 @@ class User extends Defaut\User {
     "is_external"             => [MappingMce::name => 'dn', MappingMce::type => MappingMce::booleanLdap],
     "uuid"                    => "uniqueidentifier",
     "password"                => "userpassword",
-    "order"                   => [MappingMce::name => "mineqordreaffichage", MappingMce::regexp => "/^[a-zA-Z0-9]{1,4}$/"],    // Ordre d'affichage des personnes
+    "order"                   => [MappingMce::name => "mineqordreaffichage", MappingMce::regexp => "/^[a-zA-Z0-9]*$/"],        // Ordre d'affichage des personnes
     "alias"                   => [MappingMce::name => 'seeAlso', MappingMce::type => MappingMce::arrayLdap],
     "portee"                  => [MappingMce::name => 'mineqportee', MappingMce::regexp => "/^[0-9]*$/"],
     "work"                    => "observation",

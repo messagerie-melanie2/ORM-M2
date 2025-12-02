@@ -251,9 +251,9 @@ class User extends Defaut\User {
     "description"             => 'description',                                                                                // Description
     "phonenumber"             => [MappingMce::name => 'telephonenumber', MappingMce::regexp => "/^[^a-zA-Zàâèéêëîïñôùûç]*$/"], // Numéro de téléphone
     "phoneformat"             => [MappingMce::name => 'telephonenumber', MappingMce::regexp => "/^[^a-zA-Zàâèéêëîïñôùûç]*$/"], // Numéro de téléphone
-    "faxnumber"               => [MappingMce::name => 'facsimiletelephonenumber', MappingMce::regexp => "/^[^a-zA-Zàâèéêëîïñôùûç]$/"],// Numéro de fax
-    "mobilephone"             => [MappingMce::name => 'mobile', MappingMce::regexp => "/^[^a-zA-ZZàâèéêëîïñôùûç]$/"],          // Numéro de mobile
-    "mobileformat"            => [MappingMce::name => 'mobile', MappingMce::regexp => "/^[^a-zA-ZZàâèéêëîïñôùûç]$/"],          // Numéro de mobile
+    "faxnumber"               => [MappingMce::name => 'facsimiletelephonenumber', MappingMce::regexp => "/^[^a-zA-Zàâèéêëîïñôùûç]*$/"],// Numéro de fax
+    "mobilephone"             => [MappingMce::name => 'mobile', MappingMce::regexp => "/^[^a-zA-ZZàâèéêëîïñôùûç]*$/"],          // Numéro de mobile
+    "mobileformat"            => [MappingMce::name => 'mobile', MappingMce::regexp => "/^[^a-zA-ZZàâèéêëîïñôùûç]*$/"],          // Numéro de mobile
     "roomnumber"              => 'roomnumber',                                                                                 // Numéro de bureau
     "title"                   => 'title',                                                                                      // Titre
     "business_category"       => [MappingMce::name => 'businesscategory', MappingMce::type => MappingMce::arrayLdap],          // Cetégorie

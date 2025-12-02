@@ -223,7 +223,7 @@ class User extends Defaut\User {
    */
   const MAPPING = [
     "dn"                      => 'dn',                                                                                         // DN de l'utilisateur
-    "uid"                     => [MappingMce::name => 'uid', MappingMce::regexp => "/^[a-z0-9.\-]{1,34}$/"],                   // Identifiant de l'utilisateur
+    "uid"                     => [MappingMce::name => 'uid', MappingMce::regexp => "/^[a-z0-9.\-]{1,38}$/"],                   // Identifiant de l'utilisateur
     "fullname"                => 'cn',                                                                                         // Nom complet de l'utilisateur
     "name"                    => [MappingMce::name => 'displayname', MappingMce::regexp => "/^[a-zA-Z0-9 _-]*$/"],             // Display name de l'utilisateur
     "lastname"                => [MappingMce::name => 'sn', MappingMce::regexp => "/^[a-zA-Z0-9 _-]*$/"],                      // Last name de l'utilisateur
@@ -245,7 +245,7 @@ class User extends Defaut\User {
     "use_photo_intranet"      => 'mineqpublicationphotointranet',                                                              // Flag publier la photo de l'utilisateur sur l'intranet
     "employee_number"         => [MappingMce::name => 'employeenumber', MappingMce::defaut => 'non renseigné'],                // Matricule de l'utilisateur
     "ministere"               => 'mineqzone',                                                                                  // Zone de l'utilisateur
-    "street"                  => [MappingMce::name => 'street', MappingMce::regexp => "/^[a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç\s]*(?:$\n?^[a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç\s]*)*$/um"],// Rue
+    "street"                  => [MappingMce::name => 'street', MappingMce::regexp => "/^[a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç0-9\s]*(?:$\n?^[a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç0-9\s]*)*$/um"],// Rue
     "postalcode"              => [MappingMce::name => 'postalcode', MappingMce::regexp => "/^[0-9]*$/"],                       // Code postal
     "locality"                => [MappingMce::name => 'l', MappingMce::regexp => "/^[a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç0-9 _-]*$/u"],// Ville
     "description"             => 'description',                                                                                // Description

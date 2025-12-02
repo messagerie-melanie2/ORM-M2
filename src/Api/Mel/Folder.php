@@ -91,7 +91,7 @@ class Folder extends Defaut\Folder
         'ou'                      => [MappingMce::name => 'ou', MappingMce::regexp => "/^[a-zA-Z0-9ÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîñïôùûç '\.\-]{1,25}$/"], // Nom de l'Entité
         'smtp'                    => [MappingMce::name => 'mineqdomainessmtp', MappingMce::type => MappingMce::arrayLdap], 
         "dn"                      => 'dn',                                                                                         // DN de l'utilisateur
-        "uid"                     => [MappingMce::name => 'uid', MappingMce::regexp => "/^[[a-z0-9.\-]{1,34}$/"],                  // Identifiant de l'utilisateur
+        "uid"                     => [MappingMce::name => 'uid', MappingMce::regexp => "/^[[a-z0-9.\-]{1,38}$/"],                  // Identifiant de l'utilisateur
         "fullname"                => 'cn',                                                                                         // Nom complet de l'utilisateur
         "name"                    => 'displayname',                                                                                // Display name de l'utilisateur
         "lastname"                => 'sn',                                                                                         // Last name de l'utilisateur
@@ -113,7 +113,7 @@ class Folder extends Defaut\Folder
         "use_photo_intranet"      => 'mineqpublicationphotointranet',                                                              // Flag publier la photo de l'utilisateur sur l'intranet
         "employee_number"         => [MappingMce::name => 'employeenumber', MappingMce::defaut => 'non renseigné'],                // Matricule de l'utilisateur
         "ministere"               => 'mineqzone',                                                                                  // Zone de l'utilisateur
-        "street"                  => [MappingMce::name => 'street', MappingMce::regexp => "/^[a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç\s]*(?:$\n?^[a-zA-Zàâèéêëîïñôùûç\s]*)*$/um"], // Rue
+        "street"                  => [MappingMce::name => 'street', MappingMce::regexp => "/^[a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç0-9\s]*(?:$\n?^[a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç0-9\s]*)*$/um"], // Rue
         "postalcode"              => [MappingMce::name => 'postalcode', MappingMce::regexp => "/^[0-9]*$/"],                       // Code postal
         "locality"                => [MappingMce::name => 'l', MappingMce::regexp => "/^[a-zA-ZÀÂÈÉÊËÎÏÑÔÙÛÇàâèéêëîïñôùûç0-9 _-]*$/u"],// Ville
         "description"             => 'description',                                                                                // Description
@@ -157,7 +157,7 @@ class Folder extends Defaut\Folder
         "is_external"               => [MappingMce::name => 'dn', MappingMce::type => MappingMce::booleanLdap],
         "uuid"                      => "uniqueidentifier",
         "password"                  => "userpassword",
-        "order"                   => [MappingMce::name => "mineqordreaffichage", MappingMce::regexp => "/^[a-zA-Z0-9]{1,4}$/"],    // Ordre d'affichage des personnes
+        "order"                   => [MappingMce::name => "mineqordreaffichage", MappingMce::regexp => "/^[a-zA-Z0-9]$/"],    // Ordre d'affichage des personnes
         "alias"                     => [MappingMce::name => 'seeAlso', MappingMce::type => MappingMce::arrayLdap],
         "portee"                    => [MappingMce::name => 'mineqportee', MappingMce::regexp => "/^[0-9]*$/"],
         "work"                      => "observation",

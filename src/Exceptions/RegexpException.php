@@ -42,13 +42,18 @@ class RegexpException extends \Exception {
 	 * @var int
 	 */
 	protected $errorCode = 1;
+	/**
+	 * Champs provoquant l'erreur de regexp
+	 * @var string
+	 */
+	protected $failedField = "";
 
 	/**
 	 * Constructeur de l'exception
 	 * @param string $message
 	 * @param int $code
 	 */
-	function __construct($message = NULL, $code = NULL) {
+	function __construct($message = NULL, $code = NULL, $fField = NULL) {
 		// Error message
 		if (!isset($message))
 			$message = $this->errorMessage;
@@ -57,7 +62,19 @@ class RegexpException extends \Exception {
 		if (!isset($code))
 			$code = $this->errorCode;
 
-		M2Log::Log(M2Log::LEVEL_ERROR, "LibMelanie\Exceptions\RegexpException->__construct($code, $message)");
+		// Failed Field
+		if (isset($fField))
+			$this->failedField = $fField;
+
+		M2Log::Log(M2Log::LEVEL_ERROR, "LibMelanie\Exceptions\RegexpException->__construct($code, $message, $fField)");
 		parent::__construct($message, (int) $code);
+	}
+
+	/**
+     * Récupère le champs causant l'erreur
+     * @return string the failed field as a string.
+     */
+    public function getFailedField(): string {
+		return $this->failedField;
 	}
 }

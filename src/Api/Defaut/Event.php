@@ -577,7 +577,7 @@ class Event extends MceObject {
             $organizer_master_event->uid = $this->objectmelanie->realuid;
             if ($organizer_master_event->load()) {
               // Créer l'exception chez l'organisateur
-              $organizer_event = $this->createOrganizerException($organizer_master_event);
+                $organizer_event = $this->createOrganizerException($organizer_master_event);
             }
             else {
               // Normalement on ne devrait pas arriver là mais au cas ou on gère en externe
@@ -806,8 +806,16 @@ class Event extends MceObject {
 
     $organizer_event->addException($organizer_event_exception);
     $organizer_event->modified = time();
+
+    //0008705: On vérifie que cette exception n'a pas déjà été supprimée par l'organisateur
+    $alreadyDeleted = array_key_exists(
+      $this->getMapDtrecurrence_id()->format('Ymd'),
+      $organizer_event->getMapExceptions()
+    );
+    if (!$alreadyDeleted) {
     // Enregistre l'évenement de l'organisateur
-    $organizer_event->save();
+      $organizer_event->save();
+    }
 
     return $organizer_event_exception;
   }

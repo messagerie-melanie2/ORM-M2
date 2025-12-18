@@ -258,7 +258,7 @@ abstract class Group extends MceObject {
     for ($i = 0; $i < count($dnLength); $i++) {
       $parts = explode(",", $dn, 2);
       
-      if ($dn === Config::get(Config::DEFAULT_LDAP_DN)) {
+      if ($dn === Config::get('DEFAULT_LDAP_DN', null, 'ConfigAmedee')) {
         break;
       }
       

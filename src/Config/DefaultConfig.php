@@ -428,31 +428,4 @@ class DefaultConfig
    */
   const USE_SQL_FUNCTIONS_INSTEAD_OF_QUERIES = false;
 
-  /**
-   * Récupère le chemin LDAP par défaut
-   * 
-   * @var string
-   */
-  const DEFAULT_LDAP_DN = 'ou=organisation,dc=equipement,dc=gouv,dc=fr';
-
-  /**
-   * Récupère le chemin LDAP des ressources
-   * 
-   * @var string
-   */
-  const DEFAULT_RESSOURCES_LDAP_DN = 'ou=nomenclatures,ou=ressources,dc=equipement,dc=gouv,dc=fr';
-
-  /**
-   * Récupère la valeur maximale par défaut du nombre de résultats d'une recherche
-   * 
-   * @var string
-   */
-  const DEFAULT_ADVANCED_SEARCH_MAX_RESULTS = 300;
-
-  /**
-   * Mapping de la portée pour le ldap
-   * 
-   * @var string
-   */
-  const MINEQ_PORTEE_MAPPING = ['00' => 'Cachée (00)', '20' => 'Service (20)', '40' => 'Ministère (40)', '50' => 'Administration française (50)'];
 }

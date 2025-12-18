@@ -45,18 +45,31 @@ class Config {
    * Commencer par tester si la valeur est définie par le serveur, 
    * et si non retourne celle par défaut
    * 
-   * @param string $name Nom de constante à utiliser
+   * @param null|string|array $name Nom de constante à utiliser
    * @param string $defaultValue Valeur par défaut si la valeur n'est pas positionnée
    * @param string $configName Nom de la configuration à utiliser
    * 
    * @return mixed Valeur de configuration
    */
   public static function get($name, $defaultValue = null, $configName = 'ConfigMelanie') {
-	// Ajouter "Config" si besoin
-	if (strpos($configName, 'Config') !== 0) {
-		$configName = "Config" . $configName;
-	}
-    $classname = str_replace('%%ConfigName%%', $configName, self::CONFIG_NAME);
+		// Traiter les valeurs en batch
+		if (is_array($name)) {
+			$results = [];
+			foreach ($name as $n) {
+				$results[$n] = self::get($n, $defaultValue, $configName);
+			}
+			return $results;
+		}
+		// Ajouter "Config" si besoin
+		if (strpos($configName, 'Config') !== 0) {
+			$configName = "Config" . $configName;
+		}
+			$classname = str_replace('%%ConfigName%%', $configName, self::CONFIG_NAME);
+		// Lister toutes les constantes de la classe Config
+		if (!isset($name)) {
+			return (new \ReflectionClass($classname))->getConstants();
+		}
+
     if (defined($classname . '::' . $name)) {
       // Valeur constante de serveur
       return constant($classname . '::' . $name);
@@ -268,9 +281,4 @@ class Config {
 
 	const SENDERS = 'SENDERS';
 	const DEBUG = 'DEBUG';
-
-	const DEFAULT_LDAP_DN = 'DEFAULT_LDAP_DN';
-	const DEFAULT_RESSOURCES_LDAP_DN = 'DEFAULT_RESSOURCES_LDAP_DN';
-	const DEFAULT_ADVANCED_SEARCH_MAX_RESULTS  = 'DEFAULT_ADVANCED_SEARCH_MAX_RESULTS';
-	const MINEQ_PORTEE_MAPPING  = 'MINEQ_PORTEE_MAPPING';
 }

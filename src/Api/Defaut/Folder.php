@@ -267,8 +267,4 @@ abstract class Folder extends User
       return false;
     }
   }
-
-  protected function getDefaultLdapDn() {
-    return Config::get(Config::DEFAULT_LDAP_DN);
-  }
 }

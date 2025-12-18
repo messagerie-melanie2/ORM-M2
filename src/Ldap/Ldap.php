@@ -511,7 +511,7 @@ class Ldap {
       // Récupération de l'instance LDAP en fonction du serveur
       $ldap = self::GetInstance($server);
 
-      $base_dn = "ou=$type," . LibMelanie\Config\Config::get(LibMelanie\Config\Config::DEFAULT_RESSOURCES_LDAP_DN);
+      $base_dn = "ou=$type," . LibMelanie\Config\Config::get('DEFAULT_RESSOURCES_LDAP_DN', null, 'ConfigAmedee');
 
       $filter = "(objectClass=*)";
 
@@ -1248,7 +1248,7 @@ class Ldap {
       // Connexion pour lire les données
       if ($ldap->bind4lookup()) {
         // Lancement de la recherche
-        $sr = $ldap->search(LibMelanie\Config\Config::get(LibMelanie\Config\Config::DEFAULT_LDAP_DN), $filter, $mapping);
+        $sr = $ldap->search(LibMelanie\Config\Config::get('DEFAULT_LDAP_DN', null, 'ConfigAmedee'), $filter, $mapping);
         if ($sr && $ldap->count_entries($sr) > 0) {
           $infos = $ldap->get_entries($sr);
           $ldap->setCache($keycache, $infos);

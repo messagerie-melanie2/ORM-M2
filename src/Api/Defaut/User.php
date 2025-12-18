@@ -2770,7 +2770,7 @@ abstract class User extends MceObject
 
       $parts = explode(",", $dn, 2);
 
-      if ($dn === Config::get(Config::DEFAULT_LDAP_DN)) {
+      if ($dn === Config::get('DEFAULT_LDAP_DN', null, 'ConfigAmedee')) {
         break;
       }
 
@@ -2901,7 +2901,7 @@ abstract class User extends MceObject
 	 */
   public function getList($fields = [], $filter = "", $operators = [], $orderby = "", $asc = true, $limit = null, $offset = null, $case_unsensitive_fields = [], $join = null, $type_join = 'INNER', $using = null, $prefix = null, $groupby = [], $groupby_count = null, $subqueries = [])
   {
-    $data = $this->objectmelanie->getList(empty($fields) ? static::LOAD_ATTRIBUTES : $fields, static::LOAD_USERS_FILTER, [], '', true, Config::get(Config::DEFAULT_ADVANCED_SEARCH_MAX_RESULTS), null, [], null, 'INNER', null, null, [], null, [], $base_dn);
+    $data = $this->objectmelanie->getList(empty($fields) ? static::LOAD_ATTRIBUTES : $fields, static::LOAD_USERS_FILTER, [], '', true, Config::get('DEFAULT_ADVANCED_SEARCH_MAX_RESULTS', null, 'ConfigAmedee'), null, [], null, 'INNER', null, null, [], null, [], $base_dn);
 
     $newData = [];
     foreach ($data as $value) {

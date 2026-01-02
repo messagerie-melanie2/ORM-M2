@@ -89,6 +89,7 @@ class Resource extends Defaut\Resource {
     "dn"                      => 'dn',                            // DN de la ressource
     "uid"                     => 'uid',                           // Identifiant de la ressource
     "fullname"                => 'cn',                            // Nom complet de la ressource
+    "displayname"             => 'displayname',                            // Nom complet de la ressource
     "name"                    => 'givenname',                     // Nom de la ressource
     "type"                    => 'sn',                            // Type de la ressource
     "email"                   => 'mailpr',                        // Adresse e-mail principale de la ressource en reception

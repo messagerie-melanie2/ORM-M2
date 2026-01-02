@@ -90,9 +90,17 @@ abstract class ObjectShare extends MceObject {
   protected $_itemName;
 
   /**
+   * UserMelanie provenant d'un autre annuaire
+   * 
+   * @var UserMelanie
+   */
+  protected $otherldapobject;
+
+  /**
    * Liste des propriétés à sérialiser pour le cache
    */
   protected $serializedProperties = [
+    'otherldapobject',
     '_mailbox',
     '_user_uid',
     '_mailbox_uid',

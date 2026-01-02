@@ -93,6 +93,13 @@ abstract class Resource extends MceObject {
   protected $_preferences;
 
   /**
+   * UserMelanie provenant d'un autre annuaire
+   * 
+   * @var UserMelanie
+   */
+  protected $otherldapobject;
+
+  /**
    * Liste des propriétés à sérialiser pour le cache
    */
   protected $serializedProperties = [

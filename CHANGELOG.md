@@ -1,3 +1,10 @@
+ORM m2 - 0.6.29
+------
+- 0008931: Récurrences: le clic sur mise à jour de mon agenda fait réapparaitre l'occurrence supprimée chez l'organisateur 
+- Ajout de l'API Standard
+- Support du displayname dans les ressources
+- Problème avec l'objet "otherldapobject"
+
 ORM m2 - 0.6.28
 ------
 - 0009285: Il manque la gestion des vroom dans MappingMCE

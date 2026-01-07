@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Ce fichier est développé pour la gestion de la lib MCE
  * 
@@ -18,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace LibMelanie\Api\Mel;
 
 use LibMelanie\Api\Defaut;
@@ -43,12 +45,13 @@ use LibMelanie\Config\MappingMce;
  * @property string $service Service du groupe dans l'annuaire
  * @property-read boolean $is_dynamic Est-ce qu'il s'agit d'une liste dynamique ?
  */
-class Group extends Defaut\Group {
+class Group extends Defaut\Group
+{
     /**
-	 * Configuration du délimiteur pour le server host
-	 * 
-	 * @var string
-	 */
+     * Configuration du délimiteur pour le server host
+     * 
+     * @var string
+     */
     const SERVER_HOST_DELIMITER = '%';
 
     /**
@@ -98,6 +101,10 @@ class Group extends Defaut\Group {
         "mdrive"                  => [MappingMce::name => 'info', MappingMce::prefixLdap => 'MDRIVE: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'oui', MappingMce::falseLdapValue => 'non', MappingMce::emptyLdapValue => 'non'],
         "gestion"                 => [MappingMce::name => 'info', MappingMce::prefixLdap => 'GESTION: ', MappingMce::type => MappingMce::stringLdap],
         "reponse"                 => [MappingMce::name => 'info', MappingMce::prefixLdap => 'REPONSE:', MappingMce::type => MappingMce::stringLdap],
+        "observation"             => [MappingMce::name => 'info', MappingMce::prefixLdap => 'OBSERVATION:', MappingMce::type => MappingMce::stringLdap],
+        "description"             => 'description',
+        "order"                   => 'mineqordreaffichage',
+        "portee"                  => 'mineqportee',
     ];
 
     /**
@@ -105,7 +112,8 @@ class Group extends Defaut\Group {
      * 
      * @return mixed|NULL Valeur du serveur host, null si non trouvé
      */
-    protected function getMapServer_host() {
+    protected function getMapServer_host()
+    {
         M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapServer_host()");
         foreach ($this->server_routage as $route) {
             if (strpos($route, self::SERVER_HOST_DELIMITER) !== false) {
@@ -121,7 +129,8 @@ class Group extends Defaut\Group {
      * 
      * @return mixed|NULL Valeur du serveur user, null si non trouvé
      */
-    protected function getMapServer_user() {
+    protected function getMapServer_user()
+    {
         M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->getMapServer_user()");
         foreach ($this->server_routage as $route) {
             if (strpos($route, self::SERVER_HOST_DELIMITER) !== false) {
@@ -137,9 +146,10 @@ class Group extends Defaut\Group {
      * 
      * @return boolean Est-ce qu'il s'agit d'une liste dynamique ?
      */
-    protected function getMapIs_dynamic() {
-        return is_array($this->objectmelanie->objectclass) 
-                && in_array('labeledURIObject', $this->objectmelanie->objectclass);
+    protected function getMapIs_dynamic()
+    {
+        return is_array($this->objectmelanie->objectclass)
+            && in_array('labeledURIObject', $this->objectmelanie->objectclass);
     }
     /**
      * Mapping is_dynamic field
@@ -148,7 +158,8 @@ class Group extends Defaut\Group {
      * 
      * @return boolean false non supporté
      */
-    protected function setMapIs_dynamic($is_dynamic) {
+    protected function setMapIs_dynamic($is_dynamic)
+    {
         return false;
     }
 
@@ -157,7 +168,8 @@ class Group extends Defaut\Group {
      * 
      * @return boolean $is_agriculture Est-ce que l'utilisateur appartient au MAA (calcul sur le liens import)
      */
-    protected function getMapIs_agriculture() {
+    protected function getMapIs_agriculture()
+    {
         return strpos($this->liens_import, 'AGRI.Lien: ') === 0;
     }
 
@@ -168,7 +180,28 @@ class Group extends Defaut\Group {
      * 
      * @return boolean false non supporté
      */
-    protected function setMapIs_agriculture($is_agriculture) {
+    protected function setMapIs_agriculture($is_agriculture)
+    {
         return false;
+    }
+
+    protected function setMapLastname($lastname)
+    {
+        $this->objectmelanie->lastname = $lastname;
+        $this->setMapMineqRDN();
+        $this->objectmelanie->fullname = $lastname;
+    }
+
+    protected function setMapMineqRDN()
+    {
+        $mineqRDN = $this->lastname;
+        $mineqRDN = str_replace(' ', '-', $mineqRDN);
+        $mineqRDN = preg_replace('/[^\p{L}\p{N}\.-]/u', '.', $mineqRDN);
+        $this->objectmelanie->rdn = $mineqRDN;
+    }
+
+    protected function setMapFullname()
+    {
+        $this->objectmelanie->fullname = $this->objectmelanie->lastname . $this->objectmelanie->observation;
     }
 }

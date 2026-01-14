@@ -267,4 +267,8 @@ abstract class Folder extends User
       return false;
     }
   }
+
+  protected function getDefaultLdapDn() {
+    return Config::get('DEFAULT_LDAP_DN', null, 'ConfigAmedee');
+  }
 }

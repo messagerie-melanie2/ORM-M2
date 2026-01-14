@@ -348,6 +348,8 @@ abstract class User extends MceObject
    */
   protected $_itemName;
 
+  protected $_parent;
+
   // **** Constantes pour les preferences
   /**
    * Scope de preference par defaut pour l'utilisateur
@@ -2931,5 +2933,21 @@ abstract class User extends MceObject
       return strnatcmp($a->fullname, $b->fullname);
     });
     return $users;
+  }
+
+  protected function getMapParent()
+  {
+    if (!isset($this->_parent)) {
+      $parent_dn = explode(',', $this->objectmelanie->dn, 2)[1];
+
+      $Folder = $this->__getNamespace() . '\\Folder';
+      $folder = new $Folder($this->_server, $this->_itemName);
+
+      $folder->dn = $parent_dn;
+      if ($folder->load()) {
+        $this->_parent = $folder;
+      }
+    }
+    return $this->_parent;
   }
 }

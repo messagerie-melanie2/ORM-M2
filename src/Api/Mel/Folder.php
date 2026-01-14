@@ -65,7 +65,7 @@ class Folder extends Defaut\Folder
      * 
      * @ignore
      */
-    const LOAD_ATTRIBUTES = ['dn', 'fullname', 'email', 'description'];
+    const LOAD_ATTRIBUTES = ['dn', 'fullname', 'description', 'service'];
 
 
     /**

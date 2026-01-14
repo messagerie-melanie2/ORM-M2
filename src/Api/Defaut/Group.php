@@ -94,6 +94,8 @@ abstract class Group extends MceObject {
    */
   protected $_itemName;
 
+  protected $_parent;
+
   // **** Configuration des filtres et des attributs par défaut
   /**
    * Filtre pour la méthode load()
@@ -320,5 +322,21 @@ abstract class Group extends MceObject {
       $_members[] = $member->uid;
     }
     $this->objectmelanie->members = $_members;
+  }
+
+  protected function getMapParent()
+  {
+    if (!isset($this->_parent)) {
+      $parent_dn = explode(',', $this->objectmelanie->dn, 2)[1];
+
+      $Folder = $this->__getNamespace() . '\\Folder';
+      $folder = new $Folder($this->_server, $this->_itemName);
+
+      $folder->dn = $parent_dn;
+      if ($folder->load()) {
+        $this->_parent = $folder;
+      }
+    }
+    return $this->_parent;
   }
 }

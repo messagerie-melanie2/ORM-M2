@@ -185,23 +185,62 @@ class Group extends Defaut\Group
         return false;
     }
 
-    protected function setMapLastname($lastname)
+    /**
+     * Récupère le service (departmentNumber) depuis l'entité parente
+     * 
+     * @return void
+     */
+    protected function calculateService()
     {
-        $this->objectmelanie->lastname = $lastname;
-        $this->setMapMineqRDN();
-        $this->objectmelanie->fullname = $lastname;
+        $this->objectmelanie->service = $this->getMapParent()->service;
     }
 
-    protected function setMapMineqRDN()
+    /**
+     * Définit la propriété RDN de l'objet Melanie à partir du nom de la liste
+     *
+     * Cette méthode transforme le nom de famille en une chaîne compatible RDN :
+     * - Remplace les espaces par des tirets.
+     * - Remplace tous les caractères non alphabétiques, non numériques, sauf les points et tirets, par un point.
+     * - Affecte le résultat à la propriété 'rdn' de l'objet Melanie.
+     *
+     * @return void
+     */
+    protected function calculateMineqRDN()
     {
-        $mineqRDN = $this->lastname;
+        $mineqRDN = $this->objectmelanie->lastname;
         $mineqRDN = str_replace(' ', '-', $mineqRDN);
         $mineqRDN = preg_replace('/[^\p{L}\p{N}\.-]/u', '.', $mineqRDN);
         $this->objectmelanie->rdn = $mineqRDN;
     }
 
-    protected function setMapFullname()
+    /**
+     * Définit la propriété fullname de l'objet Melanie en concaténant le nom de famille et l'observation
+     *
+     * Cette méthode crée le nom complet en combinant le nom de famille et l'observation,
+     * puis affecte le résultat à la propriété 'fullname' de l'objet Melanie.
+     *
+     * @return void
+     */
+    protected function calculateFullname()
     {
-        $this->objectmelanie->fullname = $this->objectmelanie->lastname . $this->objectmelanie->observation;
+        $service = trim((string) ($this->getMapParent()->service ?? ''));
+        $observation = trim((string) ($this->objectmelanie->observation));
+
+        $this->objectmelanie->fullname =
+            $this->objectmelanie->lastname
+            . ($observation !== '' ? ' (' . $this->objectmelanie->observation . ')' : '')
+            . ($service !== '' ? ' - ' . $service : '');
+    }
+
+    /**
+     * Calcul des champs spécifiques à Mel
+     * 
+     * @ignore
+     */
+    protected function calculateFields()
+    {
+        $this->calculateMineqRDN();
+        $this->calculateService();
+        $this->calculateFullname();
     }
 }

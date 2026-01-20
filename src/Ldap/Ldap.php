@@ -1081,8 +1081,6 @@ class Ldap {
    * @return array
    */
   public static function getFolderBalInfos($base_dn, $type, $mapping, $server = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getFolderBalInfos($base_dn)");
-
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
@@ -1130,23 +1128,17 @@ class Ldap {
    * 
    * @return array 
    */
-  public static function getFolderChildrenInfos($base_dn, $type, $mapping, $scope = 'one', $server = null) {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getFolderChildrenInfos($base_dn)");
-
+  public static function getFolderChildrenInfos($base_dn, $filter, $mapping, $scope = 'one', $server = null) {
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
 
     $ldap = self::GetInstance($server);
 
-    $filter = $ldap->getConfig("get_folder_children_infos_filter");
-
-    if (isset($type) && !isset($filter)) {
-        $filter = "(&(objectclass=$type)(mineqPortee>=40))";
-    } else {
-      $filter = "(&(objectclass=*)(mineqPortee>=40))";
-    }
-
+    $filter = $filter 
+        ?? $ldap->getConfig('get_folder_children_infos_filter') 
+        ?? '(&(objectclass=*)(mineqPortee>=40))';
+    
     // Récupération des données en cache
     $keycache = "getFolderChildrenInfos:$server:" . md5($filter) . ":$base_dn";
     $infos = $ldap->getCache($keycache);

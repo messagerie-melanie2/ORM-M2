@@ -217,6 +217,12 @@ class User extends Defaut\User {
    * @ignore
    */
   const GET_LISTS_IS_MEMBER_FILTER = "(&(objectclass=mineqMelListe)(mineqMelMembres=%%email%%))";
+  /**
+   * Filtre pour récupérer une BALI ou PERS
+   * 
+   * @ignore
+   */
+  const USER_FILTER = "(&(|(mineqTypeEntree=BALI)(mineqTypeEntree=PERS))(mineqPortee>=40))";
 
   /**
    * Configuration du mapping qui surcharge la conf

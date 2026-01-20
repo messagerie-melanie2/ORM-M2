@@ -54,9 +54,9 @@ class ExportMelanie extends UserMelanie
    * 
    * @return array Liste d'objet
    */
-  public function getExportChildren($attributes)
+  public function getExportChildren($attributes, $filter)
   {
-    $result = Ldap::getFolderChildrenInfos($this->dn, 'organizationalPerson', $this->get_mapping_attributes($attributes), 'subtree');
+    $result = Ldap::getFolderChildrenInfos($this->dn, $filter, $this->get_mapping_attributes($attributes), 'subtree');
 
     if (isset($result)) {
       return $result;

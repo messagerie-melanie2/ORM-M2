@@ -134,7 +134,7 @@ abstract class Export extends MceObject
 
     $newData = [];
 
-    $data = $this->objectmelanie->getExportChildren($attributes);
+    $data = $this->objectmelanie->getExportChildren($attributes, $user::USER_FILTER);
     foreach ($data as $key => $value) {
       if(is_array($value)){
         $tempUser = new $user();

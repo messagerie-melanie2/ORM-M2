@@ -1,3 +1,7 @@
+ORM m2 - 0.6.30
+------
+- 0009370: [ICS] si l'année de date de fin de récurrence est à 9999 la considérer sans date de fin
+
 ORM m2 - 0.6.29
 ------
 - 0008931: Récurrences: le clic sur mise à jour de mon agenda fait réapparaitre l'occurrence supprimée chez l'organisateur 

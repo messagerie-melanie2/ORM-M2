@@ -713,35 +713,6 @@ class EventToICS {
   }
 
   /**
-   * Ajoute le timezone au VCalendar
-   *
-   * @param VObject\Component $vcalendar
-   * @param string $timezone
-   */
-  private static function generationTimezone(VObject\Component $vcalendar, $timezone) {
-    if (!Config::get(Config::ICS_ADD_TIMEZONE))
-      return;
-
-    if ($timezone === 'Europe/Paris') {
-      $vtimezone = $vcalendar->add('VTIMEZONE');
-      $vtimezone->TZID = 'Europe/Paris';
-      $vtimezone->add(ICS::X_LIC_LOCATION, 'Europe/Paris');
-      $daylight = $vtimezone->add('DAYLIGHT');
-      $daylight->TZOFFSETFROM = '+0100';
-      $daylight->TZOFFSETTO = '+0200';
-      $daylight->TZNAME = 'CEST';
-      $daylight->DTSTART = '19700329T020000';
-      $daylight->RRULE = 'FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3';
-      $standard = $vtimezone->add('STANDARD');
-      $standard->TZOFFSETFROM = '+0200';
-      $standard->TZOFFSETTO = '+0100';
-      $standard->TZNAME = 'CET';
-      $standard->DTSTART = '19701025T030000';
-      $standard->RRULE = 'FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10';
-    }
-  }
-
-  /**
    * Formatte l'alarme en minutes en un trigger ICS
    *
    * @param int $alarm

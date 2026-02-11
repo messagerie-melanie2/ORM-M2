@@ -40,6 +40,16 @@ class Meeting {
     const DESCRIPTION = "Pour rejoindre la réunion Zoom : %%url%%\r\nCode secret : %%password%%";
 
     /**
+     * Expression régulière pour matcher la description à nettoyer si besoin
+     */
+    const DESCRIPTION_REGEX = '/Pour rejoindre la réunion Zoom : (.*)(\r\n|\r|\n)Code secret : (.*)/';
+
+    /**
+     * Expression régulière pour matcher l'url Zoom à nettoyer si besoin
+     */
+    const URL_REGEX = '/https:\/\/(.*).zoom.us\/j\/(.*)(\/|)/';
+
+    /**
      * Enregistre un événement Zoom
      * 
      * @param object $event L'événement à enregistrer, doit contenir les propriétés zoom_meeting_id et zoom_json
@@ -80,7 +90,8 @@ class Meeting {
                 $event->recurrence->type = \LibMelanie\Api\Defaut\Recurrence::RECURTYPE_NORECUR;
 
                 if (strpos($event->location, $event->zoom_meeting_url) === false) {
-                    $event->location .= ' ' . $event->zoom_meeting_url;
+                    $event->location = preg_replace(self::URL_REGEX, '', $event->location) 
+                                        . ' ' . $event->zoom_meeting_url;
                 }
 
                 if (strpos($event->description, $event->zoom_meeting_url) === false) {
@@ -88,7 +99,9 @@ class Meeting {
                         $event->description = str_replace(['%%url%%', '%%password%%'], [$event->zoom_meeting_url, $event->zoom_meeting_password], self::DESCRIPTION);
                     }
                     else {
-                        $event->description = str_replace(['%%url%%', '%%password%%'], [$event->zoom_meeting_url, $event->zoom_meeting_password], self::DESCRIPTION) . "\r\n\r\n" . $event->description;
+                        $event->description = str_replace(['%%url%%', '%%password%%'], [$event->zoom_meeting_url, $event->zoom_meeting_password], self::DESCRIPTION) 
+                                                . "\r\n\r\n" 
+                                                . preg_replace(self::DESCRIPTION_REGEX, '', $event->description);
                     }
                 }
 

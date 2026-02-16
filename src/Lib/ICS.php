@@ -129,6 +129,7 @@ class ICS {
 	 * Status (http://tools.ietf.org/html/rfc2445#section-4.8.1.11)
 	 */
 	const STATUS = 'STATUS';
+	const STATUS_FREE = 'FREE';
 	const STATUS_TENTATIVE = 'TENTATIVE';
 	const STATUS_CONFIRMED = 'CONFIRMED';
 	const STATUS_CANCELLED = 'CANCELLED';

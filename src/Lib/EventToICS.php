@@ -404,7 +404,7 @@ class EventToICS {
     $user_uid = $user->uid;
     // Test si l'événement est privé, confidentiel ou public
     if (($event->class == Event::CLASS_PRIVATE || $event->class == Event::CLASS_CONFIDENTIAL) && (($event->owner != $user_uid && isset($calendar) && $calendar->owner != $user_uid && strpos($event->owner, $user_uid . '.-.') !== 0 && !$calendar->asRight(Config::get(Config::PRIV))) || !isset($user_uid))) {
-      $vevent->SUMMARY = 'Événement privé';
+      $vevent->SUMMARY = '[' . self::convertStatusToFR($event->status) . '] Événement privé';
     } else if ($isfreebusy) {
       $vevent->SUMMARY = '[' . self::convertStatusToFR($event->status) . '] Événement';
     } else {

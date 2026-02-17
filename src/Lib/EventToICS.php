@@ -339,11 +339,9 @@ class EventToICS {
         case Event::STATUS_CONFIRMED :
         case Event::STATUS_VACATION :
           $vevent->STATUS = ICS::STATUS_CONFIRMED;
-          $vevent->TRANSP = ICS::TRANSP_OPAQUE;
           break;
         case Event::STATUS_NONE :
         case Event::STATUS_TELEWORK :
-          $vevent->STATUS = ICS::STATUS_FREE;
           $vevent->TRANSP = ICS::TRANSP_TRANSPARENT;
           break;
         case Event::STATUS_CANCELLED :
@@ -352,7 +350,6 @@ class EventToICS {
           break;
         case Event::STATUS_TENTATIVE :
           $vevent->STATUS = ICS::STATUS_TENTATIVE;
-          $vevent->TRANSP = ICS::TRANSP_OPAQUE;
           break;
       }
     } else

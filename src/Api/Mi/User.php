@@ -67,6 +67,12 @@ use LibMelanie\Config\MappingMce;
  */
 class User extends Mce\User {
   /**
+   * Filtre pour la méthode load() avec un email
+   * 
+   * @ignore
+   */
+  const LOAD_FROM_EMAIL_FILTER = "(mailalternateaddress=%%email%%)";
+  /**
    * Filtre pour la méthode getBalpEmission()
    * 
    * @ignore

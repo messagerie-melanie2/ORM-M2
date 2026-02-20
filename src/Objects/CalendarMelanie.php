@@ -408,16 +408,16 @@ class CalendarMelanie extends MagicObject implements IObjectMelanie {
 		// Range
 		$event_range = "";
 		if (isset($event_end) && isset($event_start)) {
-		  $event_range .= " AND ((k1.event_start >= :event_start AND k1.event_start <= :event_end) OR (k1.event_end >= :event_start AND k1.event_end <= :event_end) OR (k1.event_end >= :event_end AND k1.event_start <= :event_start) OR (k1.event_recurtype >= 1 AND k1.event_recurenddate >= :event_start AND k1.event_end <= :event_end))";
+		  $event_range .= " AND ((k1.event_start >= :event_start AND k1.event_start < :event_end) OR (k1.event_end > :event_start AND k1.event_end <= :event_end) OR (k1.event_end >= :event_end AND k1.event_start <= :event_start) OR (k1.event_recurtype >= 1 AND k1.event_recurenddate > :event_start AND k1.event_end <= :event_end))";
 		  $params['event_end'] = $event_end;
 		  $params['event_start'] = $event_start;
 		}
 		else if (isset($event_end)) {
-			$event_range .= " AND (k1.event_start <= :event_end OR (k1.event_recurtype >= 1 AND k1.event_recurenddate <= :event_end))";
+			$event_range .= " AND (k1.event_start < :event_end OR (k1.event_recurtype >= 1 AND k1.event_recurenddate <= :event_end))";
 			$params['event_end'] = $event_end;
 		}
 		else if (isset($event_start)) {
-			$event_range .= " AND (k1.event_end >= :event_start OR (k1.event_recurtype >= 1 AND k1.event_recurenddate >= :event_start))";
+			$event_range .= " AND (k1.event_end > :event_start OR (k1.event_recurtype >= 1 AND k1.event_recurenddate > :event_start))";
 			$params['event_start'] = $event_start;
 		}
 		if (isset($modified)) {

@@ -1836,6 +1836,11 @@ class Event extends MceObject {
       return null;
     }
 
+    // Vérifier s'il y a des ressources et si elles respectent les critères
+    if ($saveAttendees && !$this->validateResources()) {
+      return null;
+    }
+
     // MANTIS 0007426: Avancer la date de fin de récurrence devrait supprimer les occurrences postérieures
     if ($this->objectmelanie->fieldHasChanged('enddate') && !$isExternal) {
       $this->deleteOldOccurrences();
@@ -1918,6 +1923,56 @@ class Event extends MceObject {
     //gc_collect_cycles();
     M2Log::Log(M2Log::LEVEL_DEBUG, $this->get_class . "->save() Rien a sauvegarder: return null");
     return null;
+  }
+
+  /**
+   * Valide les ressources associées à l'évènement
+   * 
+   * @return boolean true si les ressources sont valides, false sinon
+   */
+  protected function validateResources() {
+    // Détecter les attendees pour tous les évènements et exceptions
+    $hasAttendees = $this->getMapHasAttendees();
+    // Récupération de l'organisateur
+    $organizer = $this->getMapOrganizer();
+    if (!$hasAttendees || $organizer->extern || !empty($organizer->calendar) && $this->calendar != $organizer->calendar) {
+      // Pas de gestion des ressources à prévoir
+      return true;
+    }
+
+    if (isset($this->attendees) && is_array($this->attendees)) {
+      foreach ($this->attendees as $attendee) {
+        if ($attendee->is_ressource) {
+          $Recurrence = $this->__getNamespace() . '\\Recurrence';
+
+          // MANTIS 0009375: Bloquer l'enregistrement de l'événement s'il est récurrent avec une ressource
+          if ($this->getMapRecurrence()->type !== $Recurrence::RECURTYPE_NORECUR) {
+            M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->validateResources() Un evenement recurrent ne peut pas avoir de ressource");
+            return false;
+          }
+
+          $Calendar = $this->__getNamespace() . '\\Calendar';
+
+          // Création du calendar melanie
+          $resource_calendar = new $Calendar();
+          $resource_calendar->id = $attendee->uid;
+
+          $events = $resource_calendar->getRangeEvents($this->start, $this->end, null, true);
+
+          if (count($events) > 1) {
+            return false;
+          }
+          else if (count($events) === 1) {
+            $event = array_shift($events);
+            if ($event->uid != $this->uid) {
+              return false;
+            }
+          }
+        }
+      }
+    }
+
+    return true;
   }
 
   /**

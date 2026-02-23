@@ -75,7 +75,7 @@ class Resource extends Defaut\Resource {
    * 
    * @ignore
    */
-  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'shares', 'type', 'bal', 'roomnumber', 'batiment', 'etage', 'capacite', 'caracteristiques', 'street', 'postalcode', 'locality', 'description', 'title'];
+  const LOAD_ATTRIBUTES = ['fullname', 'uid', 'name', 'email', 'email_list', 'shares', 'type', 'bal', 'roomnumber', 'batiment', 'etage', 'capacite', 'caracteristiques', 'restrictions', 'street', 'postalcode', 'locality', 'description', 'title'];
 
   /**
    * DN a utiliser comme base pour les requetes
@@ -102,17 +102,18 @@ class Resource extends Defaut\Resource {
     "description"             => 'description',                   // Description
     "roomnumber"              => 'roomnumber',                    // Numéro de bureau
     "title"                   => 'title',                         // Titre
-    "batiment"                => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Batiment: ', MappingMce::type => MappingMce::stringLdap],
-    "etage"                   => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Etage: ', MappingMce::type => MappingMce::stringLdap],
-    "capacite"                => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Capacite: ', MappingMce::type => MappingMce::stringLdap],
-    "caracteristiques"        => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Caracteristiques: ', MappingMce::type => MappingMce::stringLdap],
-    "batiment"                => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Batiment: ', MappingMce::type => MappingMce::stringLdap],
+    "batiment"                => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Batiment: '],
+    "etage"                   => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Etage: '],
+    "capacite"                => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Capacite: '],
+    "caracteristiques"        => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Caracteristiques: '],
+    "batiment"                => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Batiment: '],
+    "restrictions"            => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Droit.Reservation: ', MappingMce::type => MappingMce::arrayLdap],
 
     // Zoom Room
     "is_zoom_room"            => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.Type: ', MappingMce::type => MappingMce::booleanLdap, MappingMce::trueLdapValue => 'Zoom Room'],
-    "zoom_account_id"         => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.ZoomRoom.AccountID: ', MappingMce::type => MappingMce::stringLdap],
-    "zoom_client_id"          => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.ZoomRoom.ClientID: ', MappingMce::type => MappingMce::stringLdap],
-    "zoom_internal_email"     => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.ZoomRoom.InternalEmail: ', MappingMce::type => MappingMce::stringLdap],
+    "zoom_account_id"         => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.ZoomRoom.AccountID: '],
+    "zoom_client_id"          => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.ZoomRoom.ClientID: '],
+    "zoom_internal_email"     => [MappingMce::name => 'info', MappingMce::prefixLdap => 'Ressource.ZoomRoom.InternalEmail: '],
 
     "modifiedtime"            => 'mineqmodifiedtimestamp',
   ];

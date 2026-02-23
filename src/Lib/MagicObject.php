@@ -610,12 +610,39 @@ abstract class MagicObject implements Serializable {
 		        break;
 	        // ARRAY LDAP
 		      case MappingMce::arrayLdap:
-		        if (is_array($value)) {
-		          unset($value['count']);
-		        }
-		        else {
-		          $value = [$value];
-		        }
+            // 0009393: Gérer le préfixe pour un arrayLdap
+            if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap])) {
+              $_prefix = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::prefixLdap];
+              $_val = [];
+              $_found = false;
+              foreach ($value as $val) {
+                if (strpos($val, $_prefix) === 0) {
+                  $_val[] = trim(str_replace($_prefix, '', $val));
+                  $_found = true;
+                }
+              }
+              
+              if ($_found) {
+                $value = $_val;
+              }
+              else {
+                // Valeur par défaut
+                if (isset(MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut])) {
+                  $value = MappingMce::$Data_Mapping[$this->objectType][$name][MappingMce::defaut];
+                }
+                else {
+                  $value = [];
+                }
+              }
+            }
+            else {
+              if (is_array($value)) {
+                unset($value['count']);
+              }
+              else {
+                $value = [$value];
+              }
+            }
             break;
           // DATE LDAP
           case MappingMce::dateLdap:

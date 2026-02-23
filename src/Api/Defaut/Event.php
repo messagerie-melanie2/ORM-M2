@@ -1968,6 +1968,23 @@ class Event extends MceObject {
               return false;
             }
           }
+
+          // MANTIS 0009392: Bloquer l'enregistrement de l'événement avec ressource si elle n'est pas réservable par l'organisateur
+          $restrictions = $attendee->resource->restrictions;
+
+          if (!empty($restrictions)) {
+            $_found = false;
+            foreach ($restrictions as $restriction) {
+              if (strpos($organizer->dn, $restriction) !== false) {
+                $_found = true;
+                break;
+              }
+            }
+            if (!$_found) {
+              M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->validateResources() L'organisateur n'a pas le droit de réserver la ressource " . $attendee->uid);
+              return false;
+            }
+          }
         }
       }
     }

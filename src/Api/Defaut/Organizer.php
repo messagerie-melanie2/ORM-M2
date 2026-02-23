@@ -71,6 +71,14 @@ class Organizer extends MceObject {
    * @var string
    */
   private $organizer_name = null;
+
+  /**
+   * Dn de l'organisateur de l'évènement
+   * 
+   * @var string
+   */
+  private $organizer_dn = null;
+
   /**
    * Valeurs decodées de organizer_json
    * 
@@ -109,6 +117,7 @@ class Organizer extends MceObject {
     // Intialisation de l'email de l'organisateur
     $this->organizer_email = null;
     $this->organizer_name = null;
+    $this->organizer_dn = null;
     $this->extern = null;
     
     // Définition de l'évènement melanie2
@@ -195,6 +204,7 @@ class Organizer extends MceObject {
       // Intialisation de l'email et du nom de l'organisateur
       $this->organizer_email = null;
       $this->organizer_name = null;
+      $this->organizer_dn = null;
     }
     $this->setOrganizerParam('extern', $extern);
     $this->extern = $extern;
@@ -324,6 +334,7 @@ class Organizer extends MceObject {
       if ($user->load(['uid', 'fullname', 'is_mailbox'])) {
         if ($user->is_objectshare) {
           $this->objectmelanie->organizer_uid = $user->objectshare->uid;
+          $this->organizer_dn = $user->objectshare->mailbox->dn;
           $name = $user->objectshare->mailbox->fullname;
           // MANTIS 0009108: Avoir une configuration pour utiliser les emails de BALF plutôt que les objets de partage
           if (Config::get(Config::INVITATION_FORCE_SHARED_MAILBOX_EMAIL, false)) {
@@ -334,6 +345,7 @@ class Organizer extends MceObject {
         }
         else {
           $this->objectmelanie->organizer_uid = $user->uid;
+          $this->organizer_dn = $user->dn;
           $name = $user->fullname;
           // MANTIS 0006288: Lorsqu'on recherche si l'organisateur est externe, valider l'objectClass mineqMelBoite
           $this->extern = !$user->is_mailbox;
@@ -344,6 +356,7 @@ class Organizer extends MceObject {
       }
       else {
         $this->objectmelanie->organizer_uid = null;
+        $this->organizer_dn = null;
         $this->extern = true;
       }
       $this->setOrganizerParam('extern', $this->extern);
@@ -376,10 +389,12 @@ class Organizer extends MceObject {
           $user->uid = $this->objectmelanie->organizer_uid;
           if ($user->load(['email'])) {
             $this->organizer_email = $user->email;
+            $this->organizer_dn = $user->dn;
             $this->extern = false;
           }
           else {
             $this->organizer_email = '';
+            $this->organizer_dn = null;
             $this->extern = true;
           }
         }
@@ -439,6 +454,25 @@ class Organizer extends MceObject {
     }
     return $this->organizer_name;
   }
+
+  /**
+   * Mapping dn field
+   * 
+   * @ignore
+   */
+  protected function getMapDn() {
+    if (!$this->extern && !isset($this->organizer_dn)) {
+      $User = $this->__getNamespace() . '\\User';
+      $user = new $User();
+      $user->uid = $this->objectmelanie->organizer_uid;
+      if ($user->load()) {
+        $this->organizer_dn = $user->dn;
+      }
+    }
+
+    return $this->organizer_dn;
+  }
+
   /**
    * Mapping role field
    *

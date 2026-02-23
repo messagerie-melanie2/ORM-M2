@@ -1,3 +1,15 @@
+ORM m2 - 0.6.31
+------
+- 0009383: Zoom : nettoyer les anciennes données de description et url
+- 0009386: [ICS] Ajouter le status dans le titre de l'événement privé
+- 0009385: [ICS] Gérer le statut Free avec le Transp
+- 0009389: [MI] Modifier le filtre pour rechercher par alternate address
+- 0009391: Reprise du getRangeEvent pour exclure les événements qui touchent seulement les limites
+- 0009375: Bloquer l'enregistrement de l'événement s'il est récurrent avec une ressource
+- 0009376: Bloquer l'enregistrement de l'événement avec ressource si elle est occupée par un autre événement
+- 0009393: Gérer le préfixe pour un arrayLdap
+- 0009392: Bloquer l'enregistrement de l'événement avec ressource si elle n'est pas réservable par l'organisateur
+
 ORM m2 - 0.6.30
 ------
 - 0009370: [ICS] si l'année de date de fin de récurrence est à 9999 la considérer sans date de fin

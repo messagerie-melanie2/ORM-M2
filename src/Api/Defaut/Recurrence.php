@@ -600,7 +600,7 @@ class Recurrence extends MceObject {
           $recurrence[ICS::UNTIL] = $this->arrayToDateTime($recurrence[ICS::UNTIL]);
         }
         // MANTIS 0009370: [ICS] si l'année de date de fin de récurrence est à 9999 la considérer sans date de fin
-        if ($recurrence[ICS::UNTIL] instanceof \DateTime && $recurrence[ICS::UNTIL]->format('Y') == '9999') {
+        if (isset($recurrence[ICS::UNTIL]) && $recurrence[ICS::UNTIL] instanceof \DateTime && $recurrence[ICS::UNTIL]->format('Y') == '9999') {
           unset($recurrence[ICS::UNTIL]);
         }
         // Convert each RDATE to DateTime if necessary

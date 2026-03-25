@@ -1,3 +1,9 @@
+ORM m2 - 0.6.32
+------
+- 0009416: [Recurrence] n'utiliser UNTIL que s'il est présent
+- 0009415: [Standard] Ne pas charger la liste des boites avec getObjectsSharedGestionnaire
+- 0009417: [MagicObject] Setter pour les arrayLdap avec prefix
+
 ORM m2 - 0.6.31
 ------
 - 0009383: Zoom : nettoyer les anciennes données de description et url

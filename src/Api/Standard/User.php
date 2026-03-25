@@ -189,6 +189,17 @@ class User extends Defaut\User {
   }
 
   /**
+   * Récupère la liste des objets de partage accessibles en gestionnaire à l'utilisateur
+   * 
+   * @param array $attributes [Optionnal] List of attributes to load
+   *
+   * @return ObjectShare[] Liste d'objets
+   */
+  public function getObjectsSharedGestionnaire($attributes = null) {
+    return [];
+  }
+
+  /**
    * ***************************************************
    * DATA MAPPING
    */

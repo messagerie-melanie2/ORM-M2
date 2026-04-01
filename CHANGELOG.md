@@ -1,3 +1,7 @@
+ORM m2 - 0.6.33
+------
+- 0009427: [Mel] Ajouter les objectShare dans le filtre ldap par email
+
 ORM m2 - 0.6.32
 ------
 - 0009416: [Recurrence] n'utiliser UNTIL que s'il est présent

@@ -140,7 +140,7 @@ class User extends Defaut\User {
    * 
    * @ignore
    */
-  const LOAD_FROM_EMAIL_FILTER = "(&(|(mail=%%email%%)(mineqmelmailemission=%%email%%)(info=Bnum.mail.ext:%%email%%))(|(objectClass=calEntry)(objectClass=mineqMelListe)))";
+  const LOAD_FROM_EMAIL_FILTER = "(&(|(mail=%%email%%)(mineqmelmailemission=%%email%%)(info=Bnum.mail.ext:%%email%%))(|(objectClass=calEntry)(objectClass=mineqMelListe)(objectClass=mineqMelObjetPartage)))";
   /**
    * Attributs par défauts pour la méthode load()
    * 

@@ -43,18 +43,18 @@ $debug_file = '/var/log/script_groups.log';
 
 // Configuration de la connexion a la base de donnees
 $_conf['sql'] = array(
-	'hostspec' => '<hostname>',
-	'password' => '<password>',
-	'database' => '<database>',
+	'hostspec' => '%%DROITS_GROUPS_HORDE_SQL_HOSTNAME%%',
+	'password' => '%%DROITS_GROUPS_HORDE_SQL_PASSWORD%%',
+	'database' => '%%DROITS_GROUPS_HORDE_SQL_DATABASE%%',
 	'port' => 5432,
-	'username' => '<username>'
+	'username' => '%%DROITS_GROUPS_HORDE_SQL_USERNAME%%'
 );
 
 // Configuration de la connexion au serveur LDAP
 $_conf['ldap'] = array(
-    'host' => '<hostname>', //host name of your LDAP Server
-    'port' => '<port>', //port
-    'baseDNUsers' => '<base_dn>' //where to look at valid user
+    'host' => '%%DROITS_GROUPS_HORDE_LDAP_HOSTNAME%%', //host name of your LDAP Server
+    'port' => '%%DROITS_GROUPS_HORDE_LDAP_PORT%%', //port
+    'baseDNUsers' => '%%DROITS_GROUPS_HORDE_LDAP_BASE_DN%%' //where to look at valid user
 );
 
 ##############################################################

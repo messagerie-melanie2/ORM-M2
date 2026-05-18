@@ -1257,7 +1257,8 @@ class Event extends MceObject {
     $attendee_calendar->id = $attendee->uid;
 
     if (!$attendee_calendar->load()) {
-      if ($attendee->is_ressource) {
+      // MANTIS 0009464: [En attente] Créer l'agenda par défaut si le participant est une boite individuelle
+      if ($attendee->is_ressource || $attendee->is_individuelle) {
         $attendee_user->createDefaultCalendar();
         $attendee_calendar->load();
       }

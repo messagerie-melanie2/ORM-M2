@@ -1,3 +1,8 @@
+ORM m2 - 0.6.34
+------
+- 0009464: [En attente] Créer l'agenda par défaut si le participant est une boite individuelle
+- 0009466: Le "via" d'un organisateur est basé sur le créateur et pas l'organisateur
+
 ORM m2 - 0.6.33
 ------
 - 0009427: [Mel] Ajouter les objectShare dans le filtre ldap par email

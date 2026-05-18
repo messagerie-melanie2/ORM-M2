@@ -238,14 +238,15 @@ class Organizer extends MceObject {
     $this->objectmelanie->organizer_calendar_id = $calendar;
     if (isset($this->event) 
         && $calendar == $this->event->calendar
-        && $this->event->getCalendarMelanie()->owner != $this->event->owner
+        && $this->event->getCalendarMelanie()->owner != $this->uid
         && Config::get(Config::USE_SHARED_INVITATION)) {
       $User = $this->__getNamespace() . '\\User';
       $user = new $User();
       $user->uid = $this->event->getCalendarMelanie()->owner;
       if ($user->load(['type', 'fullname', 'name', 'email']) && $user->is_individuelle) {
         $owner = new $User();
-        $owner->uid = $this->event->owner;
+        // MANTIS 0009466: Le "via" d'un organisateur est basé sur le créateur et pas l'organisateur
+        $owner->uid = $this->uid;
         if ($owner->is_objectshare) {
           $owner->uid = $owner->objectshare->user_uid;
         }

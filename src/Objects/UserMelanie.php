@@ -502,12 +502,12 @@ class UserMelanie extends MagicObject implements IObjectMelanie {
     $matches = [];
     // Gestion du %%username%%
     if (strpos($filter, '%%username%%') !== false) {
-      $filter = str_replace('%%username%%', $this->uid, $filter);
+      $filter = str_replace('%%username%%', Ldap::EscapeFilter($this->uid), $filter);
     }
     if (strpos($filter, '%%') !== false 
         && preg_match_all('/%%([\w]+)%%/', $filter, $matches, PREG_PATTERN_ORDER) !== false) {
       foreach ($matches[1] as $attr) {
-        $filter = str_replace('%%'.$attr.'%%', $this->$attr, $filter);
+        $filter = str_replace('%%'.$attr.'%%', Ldap::EscapeFilter($this->$attr), $filter);
       }
     }
     return $filter;

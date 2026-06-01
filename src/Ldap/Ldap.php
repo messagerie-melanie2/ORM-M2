@@ -340,6 +340,8 @@ class Ldap {
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
+    // Échaper la donnée
+    $username = self::EscapeFilter($username);
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = self::GetInstance($server);
     // Filtre ldap
@@ -404,6 +406,8 @@ class Ldap {
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
+    // Échaper la donnée
+    $user_dn = self::EscapeDn($user_dn);
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = self::GetInstance($server);
     // Filtre ldap
@@ -451,7 +455,7 @@ class Ldap {
    * @return array|null
    * @throws Exceptions\Melanie2LdapException
    */
-  public static function GetUsersList($filter , $ldap_attr = null, $server = null)
+  public static function GetUsersList($filter, $ldap_attr = null, $server = null)
   {
       M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::GetUsersList($filter)");
       if (!isset($server)) {
@@ -511,6 +515,8 @@ class Ldap {
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
+    // Échaper la donnée
+    $username = self::EscapeFilter($username);
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = self::GetInstance($server);
     // Filtre ldap
@@ -578,6 +584,8 @@ class Ldap {
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
+    // Échaper la donnée
+    $username = self::EscapeFilter($username);
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = self::GetInstance($server);
     // Filtre ldap
@@ -645,6 +653,8 @@ class Ldap {
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
+    // Échaper la donnée
+    $username = self::EscapeFilter($username);
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = self::GetInstance($server);
     // Filtre ldap
@@ -768,6 +778,8 @@ class Ldap {
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
+    // Échaper la donnée
+    $username = self::EscapeFilter($username);
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = self::GetInstance($server);
     // Filtre ldap
@@ -831,6 +843,8 @@ class Ldap {
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
+    // Échaper la donnée
+    $username = self::EscapeFilter($username);
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = self::GetInstance($server);
     // Filtre ldap
@@ -894,6 +908,8 @@ class Ldap {
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
+    // Échaper la donnée
+    $email = self::EscapeFilter($email);
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = self::GetInstance($server);
     // Filtre ldap
@@ -957,6 +973,8 @@ class Ldap {
     if (!isset($server)) {
       $server = LibMelanie\Config\Ldap::$SEARCH_LDAP;
     }
+    // Échaper la donnée
+    $email = self::EscapeFilter($email);
     // Récupération de l'instance LDAP en fonction du serveur
     $ldap = self::GetInstance($server);
     // Filtre ldap
@@ -1151,8 +1169,32 @@ class Ldap {
    * @return string
    */
   public static function getLastRequest() {
-    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getLastRequest()");
+    M2Log::Log(M2Log::LEVEL_DEBUG, "Ldap::getLastRequest() : " . self::$last_request);
     return self::$last_request;
+  }
+
+  /**
+   * Retourne une valeur échapée pour un filtre ldap
+   * 
+   * @param string $value Valeur à échapper
+   * @param string $ignore Caractères à ignorer pour l'échappement
+   * 
+   * @return string Valeur échappée
+   */
+  public static function EscapeFilter($value, $ignore = "") {
+    return ldap_escape($value, $ignore, LDAP_ESCAPE_FILTER);
+  }
+
+  /**
+   * Retourne une valeur échapée pour un DN ldap
+   * 
+   * @param string $dn DN à échapper
+   * @param string $ignore Caractères à ignorer pour l'échappement
+   * 
+   * @return string DN échappé
+   */
+  public static function EscapeDn($dn, $ignore = "") {
+    return ldap_escape($dn, $ignore, LDAP_ESCAPE_DN);
   }
   
   /**

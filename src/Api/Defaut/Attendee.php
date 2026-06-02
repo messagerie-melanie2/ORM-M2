@@ -244,6 +244,7 @@ class Attendee extends MceObject {
    */
   public function render() {
     M2Log::Log(M2Log::LEVEL_TRACE, $this->get_class . "->render()");
+    $this->_setAttendeeFromUser();
     $attendee = [];
     $attendee[Config::get(Config::NAME)] = $this->_name;
     $attendee[Config::get(Config::ROLE)] = $this->_role;
@@ -762,6 +763,16 @@ class Attendee extends MceObject {
    * Positionne les champs de l'attendee à partir de l'information de l'annuaire
    */
   protected function _setAttendeeFromUser() {
+    if (isset($this->_is_external) && $this->_is_external) {
+      // Réinitialiser les paramètres juste au cas ou
+      $this->_uid = null;
+      $this->_is_ressource = null;
+      $this->_is_individuelle = null;
+      $this->_is_list = null;
+
+      return;
+    }
+
     if (!isset($this->_user)) {
       $User = $this->__getNamespace() . '\\User';
       $this->_user = new $User();

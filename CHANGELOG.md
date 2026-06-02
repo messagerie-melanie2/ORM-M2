@@ -1,3 +1,8 @@
+ORM m2 - 0.6.35
+------
+- 0009478: Echapper la donnée avant de la passer au filtre ldap
+- 0009479: Pour un organisateur, les infos ldap des participants ne sont pas enregistrés
+
 ORM m2 - 0.6.34
 ------
 - 0009464: [En attente] Créer l'agenda par défaut si le participant est une boite individuelle

@@ -1193,7 +1193,7 @@ class Ldap {
    * 
    * @return string DN échappé
    */
-  public static function EscapeDn($dn, $ignore = "") {
+  public static function EscapeDn($dn, $ignore = ",=+<>#;\"\\") {
     return ldap_escape($dn, $ignore, LDAP_ESCAPE_DN);
   }
   

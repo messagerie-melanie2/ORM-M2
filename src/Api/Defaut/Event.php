@@ -2158,8 +2158,27 @@ class Event extends MceObject {
    * Déplacement d'un évènement d'un calendrier à un autre
    * 
    * @param string $calendar_id Identifiant du calendrier source
+   * @param User $user Utilisateur qui effectue le déplacement
    */
-  public function move($calendar_id) {
+  public function move($calendar_id, $user) {
+    M2Log::Log(M2Log::LEVEL_INFO, $this->get_class . "->move($calendar_id) event_uid : " . $this->uid);
+
+    // MANTIS 0009489: Un move ne devrait être possible que si on a les droits d'écriture sur l'agenda
+    if (isset($user)) {
+      $calendar = new Calendar($user);
+      $calendar->id = $calendar_id;
+
+      if (!$calendar->load()) {
+        M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->move() Impossible de charger le calendrier " . $calendar_id);
+        return;
+      }
+
+      if (!$calendar->asRight(LibMelanie\Config\ConfigMelanie::WRITE)) {
+        M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->move() L'utilisateur " . $user->uid . " n'a pas les droits d'écriture sur le calendrier " . $calendar_id);
+        return;
+      }
+    }
+
     $event = new $this->get_class();
     $event->uid = $this->uid;
     $event->calendar = $calendar_id;

@@ -127,7 +127,7 @@ class ICSToEvent {
       if (isset($vevent->{ICS::X_CM2V3_ACTION}) 
           && strtolower($vevent->{ICS::X_CM2V3_ACTION}) == 'move'
           && isset($vevent->{ICS::X_CALDAV_CALENDAR_ID})) {
-        $object->move($vevent->{ICS::X_CALDAV_CALENDAR_ID}->getValue());
+        $object->move($vevent->{ICS::X_CALDAV_CALENDAR_ID}->getValue(), $user);
       }
 
       // Owner

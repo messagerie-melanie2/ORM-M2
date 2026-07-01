@@ -1,3 +1,8 @@
+ORM m2 - 0.6.36
+------
+- 0009489: Un move ne devrait être possible que si on a les droits d'écriture sur l'agenda
+- 0009529: L'échappement du DN devrait se faire que sur certains caractères
+
 ORM m2 - 0.6.35
 ------
 - 0009478: Echapper la donnée avant de la passer au filtre ldap

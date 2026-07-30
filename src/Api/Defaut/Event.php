@@ -2173,7 +2173,7 @@ class Event extends MceObject {
         return;
       }
 
-      if (!$calendar->asRight(LibMelanie\Config\ConfigMelanie::WRITE)) {
+      if (!$calendar->asRight(\LibMelanie\Config\ConfigMelanie::WRITE)) {
         M2Log::Log(M2Log::LEVEL_ERROR, $this->get_class . "->move() L'utilisateur " . $user->uid . " n'a pas les droits d'écriture sur le calendrier " . $calendar_id);
         return;
       }

@@ -1,3 +1,9 @@
+ORM m2 - 0.6.37
+------
+- 0009549: Optimisation du trigger sur kronolith_sync
+- 0009548: Nouvelles fonctions d'administration pour la purge de la base de données
+- 0009547: Erreur sur la fonction move de Event
+
 ORM m2 - 0.6.36
 ------
 - 0009489: Un move ne devrait être possible que si on a les droits d'écriture sur l'agenda

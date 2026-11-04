@@ -69,7 +69,7 @@ class Group extends Defaut\Group {
         "type"                    => 'mcetypeentree',                   // Type d'entrée (boite individuelle, partagée, ressource, ...)
         "server_routage"          => [MappingMce::name => 'mailhost', MappingMce::type => MappingMce::arrayLdap], // Champ utilisé pour le routage des messages
         "members"                 => [MappingMce::name => 'memberuid', MappingMce::type => MappingMce::arrayLdap], // Liste des membres du groupes
-        "members_email"           => [MappingMce::name => 'mcemelmembres', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses mails de la liste
+        "members_email"           => [MappingMce::name => 'mcemembres', MappingMce::type => MappingMce::arrayLdap], // Liste d'adresses mails de la liste
         "owners"                  => [MappingMce::name => 'owner', MappingMce::type => MappingMce::arrayLdap], // Liste des propriétaires du groupes
         "unique_identifier"       => 'uniqueidentifier',              // Identifier unique pour le groupe
         "is_dynamic"              => [MappingMce::name => 'objectclass', MappingMce::type => MappingMce::arrayLdap], // Est-ce qu'il s'agit d'une liste dynamique ?
